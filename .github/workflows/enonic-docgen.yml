@@ -3,6 +3,7 @@ name: Generate Documentation
 on:
   push:
     branches:
+      - "main"
       - "master"
       - "8.0"
     paths:
