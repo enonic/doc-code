@@ -8,19 +8,14 @@ Define forms for management of structured content
 
 == Introduction
 
-To facilitate creation of structured content, Enonic CMS ships with a high-level schema concept that requires no coding.
+Define your content model as code with Enonic schemas.
 
-Each schema will produce a deterministic set of properties with valid values and indexing rules. Content can be submitted through both via UI, and API.
+== What is a schema?
 
-== TODO
-A basic concept used throughout the CMS is called schemas.
-Schemas enable developers to easily define various types of forms used throughout the CMS.
+A schema defines a deterministic data structure. A schema provides a 1:1 mapping between schema fields and the underlying document structure, making it easy to work with content, both in Content Studio, and programmatically via the API.
 
-The schema system provides a 1:1 mapping between schema fields and corresponding document properties.
-For instance, a text input called "title", is mapped to a property called "title" in the underlying document structure.
+Schemas are namespaced, and enable teams to easily share and reuse content models across projects and organizations
 
-The schema system provides a range of standard <<cms/schemas/input-types#, Input types>>, such as TextLine and ContentSelector.
-It also offers advanced form components such as ItemSets and OptionSets for creating nested sets of data and optional sets of data.
 
 [#forms]
 == Forms

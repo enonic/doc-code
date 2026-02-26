@@ -6,7 +6,7 @@
     },
     {
       "title": "Descriptors",
-      "document": "schemas/definition",
+      "document": "schemas/descriptors",
       "menuItems": [
         {
           "title": "Schema Localization",
