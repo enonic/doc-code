@@ -1,0 +1,190 @@
+{
+  "menuItems": [
+    {
+      "title": "Intro",
+      "document": "index"
+    },
+    {
+      "title": "Descriptors",
+      "document": "schemas/descriptors",
+      "menuItems": [
+        {
+          "title": "Schema Localization",
+          "document": "schemas/i18n"
+        },
+        {
+          "title": "Content Indexing",
+          "document": "schemas/indexing"
+        },            
+        {
+          "title": "Form fragments",
+          "document": "schemas/form-fragments"
+        }
+      ]
+    },
+    {
+      "title": "Form items",
+      "document": "schemas/items",
+      "menuItems": [
+        {
+          "title": "AttachmentUploader",
+          "document": "schemas/attachmentuploader"
+        },
+        {
+          "title": "CheckBox",
+          "document": "schemas/checkbox"
+        },
+        {
+          "title": "ComboBox",
+          "document": "schemas/combobox"
+        },
+        {
+          "title": "ContentSelector",
+          "document": "schemas/contentselector"
+        },
+        {
+          "title": "ContentTypeFilter",
+          "document": "schemas/contenttypefilter"
+        },
+        {
+          "title": "CustomSelector",
+          "document": "schemas/customselector"
+        },
+        {
+          "title": "Date",
+          "document": "schemas/date"
+        },
+        {
+          "title": "DateTime",
+          "document": "schemas/datetime"
+        },
+        {
+          "title": "Double",
+          "document": "schemas/double"
+        },
+        {
+          "title": "GeoPoint",
+          "document": "schemas/geopoint"
+        },
+        {
+          "title": "FieldSet",
+          "document": "schemas/field-set"
+        },
+        {
+          "title": "HtmlArea",
+          "document": "schemas/htmlarea",
+          "menuItems": [
+            {
+              "title": "Styles",
+              "document": "schemas/styles"      
+            }
+          ]
+        },
+        {
+          "title": "ImageSelector",
+          "document": "schemas/imageselector"
+        },
+        {
+          "title": "Instant",
+          "document": "schemas/instant"
+        },
+        {
+          "title": "ItemSet",
+          "document": "schemas/item-set"
+        },
+        {
+          "title": "Long",
+          "document": "schemas/long"
+        },
+        {
+          "title": "MediaSelector",
+          "document": "schemas/mediaselector"
+        },
+        {
+          "title": "OptionSet",
+          "document": "schemas/option-set"
+        },
+        {
+          "title": "RadioButton",
+          "document": "schemas/radiobutton"
+        },
+        {
+          "title": "Tag",
+          "document": "schemas/tag"
+        },
+        {
+          "title": "TextArea",
+          "document": "schemas/textarea"
+        },
+        {
+          "title": "TextLine",
+          "document": "schemas/textline"
+        },
+        {
+          "title": "Time",
+          "document": "schemas/time"
+        }
+      ]
+    },
+    {
+      "title": "Content Types",
+      "document": "schemas/content-type",
+      "menuItems": [
+        {
+          "title": "Structured",
+          "document": "schemas/structured"
+        },
+        {
+          "title": "Unstructured",
+          "document": "schemas/unstructured"
+        },
+        {
+          "title": "Media",
+          "document": "schemas/media"
+        },
+        {
+          "title": "Built-in",
+          "document": "schemas/built-in"
+        }
+      ]
+    },
+    {
+      "title": "Mixins",
+      "document": "schemas/mixin"
+    },
+    {
+      "title": "Macros",
+      "document": "schemas/macro"
+    },
+    {
+      "title": "Components",
+      "document": "schemas/components",
+      "menuItems": [
+        {
+          "title": "Page",
+          "document": "schemas/page"
+        },
+        {
+          "title": "Region",
+          "document": "schemas/region"
+        },
+        {
+          "title": "Part",
+          "document": "schemas/part"
+        },
+        {
+          "title": "Layout",
+          "document": "schemas/layout"
+        },
+        {
+          "title": "Text component",
+          "document": "schemas/text"
+        },
+        {
+          "title": "Component Filtering",
+          "document": "schemas/component-filtering"
+        }
+      ]
+    }        
+  ]
+}
