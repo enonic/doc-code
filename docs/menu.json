@@ -3,188 +3,260 @@
     {
       "title": "Intro",
       "document": "index"
-    },
+    },  
     {
-      "title": "Forms",
-      "document": "schemas/forms",
+      "title": "Dev kit",
+      "document": "dev-kit",
       "menuItems": [
         {
-          "title": "Form fragments",
-          "document": "schemas/fragments"
+          "title": "Sandboxes",
+          "document": "sandboxes"
+        },  
+        {
+          "title": "Starters",
+          "document": "starters"
+        },          
+        {
+          "title": "Build system",
+          "document": "builds"
         },
         {
-          "title": "Indexing",
-          "document": "schemas/indexing"
-        },            
-        {
-          "title": "Schema Localization",
-          "document": "schemas/i18n"
+          "title": "CI/CD",
+          "document": "ci-cd"
         }
       ]
     },
     {
-      "title": "Form items",
-      "document": "schemas/items",
+      "title": "Runtime",
+      "document": "enonic-runtime",
       "menuItems": [
         {
-          "title": "AttachmentUploader",
-          "document": "schemas/attachmentuploader"
+          "title": "/api ",
+          "document": "runtime/api-engine"
         },
         {
-          "title": "CheckBox",
-          "document": "schemas/checkbox"
+          "title": "/admin",
+          "document": "runtime/admin-engine"
         },
         {
-          "title": "ComboBox",
-          "document": "schemas/combobox"
+          "title": "/site",
+          "document": "runtime/site-engine"
         },
         {
-          "title": "ContentSelector",
-          "document": "schemas/contentselector"
-        },
-        {
-          "title": "ContentTypeFilter",
-          "document": "schemas/contenttypefilter"
-        },
-        {
-          "title": "CustomSelector",
-          "document": "schemas/customselector"
-        },
-        {
-          "title": "Date",
-          "document": "schemas/date"
-        },
-        {
-          "title": "DateTime",
-          "document": "schemas/datetime"
-        },
-        {
-          "title": "Double",
-          "document": "schemas/double"
-        },
-        {
-          "title": "GeoPoint",
-          "document": "schemas/geopoint"
-        },
-        {
-          "title": "FieldSet",
-          "document": "schemas/field-set"
-        },
-        {
-          "title": "HtmlArea",
-          "document": "schemas/htmlarea",
-          "menuItems": [
-            {
-              "title": "Styles",
-              "document": "schemas/styles"      
-            }
-          ]
-        },
-        {
-          "title": "ImageSelector",
-          "document": "schemas/imageselector"
-        },
-        {
-          "title": "Instant",
-          "document": "schemas/instant"
-        },
-        {
-          "title": "ItemSet",
-          "document": "schemas/item-set"
-        },
-        {
-          "title": "Long",
-          "document": "schemas/long"
-        },
-        {
-          "title": "MediaSelector",
-          "document": "schemas/mediaselector"
-        },
-        {
-          "title": "OptionSet",
-          "document": "schemas/option-set"
-        },
-        {
-          "title": "RadioButton",
-          "document": "schemas/radiobutton"
-        },
-        {
-          "title": "Tag",
-          "document": "schemas/tag"
-        },
-        {
-          "title": "TextArea",
-          "document": "schemas/textarea"
-        },
-        {
-          "title": "TextLine",
-          "document": "schemas/textline"
-        },
-        {
-          "title": "Time",
-          "document": "schemas/time"
+          "title": "/webapp",
+          "document": "runtime/webapp-engine"
         }
       ]
     },
     {
-      "title": "Content Types",
-      "document": "schemas/content-type",
+      "title": "Enonic Framework",
+      "document": "framework",
       "menuItems": [
         {
-          "title": "Structured",
-          "document": "schemas/structured"
+          "title": "Controllers",
+          "document": "framework/controllers"
         },
         {
-          "title": "Unstructured",
-          "document": "schemas/unstructured"
+          "title": "Globals",
+          "document": "framework/globals"
         },
         {
-          "title": "Media",
-          "document": "schemas/media"
+          "title": "HTTP",
+          "document": "framework/http"
         },
         {
-          "title": "Built-in",
-          "document": "schemas/built-in"
+          "title": "Events",
+          "document": "framework/events"
+        },
+        {
+          "title": "Error handler",
+          "document": "framework/error"
+        },
+        {
+          "title": "Filters",
+          "document": "framework/filters"
+        },
+        {
+          "title": "ID provider",
+          "document": "framework/idprovider"
+        },
+        {
+          "title": "Tasks",
+          "document": "framework/tasks"
+        },
+        {
+          "title": "Templating",
+          "document": "framework/templating"
+        },
+        {
+          "title": "Localization",
+          "document": "framework/i18n"
+        },
+        {
+          "title": "Websocket",
+          "document": "framework/websocket"
+        },
+        {
+          "title": "Mappings",
+          "document": "framework/mappings"
+        },
+        {
+          "title": "Components",
+          "document": "framework/components"
+        },
+        {
+          "title": "Processors",
+          "document": "framework/processors"
+        },
+        {
+          "title": "Contributions",
+          "document": "framework/contributions"
+        },
+        {
+          "title": "Main controller",
+          "document": "framework/main"
+        },
+        {
+          "title": "Java bridge",
+          "document": "framework/java-bridge"
         }
       ]
     },
     {
-      "title": "Mixins",
-      "document": "schemas/mixin"
-    },
+      "title": "Project structure",
+      "document": "structure"
+    },  
     {
-      "title": "Macros",
-      "document": "schemas/macro"
-    },
-    {
-      "title": "Components",
-      "document": "schemas/components",
+      "title": "Examples",
+      "document": "examples",
       "menuItems": [
         {
-          "title": "Page",
-          "document": "schemas/page"
+          "title": "Building APIs",
+          "document": "building-apis"
+        },  
+        {
+          "title": "Building ID providers",
+          "document": "building-id-providers"
+        },  
+        {
+          "title": "Building Extensions",
+          "document": "building-extensions"
+        },  
+        {
+          "title": "Building Extensions",
+          "document": "building-extensions"
+        },  
+        {
+          "title": "Building Sites",
+          "document": "building-sites"
+        },  
+        {
+          "title": "Building Webapps",
+          "document": "building-webapps"
+        }  
+      ]
+    },
+    {
+      "title": "Platform API",
+      "document": "api",
+      "menuItems": [
+        {
+          "title": "Admin API",
+          "document": "api/lib-admin"
         },
         {
-          "title": "Region",
-          "document": "schemas/region"
+          "title": "Application API",
+          "document": "api/lib-app"
         },
         {
-          "title": "Part",
-          "document": "schemas/part"
+          "title": "Auditlog API",
+          "document": "api/lib-auditlog"
         },
         {
-          "title": "Layout",
-          "document": "schemas/layout"
+          "title": "Authentication API",
+          "document": "api/lib-auth"
         },
         {
-          "title": "Text component",
-          "document": "schemas/text"
+          "title": "Cluster API",
+          "document": "api/lib-cluster"
         },
         {
-          "title": "Component Filtering",
-          "document": "schemas/component-filtering"
+          "title": "Common API",
+          "document": "api/lib-common"
+        },
+        {
+          "title": "Content API",
+          "document": "api/lib-content"
+        },
+        {
+          "title": "Context API",
+          "document": "api/lib-context"
+        },
+        {
+          "title": "Event API",
+          "document": "api/lib-event"
+        },
+        {
+          "title": "Export API",
+          "document": "api/lib-export"
+        },
+        {
+          "title": "Grid API",
+          "document": "api/lib-grid"
+        },
+        {
+          "title": "I18N API",
+          "document": "api/lib-i18n"
+        },
+        {
+          "title": "IO API",
+          "document": "api/lib-io"
+        },
+        {
+          "title": "Mail API",
+          "document": "api/lib-mail"
+        },
+        {
+          "title": "Node API",
+          "document": "api/lib-node"
+        },
+        {
+          "title": "Portal API",
+          "document": "api/lib-portal"
+        },
+        {
+          "title": "Project API",
+          "document": "api/lib-project"
+        },
+        {
+          "title": "Repo API",
+          "document": "api/lib-repo"
+        },
+        {
+          "title": "Scheduler API",
+          "document": "api/lib-scheduler"
+        },
+        {
+          "title": "Schema API",
+          "document": "api/lib-schema"
+        },
+        {
+          "title": "Tasks API",
+          "document": "api/lib-task"
+        },
+        {
+          "title": "Value API",
+          "document": "api/lib-value"
+        },
+        {
+          "title": "VHost API",
+          "document": "api/lib-vhost"
+        },
+        {
+          "title": "Websocket API",
+          "document": "api/lib-websocket"
         }
       ]
-    }        
+    }
   ]
 }

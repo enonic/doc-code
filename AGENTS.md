@@ -1,6 +1,6 @@
 # Agent Instructions for Enonic CMS Documentation
 
-This repository contains the reference documentation for Enonic's CMS features, written in AsciiDoc.
+This repository contains the reference documentation for Enonic XP application development, written in AsciiDoc.
 
 ## Build, Test, and Lint
 
