@@ -35,33 +35,11 @@
       ]
     },
     {
-      "title": "Runtime",
-      "document": "runtime",
-      "menuItems": [
-        {
-          "title": "Architecture",
-          "document": "architecture"
-        },      
-        {
-          "title": "Events",
-          "document": "events"
-        },      
-        {
-          "title": "Context",
-          "document": "context"
-        },      
-        {
-          "title": "Configuration",
-          "document": "config"
-        }      
-      ]
-    },
-    {
-      "title": "Building APIs",
+      "title": "Custom APIs",
       "document": "building-apis"
     },  
     {
-      "title": "Building Extensions",
+      "title": "Extensions",
       "document": "building-extensions",
       "menuItems": [
         {
@@ -87,13 +65,35 @@
       ] 
     },
     {
-      "title": "Building Webapps",
+      "title": "Webapps",
       "document": "building-webapps"
     },
     {
-      "title": "Building Sites",
+      "title": "Sites and schemas",
       "document": "building-sites"
     },  
+    {
+      "title": "Runtime",
+      "document": "runtime",
+      "menuItems": [
+        {
+          "title": "Architecture",
+          "document": "architecture"
+        },      
+        {
+          "title": "Events",
+          "document": "events"
+        },      
+        {
+          "title": "Context",
+          "document": "context"
+        },      
+        {
+          "title": "Configuration",
+          "document": "config"
+        }      
+      ]
+    },
     {
       "title": "Framework",
       "document": "framework",
