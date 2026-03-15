@@ -5,8 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<title>Localization</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,45 +437,135 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
-<div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
-</div>
+<h1>Localization</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#use_cases">Use cases</a></li>
+<li><a href="#localization_files">Localization files</a></li>
+<li><a href="#locale_format">Locale format</a></li>
+<li><a href="#best_match_resolving">Best match resolving</a>
+<ul class="sectlevel2">
+<li><a href="#encoding_and_special_characters">Encoding and special characters</a></li>
+</ul>
+</li>
+<li><a href="#sample">Sample</a></li>
+<li><a href="#placeholders">Placeholders</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
+<p>Localizing your projects</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
+<h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
 <div class="sectionbody">
-<div class="admonitionblock important">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
+This section applies to code level localization, not multi-lingual content and websites.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Any project targeting users with different languages, you may want to localize the interface.</p>
+</div>
+<div class="paragraph">
+<p>The XP framework provides localization for the following use-cases:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">CMS/Sites</dt>
+<dd>
+<p>Use the <a href="../api/lib-i18n.ahtml">the localization API</a> to dynamically localize any text phrases in your app. The framework will attempt to apply the locale specified in the site&#8217;s language property.</p>
+</dd>
+<dt class="hdlist1">Admin Console</dt>
+<dd>
+<p>Localise labels and texts in <a href="../cms/schemas.ahtml#schema_localization">schemas</a> such as content types. The framework will attempt to use the locale derived from the browser&#8217;s "accept-language" settings.</p>
+</dd>
+<dt class="hdlist1">Webapps and more</dt>
+<dd>
+<p>The <a href="../api/lib-i18n.ahtml">the localization API</a> may also be used for any other purpose. In these cases, the developer must control and explicitly specify locale.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="localization_files"><a class="link" href="#localization_files">Localization files</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The localization files are plain text files, using the <code>properties</code> format (key = value).
+The files must be placed in a specific project folder: <code>/src/main/resources/i18n/</code>.</p>
+</div>
+<div class="paragraph">
+<p>Imagine, making an app that should support the following localizations.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>'English' (en)</p>
+</li>
+<li>
+<p>'English US' (en-US)</p>
+</li>
+<li>
+<p>'New Norwegian' (nn)</p>
+</li>
+<li>
+<p>'New Norwegian Norway' (nn-NO)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each locale then needs to have a matching localization file, in the format:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>phrases[_LOCALE].properties</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The API&#8217;s country codes use <code>-</code> as separator but the files use <code>_</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Sample localization bundle</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">i18n/phrases.properties
+i18n/phrases_en_US.properties
+i18n/phrases_no.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This format and packaging is commonly known as "property bundles".</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The filenames are case sensitive!
 </td>
 </tr>
 </table>
@@ -484,70 +573,171 @@ For hands on introduction to development and the SDK, visit the <a href="https:/
 </div>
 </div>
 <div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
+<h2 id="locale_format"><a class="link" href="#locale_format">Locale format</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
+<p>A locale is composed of two-letter codes for language, country and variant.
+Language is required, country and variant are optional.</p>
 </div>
 <div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
+<p>For the property files, all codes are case sensitive and separated by and underscore (_).</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Via Admin Console</dt>
+<dt class="hdlist1">The string-representation of a locale is</dt>
 <dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
-</dd>
-<dt class="hdlist1">Via API</dt>
-<dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
-</dd>
-<dt class="hdlist1">Via File system</dt>
-<dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
+<p>la[_CO][_VA]</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
+<p>where</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>la</code>= two letter language code as specified by <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO-639</a></p>
+</li>
+<li>
+<p><code>CO</code> = optional two-letter country code as specified by <a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO-3166</a></p>
+</li>
+<li>
+<p><code>VA</code> = two letter rarely used variant-code.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A sample locale including vendor specific variant:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>es_ES_Traditional_WIN"..</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Variants are rarely used in XP, and can pretty much be discarded.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
+<h2 id="best_match_resolving"><a class="link" href="#best_match_resolving">Best match resolving</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
+<p>Based on the requested locale to be used, the framework applies the best matching pattern to find the optimal localization file.</p>
 </div>
+<div class="paragraph">
+<p>If the requested locale is "en-US", the XP framework will look for localization files in the following order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>phrases_en_US.properties</code></p>
+</li>
+<li>
+<p><code>phrases_en.properties</code></p>
+</li>
+<li>
+<p><code>phrases.properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As such, if the locale for a request was <code>en</code>, the <code>phrases_en.properties</code> file would be used.</p>
+</div>
+<div class="paragraph">
+<p>If the locale does not match any specific file, the default <code>phrases.properties</code> will be used as fallback.</p>
+</div>
+<div class="paragraph">
+<p>If no matching localization key is found in any of the files in a bundle, a default <code>NOT_TRANSLATED</code> will be displayed.</p>
+</div>
+<div class="sect2">
+<h3 id="encoding_and_special_characters"><a class="link" href="#encoding_and_special_characters">Encoding and special characters</a></h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Starting</dt>
+<dt class="hdlist1">Property keys</dt>
 <dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
+<p>Must be in the ISO-8859-1 range, also known as Latin-1 characters. Non-Latin-1 characters use Unicode escape characters, e.g \u00E6 for the Norwegian letter 'æ'.</p>
 </dd>
-<dt class="hdlist1">Stopping</dt>
+<dt class="hdlist1">Property values</dt>
 <dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
+<p>Supports any unicode characters</p>
 </dd>
 </dl>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+We always recommend saving property files using the UTF charset.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
+<h2 id="sample"><a class="link" href="#sample">Sample</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
+<p>Below is an example of what a property file might look like</p>
+</div>
+<div class="listingblock">
+<div class="title">phrases.properties</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello there!
+message = Good to see you. How are you doing?
+with_\u00e6_\u00f8_\u00e5 = This key contains norwegian characters æ, ø and å</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="placeholders"><a class="link" href="#placeholders">Placeholders</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The properties format also supports parameter values that can be merged into the localized strings.
+Below is an example of what this might look like:</p>
+</div>
+<div class="listingblock">
+<div class="title">phrases.properties</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello, {0}!
+message_url = http://localhost:8080/{0}
+message_multi_placeholder = My name is {0} and I live in {1}
+message_placeholder = Hello, my name is {0}.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Placeholders are marked with <code>{&lt;number&gt;}</code>.
+The given number corresponds with the function argument named <code>values</code> and the position of the parameter.</p>
+</div>
+<div class="paragraph">
+<p>See documentation for <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/MessageFormat.html">MessageFormat</a> for advanced use of placeholders.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<span class="image"><span class="alt">XP 7.8.0</span></span> Placeholders get formatted according to requested locale
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

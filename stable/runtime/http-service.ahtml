@@ -5,8 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<title>HTTP Service</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,116 +437,126 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
-<div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
-</div>
+<h1>HTTP Service</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#controller">Controller</a></li>
+<li><a href="#endpoint">Endpoint</a></li>
+<li><a href="#descriptor">Descriptor</a>
+<ul class="sectlevel2">
+<li><a href="#serviceurl">serviceUrl()</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>HTTP Service is deprecated and will be removed in future releases.</p>
+</div>
+<div class="paragraph">
+<p><a href="api-engine.ahtml">Universal API</a> is designed to substitute HTTP Service.</p>
+</div>
+<div class="paragraph">
+<p>It is possible to control its availability via <code>legacy.httpService.enabled</code> parameter in <code>com.enonic.xp.portal.cfg</code></p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>HTTP Service enable mouting of <a href="../../framework/http.ahtml#http-controller">http controllers</a> safely made available within an application (or site&#8217;s) url space, without the use of routers.
+Due to the URL-pattern created, an http service will never conflict with other application url patterns.
+Services are in particular useful when used in the <a href="site-engine.ahtml">Site engine</a> or webapps where URLs are not predictable.</p>
+</div>
+</div>
+</div>
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<h2 id="controller"><a class="link" href="#controller">Controller</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
+<p>To create a service, place an http controller file in the <code>src/main/resources/services/</code> structure of your project.
+Each controller needs to be placed in a folder matching it&#8217;s name i.e.: <code>src/main/resources/services/myservice/myservice.js</code></p>
 </div>
 <div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
+<p>Example service controller</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/services/&lt;service-name&gt;/&lt;service-name&gt;.js</div>
+<div class="content">
+<pre class="highlight"><code class="language-JavaScript" data-lang="JavaScript">exports.GET = function(req) {
+  return {
+    body: {
+      time: new Date()
+    },
+    contentType: 'application/json'
+  };
+
+};</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
+<h2 id="endpoint"><a class="link" href="#endpoint">Endpoint</a></h2>
 <div class="sectionbody">
-<div class="admonitionblock important">
+<div class="paragraph">
+<p>Services use the following mount pattern: <code>**/_/service/&lt;appname&gt;/&lt;servicename&gt;</code>.
+This means that a service can be invoked in multiple locations, i.e. <code>domain.com/_/service/..</code> or <code>domain.com/some/path/_/service/..</code>.
+The context the service is mounted on can also be used by the controller as context.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>As an example the service 'profileimage' will only work in context of a profile&#8217;s url.
+I.e. <code>domain.com/profile/user1/_/service/myapp/profileimage</code> will service an image, but invoked elsewhere it will not work.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, services may by used by any client or user.
+At times, it makes sense to restrict access to the service based on user roles.
+This can be done without custom coding.</p>
+</div>
+<div class="paragraph">
+<p>Sample descriptor limiting access to the service:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resouces/services/&lt;service-name&gt;/&lt;service-name&gt;.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;service&gt;
+  &lt;allow&gt;
+    &lt;principal&gt;role:system.admin&lt;/principal&gt;
+    &lt;principal&gt;role:myapp.myrole&lt;/principal&gt;
+  &lt;/allow&gt;
+&lt;/service&gt;</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="serviceurl"><a class="link" href="#serviceurl">serviceUrl()</a></h3>
+<div class="paragraph">
+<p>To safely generate a service URL, use the serviceUrl() function that is part of the <a href="../../api/lib-portal.ahtml">Portal Library</a>.</p>
+</div>
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
+When invoked, the function will generate a contextual service url based on the context of the current controller.
 </td>
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
-</div>
-<div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Via Admin Console</dt>
-<dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
-</dd>
-<dt class="hdlist1">Via API</dt>
-<dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
-</dd>
-<dt class="hdlist1">Via File system</dt>
-<dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Starting</dt>
-<dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
-</dd>
-<dt class="hdlist1">Stopping</dt>
-<dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
 </div>
 </div>
 </div>

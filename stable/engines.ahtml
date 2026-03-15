@@ -5,8 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<title>HTTP engines</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,116 +437,122 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
-<div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
-</div>
+<h1>HTTP engines</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#implementations">Implementations</a>
+<ul class="sectlevel2">
+<li><a href="#common_request_pipeline">Common request pipeline</a></li>
+</ul>
+</li>
+<li><a href="#underscore_endpoint">Underscore endpoint</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
+<p>XP applications using the <a href="../framework.ahtml">XP framework</a> are essentially powered by the runtime&#8217;s HTTP engine.
+The HTTP engine is responsible for handling web-based request to the runtime.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
-<div class="sectionbody">
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
+<h2 id="implementations"><a class="link" href="#implementations">Implementations</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
+<p>By default, the XP runtime serves HTTP requests from port 8080 (customizable).
+There are four specific web engine implementations available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="engines/webapp-engine.ahtml">Web app engine</a> <code>:8080/webapp/</code></p>
+</li>
+<li>
+<p><a href="engines/site-engine.ahtml">Site engine</a> <code>:8080/site/</code></p>
+</li>
+<li>
+<p><a href="engines/admin-engine.ahtml">Admin engine</a> <code>:8080/admin/</code></p>
+</li>
+<li>
+<p><a href="engines/api-engine.ahtml">Universal API</a> <code>:8080/api/</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
+<p>Each engine provides a purpose specific request processing and execution pipeline.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="common_request_pipeline"><a class="link" href="#common_request_pipeline">Common request pipeline</a></h3>
 <div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
+<p>All HTTP engines share a common request pipeline as specified below:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="engines/media/common-pipeline.svg" alt="Common HTTP request pipeline" width="768px">
+</div>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Via Admin Console</dt>
+<dt class="hdlist1">Vhost filters</dt>
 <dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
+<p>Request routing based on <a href="../deployment/vhosts.ahtml">virtual hosts</a></p>
 </dd>
-<dt class="hdlist1">Via API</dt>
+<dt class="hdlist1">Java request filters</dt>
 <dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
+<p>Optional Java request filters</p>
 </dd>
-<dt class="hdlist1">Via File system</dt>
+<dt class="hdlist1">Auth filter</dt>
 <dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
+<p>The <a href="../deployment/vhosts.ahtml">virtual host contextual ID provider</a> will be invoked, unless a user already exists in the context</p>
+</dd>
+<dt class="hdlist1">Engine pipeline</dt>
+<dd>
+<p>If nothing else matches, the pipeline of the specific engine will be executed</p>
+</dd>
+<dt class="hdlist1">Asset service</dt>
+<dd>
+<p>Serves <a href="engines/asset-service.ahtml">static assets</a> for the <code>/_/asset/*</code> request patterns</p>
+</dd>
+<dt class="hdlist1">HTTP Service</dt>
+<dd>
+<p>Provide access to <a href="engines/http-service.ahtml">Http service controllers</a> through the <code>/_/service/*</code> request pattern</p>
+</dd>
+<dt class="hdlist1">IDprovider Service</dt>
+<dd>
+<p>For direct interaction with the contextual <a href="engines/idprovider-service.ahtml">IDprovider</a> based on the <code>/_/idprovider/*</code> request patterns</p>
+</dd>
+<dt class="hdlist1">Auth handler</dt>
+<dd>
+<p>Triggered if the pipeline returns a "401: Unauthorized" error code, the contextual ID Provider will be invoked, optionally handling the request</p>
+</dd>
+<dt class="hdlist1">Error handler</dt>
+<dd>
+<p>If the pipeline returns an unhandled error (everything but "200: OK") that was not handled by an ID Provider, the contextual error handler will kick in.</p>
+</dd>
+<dt class="hdlist1">Java response filters</dt>
+<dd>
+<p>Optional Java response filters</p>
+</dd>
+<dt class="hdlist1">Standard error handler</dt>
+<dd>
+<p>Finally, if the request fails with an error that is still unhandled, XP&#8217;s standard error handler will kick in</p>
 </dd>
 </dl>
 </div>
-<div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
+<h2 id="underscore_endpoint"><a class="link" href="#underscore_endpoint">Underscore endpoint</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Starting</dt>
-<dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
-</dd>
-<dt class="hdlist1">Stopping</dt>
-<dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
+<p>All engines reserve the use of the underscore character <code>\_</code> (by itself) to provide access to the <a href="engines/api-engine.ahtml">Universal API</a>.
+This applies to at any location within the URL path hierarchy.
+For instance, the following request <code>:8080/webapp/&lt;webapp&gt;/_/*</code> or <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/some/content/_/*</code> are reserved.</p>
 </div>
 </div>
 </div>

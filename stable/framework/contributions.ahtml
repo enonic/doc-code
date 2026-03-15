@@ -5,8 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<title>Page Contributions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,45 +437,30 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
-<div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
-</div>
+<h1>Page Contributions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#contribution_merging">Contribution merging</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
+<p>Lets components, macros, and processors contribute content to the response HTML header and/or footer.</p>
 </div>
-<div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
-<div class="sectionbody">
-<div class="admonitionblock important">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
+Only available in the <a href="../runtime/engines/site-engine.ahtml">Site Engine</a>
 </td>
 </tr>
 </table>
@@ -484,70 +468,140 @@ For hands on introduction to development and the SDK, visit the <a href="https:/
 </div>
 </div>
 <div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
+<p>Some pages and applications require specific scripts to be available within the HTML response of a page, typically placed within a specific location of the markup such as in the &lt;head&gt; section, or close to the body end tag.</p>
 </div>
 <div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
+<p>Example use cases are:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Let a part contribute JavaScript to the page&#8217;s <code>&lt;head&gt;</code> section.</p>
+</li>
+<li>
+<p>Let a part contribute custom CSS to the <code>&lt;head&gt;</code> of that page.</p>
+</li>
+<li>
+<p>A layout might add a JavaScript tracker to the end of the <code>&lt;body&gt;</code> of the page.</p>
+</li>
+</ul>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Page contributions will only be triggered if the response type is <code>text/html</code> (which is the default)
+</td>
+</tr>
+</table>
 </div>
-<div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
+<p>There are four positions in the result HTML where contributed content can be inserted:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Via Admin Console</dt>
+<dt class="hdlist1">headBegin</dt>
 <dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
+<p>After the <code>&lt;head&gt;</code> opening tag.</p>
 </dd>
-<dt class="hdlist1">Via API</dt>
+<dt class="hdlist1">headEnd</dt>
 <dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
+<p>Before the <code>&lt;/head&gt;</code> closing tag.</p>
 </dd>
-<dt class="hdlist1">Via File system</dt>
+<dt class="hdlist1">bodyBegin</dt>
 <dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
+<p>After the <code>&lt;body&gt;</code> opening tag.</p>
 </dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Starting</dt>
+<dt class="hdlist1">bodyEnd</dt>
 <dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
-</dd>
-<dt class="hdlist1">Stopping</dt>
-<dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
+<p>Before the <code>&lt;/body&gt;</code> closing tag.</p>
 </dd>
 </dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
+<p>The component or controller must add a <code>pageContributions</code> property in the <a href="http.ahtml#http-response">HTTP response object</a>.</p>
+</div>
+<div class="paragraph">
+<p>Sample controller return adding a script element to <code>headEnd</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">return {
+  body: '&lt;p&gt;Some markup&lt;/p&gt;',
+  pageContributions: {
+    headEnd: [
+      "&lt;script&gt;My script&lt;/script&gt;"
+    ]
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Changing the <code>headEnd</code> to one of the other possible positions will affect where the code you contributed is merged in the response markup.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample with multiple contributions</div>
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">return {
+  "body": "&lt;div&gt;...&lt;/div&gt;",
+  "pageContributions": {
+    "headEnd": "value",
+    "bodyEnd": [
+      "value1", "value2"
+    ]
+  }
+};</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Page Contributions are optional.</p>
+</li>
+<li>
+<p>Contribution values are treated as plain text.</p>
+</li>
+<li>
+<p>Values must be unique within each injection point, duplicates will be truncated.</p>
+</li>
+<li>
+<p>If the target tag does not exist in the response body, the contribution will be ignored. I.e. if there is no <code>&lt;head&gt;</code> tag, the contributions to <code>headBegin</code> and  <code>headEnd</code> will be ignored.</p>
+</li>
+<li>
+<p>For consistency, all positions are automatically treated arrays in the aggregated response object, even if there is only a single value.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="contribution_merging"><a class="link" href="#contribution_merging">Contribution merging</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Page contributions are merged into the response markup during a specific step in the <a href="../runtime/engines/site-engine.ahtml">site engine</a>, called <code>Contributions filter</code>. It occurs after <a href="processors.ahtml">page processors</a> and before <a href="mappings.ahtml">the site filters</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Duplicate page contributions will automatically be removed, so developers do not have to worry about this.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

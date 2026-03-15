@@ -5,8 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<title>Task API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,37 +437,525 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
-<div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
-</div>
+<h1>Task API</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#events">Events</a></li>
+<li><a href="#functions">Functions</a>
+<ul class="sectlevel2">
+<li><a href="#get">get</a></li>
+<li><a href="#isrunning">isRunning</a></li>
+<li><a href="#list">list</a></li>
+<li><a href="#progress">progress</a></li>
+<li><a href="#sleep">sleep</a></li>
+<li><a href="#executefunction">executeFunction</a></li>
+<li><a href="#submittask">submitTask</a></li>
+</ul>
+</li>
+<li><a href="#type_definitions">Type Definitions</a>
+<ul class="sectlevel2">
+<li><a href="#taskinfo">TaskInfo</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
+<p>Functions for execution of asynchronous tasks.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Add the following to your <code>build.gradle</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+  include "com.enonic.xp:lib-task:${xpVersion}"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the <code>import</code> statement to your controller:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import taskLib from '/lib/xp/task';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You are now ready to use the API.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="events"><a class="link" href="#events">Events</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Usage of this API produces the following events:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Distributed events</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Event</th>
+<th class="tableblock halign-left valign-top">Occurs when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task.submitted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a task is submitted</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task.updated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a task is updated</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task.removed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a task is removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task.finished</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a task completes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task.failed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a task fails</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more information on events, check out the <a href="lib-event.ahtml">event API</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="get"><a class="link" href="#get">get</a></h3>
+<div class="paragraph">
+<p>Returns the current state and progress details for the specified task.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taskId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Id of the task</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>object</strong> : (<a href="#taskinfo"><code>TaskInfo</code></a>) Detail information for the task. Or null if the task could not be found.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Obtains details for an active task:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get as getTask} from '/lib/xp/task';
+
+const taskInfo = getTask('7ca603c1-3b88-4009-8f30-46ddbcc4bb19');
+
+if (taskInfo) {
+  log.info('Current task state = %s', taskInfo.state);
+} else {
+  log.info('Task not found');
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
+  description: "Long running task",
+  id: "7ca603c1-3b88-4009-8f30-46ddbcc4bb19",
+  name: "task-7ca603c1-3b88-4009-8f30-46ddbcc4bb19",
+  state: "RUNNING",
+  application: "com.enonic.myapp",
+  user: "user:store:me",
+  startTime: "2017-10-01T09:00:00Z",
+  progress: {
+    info: "Processing item 33",
+    current: 33,
+    total: 42
+  }
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="isrunning"><a class="link" href="#isrunning">isRunning</a></h3>
+<div class="paragraph">
+<p>Checks if any task with the given name or id is currently running.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name or id of the task.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean</strong> : <code>true</code> if there is a task with the specified name or id, and state 'RUNNING'; <code>false</code> otherwise.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Check if a task is currently running:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {isRunning} from '/lib/xp/task';
+
+if (!isRunning('com.enonic.myapp:clean-up-task')) {
+  log.info('Start task...');
+} else {
+  log.info('Task already running');
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="list"><a class="link" href="#list">list</a></h3>
+<div class="paragraph">
+<p>Returns the list of running tasks with their current state and progress details.
+On clustered environments aggregated list is returned.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 97%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Attributes</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JSON with optional parameters</p>
+</div>
+<table class="tableblock frame-ends grid-none stretch">
+<caption class="title">Properties</caption>
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 97%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Attributes</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Filter by name</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Filter by task state (<code>WAITING</code> | <code>RUNNING</code> | <code>FINISHED</code> | <code>FAILED</code>).</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>Array</strong> : (<a href="#taskinfo"><code>TaskInfo[]</code></a>) List with task information for every task.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">1. Obtains list of active tasks:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {list} from '/lib/xp/task';
+
+const tasks = list();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = [
+  {
+    description: "Long running task",
+    id: "7ca603c1-3b88-4009-8f30-46ddbcc4bb19",
+    name: "task-7ca603c1-3b88-4009-8f30-46ddbcc4bb19",
+    state: "RUNNING",
+    application: "com.enonic.app1",
+    user: "user:store:user1",
+    startTime: "2017-10-01T09:00:00Z",
+    progress: {
+      info: "Processing item 33",
+      current: 33,
+      total: 42
+    }
+  },
+  {
+    description: "Update statistics",
+    id: "b6173bcb-bf54-409b-aa6b-96ae6fcec263",
+    name: "task-b6173bcb-bf54-409b-aa6b-96ae6fcec263",
+    state: "FINISHED",
+    application: "com.enonic.app2",
+    user: "user:store:user2",
+    startTime: "2017-10-02T09:00:00Z",
+    progress: {
+      info: "Work completed",
+      current: 0,
+      total: 0
+    }
+  },
+  {
+    description: "Import remote data",
+    id: "e1f57280-d672-4cd8-b674-98e26e5b69ae",
+    name: "task-e1f57280-d672-4cd8-b674-98e26e5b69ae",
+    state: "FAILED",
+    application: "com.enonic.app3",
+    user: "user:store:user3",
+    startTime: "2017-10-03T09:00:00Z",
+    progress: {
+      info: "Fetching data",
+      current: 33,
+      total: 100
+    }
+  }
+];</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">2. Obtains list of running tasks with a given name and state:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {list} from '/lib/xp/task';
+
+const tasks = list({
+  name: "com.enonic.myapp:clean-up",
+  state: "RUNNING"
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = [
+  {
+    description: "Long running task",
+    id: "7ca603c1-3b88-4009-8f30-46ddbcc4bb19",
+    name: "com.enonic.myapp:clean-up",
+    state: "RUNNING",
+    application: "com.enonic.myapp",
+    user: "user:store:user",
+    startTime: "2017-10-01T09:00:00Z",
+    progress: {
+      info: "Processing item 33",
+      current: 33,
+      total: 42
+    }
+  }
+];</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="progress"><a class="link" href="#progress">progress</a></h3>
+<div class="paragraph">
+<p>Reports progress information from an executing task. This function can only be called within the context of a task function, otherwise it will fail and throw an exception.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JSON with progress details</p>
+</div>
+<table class="tableblock frame-ends grid-none stretch">
+<caption class="title">Properties</caption>
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 97%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Attributes</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">current</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Integer value representing the number of items that have been processed in the task</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Integer value representing the total number of items to process in the task</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">info</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Text describing the current progress for the task</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Execute task and keep taskId for polling status:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {executeFunction, progress} from '/lib/xp/task';
+
+const taskId = executeFunction({
+  description: 'Background task',
+  func: () =&gt; {
+
+    progress({info: 'Initializing task'});
+
+    for (const i of Array(10).keys()) {
+      progress({
+        info: 'Processing item ' + (i + 1),
+        current: i,
+        total: 10
+      });
+
+      processItem(i);
+    }
+
+    progress({info: 'Task completed'});
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sleep"><a class="link" href="#sleep">sleep</a></h3>
+<div class="paragraph">
+<p>Causes the current execution thread to sleep (temporarily cease execution) for the specified number of milliseconds.</p>
+</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -476,78 +963,417 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
+This function will only work inside a task.
 </td>
 </tr>
 </table>
 </div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">timeMillis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The length of time to sleep in milliseconds</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Execute task and keep taskId for polling status:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {sleep} from '/lib/xp/task';
+
+let retries = 3;
+let result = fetchRemoteData();
+
+while (!result &amp;&amp; retries &gt; 0) {
+  // wait half a second before retrying
+  sleep(500);
+  retries -= 1;
+  result = fetchRemoteData();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="executefunction"><a class="link" href="#executefunction">executeFunction</a></h3>
+<div class="paragraph">
+<p>Executes a function in the background. Returns an id representing the task of execution.</p>
+</div>
+<div class="paragraph">
+<p>This function returns immediately. The callback function will be executed asynchronously.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JSON with the parameters</p>
+</div>
+<table class="tableblock frame-ends grid-none stretch">
+<caption class="title">Properties</caption>
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Text describing the task to be executed</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">func</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Callback function to be executed asynchronously</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : Id of the task function that will be executed.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Execute task function and keep taskId for polling status:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {executeFunction} from '/lib/xp/task';
+
+const taskId = executeFunction({
+  description: 'Background function',
+  func: () =&gt; {
+    longRunningFunction();
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="submittask"><a class="link" href="#submittask">submitTask</a></h3>
+<div class="paragraph">
+<p>Submits a named task to be executed in the background and returns an id representing the task.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This function returns immediately. The callback function will be executed asynchronously.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+lib-task prior version 7.6 does not submit distributable named tasks, instead task always gets executed locally.
+Recompile your application with the newer library version in order for tasks to be distributable.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JSON with the parameters</p>
+</div>
+<table class="tableblock frame-ends grid-none stretch">
+<caption class="title">Properties</caption>
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 97%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Attributes</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Descriptor of the task to execute. Descriptor can be relative to the current application, or a fully qualified task descriptor name (&lt;appname&gt;:&lt;taskname&gt;) <span class="image"><span class="alt">XP 7.13.0</span></span></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Optional name of the task which appears in task info. If not specified, descriptor name will be used instead.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configuration parameters to pass to the task to be executed. The object must be valid according to the schema defined in the form of the task descriptor XML.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : Id of the task that will be executed.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Execute task, located in the current app, by name:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {submitTask} from '/lib/xp/task';
+
+const taskId = submitTask({
+  descriptor: 'job42',
+  config: {
+    count: 123
+  }
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Execute a task located in a different app:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {submitTask} from '/lib/xp/task';
+
+const taskId = submitTask({
+  descriptor: 'com.enonic.app.myapp:work',
+  config: {}
+});</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
+<div class="sect2">
+<h3 id="taskinfo"><a class="link" href="#taskinfo">TaskInfo</a></h3>
+<div id="taskinfo" class="paragraph lead">
+<p>Type</p>
 </div>
 <div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
+<p><strong>object</strong></p>
 </div>
+<div class="paragraph lead">
+<p>Properties</p>
 </div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Task Id</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Task name</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Task description</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Task state (<code>WAITING</code> | <code>RUNNING</code> | <code>FINISHED</code> | <code>FAILED</code>)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Application containing the callback function to run</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Key of the user that submitted the task</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Time when the task was submitted (in ISO-8601 format)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">progress</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Progress information provided by the running task</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">node</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>XP cluster node the task is running on <span class="image"><span class="alt">XP 7.13.0</span></span></p>
 </div>
-<div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Via Admin Console</dt>
-<dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
-</dd>
-<dt class="hdlist1">Via API</dt>
-<dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
-</dd>
-<dt class="hdlist1">Via File system</dt>
-<dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Starting</dt>
-<dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
-</dd>
-<dt class="hdlist1">Stopping</dt>
-<dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
+<table class="tableblock frame-all grid-none stretch">
+<caption class="title">Properties</caption>
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">current</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Integer value representing the number of items that have been processed in the task</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Integer value representing the total number of items to process in the task</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">info</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Text describing the current progress for the task</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>

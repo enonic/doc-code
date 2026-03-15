@@ -5,8 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<title>HTTP response</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,116 +437,161 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
-<div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
-</div>
+<h1>HTTP response</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#http-response">HTTP Response</a></li>
+<li><a href="#http-cookies">HTTP Cookies</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
+<p>The framework defines the following HTTP response object:</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
+<h2 id="http-response"><a class="link" href="#http-response">HTTP Response</a></h2>
 <div class="sectionbody">
-<div class="admonitionblock important">
+<div class="paragraph">
+<p>The <code>response</code> object is the value returned by an HTTP controller - as a response to an :ref:`http_request`.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "status": 200,  <i class="conum" data-value="1"></i><b>(1)</b>
+  "body": "Hello World",  <i class="conum" data-value="2"></i><b>(2)</b>
+  "contentType": "text/plain",  <i class="conum" data-value="3"></i><b>(3)</b>
+  "headers": {   <i class="conum" data-value="4"></i><b>(4)</b>
+      "key": "value"
+  },
+  "cookies": {},   <i class="conum" data-value="5"></i><b>(5)</b>
+  "redirect": "/another/page",   <i class="conum" data-value="6"></i><b>(6)</b>
+  "postProcess": true,   <i class="conum" data-value="7"></i><b>(7)</b>
+  "pageContributions": {},   <i class="conum" data-value="8"></i><b>(8)</b>
+  "applyFilters": true   <i class="conum" data-value="9"></i><b>(9)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
-</td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>HTTP response status code (default is <code>200</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>HTTP message body of the response that can either be a string or a JavaScript object.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>MIME type of the body (defaults to <code>text/plain; charset=utf-8</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Name/value pairs with the HTTP headers to be added to the response. Starting from <span class="image"><span class="alt">XP 7.15.0</span></span> value can be <code>null</code>/<code>undefined</code> to remove a headers added by other controllers/filters.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>HTTP cookies to be added to the response. Will be described in a later section.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>URI to redirect to. If specified, the value will be set in the "Location" header and the status will be set to 303.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Site engine only: If enabled the response body from a page render is processed to find and render any component tags found. (default is <code>true</code>). Set to false to skip post processing of tags.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>Site engine only: Use to contribute html to the resulting response markup. See <a href="contributions.ahtml">page contributions</a> for more information.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td>Site engine only: If enabled, any defined <a href="processors.ahtml">response processors</a> in the pipeline will be executed.</td>
 </tr>
 </table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
+<h2 id="http-cookies"><a class="link" href="#http-cookies">HTTP Cookies</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
+<p>There are two ways that Http Cookie values can be set in responses (see examples).</p>
 </div>
 <div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
+<p>Here&#8217;s an example of how the cookies are set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">return {
+    status: 200,
+    body: "Hello World",
+    cookies: {
+        "plain": "value",  <i class="conum" data-value="1"></i><b>(1)</b>
+        "complex": {  <i class="conum" data-value="2"></i><b>(2)</b>
+            value: "value",  <i class="conum" data-value="3"></i><b>(3)</b>
+            path: "/valid/path",  <i class="conum" data-value="4"></i><b>(4)</b>
+            domain: "enonic.com",  <i class="conum" data-value="5"></i><b>(5)</b>
+            comment: "Some cookie comments",  <i class="conum" data-value="6"></i><b>(6)</b>
+            maxAge: 2000,  <i class="conum" data-value="7"></i><b>(7)</b>
+            secure: false,  <i class="conum" data-value="8"></i><b>(8)</b>
+            httpOnly: false,  <i class="conum" data-value="9"></i><b>(9)</b>
+            sameSite: "Lax" <i class="conum" data-value="10"></i><b>(10)</b>
+        }
+    }
+};</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Via Admin Console</dt>
-<dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
-</dd>
-<dt class="hdlist1">Via API</dt>
-<dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
-</dd>
-<dt class="hdlist1">Via File system</dt>
-<dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Starting</dt>
-<dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
-</dd>
-<dt class="hdlist1">Stopping</dt>
-<dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>If the value is a string then the cookie is created using default settings.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>If the value is an object, it will try to apply the settings.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Value (required) The value to store in the cookie. This example will create a cookie looking like this <code>complex: value</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The paths on the site where this cookie should be available from (and all containing paths). Defaults to <code>empty</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Add additional sites that should be able to read the cookie. Defaults to <code>empty</code> (Only the server that creates the cookie can read it.)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>A comment describing the cookie. Default to <code>`null</code>. Deprecated and will be removed in future versions of XP.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Number of <strong>seconds</strong> before the browser is allowed to delete the cookie. Defaults to <code>-1</code> (The cookie will live until the browser is shut down.)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>Control if the cookie should only be accepted to be created and read over https and similar secure protocols. Defaults to <code>false</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td>Control if the cookie is available for scripts or not. If <code>true</code>, only the serverside code can read the cookie. Defaults to <code>false</code> (Also client-side scripts can read the cookie.)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="10"></i><b>10</b></td>
+<td>SameSite flag for the cookie. Can be <code>lax</code>, <code>strict</code>, <code>none</code> or <code>&nbsp;</code> for "not set". Default is "not set", meaning "browser&#8217;s default".</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

@@ -5,8 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<title>TypeScript definitions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,116 +437,284 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
-<div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
-</div>
+<h1>TypeScript definitions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#install_types">Install types</a></li>
+<li><a href="#enonic_libraries">Enonic Libraries</a>
+<ul class="sectlevel2">
+<li><a href="#global">Global</a></li>
+<li><a href="#core">Core</a></li>
+<li><a href="#content">Content</a></li>
+<li><a href="#additional_types">Additional types</a></li>
+</ul>
+</li>
+<li><a href="#usage">Usage</a>
+<ul class="sectlevel2">
+<li><a href="#require">require</a></li>
+<li><a href="#es6_style_import">ES6-style import</a></li>
+</ul>
+</li>
+<li><a href="#configuration">Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#require_2">Require</a></li>
+<li><a href="#other_imports">Other imports</a></li>
+</ul>
+</li>
+<li><a href="#beans">Beans</a>
+<ul class="sectlevel2">
+<li><a href="#option_1">Option 1</a></li>
+<li><a href="#option_2">Option 2</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<h2 id="intro"><a class="link" href="#intro">Intro</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
+<p>We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our standard <a href="../api.ahtml">JS APIs</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
+<h2 id="install_types"><a class="link" href="#install_types">Install types</a></h2>
 <div class="sectionbody">
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under <a href="https://www.npmjs.com/org/enonic-types">@enonic-types</a> organisation on NPM.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
+<h2 id="enonic_libraries"><a class="link" href="#enonic_libraries">Enonic Libraries</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
+<p>For example, you have a <code>lib-auth</code> gradle dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-gradle" data-lang="gradle">dependencies {
+  include "com.enonic.xp:lib-auth:${xpVersion}"
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
+<p>To add type definitions for the library, install dependency from NPM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/lib-auth</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="global"><a class="link" href="#global">Global</a></h3>
+<div class="paragraph">
+<p>Along with library types it is <strong>higlhy recommended</strong> to install definitions for global objects (<code>app</code>, <code>__</code>, <code>log</code>) and functions (<code>resolve</code>, <code>require</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/global</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since <code>global</code> types are not placed under the <code>node_modules/@types</code>, it is neccessary to include them manually:</p>
+</div>
+<div class="paragraph">
+<p><code>tsconfig.json</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "compilerOptions": {
+    "types": [
+      "@enonic-types/global"
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="core"><a class="link" href="#core">Core</a></h3>
+<div class="paragraph">
+<p>There are types that are shared between other libraries (like <code>Content</code> or <code>Principal</code>). Such types reside in the <code>core</code> package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. Content library exports <code>Content`</code> type. But if you want to use these type directly, you&#8217;ll need to install them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/core</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and then import them in your TypeScript code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">import type {Content} from '@enonic-types/core';</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="content"><a class="link" href="#content">Content</a></h3>
+<div class="paragraph">
+<p><code>Content</code> contains the <code>x</code> property that has a very special <code>XpXData</code> type.</p>
+</div>
+<div class="paragraph">
+<p><code>XpXData</code> is an interface that is added to the global scope, so it can be modified using the <a href="https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces">declaration merging</a>. This allows you to set the shape of the XData in your project, simply by declaring the <code>XpXData</code> like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpXData {
+        'com-mysite-app': {
+            metadata: {
+                metaTagTitle: string;
+                metaTagImageId: string;
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="additional_types"><a class="link" href="#additional_types">Additional types</a></h3>
+<div class="paragraph">
+<p><code>Content</code> is a complex type that contains unions and maps that are not exported but may be needed during the development. Actually, these types can easily be retrieved from the <code>Content</code> itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">import type {Content} from '@enonic-types/core';
+
+type Attachments = Content['attachments'];
+
+type ContentInheritType = Content['inherit'];
+
+type Workflow = Content['workflow'];</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="require"><a class="link" href="#require">require</a></h3>
 <div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
+<p>After <code>global</code> and library types are installed and configured in <code>tsconfig.json</code>, libraries can be imported just like they would be in JS code:</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Via Admin Console</dt>
-<dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
-</dd>
-<dt class="hdlist1">Via API</dt>
-<dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
-</dd>
-<dt class="hdlist1">Via File system</dt>
-<dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
-</dd>
-</dl>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">const libAuth = require('/lib/xp/auth');</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="es6_style_import"><a class="link" href="#es6_style_import">ES6-style import</a></h3>
+<div class="paragraph">
+<p>If you are planning to use <code>import</code> in your code and transpile it with the default <code>tsc</code> TypeScript compiler, you&#8217;ll need to add proper types mapping to your configuration via <code>baseUrl</code> and <code>paths</code> properties in <code>tsconfig.json</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "/lib/xp/auth": ["node_modules/@enonic-types/lib-auth"],
+    }
+  }
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
+<p>Then in your code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">import {login, logout, getUser, generatePassword} from '/lib/xp/auth';</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
+<p>Configuring <code>baseUrl</code> and <code>paths</code> will allow the TypeScript compiler to keep the valid paths in the resulting JavaScript files.</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Starting</dt>
-<dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
-</dd>
-<dt class="hdlist1">Stopping</dt>
-<dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
-</dd>
-</dl>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="require_2"><a class="link" href="#require_2">Require</a></h3>
 <div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
+<p>To add support for type resolution for custom libraries via <code>require</code>, you can redeclare the <code>XpLibraries</code> interface in global scope, which will lead to declaration merging:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpLibraries {
+        '/lib/custom/mylib': typeof import('./mylib');
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="other_imports"><a class="link" href="#other_imports">Other imports</a></h3>
+<div class="paragraph">
+<p>If you want to use custom import functions, like <code><em>non_webpack_require</em></code> with Webpack, just use <code>XpRequire</code> from <code>global</code> types for this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare const __non_webpack_require__: XpRequire;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="beans"><a class="link" href="#beans">Beans</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To create a new Java bean, the <code>__.newBean()</code> function must be used. Making it return a proper type can be done in two ways. Let&#8217;s say, you have created an interface for that bean somewhere in your project:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">interface SomeHelper {
+  help(text: string): void;
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="option_1"><a class="link" href="#option_1">Option 1</a></h3>
+<div class="paragraph">
+<p>You can pass the type argument explicitly. This option is a bit cleaner.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">const helper = __.newBean&lt;SomeHelper&gt;('com.me.project.SomeHelper');</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="option_2"><a class="link" href="#option_2">Option 2</a></h3>
+<div class="paragraph">
+<p>Or you can map the bean name to bean interface. It may be a preferable way to do it, if the bean is used across multiple files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpBeans {
+        'com.me.project.SomeHelper': SomeHelper;
+    }
+}
+
+const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

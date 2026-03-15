@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="Customize and extend Enonic XP to your needs by building your own apps">
-<title>Enonic Application development</title>
+<meta name="author" content="This section describes the file structure of an Enonic application project">
+<title>Project and code structure</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,45 +438,47 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic Application development</h1>
+<h1>Project and code structure</h1>
 <div class="details">
-<span id="author" class="author">Customize and extend Enonic XP to your needs by building your own apps</span><br>
+<span id="author" class="author">This section describes the file structure of an Enonic application project</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#tutorials">Tutorials</a></li>
-<li><a href="#enonic_apps">Enonic apps</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#life_cycle">Life Cycle</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#project_structure">Project structure</a>
+<ul class="sectlevel2">
+<li><a href="#build_files">Build files</a></li>
+<li><a href="#general_resources">General resources</a></li>
+<li><a href="#java">Java</a></li>
+</ul>
+</li>
+<li><a href="#apps_vs_libraries">Apps vs Libraries</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>Enonic XP is a highly modular and customizable platform. Enonic apps may contain anything from <a href="cms.ahtml">content schemas</a>, APIs, tasks, admin extensions, id providers, and webapps to modern websites.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="edk.ahtml">Enonic Development Kit</a> (EDK) allow developers to quickly start building.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="tutorials"><a class="link" href="#tutorials">Tutorials</a></h2>
-<div class="sectionbody">
-<div class="admonitionblock important">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-For hands on introduction to development and the SDK, visit the <a href="https://developer.enonic.com/start">quickstart</a>, <a href="https://developer.enonic.com/docs/developer-101">Developer 101</a>, or <a href="https://developer.enonic.com/docs/my-first-site">My first site</a> tutorials.
+Get started running. Use one of our <a href="https://market.enonic.com/starters">starters</a> to bootstrap your development project.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. However, thanks to the <a href="../runtime.ahtml">XP runtime</a> being a polyglot, applications may contain Java, Kotlin, Scala, or any other language that compiles to Java bytecode.
 </td>
 </tr>
 </table>
@@ -484,70 +486,220 @@ For hands on introduction to development and the SDK, visit the <a href="https:/
 </div>
 </div>
 <div class="sect1">
-<h2 id="enonic_apps"><a class="link" href="#enonic_apps">Enonic apps</a></h2>
+<h2 id="project_structure"><a class="link" href="#project_structure">Project structure</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps are standalone software packages that can be installed and started within Enonic XP. Content Studio and the Headless API are examples of Enonic apps.</p>
+<p>The example structure below includes the standard files and folders in an Enonic application (or library).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-files" data-lang="files">sample-project/
+  build.gradle
+  gradle.properties
+  gradlew
+  gradlew.bat
+  settings.gradle
+  src/
+    main/
+      resources/
+        application.svg
+        application.yml
+        admin/
+          tools/
+          widgets/
+        api/
+        assets/
+        error/
+        i18n/
+        idprovider/
+        main.js
+        cms/
+          cms.yml
+          site.yml
+          content-types/
+          layouts/
+          macros/
+          mixins/
+          pages/
+          parts/
+          processors/
+          x-data/
+        webapp/
+        tasks/
+      java/
+    test/
+      java/</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Applications are powered by XP&#8217;s <a href="runtime.ahtml">runtime</a>, which means multiple applications can run within a single instance. Once an application has started, it has access to all platform services: TODO link to system apis.</p>
+<p>Every file and folder has a specific function and purpose as described below:</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="build_files"><a class="link" href="#build_files">Build files</a></h3>
 <div class="paragraph">
-<p>There are four ways to get your applications running on Enonic XP:</p>
+<p>Enonic supports JS/TS based build tools, but relies on <a href="https://gradle.org/">Gradle</a> as the main builder.  The  <a href="https://market.enonic.com/starters/typescript-starter">TypeScript Starter</a> is a good place to set up a project.</p>
+</div>
+<div class="paragraph">
+<p>Visit the <a href="build.ahtml">build system section</a> for more details.</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Via Admin Console</dt>
+<dt class="hdlist1">build.gradle</dt>
 <dd>
-<p>Applications can be manually installed through the "Applications" admin app. Once installed, the application will be available for all nodes in an XP cluster.</p>
+<p>Main build file</p>
 </dd>
-<dt class="hdlist1">Via API</dt>
+<dt class="hdlist1">gradle.properties</dt>
 <dd>
-<p>Applications may be installed through the Management API. The applications will be available for all nodes in an XP cluster. This approach is commonly used in a CI/CD setup.</p>
+<p>Build properties</p>
 </dd>
-<dt class="hdlist1">Via File system</dt>
+<dt class="hdlist1">gradlew | /gradlew.bat</dt>
 <dd>
-<p>File system deployment is most commonly used during development, but it can also be applied for specialized deployment scenarios. Applications deployed on file will only be available on the local node, and overrides applications installed via other alternatives.</p>
+<p>Gradle wrapper file. Downloads and runs Gradle without having to install it manually.</p>
+</dd>
+<dt class="hdlist1">settings.gradle</dt>
+<dd>
+<p>Mandatory file to boostrap the build process</p>
 </dd>
 </dl>
 </div>
+</div>
+<div class="sect2">
+<h3 id="general_resources"><a class="link" href="#general_resources">General resources</a></h3>
 <div class="paragraph">
-<p>Consider a microservice style highly controlled setup where you bundle your app(s) together with the XP runtime and launch it as a separate instance.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="life_cycle"><a class="link" href="#life_cycle">Life Cycle</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In addition to installing and uninstalling, XP applications may be started and stopped.
-This is referred to as the life cycle of the application. During the stop and start phases, applications themselves may execute custom code.</p>
+<p>The majority of Enonic specific code is placed within <code>src/main/resources/</code>:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Starting</dt>
+<dt class="hdlist1">admin/tools/</dt>
 <dd>
-<p>Once installed, applications are automatically started on all nodes. During the startup, if it exists, the application&#8217;s main.js script will be executed.</p>
+<p>Admin tools are defined here. Tools are administrative apps listed in the admin console menu.</p>
 </dd>
-<dt class="hdlist1">Stopping</dt>
+<dt class="hdlist1">admin/widgets/</dt>
 <dd>
-<p>Before uninstalling, applications are automatically stopped on all nodes.
-During the stopping, if it exists, the disposer of the application&#8217;s main.js script will be executed.</p>
+<p>Admin widgets are essentially user interface components that can be embedded within other admin tools.</p>
+</dd>
+<dt class="hdlist1">application.svg</dt>
+<dd>
+<p>Application icon in SVG format. Should be in a square format.</p>
+</dd>
+<dt class="hdlist1">application.xml</dt>
+<dd>
+<p>Application information in XML format.</p>
+</dd>
+<dt class="hdlist1">assets/</dt>
+<dd>
+<p>Standard folder for serving of static assets, such as css and javascript. Assets are served by the <a href="../runtime/engines/asset-service.ahtml">asset service</a>.</p>
+</dd>
+<dt class="hdlist1">error/error.js</dt>
+<dd>
+<p>The <a href="../framework/error.ahtml">HTTP error handler</a></p>
+</dd>
+<dt class="hdlist1">main.js</dt>
+<dd>
+<p>The application&#8217;s <a href="../framework/main.ahtml">main controller</a>. Executed when an application starts and stops.</p>
+</dd>
+<dt class="hdlist1">services/</dt>
+<dd>
+<p>Contains <a href="../runtime/engines/http-service.ahtml">Http service controllers</a></p>
+</dd>
+<dt class="hdlist1">i18n/</dt>
+<dd>
+<p>Short for internationalization, this folder contains <a href="../api/lib-i18n.ahtml">app localization files</a></p>
+</dd>
+<dt class="hdlist1">idprovider/</dt>
+<dd>
+<p>The application may implement an <a href="../framework/idprovider.ahtml#part">ID Provider</a> here.</p>
+</dd>
+<dt class="hdlist1">tasks/</dt>
+<dd>
+<p>May contain <a href="../api/lib-task.ahtml">task controllers</a> for running asynchronous and background processing.</p>
+</dd>
+<dt class="hdlist1">site/site.xml</dt>
+<dd>
+<p>Contains <a href="../cms/sites.ahtml#site_xml">site configuration schema</a>, and declaring that the app can be added to projects and sites</p>
+</dd>
+<dt class="hdlist1">site/content-types/</dt>
+<dd>
+<p>Contains <a href="../cms/content-types.ahtml">Content type</a> definitions.</p>
+</dd>
+<dt class="hdlist1">site/processors/</dt>
+<dd>
+<p>For post processing of HTML response from pages built with the <a href="../framework.ahtml">Enonic JS framework</a>.</p>
+</dd>
+<dt class="hdlist1">site/layouts/</dt>
+<dd>
+<p><a href="../cms/pages/layouts.ahtml">Layout components</a> are placed here.</p>
+</dd>
+<dt class="hdlist1">site/mixins/</dt>
+<dd>
+<p><a href="../cms/schemas/mixins.ahtml">Reusable schemas</a> are placed here.</p>
+</dd>
+<dt class="hdlist1">site/macros/</dt>
+<dd>
+<p><a href="../cms/macros.ahtml">Rich text Macro components</a> are placed here.</p>
+</dd>
+<dt class="hdlist1">site/pages/</dt>
+<dd>
+<p><a href="../cms/pages.ahtml">Page components</a> are placed here.</p>
+</dd>
+<dt class="hdlist1">site/parts/</dt>
+<dd>
+<p><a href="../cms/pages/parts.ahtml">Part components</a> are placed here.</p>
+</dd>
+<dt class="hdlist1">site/x-data/</dt>
+<dd>
+<p><a href="../cms/x-data.ahtml">X-data schemas</a> are defined here</p>
+</dd>
+<dt class="hdlist1">webapp/webapp.js</dt>
+<dd>
+<p><a href="../runtime.ahtml#webapp_js">Webapp</a> based on the Enonic JS framework are placed here.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="java"><a class="link" href="#java">Java</a></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">/src/main/java/</dt>
+<dd>
+<p>Optionally place Java code here.</p>
+</dd>
+<dt class="hdlist1">/src/test/java/</dt>
+<dd>
+<p>Optionally place Java tests here.</p>
 </dd>
 </dl>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
+<h2 id="apps_vs_libraries"><a class="link" href="#apps_vs_libraries">Apps vs Libraries</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Applications can be configured by adding a <a href="deployment/config.ahtml">custom configuration file</a> <code>&lt;app-name&gt;.cfg</code> i.e. <code>my.custom.app.cfg</code> to your Enonic instance</p>
+<p>Enonic libraries are similar to applications, the main difference being that a library cannot be installed and started by itself.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Check out <a href="https://market.enonic.com/starters/library-starter">the library starter</a> if you are planning to build your own library.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A library may consist of the same files and functionality you would find in an application - such as Assets, Content Types and JS controllers.</p>
+</div>
+<div class="paragraph">
+<p>Enonic libraries are added to your application by declaring a dependency in the <a href="build.ahtml#build.gradle">build file</a>.</p>
+</div>
+<div class="paragraph">
+<p>The core functionality of XP is exposed via standard libraries. Check out the <a href="../api.ahtml">Standard Libraries documentation</a>. You will also find additional libraries on <a href="https://market.enonic.com/libraries">Enonic Market</a></p>
 </div>
 </div>
 </div>
