@@ -6,71 +6,67 @@
     },  
     {
       "title": "Development kit",
-      "document": "dev-kit",
+      "document": "edk",
       "menuItems": [
         {
           "title": "Sandboxes",
-          "document": "sandboxes"
-        },  
+          "document": "edk/sandboxes"
+        },
         {
           "title": "Starters",
-          "document": "starters"
+          "document": "edk/starters"
         },          
         {
           "title": "Build system",
-          "document": "builds"
+          "document": "edk/builds"
         },
         {
           "title": "CI/CD",
-          "document": "ci-cd"
+          "document": "edk/ci-cd"
         },
         {
-          "title": "Starters",
-          "document": "starters"
-        },  
-        {
           "title": "TypeScript",
-          "document": "typescript"
+          "document": "edk/typescript"
         }
       ]
     },
     {
       "title": "Custom APIs",
-      "document": "building-apis"
+      "document": "custom-apis"
     },  
     {
       "title": "Extensions",
-      "document": "building-extensions",
+      "document": "extensions",
       "menuItems": [
         {
           "title": "Background tasks",
-          "document": "tasks"
+          "document": "extensions/tasks"
         },
         {
           "title": "Admin tools",
-          "document": "admin-tools"
+          "document": "extensions/admin-tools"
         },
         {
           "title": "Admin Widgets",
-          "document": "admin-widgets"
+          "document": "extensions/admin-widgets"
         },
         {
           "title": "ID providers",
-          "document": "id-providers"
+          "document": "extensions/id-providers"
         },
         {
           "title": "Metrics",
-          "document": "metrics"
+          "document": "extensions/metrics"
         }
       ] 
     },
     {
       "title": "Webapps",
-      "document": "building-webapps"
+      "document": "webapps"
     },
     {
       "title": "Sites and schemas",
-      "document": "building-sites"
+      "document": "sites"
     },  
     {
       "title": "Runtime",
@@ -78,19 +74,27 @@
       "menuItems": [
         {
           "title": "Architecture",
-          "document": "architecture"
-        },      
+          "document": "runtime/architecture"
+        },
+        {
+          "title": "Lifecycle",
+          "document": "runtime/lifecycle"
+        },
+        {
+          "title": "Logging",
+          "document": "runtime/logging"
+        }
         {
           "title": "Events",
-          "document": "events"
+          "document": "runtime/events"
         },      
         {
           "title": "Context",
-          "document": "context"
+          "document": "runtime/context"
         },      
         {
           "title": "Configuration",
-          "document": "config"
+          "document": "runtime/config"
         }      
       ]
     },
