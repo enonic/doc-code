@@ -5,7 +5,7 @@
       "document": "index"
     },  
     {
-      "title": "Dev kit",
+      "title": "Development kit",
       "document": "dev-kit",
       "menuItems": [
         {
@@ -23,33 +23,79 @@
         {
           "title": "CI/CD",
           "document": "ci-cd"
-        }
+        },
+        {
+          "title": "Starters",
+          "document": "starters"
+        }  
       ]
     },
     {
       "title": "Runtime",
-      "document": "enonic-runtime",
+      "document": "runtime"
+    },
+    {
+      "title": "Basics",
+      "document": "basics",
       "menuItems": [
         {
-          "title": "/api ",
-          "document": "runtime/api-engine"
+          "title": "Code structure",
+          "document": "structure"
         },
         {
-          "title": "/admin",
-          "document": "runtime/admin-engine"
+          "title": "TypeScript",
+          "document": "typescript"
         },
         {
-          "title": "/site",
-          "document": "runtime/site-engine"
-        },
+          "title": "Events",
+          "document": "events"
+        },      
         {
-          "title": "/webapp",
-          "document": "runtime/webapp-engine"
-        }
+          "title": "Context and Config",
+          "document": "configuration"
+        }      
       ]
     },
     {
-      "title": "Enonic Framework",
+      "title": "Extensions",
+      "document": "building-extensions",
+      "menuItems": [
+        {
+          "title": "Custom APIs",
+          "document": "apis"
+        },  
+        {
+          "title": "Background tasks",
+          "document": "tasks"
+        },
+        {
+          "title": "Admin tools",
+          "document": "admin-tools"
+        },
+        {
+          "title": "Admin Widgets",
+          "document": "admin-widgets"
+        },
+        {
+          "title": "ID providers",
+          "document": "id-providers"
+        },
+        {
+          "title": "Metrics",
+          "document": "metrics"
+        }
+      ] 
+    },  
+    {
+      "title": "Webapps",
+      "document": "building-webapps"
+    },
+    {
+      "title": "Sites",
+      "document": "building-sites"
+    },  
+    {
+      "title": "Framework",
       "document": "framework",
       "menuItems": [
         {
@@ -123,40 +169,6 @@
       ]
     },
     {
-      "title": "Project structure",
-      "document": "structure"
-    },  
-    {
-      "title": "Examples",
-      "document": "examples",
-      "menuItems": [
-        {
-          "title": "Building APIs",
-          "document": "building-apis"
-        },  
-        {
-          "title": "Building ID providers",
-          "document": "building-id-providers"
-        },  
-        {
-          "title": "Building Extensions",
-          "document": "building-extensions"
-        },  
-        {
-          "title": "Building Extensions",
-          "document": "building-extensions"
-        },  
-        {
-          "title": "Building Sites",
-          "document": "building-sites"
-        },  
-        {
-          "title": "Building Webapps",
-          "document": "building-webapps"
-        }  
-      ]
-    },
-    {
       "title": "Platform API",
       "document": "api",
       "menuItems": [
@@ -169,11 +181,11 @@
           "document": "api/lib-app"
         },
         {
-          "title": "Auditlog API",
+          "title": "Audit API",
           "document": "api/lib-auditlog"
         },
         {
-          "title": "Authentication API",
+          "title": "Identity API",
           "document": "api/lib-auth"
         },
         {
