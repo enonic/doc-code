@@ -57,11 +57,11 @@
       ]
     },
     {
-      "title": "Custom APIs",
+      "title": "Building APIs",
       "document": "building-apis"
     },  
     {
-      "title": "Extensions",
+      "title": "Building Extensions",
       "document": "building-extensions",
       "menuItems": [
         {
@@ -87,11 +87,11 @@
       ] 
     },
     {
-      "title": "Webapps",
+      "title": "Building Webapps",
       "document": "building-webapps"
     },
     {
-      "title": "Sites",
+      "title": "Building Sites",
       "document": "building-sites"
     },  
     {
