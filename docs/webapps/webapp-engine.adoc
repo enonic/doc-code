@@ -1,19 +1,20 @@
-= Building and delivering Webapps with the Enonic framework
+= Webapp engine and request pipeline
 :toc: right
-:imagesdir: webapps/images
+:imagesdir: media
 
 The Webapp engine is responsible for processing of requests on the endpoint `<server>:<port>/webapp/<app-name>/*`
 
+== Request pipeline
 
-== Introduction
+The webapp pipeline is executed as a subset of the <<../engines#common_request_pipeline,common pipeline>>:
 
-Enonic is capable of delivering web applications natively, without the need for a 3rd party front-end framework. The webapp engine provides a powerful and flexible platform for building and delivering web applications of all kinds, from simple static sites to complex, dynamic applications with advanced features like server-side rendering, real-time updates, and much more.
+image::webapp-pipeline.svg[Webapp rendering pipeline, 768px]
 
+This section describes the full pipeline involved in processing a webapp http request.
 
-TODO: Tutorials here!
+Web app controller:: Invokes the webapp controller of the contextual application
 
-
-== Usage
+== webapp controller
 
 To turn your application into a webapp, simply place an HTTP controller called `+/src/main/resources/webapp/webapp.js+` into your project.
 
@@ -72,9 +73,3 @@ exports.all = function (req) {
 ----
 
 NOTE: To handle routing and filters in web apps, the implementer should use the https://market.enonic.com/vendors/enonic/router-lib[router library].
-
-
-== Static webapps
-
-Static webapps are pre-compiled web applications that serve static content, such as HTML, CSS, and JavaScript files. These web applications do not require any server-side processing. 
-

@@ -139,6 +139,10 @@
       "document": "schemas"
     },
     {
+      "title": "Serving static assets",
+      "document": "static-assets"
+    },
+    {
       "title": "Building APIs",
       "document": "custom-apis"
     },  
