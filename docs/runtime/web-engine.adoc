@@ -1,27 +1,24 @@
-= The Enonic XP runtime
+= Request pipleline and the web engines
 :toc: right
 :imagesdir: engines/media
 
-Applications built with the <<framework#,Enonic framework>> are powered by the XP's runtime.
+The runtime serves HTTP requests on `port 8080` (customizable) via four purpose-specific endpoints (aka engines)
 
-== Introduction
-The runtime is responsible for executing code deployed to the XP platform, and serves as the foundation for all Enonic apps and the Enonic JavaScript/TypeScript framework. It provides developers with direct access to all of the XP platforms features, including NoSQL storage, clustering, and much more. The primary triggers for executing code are HTTP requests, scheduled jobs, and events.
+== Enpoints
 
-== Web Engines
+A core feature of the XP runtimes is http request handling. `port 8080` (customizable) provides four purpose-specific endpoints (aka engines):
 
-By default, the XP runtime serves HTTP requests from `port 8080` (customizable) via four endpoints, each serving a specific purpose and powered by a specific engine:
-
-* <<apis#,API>> `/api`
-* <<admin#,Admin>> `/admin`
-* <<webapps#,Webapps>> `/webapp`
-* <<sites#,Sites>> `/site`
+* <<apis#,API>> `/api` - for APIs, microservices and similar
+* <<admin#,Admin>> `/admin` - for administrative tasks and management
+* <<webapps#,Webapps>> `/webapp` - for web applications
+* <<sites#,Sites>> `/site` - for CMS driven websites
 
 Each engine serves a specific purpose and has its own request processing and execution pipeline. However, they all share a common request pipeline:
 
 [[common_request_pipeline]]
 === Common request pipeline
 
-All web engines share a common request pipeline as specified below:
+All web engines share a common request pipeline:
 
 image::common-pipeline.svg[Common HTTP request pipeline, 768px]
 

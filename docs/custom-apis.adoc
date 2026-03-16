@@ -1,6 +1,12 @@
-= Universal API WIP
+= Building custom APIs with the Enonic JS framework
 
-Universal API enables mounting of <<../../framework/http#http-controller,http controllers>> safely made available on `/api` endpoint as well as within an application (or site's) URL space, without the use of routers. It supports Headless approach or <<site-engine#,Site engine>>, <<webapp-engine#,Webapp engine>> and <<admin-engine#,Admin engine>> needs to access dynamic data, like REST API, GraphQL API, or other data sources.
+A core feature of Enonic XP the ability to build custom APIs and re-use them across the platform - aka the Universal API.
+
+== Introduction
+
+The Universal API is a powerful feature of the Enonic XP platform that allows developers to create custom APIs that can be securely exposed on the <<##custom-api#, API endpoint>>. Additionally, the APIs can also be deployed and accessed via other endpoints such as <<sites#,Sites>>, <<webapps#,Webapps>> and the <<extensions/admin#,XP Admin>>.
+
+== Features
 
 The Main Features of Universal API are:
 
@@ -12,12 +18,12 @@ The Main Features of Universal API are:
 * Granular. Mounting of API must be explicitly specified in engine descriptor files.
 * Modular. APIs can be borrowed from other applications, so you can use existing APIs in your application.
 
-== Controller
 
-To create an API, place an http controller file in the `src/main/resources/apis/` structure of your project.
-Each controller needs to be placed in a folder matching its name i.e.: `src/main/resources/api/myapi/myapi.js`
+== Usage
 
-Example service controller
+To create an API, place an http controller file in the `src/main/resources/apis/` structure of your project. Each controller needs to be placed in a folder matching its name i.e.: `src/main/resources/api/myapi/myapi.js`
+
+Example controller
 
 .src/main/resources/apis/<api-name>/<api-name>.js
 [source,JavaScript]

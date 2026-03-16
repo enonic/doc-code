@@ -1,8 +1,8 @@
-= Component service
+= Component API
 :toc: right
 :imagesdir: images
 
-The component service enables rendering of contextual page components directly `+:8080/site/<repo>/<branch>/<path-to-page>/_/component/<component-path>+`
+The component API enables rendering of contextual page components directly `+:8080/site/<repo>/<branch>/<path-to-page>/_/component/<component-path>+`
 
 == Component rendering pipeline
 
@@ -17,6 +17,5 @@ Component rendering::  In this mode, only the *component rendering* step (as des
 ====
 By implementing `exports.post()` or any other HTTP methods in the component controller, it may also be used to act as the backend for your component.
 
-Developers may also check if a component is rendered inline, or directly by using the request context.
-This may for instance be used to produce JSON in direct rendering mode rather than HTML, which is mandatory for inline mode.
+Developers may also check if a component is rendered inline, or directly by using the request context. This may for instance be used to produce JSON in direct rendering mode rather than HTML, which is mandatory for inline mode.
 ====
