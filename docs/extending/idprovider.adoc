@@ -103,10 +103,6 @@ Communication with the controller is handled via the <<../runtime/engines/idprov
 
 The URL to this endpoint can be generated using the <<../api/lib-portal#_idproviderurl, idProviderUrl() function in the portal library>>
 
-
-
-
-
 == Sample
 The code below demonstrates how an ID provider may be implemented
 
