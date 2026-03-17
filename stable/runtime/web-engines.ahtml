@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Admin engine</title>
+<title>Web engine request pipleline</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,12 +437,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Admin engine</h1>
+<h1>Web engine request pipleline</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#endpoint">Endpoint</a></li>
-<li><a href="#request_pipeline">Request pipeline</a></li>
+<li><a href="#engines">Engines</a></li>
+<li><a href="#contextual_api_mounts">Contextual API mounts</a></li>
+<li><a href="#common_request_pipeline">Common request pipeline</a></li>
 </ul>
 </div>
 </div>
@@ -450,38 +451,96 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP applications using the <a href="../../framework.ahtml">XP framework</a> are essentially powered by the runtime&#8217;s HTTP engine.</p>
+<p>The runtime serves HTTP requests on <code>port 8080</code> (customizable) via four purpose-specific endpoints (aka engines)</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="endpoint"><a class="link" href="#endpoint">Endpoint</a></h2>
+<h2 id="engines"><a class="link" href="#engines">Engines</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Admin engine is responsible for processing of site requests on the endpoint <code>:8080/admin/*</code></p>
+<p>A core feature of the XP runtimes is http request handling. <code>port 8080</code> (customizable) provides four purpose-specific endpoints (aka engines):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="apis.ahtml">API</a> <code>/api</code> - for APIs, microservices and similar</p>
+</li>
+<li>
+<p><a href="admin.ahtml">Admin</a> <code>/admin</code> - for platform administration</p>
+</li>
+<li>
+<p><a href="webapps.ahtml">Webapp</a> <code>/webapp</code> - for web applications</p>
+</li>
+<li>
+<p><a href="sites.ahtml">Site</a> <code>/site</code> - for CMS driven websites</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each engine serves a specific purpose and has its own request processing and execution pipeline. However, they all share a common request pipeline:</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
+<h2 id="contextual_api_mounts"><a class="link" href="#contextual_api_mounts">Contextual API mounts</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The site pipeline is executed as a subset of the <a href="../engines.ahtml#common_request_pipeline">common pipeline</a>:</p>
+<p><a href="api.ahtml">Universal APIs</a> can be mounted contextually in any of the above HTTP endpoints. The underscore character <code>\_</code> is reserved to facilitate this without conflicting with other URL patterns.</p>
+</div>
+<div class="paragraph">
+<p>The special <a href="../extending/idprovider.ahtml">ID provider API</a>, is always available on <code>/_/idprovider/*</code> across all engines, and facilities pluggable authentication and authorization across the board.</p>
+</div>
+<div class="paragraph">
+<p>TODO reserved URL patterns:
+TODO: mount in API as well?</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="common_request_pipeline"><a class="link" href="#common_request_pipeline">Common request pipeline</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All web engines share a common request pipeline:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="media/admin-pipeline.svg" alt="Admin rendering pipeline" width="768px">
+<img src="media/common-pipeline.svg" alt="Common HTTP request pipeline" width="768px">
 </div>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Tools handler</dt>
+<dt class="hdlist1">Vhost filters</dt>
 <dd>
-<p>Tools are admin apps that extend the Launcher Menu. A tool&#8217;s endpoint is <code>:8080/admin/&lt;app-name&gt;/&lt;tool-name&gt;</code>. The respective widget controller must be located in your project at <code>src/main/resources/admin/tools/&lt;tool-name&gt;/&lt;tool-name&gt;.js</code>.</p>
+<p>Request routing based on <a href="../deployment/vhosts.ahtml">virtual hosts</a></p>
 </dd>
-<dt class="hdlist1">Widget handler</dt>
+<dt class="hdlist1">Java request filters</dt>
 <dd>
-<p>Widgets are admin extensions used by admin tools. The respective widget controller must be located in your project at <code>src/main/resources/admin/widgets/&lt;widget-name&gt;/&lt;widget-name&gt;.js</code>.</p>
+<p>Optional system level request filters</p>
+</dd>
+<dt class="hdlist1">Autologin filter</dt>
+<dd>
+<p>The <a href="../deployment/vhosts.ahtml">virtual host contextual ID provider</a> will be invoked, unless a user already exists in the context</p>
+</dd>
+<dt class="hdlist1">Engine specific pipeline</dt>
+<dd>
+<p>Pipeline of the matching web engine will be executed</p>
+</dd>
+<dt class="hdlist1">Auth handler</dt>
+<dd>
+<p>Triggered if the pipeline returns a "401: Unauthorized" error code, the contextual ID Provider will be invoked, optionally handling the request</p>
+</dd>
+<dt class="hdlist1">Error handler</dt>
+<dd>
+<p>If the pipeline returns an unhandled error (everything but "200: OK") that was not handled by an ID Provider, the contextual error handler will kick in.</p>
+</dd>
+<dt class="hdlist1">Java response filters</dt>
+<dd>
+<p>Optional system level response filters</p>
+</dd>
+<dt class="hdlist1">Standard error handler</dt>
+<dd>
+<p>Finally, if the request fails with an error that is still unhandled, XP&#8217;s standard error handler will kick in</p>
 </dd>
 </dl>
 </div>
@@ -490,7 +549,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-16 14:03:29 UTC
+Last updated 2026-03-17 09:58:01 UTC
 </div>
 </div>
 </body>

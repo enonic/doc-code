@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Overview of the XP runtime architecture</title>
+<title>Admin engine</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,21 +437,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Overview of the XP runtime architecture</h1>
+<h1>Admin engine</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#architecture">Architecture</a>
-<ul class="sectlevel2">
-<li><a href="#modular">Modular</a></li>
-<li><a href="#multi_threaded">Multi-threaded</a></li>
-<li><a href="#optimised">Optimised</a></li>
-</ul>
-</li>
-<li><a href="#stateful_and_stateless">Stateful and stateless</a></li>
-<li><a href="#scalable">Scalable</a></li>
-<li><a href="#management_and_metrics_api">Management and metrics API</a></li>
+<li><a href="#endpoint">Endpoint</a></li>
+<li><a href="#request_pipeline">Request pipeline</a></li>
 </ul>
 </div>
 </div>
@@ -459,93 +450,47 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Enonic XP runtime powers all applications running on the platform.</p>
+<p>XP applications using the <a href="../../framework.ahtml">XP framework</a> are essentially powered by the runtime&#8217;s HTTP engine.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<h2 id="endpoint"><a class="link" href="#endpoint">Endpoint</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To simplify development, upgrades and maintenance, Enonic XP was built like an operating system where developers can rely on the version of the platform when building Enonic apps.</p>
-</div>
-<div class="paragraph">
-<p><a href="framework.ahtml">Enonic&#8217;s JavaScript framework</a> execute on top of the runtime, which means they have access to XP&#8217;s platform services, such as the <a href="storage.ahtml">NoSQL Storage</a>, clustering and CMS features.</p>
-</div>
-<div class="paragraph">
-<p>The runtime also provides a <a href="runtime/engines.ahtml">execution pipeline</a> for processing requests, and a <a href="runtime/task-engine.ahtml">task engine</a> for running scheduled and on-demand tasks.</p>
+<p>Admin engine is responsible for processing of site requests on the endpoint <code>:8080/admin/*</code></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="architecture"><a class="link" href="#architecture">Architecture</a></h2>
+<h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The XP runtime is built on top of GraalVM, and a series of open source components. Still, XP apps are primarily developed using JavaScript - thanks to the embedded JavaScript engine and framework. However, due to running on the JVM, XP apps may also run other JVM compatible code and libraries.</p>
-</div>
-<div class="sect2">
-<h3 id="modular"><a class="link" href="#modular">Modular</a></h3>
-<div class="paragraph">
-<p>The runtime uses the OSGi module system to isolate code (bundles) - and controls the ability to communicate between them. <a href="apps.ahtml">XP Applications</a> and XP&#8217;s system bundles essentially work in the same way - with their own life cycle and ability to install, start, stop and uninstall.</p>
+<p>The site pipeline is executed as a subset of the <a href="../engines.ahtml#common_request_pipeline">common pipeline</a>:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="runtime/media/runtime-architecture.svg" alt="Simplified view of the XP runtime internals" width="900">
+<img src="media/admin-pipeline.svg" alt="Admin rendering pipeline" width="768px">
 </div>
 </div>
-<div class="paragraph">
-<p>The architecture also allow you to run multiple applications in a single runtime. Each application may be built, installed, started and stopped independently - and even cooperate on progressing a single request. This can for instance be seen in the <a href="runtime/engines.ahtml">HTTP engines</a> and the execution pipeline. This basically means that most XP apps consume very little resources beyond the actual processing, and that a single runtime may potentially contain many applications which are mostly idle when not executing - similar to a serverless architecture, but without the limitations.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="multi_threaded"><a class="link" href="#multi_threaded">Multi-threaded</a></h3>
-<div class="paragraph">
-<p>Unlike popular JavaScript runtimes such as NodeJS, the XP runtime is multi-threaded. This allows for utilisation of multi-core CPUs, true parallell execution, and handling of large loads within a single instance.</p>
-</div>
-<div class="paragraph">
-<p>This is also important from a development perspective. Since the XP runtime is multi-threaded, developers also benefit from a simplified development model, debugging, and the ability to run threaded operations when needed. XP&#8217;s <a href="runtime/task-engine.ahtml">task engine</a> for instance runs all tasks as separate threads.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="optimised"><a class="link" href="#optimised">Optimised</a></h3>
-<div class="paragraph">
-<p>XP apps can benefit from the highly optimised JVM, but also optimisations in XP&#8217;s JavaScript framework. Also, the highly performance NoSQL storage enable access to large datasets with minimal latency.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="stateful_and_stateless"><a class="link" href="#stateful_and_stateless">Stateful and stateless</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The XP runtime is capable of running in both stateful (using the embedded NoSQL storage) and stateless mode.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="scalable"><a class="link" href="#scalable">Scalable</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>XP can easily be scaled by setting up a <a href="deployment/strategies.ahtml">cluster of runtime nodes</a>.
-It can run in virtually any infrastructure, and also be managed by Kubernetes or similar container orchestration engines for automatic scaling and more.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="management_and_metrics_api"><a class="link" href="#management_and_metrics_api">Management and metrics API</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The runtime provides a <a href="runtime/management.ahtml">management API</a>, that amongst others support as installation of apps, dumping and loading data. This is commonly accessed using the Enonic CLI.</p>
-</div>
-<div class="paragraph">
-<p>Additionally, the runtime also exposes a <a href="runtime/statistics.ahtml">metrics API</a>, providing access to runtime statistics. Like many other parts of XP, the metrics API may easily be extended with XP apps, and provide additional data as needed.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Tools handler</dt>
+<dd>
+<p>Tools are admin apps that extend the Launcher Menu. A tool&#8217;s endpoint is <code>:8080/admin/&lt;app-name&gt;/&lt;tool-name&gt;</code>. The respective widget controller must be located in your project at <code>src/main/resources/admin/tools/&lt;tool-name&gt;/&lt;tool-name&gt;.js</code>.</p>
+</dd>
+<dt class="hdlist1">Widget handler</dt>
+<dd>
+<p>Widgets are admin extensions used by admin tools. The respective widget controller must be located in your project at <code>src/main/resources/admin/widgets/&lt;widget-name&gt;/&lt;widget-name&gt;.js</code>.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-16 14:03:29 UTC
+Last updated 2026-03-17 09:58:01 UTC
 </div>
 </div>
 </body>

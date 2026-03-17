@@ -457,10 +457,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<p>HTTP Service is deprecated and will be removed in future releases.</p>
-</div>
-<div class="paragraph">
-<p><a href="api-engine.ahtml">Universal API</a> is designed to substitute HTTP Service.</p>
+<p>HTTP Services are deprecated and will be removed in future releases. It is replaced by <a href="../custom-api.ahtml">Universal APIs</a>.</p>
 </div>
 <div class="paragraph">
 <p>It is possible to control its availability via <code>legacy.httpService.enabled</code> parameter in <code>com.enonic.xp.portal.cfg</code></p>
@@ -468,9 +465,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>HTTP Service enable mouting of <a href="../../framework/http.ahtml#http-controller">http controllers</a> safely made available within an application (or site&#8217;s) url space, without the use of routers.
-Due to the URL-pattern created, an http service will never conflict with other application url patterns.
-Services are in particular useful when used in the <a href="site-engine.ahtml">Site engine</a> or webapps where URLs are not predictable.</p>
+<p>HTTP Service enable mouting of <a href="../framework/http.ahtml#http-controller">http controllers</a> safely made available within an application (or site&#8217;s) url space, without the use of routers.</p>
 </div>
 </div>
 </div>
@@ -563,7 +558,7 @@ When invoked, the function will generate a contextual service url based on the c
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-16 14:03:29 UTC
+Last updated 2026-03-17 09:58:01 UTC
 </div>
 </div>
 </body>

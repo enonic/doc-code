@@ -25,43 +25,17 @@
           "document": "edk/builds"
         },
         {
-          "title": "Libraries",
-          "document": "edk/libraries"
-        },          
-        {
-          "title": "TypeScript",
+          "title": "TS Types",
           "document": "edk/typescript"
+        },
+        {
+          "title": "CI/CD",
+          "document": "ci-cd"
         }
       ]
     },
     {
-      "title": "CI/CD",
-      "document": "ci-cd"
-    },
-    {
-      "title": "Runtime",
-      "document": "runtime",
-      "menuItems": [
-        {
-          "title": "Overview",
-          "document": "runtime/overview"
-        },
-        {
-          "title": "Web engine",
-          "document": "runtime/web-engine"
-        },
-        {
-          "title": "Context",
-          "document": "runtime/context"
-        },      
-        {
-          "title": "Configuration",
-          "document": "runtime/config"
-        }      
-      ]
-    },
-    {
-      "title": "Framework",
+      "title": "The Framework",
       "document": "framework",
       "menuItems": [
         {
@@ -73,8 +47,12 @@
           "document": "framework/globals"
         },
         {
-          "title": "HTTP",
-          "document": "framework/http"
+          "title": "Request",
+          "document": "framework/request"
+        },
+        {
+          "title": "Response",
+          "document": "framework/response"
         },
         {
           "title": "Events",
@@ -89,44 +67,28 @@
           "document": "framework/filters"
         },
         {
-          "title": "ID provider",
-          "document": "framework/idprovider"
-        },
-        {
-          "title": "Tasks",
-          "document": "framework/tasks"
-        },
-        {
           "title": "Templating",
           "document": "framework/templating"
-        },
-        {
-          "title": "Localization",
-          "document": "framework/i18n"
         },
         {
           "title": "Websocket",
           "document": "framework/websocket"
         },
         {
-          "title": "Mappings",
-          "document": "framework/mappings"
+          "title": "Tasks",
+          "document": "framework/tasks"
         },
         {
-          "title": "Components",
-          "document": "framework/components"
-        },
-        {
-          "title": "Processors",
-          "document": "framework/processors"
-        },
-        {
-          "title": "Contributions",
-          "document": "framework/contributions"
+          "title": "Scheduler",
+          "document": "framework/scheduler"
         },
         {
           "title": "Main controller",
           "document": "framework/main"
+        },
+        {
+          "title": "Localization",
+          "document": "framework/i18n"
         },
         {
           "title": "Java bridge",
@@ -135,63 +97,7 @@
       ]
     },
     {
-      "title": "Deploying schemas",
-      "document": "schemas"
-    },
-    {
-      "title": "Serving static assets",
-      "document": "static-assets"
-    },
-    {
-      "title": "Building APIs",
-      "document": "custom-apis"
-    },  
-    {
-      "title": "Building Extensions",
-      "document": "extensions",
-      "menuItems": [
-        {
-          "title": "Background tasks",
-          "document": "extensions/tasks"
-        },
-        {
-          "title": "Admin tools",
-          "document": "extensions/admin-tools"
-        },
-        {
-          "title": "Admin Widgets",
-          "document": "extensions/admin-widgets"
-        },
-        {
-          "title": "ID providers",
-          "document": "extensions/id-providers"
-        },
-        {
-          "title": "Metrics",
-          "document": "extensions/metrics"
-        }
-      ] 
-    },
-    {
-      "title": "Building Webapps",
-      "document": "webapps"
-    },
-    {
-      "title": "Building Sites",
-      "document": "sites",
-      "menuItems": [
-        {
-          "title": "Content Schemas",
-          "document": "sites/schemas"
-        },
-        {
-          "title": "Site engine",
-          "document": "sites/site-engine"
-        }
-      ]
-    },
-    {
-      "title": "Platform API",
+      "title": "JavaScript APIs",
       "document": "api",
       "menuItems": [
         {
@@ -291,6 +197,102 @@
           "document": "api/lib-websocket"
         }
       ]
+    },
+    {
+      "title": "Runtime and endpoints",
+      "document": "runtime",
+      "menuItems": [
+        {
+          "title": "Web engines",
+          "document": "runtime/web-engines"
+        },     
+        {
+          "title": "ID provider",
+          "document": "runtime/idprovider"
+        },  
+        {
+          "title": "Configuration",
+          "document": "runtime/config"
+        },      
+        {
+          "title": "HTTP Service",
+          "document": "runtime/http-service"
+        },
+        {
+          "title": "Asset Service",
+          "document": "runtime/asset-service"
+        }
+      ]
+    },
+    {
+      "title": "Building for the web",
+      "document": "web",
+      "menuItems": [
+        {
+          "title": "Custom APIs",
+          "document": "web/apis"
+        },
+        {
+          "title": "Static assets",
+          "document": "web/static-assets"
+        },
+        {
+          "title": "Webapps",
+          "document": "web/webapps"
+        },
+        {
+          "title": "Sites",
+          "document": "sites",
+          "menuItems": [
+            {
+              "title": "Schemas",
+              "document": "sites/schemas"
+            },
+            {
+              "title": "Mappings",
+              "document": "sites/mappings"
+            },
+            {
+              "title": "Processors",
+              "document": "sites/processors"
+            },
+            {
+              "title": "Contributions",
+              "document": "sites/contributions"
+            },
+            {
+              "title": "Components",
+              "document": "sites/components"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Extending the platform",
+      "document": "extensions",
+      "menuItems": [
+        {
+          "title": "Admin tools",
+          "document": "extensions/admin-tools"
+        },
+        {
+          "title": "Widgets",
+          "document": "extensions/widgets"
+        },
+        {
+          "title": "Tasks",
+          "document": "extensions/tasks"
+        },
+        {
+          "title": "ID providers",
+          "document": "extensions/id-providers"
+        },
+        {
+          "title": "Metrics",
+          "document": "extensions/metrics"
+        }
+      ] 
     }
   ]
 }

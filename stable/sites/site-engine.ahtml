@@ -446,7 +446,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#site_request_pipeline">Site request pipeline</a></li>
-<li><a href="#standard_apis">Standard APIs</a></li>
+<li><a href="#contextual_apis">Contextual APIs</a></li>
 </ul>
 </div>
 </div>
@@ -462,11 +462,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="site_request_pipeline"><a class="link" href="#site_request_pipeline">Site request pipeline</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The site pipeline is executed as a subset of the <a href="runtime.ahtml#common_request_pipeline">common pipeline</a>:</p>
+<p>The site pipeline is executed as a subset of the <a href="../runtime/web-engine.ahtml#common_request_pipeline">common pipeline</a>:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="media/site-pipeline.svg" alt="Site rendering pipeline" width="768px">
+<img src="images/site-pipeline.svg" alt="Site rendering pipeline" width="768px">
 </div>
 </div>
 <div class="paragraph">
@@ -555,10 +555,10 @@ In <code>edit</code> rendering mode status code is <code>200</code> instead of <
 </div>
 </div>
 <div class="sect1">
-<h2 id="standard_apis"><a class="link" href="#standard_apis">Standard APIs</a></h2>
+<h2 id="contextual_apis"><a class="link" href="#contextual_apis">Contextual APIs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following Universal API&#8217;s are always available on the site endpoint.</p>
+<p>The following Universal API&#8217;s are always mounted on the site&#8217;s underscore endpoint.</p>
 </div>
 <div class="paragraph">
 <p>TODO:</p>
@@ -574,7 +574,7 @@ ATTACHMENT</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-16 14:03:29 UTC
+Last updated 2026-03-17 09:58:01 UTC
 </div>
 </div>
 </body>

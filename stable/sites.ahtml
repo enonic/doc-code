@@ -442,7 +442,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#sites_vs_webapps">Sites vs Webapps</a></li>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#multiple_apps_per_site">Multiple apps per site</a></li>
 </ul>
@@ -477,18 +476,16 @@ TUTORIALS HERE!
 </div>
 </div>
 <div class="sect1">
-<h2 id="sites_vs_webapps"><a class="link" href="#sites_vs_webapps">Sites vs Webapps</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Websites are essentially webapps where the URLs are controlled by editors, rather than the developers.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Unlike XP webapps, XP sites do not have a default controller, but instead rely on resolving controllers based on the content being requested.</p>
+<p>Unlike <a href="webapps.ahtml">XP webapps</a>, XP sites do not have a default controller, but instead rely on resolving controllers based on the content being requested.</p>
+</div>
+<div class="paragraph">
+<p>To implement a site, start by placing a site descriptor file in <code>src/main/resources/site/site.xml</code> of your project.</p>
+</div>
+<div class="paragraph">
+<p>Implement at least TODO: Add descriptor example and explain the main elements of it.</p>
 </div>
 </div>
 </div>
@@ -503,7 +500,7 @@ TUTORIALS HERE!
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-16 14:03:29 UTC
+Last updated 2026-03-17 09:58:01 UTC
 </div>
 </div>
 </body>

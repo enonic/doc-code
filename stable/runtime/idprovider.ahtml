@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Request pipleline and the web engines</title>
+<title>ID provider endpoint</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,16 +437,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Request pipleline and the web engines</h1>
+<h1>ID provider endpoint</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#enpoints">Enpoints</a>
-<ul class="sectlevel2">
-<li><a href="#common_request_pipeline">Common request pipeline</a></li>
-</ul>
-</li>
-<li><a href="#underscore_endpoint">Underscore endpoint</a></li>
+<li><a href="#mount_point">Mount point</a></li>
+<li><a href="#request_pipeline">Request pipeline</a></li>
+<li><a href="#implementation">Implementation</a></li>
 </ul>
 </div>
 </div>
@@ -454,113 +451,74 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The runtime serves HTTP requests on <code>port 8080</code> (customizable) via four purpose-specific endpoints (aka engines)</p>
+<p>ID provider is implemented as a Universal API, and offers a contextual endpoint for communicating directly with any ID provider.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="enpoints"><a class="link" href="#enpoints">Enpoints</a></h2>
+<h2 id="mount_point"><a class="link" href="#mount_point">Mount point</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A core feature of the XP runtimes is http request handling. <code>port 8080</code> (customizable) provides four purpose-specific endpoints (aka engines):</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="apis.ahtml">API</a> <code>/api</code> - for APIs, microservices and similar</p>
-</li>
-<li>
-<p><a href="admin.ahtml">Admin</a> <code>/admin</code> - for administrative tasks and management</p>
-</li>
-<li>
-<p><a href="webapps.ahtml">Webapps</a> <code>/webapp</code> - for web applications</p>
-</li>
-<li>
-<p><a href="sites.ahtml">Sites</a> <code>/site</code> - for CMS driven websites</p>
-</li>
-</ul>
+<p>The IDprovider API is implicitly mounted across all web engines as <code>/_/idprovider/&lt;idprovider-name&gt;</code>.</p>
 </div>
 <div class="paragraph">
-<p>Each engine serves a specific purpose and has its own request processing and execution pipeline. However, they all share a common request pipeline:</p>
+<p>For a live deployment, it may be reached in a URL-pattern like this: <code>company.com/_/idprovider/myidprovider</code></p>
 </div>
-<div class="sect2">
-<h3 id="common_request_pipeline"><a class="link" href="#common_request_pipeline">Common request pipeline</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The IDprovider instances available in a certain context is controlled by your vhost configuration.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>All web engines share a common request pipeline:</p>
+<p>The site pipeline is executed as a subset of the <a href="../engines.ahtml#common_request_pipeline">common pipeline</a>:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="engines/media/common-pipeline.svg" alt="Common HTTP request pipeline" width="768px">
+<img src="media/idprovider-pipeline.svg" alt="ID provider rendering pipeline" width="768px">
 </div>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Vhost filters</dt>
+<dt class="hdlist1">Login</dt>
 <dd>
-<p>Request routing based on <a href="../deployment/vhosts.ahtml">virtual hosts</a></p>
+<p>Fixed endpoint for logging in: <code>/_/idprovider/&lt;idprovider-name&gt;/login</code>.</p>
 </dd>
-<dt class="hdlist1">Java request filters</dt>
+<dt class="hdlist1">Logout</dt>
 <dd>
-<p>Optional Java request filters</p>
+<p>Fixed endpoint for logging out: <code>/_/idprovider/&lt;idprovider-name&gt;/logout</code>.</p>
 </dd>
-<dt class="hdlist1">Autologin filter</dt>
+<dt class="hdlist1">Controller</dt>
 <dd>
-<p>The <a href="../deployment/vhosts.ahtml">virtual host contextual ID provider</a> will be invoked, unless a user already exists in the context</p>
-</dd>
-<dt class="hdlist1">Engine specific pipeline</dt>
-<dd>
-<p>Pipeline of the matching web engine will be executed</p>
-</dd>
-<dt class="hdlist1">Auth handler</dt>
-<dd>
-<p>Triggered if the pipeline returns a "401: Unauthorized" error code, the contextual ID Provider will be invoked, optionally handling the request</p>
-</dd>
-<dt class="hdlist1">Error handler</dt>
-<dd>
-<p>If the pipeline returns an unhandled error (everything but "200: OK") that was not handled by an ID Provider, the contextual error handler will kick in.</p>
-</dd>
-<dt class="hdlist1">Java response filters</dt>
-<dd>
-<p>Optional Java response filters</p>
-</dd>
-<dt class="hdlist1">Standard error handler</dt>
-<dd>
-<p>Finally, if the request fails with an error that is still unhandled, XP&#8217;s standard error handler will kick in</p>
+<p>All other request paths are routed to the ID providers, acting as a regular controller</p>
 </dd>
 </dl>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="underscore_endpoint"><a class="link" href="#underscore_endpoint">Underscore endpoint</a></h2>
+<h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All engines reserve the use of the underscore character <code>\_</code> (by itself) to provide contextual access to the <a href="api.ahtml">Universal API</a>.</p>
-</div>
-<div class="paragraph">
-<p>TODO:
-This applies to at any location within the URL path hierarchy.
-For instance, the following request <code>:8080/webapp/&lt;webapp&gt;/_/*</code> or <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/some/content/_/*</code> are reserved.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Contextual APIs</dt>
-<dd>
-<p>Provide access to <a href="#">Http service controllers</a> through the <code>/_/service/*</code> request pattern</p>
-</dd>
-<dt class="hdlist1">IDprovider Service</dt>
-<dd>
-<p>For direct interaction with the contextual <a href="engines/idprovider-service.ahtml">IDprovider</a> based on the <code>/_/idprovider/*</code> request patterns</p>
-</dd>
-</dl>
+<p>For details on how to implement an ID provider, visit the <a href="../../framework/idprovider.ahtml">framework documentation</a></p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-16 14:03:29 UTC
+Last updated 2026-03-17 09:58:01 UTC
 </div>
 </div>
 </body>
