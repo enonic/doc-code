@@ -5,7 +5,7 @@
       "document": "index"
     },  
     {
-      "title": "Development kit",
+      "title": "Fundamentals",
       "document": "edk",
       "menuItems": [
         {
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "title": "The Framework",
+      "title": "Framework",
       "document": "framework",
       "menuItems": [
         {
@@ -97,7 +97,7 @@
       ]
     },
     {
-      "title": "JavaScript APIs",
+      "title": "JS APIs",
       "document": "api",
       "menuItems": [
         {
@@ -199,7 +199,7 @@
       ]
     },
     {
-      "title": "Runtime and endpoints",
+      "title": "Runtime",
       "document": "runtime",
       "menuItems": [
         {
@@ -229,7 +229,7 @@
       "document": "web",
       "menuItems": [
         {
-          "title": "Custom APIs",
+          "title": "Universal APIs",
           "document": "web/apis"
         },
         {
