@@ -5,7 +5,7 @@
       "document": "index"
     },  
     {
-      "title": "Fundamentals",
+      "title": "Development kit",
       "document": "edk",
       "menuItems": [
         {
@@ -101,7 +101,7 @@
       ]
     },
     {
-      "title": "JS APIs",
+      "title": "Platform APIs",
       "document": "api",
       "menuItems": [
         {
@@ -207,68 +207,58 @@
       "document": "universal-api"
     },
     {
-      "title": "Building for the web",
-      "document": "web",
+      "title": "Serving Static Assets",
+      "document": "static-assets"
+    },
+    {
+      "title": "Deploying CMS schemas",
+      "document": "schemas"
+    },
+    {
+      "title": "Building Sites",
+      "document": "sites",
       "menuItems": [
         {
-          "title": "Static assets",
-          "document": "web/static-assets"
+          "title": "Mappings",
+          "document": "sites/mappings"
         },
         {
-          "title": "Webapps",
-          "document": "web/webapps"
+          "title": "Processors",
+          "document": "sites/processors"
         },
         {
-          "title": "Sites",
-          "document": "sites",
-          "menuItems": [
-            {
-              "title": "Schemas",
-              "document": "sites/schemas"
-            },
-            {
-              "title": "Mappings",
-              "document": "sites/mappings"
-            },
-            {
-              "title": "Processors",
-              "document": "sites/processors"
-            },
-            {
-              "title": "Contributions",
-              "document": "sites/contributions"
-            },
-            {
-              "title": "Components",
-              "document": "sites/components"
-            }
-          ]
+          "title": "Contributions",
+          "document": "sites/contributions"
+        },
+        {
+          "title": "Components",
+          "document": "sites/components"
         }
       ]
     },
     {
+      "title": "Building Webapps",
+      "document": "webapps"
+    },
+    {
       "title": "Extending the platform",
-      "document": "extensions",
+      "document": "extending",
       "menuItems": [
         {
           "title": "Admin tools",
-          "document": "extensions/admin-tools"
+          "document": "extending/admin-tools"
         },
         {
-          "title": "Widgets",
-          "document": "extensions/widgets"
-        },
-        {
-          "title": "Tasks",
-          "document": "extensions/tasks"
+          "title": "Admin extensions",
+          "document": "extending/extensions"
         },
         {
           "title": "ID providers",
-          "document": "extensions/id-providers"
+          "document": "extending/id-providers"
         },
         {
           "title": "Metrics",
-          "document": "extensions/metrics"
+          "document": "extending/metrics"
         }
       ] 
     }
