@@ -681,14 +681,15 @@ const url = adminLib.extensionUrl({
 <p>Interface names are free-form strings, not a closed enum. The contract is purely a string match between the extension&#8217;s <code>interfaces:</code> and the host tool&#8217;s <code>interfaces:</code>. To define a new interface point in your own admin tool, declare a stable name (e.g. <code>&lt;app-key&gt;.&lt;purpose&gt;</code>) in the tool&#8217;s descriptor and document the request/response shape your tool expects from extensions.</p>
 </div>
 <div class="paragraph">
-<p>Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool&#8217;s documentation for the contract.</p>
+<p>Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool&#8217;s documentation for the contract.
+See <a href="extensions/preview-widgets.ahtml">Preview widgets</a> for a worked example: the <code>contentstudio.liveview</code> interface published by Content Studio.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-06 19:39:44 UTC
+Last updated 2026-05-08 12:31:22 UTC
 </div>
 </div>
 </body>

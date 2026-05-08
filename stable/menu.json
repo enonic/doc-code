@@ -116,7 +116,13 @@
         },
         {
           "title": "Extensions",
-          "document": "admin/extensions"
+          "document": "admin/extensions",
+          "menuItems": [
+            {
+              "title": "Preview widgets",
+              "document": "admin/extensions/preview-widgets"
+            }
+          ]
         }
       ]
     },
