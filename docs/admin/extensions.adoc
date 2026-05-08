@@ -135,3 +135,4 @@ The listing is filtered by the caller's principals — extensions the caller can
 Interface names are free-form strings, not a closed enum. The contract is purely a string match between the extension's `interfaces:` and the host tool's `interfaces:`. To define a new interface point in your own admin tool, declare a stable name (e.g. `<app-key>.<purpose>`) in the tool's descriptor and document the request/response shape your tool expects from extensions.
 
 Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool's documentation for the contract.
+See <<extensions/preview-widgets#,Preview widgets>> for a worked example: the `contentstudio.liveview` interface published by Content Studio.

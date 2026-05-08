@@ -1,0 +1,268 @@
+= Building Preview Widgets
+:toc: right
+:imagesdir: images
+
+A preview widget is an <<../extensions#,admin extension>> that implements the `contentstudio.liveview` interface.
+Content Studio mounts such widgets into the preview dropdown of the *Edit* and *Browse* view toolbars and uses them to render selected content.
+
+This page covers the contract specific to `contentstudio.liveview`.
+The descriptor schema, deployment layout, URL resolution, and access-control checks are shared with every other admin extension and are documented at <<../extensions#,Building Admin Extensions>>.
+
+== A preview widget
+
+* Is a regular admin extension whose `interfaces:` list contains `contentstudio.liveview`.
+* Is invoked by Content Studio with the currently selected content as request parameters, and returns whatever payload an iframe (or the JSON renderer) can display.
+* May be picked manually from the preview-pane dropdown, or automatically by Content Studio's *Automatic* mode.
+* Content Studio ships 3 out of the box:
+- *Media* streams the binary files (`order: 50`)
+- *Site engine* renders pages with the Enonic XP site engine (`order: 90`)
+- *JSON* pretty-prints the content as JSON (`order: 100`)
+* Custom widgets coexist with these — there is no override; widgets are listed side by side and ordered by `config.order`.
+
+== Lifecycle
+
+From the moment a user selects a content in the grid until the preview pane shows something, Content Studio runs through the following cycle:
+
+. *Discovery.* Long before user selects a content, Content Studio populates the preview widgets dropdown with extensions having `contentstudio.liveview` interface.
+The built-in *Automatic* widget is always present at the top.
+. *Selection of content.* The user opens a content in the grid (or navigates straight to the *Edit* view).
+The selected content's id, path, type, repository, branch and archive flag become the input to all subsequent steps.
+. *Selection of widget.*
++
+--
+* *Manual* — the user picks a specific widget.
+Whatever it returns is rendered as-is, regardless of status code.
+A `5xx` shows the server error page in the iframe; a `418` is a conventional status to show a "No preview available".
+This mode is useful when you want to see exactly what was returned.
+* *Automatic* — Content Studio iterates the eligible widgets that have `auto: "true"`, in `order`, and sends a `HEAD` request to each.
+The first widget that responds with a `2xx` wins.
+Any non-`2xx` response — `418`, `404`, `5xx`, anything else — yields the turn to the next widget.
+If none was able to render, the preview pane shows "No preview available".
+--
+. *Render.* Content Studio issues a `GET` to the chosen widget with the same query parameters and embeds the response in the preview pane.
+. *Re-probe.* If the user changes the selected content, switches branch, toggles archive view, or otherwise changes any of the request parameters, the cycle repeats from step 2.
+
+== Descriptor
+
+The descriptor is the same `AdminExtension` kind as any other extension; only the `interfaces:` and `config:` keys are specific to preview widgets.
+See <<../extensions#descriptor,the parent descriptor reference>>.
+
+.src/main/resources/admin/extensions/<extension-name>/<extension-name>.yaml
+[source,yaml]
+----
+kind: "AdminExtension"
+title: "My preview"
+description: "Custom preview for articles"
+interfaces:
+  - "contentstudio.liveview"          # <1>
+config:
+  auto: "true"                        # <2>
+  order: "50"                         # <3>
+  allowContentType: "myapp:article"   # <4>
+  allowPath: "${site}/articles/*"     # <5>
+----
+
+<1> *Interface name* — must be the exact string `contentstudio.liveview` for Content Studio to discover the extension as a preview widget.
+<2> *auto* — `"true"` makes the widget eligible for *Automatic* mode.
+Default is off; widgets without this flag only run when picked manually.
+<3> *order* — sort key in the dropdown and the *Automatic* probe sequence.
+Lower values appear first; the built-in *Automatic* widget itself sits at `0`.
+<4> *allowContentType* — optional glob restricting the widget to specific content types.
+Matched client-side before the widget is even probed.
+Omit to accept any type.
+<5> *allowPath* — optional glob restricting the widget to specific content paths.
+Supports the `${site}` variable, which expands to the path of the site the content belongs to.
+
+== Request
+
+Content Studio dispatches 2 requests to the widget URL with the same query parameters.
+First, `HEAD` asks **can you render this?**. `GET` returns **the actual payload** in case of the `2xx` status from `HEAD`.
+
+.List of the parameters sent to the widget URL
+[cols="1,3"]
+|===
+| Parameter | Description
+
+| `contentId`
+| Content UUID. Mutually exclusive with `contentPath` — Content Studio sends one or the other.
+
+| `contentPath`
+| Content path, e.g. `/mysite/articles/hello`.
+
+| `type`
+| Content type name, e.g. `media:image`, `portal:page`, `myapp:article`.
+
+| `repo`
+| Repository id, e.g. `+com.enonic.cms.default+`.
+
+| `branch`
+| `draft` or `master`.
+
+| `mode`
+| `preview` (default), `inline`, or `edit`.
+
+| `archive`
+| `"true"` if the selected content is in the archive.
+
+| `auto`
+| `"true"` when invoked from *Automatic* mode. Use to short-circuit work that only matters when the user has explicitly chosen the widget.
+|===
+
+== Response
+
+=== Status codes
+
+`2xx`::
+The widget is willing to render.
+In *Automatic* mode this widget wins the iteration.
+
+non-`2xx`::
+In *Automatic* mode, yields the turn to the next eligible widget.
+There is no special "skip" code: `418`, `404`, `5xx`, and any other status all behave the same way for fall-through.
++
+In *Manual* mode (the user picked the widget explicitly) the response is rendered as-is regardless of status as long as it's not `418 I'm a teapot`.
+This is the conventional choice for intentional skips and will result in a "No preview available" message.
+
+=== Body
+
+The body is interpreted by `contentType`.
+All content types supported by an `iframe` are allowed.
+
+=== Headers
+
+The iframe is hosted inside the admin UI, so the response should set:
+
+* `+X-Frame-Options+`: `SAMEORIGIN` — prevents the preview from being framed by a third party.
+* `+Content-Security-Policy+` — restrict the resources the iframe is allowed to load.
+The exact policy depends on what the widget renders.
+
+=== `+enonic-widget-data+` header
+
+A JSON-encoded sidecar for metadata that travels alongside the rendered body.
+A way for the widget to override Content Studio UI messages or redirect the preview:
+
+[source,typescript]
+----
+const widgetData = {
+    messages: ['Article has no lead paragraph'],   // <1>
+    redirect: 'https://preview.example.com/foo',   // <2>
+    hasControllers: true                            // <3>
+};
+return {
+    status: 200,
+    contentType: 'text/html',
+    headers: {
+        'enonic-widget-data': JSON.stringify(widgetData)
+    },
+    body: '...'
+};
+----
+
+<1> *messages* — strings shown as warnings in the preview pane.
+<2> *redirect* — if set, Content Studio replaces the iframe contents with a fetch of this URL.
+Used by the built-in *Site engine* widget to delegate to the running site.
+<3> *hasControllers* — capability flags that influence which preview-pane controls light up.
+
+NOTE: These fields are used by Content Studio, other will be silently ignored.
+
+== Tutorial: building a custom preview widget
+
+This walks through a minimal preview widget that renders an HTML view for `myapp:article` content and falls out of *Automatic* mode for everything else.
+
+=== 1. Folder layout
+
+[source,files]
+----
+src/main/resources/admin/extensions/
+  my-preview/
+    my-preview.yaml
+    my-preview.ts
+----
+
+=== 2. Descriptor
+
+.src/main/resources/admin/extensions/my-preview/my-preview.yaml
+[source,yaml]
+----
+kind: "AdminExtension"
+title: "My preview"
+description: "Custom preview for articles"
+interfaces:
+  - "contentstudio.liveview"
+config:
+  auto: "true"
+  order: "60"
+  allowContentType: "myapp:article"
+----
+
+Since the widget has `order: 60`, it will be invoked after the built-in *Media* (`order: 50`), but before *Site engine* (`order: 90`) widget in **Automatic** mode.
+
+=== 3. Implementation
+
+.src/main/resources/admin/extensions/my-preview/my-preview.ts
+[source,typescript]
+----
+const contentLib = require('/lib/xp/content');
+
+const ALLOWED_TYPE = 'myapp:article';
+
+const SECURITY_HEADERS = {
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Content-Security-Policy': "default-src 'self'; style-src 'unsafe-inline'"
+};
+
+exports.HEAD = (req) => ({
+    status: req.params.type === ALLOWED_TYPE ? 200 : 418
+});
+
+exports.GET = (req) => {
+    if (req.params.type !== ALLOWED_TYPE) {
+        return { status: 418 };
+    }
+
+    const content = contentLib.get({ key: req.params.contentId });
+    if (!content) {
+        return { status: 404 };
+    }
+
+    const { headline, lead, body } = content.data;
+
+    return {
+        status: 200,
+        contentType: 'text/html',
+        headers: {
+            ...SECURITY_HEADERS,
+            'enonic-widget-data': JSON.stringify({
+                messages: lead ? [] : ['Article has no lead paragraph']
+            })
+        },
+        body: `<!doctype html>
+<html>
+  <body style="font-family: system-ui; padding: 1rem;">
+    <h1>${headline ?? content.displayName}</h1>
+    ${lead ? `<p><strong>${lead}</strong></p>` : ''}
+    ${body ? `<div>${body}</div>` : ''}
+  </body>
+</html>`
+    };
+};
+----
+
+`HEAD` answers the *Automatic* mode probe without doing any work — it returns `418` for any content that is not an article, so *Automatic* falls through to the next widget. `GET` mirrors the same gate (so a manual invocation on a non-article content also returns `418`), then loads the content and emits a small HTML view.
+The `enonic-widget-data` header surfaces a warning when the article has no lead paragraph.
+
+=== 4. Deploy
+
+Build and deploy the app the usual way — see <<../../tooling/cli#,Enonic CLI>>.
+
+=== 5. Verify in Content Studio
+
+* Open a `myapp:article` content. *My preview* appears in the preview-pane dropdown and renders the headline, lead, and body.
+* Switch to *Automatic*.
+For an article, *My preview* is selected; for any other content type it falls through and the next eligible widget renders.
+* Edit an article so its lead is empty and reload the preview — the warning surfaces via the `enonic-widget-data.messages` channel.
+
+== See also
+
+* <<../extensions#,Building Admin Extensions>> — descriptor schema, deployment, URL resolution, access control.
+* <<../tools#,Building Admin Tools>> — the host-tool side of the interface contract.
