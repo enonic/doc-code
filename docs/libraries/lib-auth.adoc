@@ -157,6 +157,76 @@ const group = createGroup({
 })
 ----
 
+=== createIdProvider
+
+Creates an ID provider.
+
+[.lead]
+Parameters
+
+An object with the following keys and their values:
+
+[%header,cols="1%,1%,1%,97%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Kind | Attributes | Description
+| key | string | | ID provider key
+| displayName | string | | ID provider display name
+| description | string | <optional> | ID provider description
+| permissions | object[] | <optional> | ID provider permissions
+|===
+
+[.lead]
+`permissions` properties
+
+[%header,cols="1%,1%,1%,1%,96%a"]
+[frame="topbot"]
+[grid="none"]
+[caption=""]
+.Properties
+!===
+! Name ! Type ! Attributes ! Default ! Description
+! principal ! string ! ! ! Principal key
+! access ! string ! ! ! Permission level: `READ`, `+CREATE_USERS+`, `+WRITE_USERS+`, `+ID_PROVIDER_MANAGER+`, `+ADMINISTRATOR+`
+!===
+
+[.lead]
+Returns
+
+*object*: The created ID provider.
+
+[.lead]
+Example
+
+.Creating an ID provider
+[source,typescript]
+----
+import {createIdProvider} from '/lib/xp/auth';
+
+const idProvider = createIdProvider({
+    key: 'myIdProvider',
+    displayName: 'My ID Provider',
+    description: 'My ID provider description',
+    permissions: [
+        {
+            principal: 'role:system.admin',
+            access: 'ADMINISTRATOR'
+        }
+    ]
+});
+----
+
+.Sample response
+[source,js]
+----
+({
+    key: "myIdProvider",
+    displayName: "My ID Provider",
+    description: "My ID provider description"
+})
+----
+
 === createRole
 
 Creates a role.
