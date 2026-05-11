@@ -12,7 +12,7 @@ As explained in the <<code#, code section>>, Enonic development projects use htt
 
 Gradle is built around the popular Maven ecosystem. Gradle is used because Enonic apps are packaged and deployed as .jar (Java) files in the end.
 
-Builds run on Gradle 9.x — bundle a Gradle Wrapper of version 9.4.1 or later in your project.
+Builds run on Gradle 9.x — bundle a Gradle Wrapper of version 9.5.0 or later in your project.
 
 TIP: Enonic supports popular TypeScript/JavaScript tooling such as TSUP, NPM and webpack to run on top of Gradle. https://market.enonic.com/starters[Try one or our Starters] to see it in action.
 

@@ -46,11 +46,11 @@ The standard build system must be updated.
 === Gradle Wrapper
 
 XP 8.0 standardizes on the use of Gradle 9.x.
-We recommend bundling Gradle wrapper of version 9.4.1 or later in your project.
+We recommend bundling Gradle wrapper of version 9.5.0 or later in your project.
 
 For simple installations, from your project root, run:
 
-  ./gradle wrapper --gradle-version 9.4.1
+  ./gradle wrapper --gradle-version 9.5.0
 
 This will install or update your project with a new Gradle wrapper.
 
