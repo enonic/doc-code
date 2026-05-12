@@ -12,7 +12,7 @@ XP listens on `port 8080` (configurable) and dispatches requests to one of four 
 |===
 | Service | Prefix | Use it for
 | <<apis#, API>> | `/api` | Custom HTTP APIs, microservices, headless integrations.
-| <<admin#, Admin>> | `/admin` | XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.
+| <<tools#, Admin>> | `/admin` | XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.
 | <<sites#, Site>> | `/site` | CMS-driven websites: pages, parts, layouts, content rendering.
 | <<webapps#, Webapp>> | `/webapp` | Standalone web applications — served by your app, no CMS context.
 |===

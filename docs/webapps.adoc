@@ -48,7 +48,3 @@ Each listed API becomes reachable as a service point at `+<server>:<port>/webapp
 == Tracing
 
 Each webapp request emits a `renderApp` trace event with the application key and request path, observable through XP's standard tracing infrastructure.
-
-== See also
-
-For a worked example, see <<../examples/webapps#, Webapp examples>>.

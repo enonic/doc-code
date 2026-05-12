@@ -14,7 +14,7 @@ This documentation covers the app-development surface only, other relevant docum
 
 == Introduction
 
-XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <<examples/schemas#, content schemas>>, custom <<apis#, APIs>>, <<admin#, admin tools and extensions>>, <<http/id-providers#, ID providers>>, <<webapps#, webapps>>, or full <<sites#, websites>> — all powered by the same JS/TS runtime and the same standard <<libraries#, libraries>>.
+XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <<schemas#, content schemas>>, custom <<apis#, APIs>>, <<tools#, admin tools>> and <<extensions#, extensions>>, <<http/id-providers#, ID providers>>, <<webapps#, webapps>>, or full <<sites#, websites>> — all powered by the same JS/TS runtime and the same standard <<libraries#, libraries>>.
 
 == Tutorials
 
@@ -28,10 +28,8 @@ IMPORTANT: For a hands-on introduction to development with Enonic XP, visit the 
 
 <<http#, HTTP>>:: The shared request pipeline, primitives (request/response, filters, error handlers, websockets, SSE), ID providers, and the four services XP dispatches to.
 
-<<apis#, APIs>>, <<admin#, Admin>>, <<sites#, Sites>>, <<webapps#, Webapps>>:: The four services exposed by XP — custom APIs, admin UIs and extensions, CMS-driven sites, and standalone web applications.
+<<apis#, APIs>>, <<tools#, Admin Tools>> and <<extensions#, Extensions>>, <<sites#, Sites>>, <<webapps#, Webapps>>:: The four services exposed by XP — custom APIs, admin UIs and extensions, CMS-driven sites, and standalone web applications.
 
 <<background#, Background>>:: Tasks and scheduled jobs for asynchronous work.
 
 <<libraries#, Libraries>>:: The platform's standard libraries — content, repos, identity, mail, and more.
-
-<<examples#, Examples>>:: End-to-end examples for common scenarios.

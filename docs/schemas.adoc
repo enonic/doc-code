@@ -1,65 +1,72 @@
 = Content schemas
 :toc: right
 
-How to ship CMS *content schemas* — content types, form fragments, mixins, page/part/layout schemas, macros, and styles — inside an Enonic app. The schema language and field types themselves are reference documentation in the https://developer.enonic.com/docs/cms/stable/schemas[CMS docs]; this page is the app-side packaging recipe.
+Explains how to ship your *CMS schemas* as code in your Enonic app
 
-== What schemas an app can ship
+== Introduction
+
+Enonic provides powerful CMS capabilities. A central concept is schemas that control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.
+
+For more details on schemas, visit the https://developer.enonic.com/docs/cms/stable/schemas[CMS docs].
+
+If your application will only contain schemas, we recommend using the  https://market.enonic.com/vendors/enonic/starter-vanilla[the Vanilla starter] as a base. It has no dependencies and a minimal build configuration, so it's ideal for schema-only apps.
+
+Create a new app using Enonic CLI:
+
+  enonic create -r starter-vanilla com.company.myapp
+
+NOTE: Choose the app name carefully. It becomes part of the schema namespace and is awkward to change later. The canonical format is `com.company.myapp`, but you can choose any unique string. Avoid generic names like `schemas` or `content` that may conflict with other apps.
+
+== How it works
 
 A single app may contribute any combination of:
 
 Content types:: Define the structure of editorial content (articles, products, media types, …).
-Form fragments:: Reusable pieces of a content form, includable from other schemas.
 Mixins:: Extra metadata attached to existing content types (formerly known as `x-data`).
-Pages, parts, layouts:: Schemas paired with rendering implementations to compose pages.
+Form fragments:: Reusable pieces of a content form, includable from other schemas.
+Components:: Pages, parts, and layouts for building landing pages
 Macros:: Custom rich-text macros invocable inside HtmlArea fields.
 Styles:: Rich-text styling extensions.
 
-Schemas are registered when the app is installed and become available immediately in Content Studio and the content APIs. They are namespaced by app key — every schema is referenced as `<app-key>:<schema-name>` (for example, `com.example.myapp:article`).
+The schemas are registered when the app is installed and become available immediately in Content Studio and the content APIs. Within their kind, each schema gets registered by namespace and schema name as follows: `<app-key>:<schema-name>` (for example, `com.example.myapp:article`).
 
-== Folder layout
+== File structure
 
-Schemas live under `src/main/resources/cms/`, with one folder per kind:
+Schemas must be placed under `src/main/resources/cms/`, with one folder per kind:
 
 [source,text]
 ----
 src/main/resources/
   cms/
     cms.yaml                       # <1>
-    site.yaml                      # <2>
     content-types/
       article/
         article.yaml
         article.svg                # <3>
+    mixins/
+      seo/  
+        seo.yaml
     form-fragments/
       address/
         address.yaml
-    mixins/
-      seo/
-        seo.yaml
     pages/
       default/
         default.yaml
-        default.ts                 # <4>
     parts/
       hero/
         hero.yaml
-        hero.ts
     layouts/
       two-col/
         two-col.yaml
-        two-col.ts
     macros/
       embed/
         embed.yaml
-        embed.ts
 ----
 
 <1> `cms.yaml` — the *app's CMS descriptor*. Used to activate mixins on existing content types and to declare app-level form references. See <<#cms-yaml>>.
-<2> `site.yaml` — the <<../sites#, site descriptor>>, present only when the app contributes a site. Lists mounted APIs, mappings, and processors.
-<3> Optional sibling icon, displayed in Content Studio.
-<4> Page, part, layout, and macro schemas pair with an implementation file (`<name>.ts`) — see <<../sites/components#, components>> for the rendering side.
+<2> Optional sibling icon, displayed in Content Studio.
 
-The folder name, file name, and the schema's referenceable name must match: `cms/parts/hero/hero.yaml` is referenced as `<app>:hero`. Choose names carefully — they end up in stored content data and are awkward to change later.
+The folder name, file name, and the schema's referenceable name must match: `cms/parts/hero/hero.yaml` is will be available in the system as `<app>:hero`. Choose names carefully — they end up in stored content data and are awkward to change later.
 
 == A content type, end to end
 
@@ -78,7 +85,7 @@ final: true
 allowChildContent: true
 allowChildContentType:
   - "base:folder"
-  - "${app}:article-*"
+  - "article-*"
 form:
   - name: "fullName"
     type: "TextLine"
@@ -91,11 +98,8 @@ form:
     label: "Biography"
 ----
 
-Notes:
+NOTE: The full set of form items is documented in the https://developer.enonic.com/docs/cms/stable/schemas/form-items[CMS forms reference].
 
-* `${app}` resolves to the current app's key at registration time. Use it instead of hard-coding your own app key, so the same schema works in forks and renamed deployments.
-* `form:` is where input field definitions go. The full set of input types (`TextLine`, `HtmlArea`, `ContentSelector`, `ImageSelector`, `Radio`, etc.) is documented in the https://developer.enonic.com/docs/cms/stable/schemas/forms[CMS forms reference].
-* `superType` defaults to `base:structured`. Other options like `base:media` or `base:folder` are documented under https://developer.enonic.com/docs/cms/stable/content/content-types[content types].
 
 [#cms-yaml]
 == The `cms.yaml` app descriptor
@@ -129,5 +133,5 @@ There is no separate "publish schemas" step. The bundle *is* the source of truth
 
 * https://developer.enonic.com/docs/cms/stable/schemas[CMS schemas reference] — the schema language, field types, and per-kind documentation.
 * https://developer.enonic.com/docs/cms/stable[CMS documentation] — content modelling, queries, and runtime APIs.
-* <<../tooling/starters#, Starters>> — folder layout for the rest of an Enonic app.
-* <<../sites#, Sites>> — wiring page/part/layout schemas to rendering implementations.
+* <<tooling/starters#, Starters>> — folder layout for the rest of an Enonic app.
+* <<sites#, Sites>> — wiring page/part/layout schemas to rendering implementations.
