@@ -481,7 +481,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom HTTP APIs, microservices, headless integrations.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="admin.ahtml">Admin</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tools.ahtml">Admin</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.</p></td>
 </tr>
@@ -587,7 +587,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-12 14:47:58 UTC
+Last updated 2026-05-12 17:23:47 UTC
 </div>
 </div>
 </body>

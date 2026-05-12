@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Building Preview Widgets</title>
+<title>Content Studio Liveview (contentstudio.liveview)</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,32 +437,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building Preview Widgets</h1>
+<h1>Content Studio Liveview (contentstudio.liveview)</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#a_preview_widget">A preview widget</a></li>
+<li><a href="#introduction">Introduction</a></li>
 <li><a href="#lifecycle">Lifecycle</a></li>
+<li><a href="#usage">Usage</a></li>
 <li><a href="#descriptor">Descriptor</a></li>
+<li><a href="#implementation">Implementation</a>
+<ul class="sectlevel2">
+<li><a href="#inline_body">Inline body</a></li>
+<li><a href="#redirect">Redirect</a></li>
+</ul>
+</li>
+<li><a href="#requestresponse">Request/response</a>
+<ul class="sectlevel2">
 <li><a href="#request">Request</a></li>
-<li><a href="#response">Response</a>
-<ul class="sectlevel2">
-<li><a href="#status_codes">Status codes</a></li>
-<li><a href="#body">Body</a></li>
-<li><a href="#headers">Headers</a></li>
-<li><a href="#enonic_widget_data_header"><code>enonic-widget-data</code> header</a></li>
+<li><a href="#response">Response</a></li>
 </ul>
 </li>
-<li><a href="#tutorial_building_a_custom_preview_widget">Tutorial: building a custom preview widget</a>
-<ul class="sectlevel2">
-<li><a href="#1_folder_layout">1. Folder layout</a></li>
-<li><a href="#2_descriptor">2. Descriptor</a></li>
-<li><a href="#3_implementation">3. Implementation</a></li>
-<li><a href="#4_deploy">4. Deploy</a></li>
-<li><a href="#5_verify_in_content_studio">5. Verify in Content Studio</a></li>
-</ul>
-</li>
-<li><a href="#see_also">See also</a></li>
 </ul>
 </div>
 </div>
@@ -470,49 +464,37 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>A preview widget is an <a href="../extensions.ahtml">admin extension</a> that implements the <code>contentstudio.liveview</code> interface.
-Content Studio mounts such widgets into the preview dropdown of the <strong>Edit</strong> and <strong>Browse</strong> view toolbars and uses them to render selected content.</p>
-</div>
-<div class="paragraph">
-<p>This page covers the contract specific to <code>contentstudio.liveview</code>.
-The descriptor schema, deployment layout, URL resolution, and access-control checks are shared with every other admin extension and are documented at <a href="../extensions.ahtml">Building Admin Extensions</a>.</p>
+<p>LiveView is an admin extension that implements the <code>contentstudio.liveview</code> interface.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="a_preview_widget"><a class="link" href="#a_preview_widget">A preview widget</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Is a regular admin extension whose <code>interfaces:</code> list contains <code>contentstudio.liveview</code>.</p>
-</li>
-<li>
-<p>Is invoked by Content Studio with the currently selected content as request parameters, and returns whatever payload an iframe (or the JSON renderer) can display.</p>
-</li>
-<li>
-<p>May be picked manually from the preview-pane dropdown, or automatically by Content Studio&#8217;s <strong>Automatic</strong> mode.</p>
-</li>
-<li>
-<p>Content Studio ships 3 out of the box:</p>
+<div class="paragraph">
+<p>LiveView extensions are used in Content Studio&#8217;s <strong>Edit</strong> and <strong>Browse</strong> views to render a preview of the currently selected content.</p>
+</div>
+<div class="paragraph">
+<p>How it works:</p>
+</div>
+<div class="paragraph">
+<p>Content Studio has a single preview iframe panel. A LiveView extension may take control of this iframe, in order to render the currently selected content. Content Studio ships with three standard LiveView extensions out of the box:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
 <p><strong>Media</strong> streams the binary files (<code>order: 50</code>)</p>
 </li>
 <li>
-<p><strong>Site engine</strong> renders pages with the Enonic XP site engine (<code>order: 90</code>)</p>
+<p><strong>XP</strong> renders pages using the built-in site service (<code>order: 90</code>)</p>
 </li>
 <li>
-<p><strong>JSON</strong> pretty-prints the content as JSON (<code>order: 100</code>)</p>
+<p><strong>JSON</strong> pretty-prints the content as JSON (<code>order: 100</code>, auto: "false")</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>Custom widgets coexist with these — there is no override; widgets are listed side by side and ordered by <code>config.order</code>.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>You may add custom LiveView extensions that coexist with these — there is no override; widgets are listed side by side and ordered by <code>config.order</code>.</p>
 </div>
 </div>
 </div>
@@ -520,43 +502,43 @@ The descriptor schema, deployment layout, URL resolution, and access-control che
 <h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>From the moment a user selects a content in the grid until the preview pane shows something, Content Studio runs through the following cycle:</p>
+<p>When a user selects a content item, until the preview pane shows something, Content Studio runs through the following cycle:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Discovery.</strong> Long before user selects a content, Content Studio populates the preview widgets dropdown with extensions having <code>contentstudio.liveview</code> interface.
-The built-in <strong>Automatic</strong> widget is always present at the top.</p>
+<p><strong>Discovery.</strong> Before the user selects a content item, Content Studio populates the LiveView dropdown with extensions declaring the <code>contentstudio.liveview</code> interface.
+The built-in <strong>Automatic</strong> mode is always present at the top.</p>
 </li>
 <li>
-<p><strong>Selection of content.</strong> The user opens a content in the grid (or navigates straight to the <strong>Edit</strong> view).
+<p><strong>Content context.</strong> The user selects a content item in the grid (or navigates straight to the <strong>Edit</strong> view).
 The selected content&#8217;s id, path, type, repository, branch and archive flag become the input to all subsequent steps.</p>
 </li>
 <li>
 <p><strong>Selection of widget.</strong></p>
 <div class="openblock">
 <div class="content">
-<div class="ulist">
-<ul>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
-<p><strong>Manual</strong> — the user picks a specific widget.
+<p><strong>Manual</strong> — the user selects a specific widget.
 Whatever it returns is rendered as-is, regardless of status code.
 A <code>5xx</code> shows the server error page in the iframe; a <code>418</code> is a conventional status to show a "No preview available".
 This mode is useful when you want to see exactly what was returned.</p>
 </li>
 <li>
-<p><strong>Automatic</strong> — Content Studio iterates the eligible widgets that have <code>auto: "true"</code>, in <code>order</code>, and sends a <code>HEAD</code> request to each.
+<p><strong>Automatic</strong> — Content Studio iterates the eligible LiveView extensions that have <code>auto: "true"</code>, in <code>order</code>, and sends a <code>HEAD</code> request to each.
 The first widget that responds with a <code>2xx</code> wins.
 Any non-<code>2xx</code> response — <code>418</code>, <code>404</code>, <code>5xx</code>, anything else — yields the turn to the next widget.
 If none was able to render, the preview pane shows "No preview available".</p>
 </li>
-</ul>
+</ol>
 </div>
 </div>
 </div>
 </li>
 <li>
-<p><strong>Render.</strong> Content Studio issues a <code>GET</code> to the chosen widget with the same query parameters and embeds the response in the preview pane.</p>
+<p><strong>Render.</strong> Content Studio issues a <code>GET</code> to the chosen LiveView extension with the same query parameters and embeds the response in the preview pane.</p>
 </li>
 <li>
 <p><strong>Re-probe.</strong> If the user changes the selected content, switches branch, toggles archive view, or otherwise changes any of the request parameters, the cycle repeats from step 2.</p>
@@ -566,14 +548,42 @@ If none was able to render, the preview pane shows "No preview available".</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A LiveView extension is declared like any admin extension — descriptor and implementation under <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-files" data-lang="files">src/main/resources/admin/extensions/
+  my-preview/
+    my-preview.yaml   <i class="conum" data-value="1"></i><b>(1)</b>
+    my-preview.ts     <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Descriptor — see <a href="#descriptor">below</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Implementation file</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The descriptor is the same <code>AdminExtension</code> kind as any other extension; only the <code>interfaces:</code> and <code>config:</code> keys are specific to preview widgets.
-See <a href="../extensions.ahtml#descriptor">the parent descriptor reference</a>.</p>
+<p>The descriptor is the same <code>AdminExtension</code> kind as any other extension; only the <code>interfaces:</code> and <code>config:</code> keys are specific to liveview widgets.
+See <a href="../extensions.ahtml#descriptor">the parent descriptor reference</a> for the shared fields.</p>
 </div>
 <div class="listingblock">
-<div class="title">src/main/resources/admin/extensions/&lt;extension-name&gt;/&lt;extension-name&gt;.yaml</div>
+<div class="title">src/main/resources/admin/extensions/my-preview/my-preview.yaml</div>
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminExtension"
 title: "My preview"
@@ -582,7 +592,7 @@ interfaces:
   - "contentstudio.liveview"          <i class="conum" data-value="1"></i><b>(1)</b>
 config:
   auto: "true"                        <i class="conum" data-value="2"></i><b>(2)</b>
-  order: "50"                         <i class="conum" data-value="3"></i><b>(3)</b>
+  order: "60"                         <i class="conum" data-value="3"></i><b>(3)</b>
   allowContentType: "myapp:article"   <i class="conum" data-value="4"></i><b>(4)</b>
   allowPath: "${site}/articles/*"     <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
 </div>
@@ -591,7 +601,7 @@ config:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>Interface name</strong> — must be the exact string <code>contentstudio.liveview</code> for Content Studio to discover the extension as a preview widget.</td>
+<td><strong>Interface name</strong> — must be the exact string <code>contentstudio.liveview</code> for Content Studio to discover the extension as a liveview widget.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -601,7 +611,8 @@ Default is off; widgets without this flag only run when picked manually.</td>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td><strong>order</strong> — sort key in the dropdown and the <strong>Automatic</strong> probe sequence.
-Lower values appear first; the built-in <strong>Automatic</strong> widget itself sits at <code>0</code>.</td>
+Lower values appear first; the built-in <strong>Automatic</strong> widget itself sits at <code>0</code>.
+With <code>order: 60</code>, this widget is probed after the built-in <strong>Media</strong> widget (<code>50</code>) but before <strong>Site engine</strong> (<code>90</code>).</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -619,14 +630,137 @@ Supports the <code>${site}</code> variable, which expands to the path of the sit
 </div>
 </div>
 <div class="sect1">
-<h2 id="request"><a class="link" href="#request">Request</a></h2>
+<h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Content Studio dispatches 2 requests to the widget URL with the same query parameters.
-First, <code>HEAD</code> asks <strong>can you render this?</strong>. <code>GET</code> returns <strong>the actual payload</strong> in case of the <code>2xx</code> status from <code>HEAD</code>.</p>
+<p>The implementation must export <code>HEAD</code> and <code>GET</code>.
+<code>HEAD</code> answers the <strong>Automatic</strong> mode probe — return <code>2xx</code> to claim the content, anything else to decline.
+<code>GET</code> returns the response that drives the iframe, in one of two shapes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Inline body</strong> — the widget returns HTML (or JSON, or any payload an iframe can display) as the response body. Content Studio renders it directly inside the iframe.</p>
+</li>
+<li>
+<p><strong>Redirect</strong> — the widget returns an <code>enonic-widget-data.redirect</code> URL and no body. Content Studio re-points the iframe at the external URL.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The two variants are equally first-class; the built-in <strong>Site engine</strong> widget uses redirect, the <strong>JSON</strong> widget uses inline body.</p>
+</div>
+<div class="sect2">
+<h3 id="inline_body"><a class="link" href="#inline_body">Inline body</a></h3>
+<div class="paragraph">
+<p>Using the extension to render a custom preview right inside Content Studio, without involving any external services.</p>
+</div>
+<div class="paragraph">
+<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code> for the full Content API, plus any other standard library (<code>lib-portal</code>, <code>lib-node</code>, <code>lib-i18n</code>, <code>lib-io</code>, &#8230;&#8203;) and 3rd-party modules the app bundles.
+The widget can query related content, traverse children, fetch attachments, render aggregated views — anything an XP module can do.</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/admin/extensions/my-preview/my-preview.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const contentLib = require('/lib/xp/content');
+const ALLOWED_TYPE = 'myapp:article';
+const SECURITY_HEADERS = {
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Content-Security-Policy': "default-src 'self'; style-src 'unsafe-inline'"
+};
+
+exports.HEAD = (req) =&gt; ({
+    status: req.params.type === ALLOWED_TYPE ? 200 : 418
+});
+
+exports.GET = (req) =&gt; {
+    if (req.params.type !== ALLOWED_TYPE) {
+        return { status: 418 };
+    }
+
+    const content = contentLib.get({ key: req.params.contentId });
+    if (!content) {
+        return { status: 404 };
+    }
+
+    const { headline, lead, body } = content.data;
+
+    return {
+        status: 200,
+        contentType: 'text/html',
+        headers: {
+            ...SECURITY_HEADERS,
+            'enonic-widget-data': JSON.stringify({
+                messages: lead ? [] : ['Article has no lead paragraph']
+            })
+        },
+        body: `&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;body style="font-family: system-ui; padding: 1rem;"&gt;
+    &lt;h1&gt;${headline ?? content.displayName}&lt;/h1&gt;
+    ${lead ? `&lt;p&gt;&lt;strong&gt;${lead}&lt;/strong&gt;&lt;/p&gt;` : ''}
+    ${body ? `&lt;div&gt;${body}&lt;/div&gt;` : ''}
+  &lt;/body&gt;
+&lt;/html&gt;`
+    };
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>HEAD</code> returns <code>418</code> for any content that is not an article, so <strong>Automatic</strong> mode falls through to the next widget without doing any work.
+<code>GET</code> mirrors the same gate (so a manual invocation on a non-article also returns <code>418</code>), then loads the content and emits a small HTML view.
+The <code>enonic-widget-data</code> header surfaces a warning when the article has no lead paragraph.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="redirect"><a class="link" href="#redirect">Redirect</a></h3>
+<div class="paragraph">
+<p>For preview frontends hosted elsewhere — a Next.js, SvelteKit, or Astro app, a microservice, anything with its own URL — the widget delegates rendering and just hands Content Studio the URL to load:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/admin/extensions/my-preview/my-preview.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const ALLOWED_TYPE = 'myapp:article';
+const PREVIEW_BASE = 'https://preview.myapp.com';
+
+exports.HEAD = (req) =&gt; ({
+    status: req.params.type === ALLOWED_TYPE ? 200 : 418
+});
+
+exports.GET = (req) =&gt; {
+    if (req.params.type !== ALLOWED_TYPE) {
+        return { status: 418 };
+    }
+
+    const url = `${PREVIEW_BASE}/preview/${req.params.contentId}?branch=${req.params.branch}`;
+
+    return {
+        status: 200,
+        headers: {
+            'enonic-widget-data': JSON.stringify({ redirect: url })
+        }
+    };
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The widget does no rendering itself — the external server is responsible for fetching the content (typically through the <a href="https://developer.enonic.com/docs/guillotine">GraphQL API</a>) and setting its own <code>X-Frame-Options</code> / <code>Content-Security-Policy</code> headers so Content Studio&#8217;s iframe can load it.
+Pass through <code>branch</code> and any other request parameters the external preview needs to fetch the right version of the content.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="requestresponse"><a class="link" href="#requestresponse">Request/response</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="request"><a class="link" href="#request">Request</a></h3>
+<div class="paragraph">
+<p>Content Studio probes the widget with <code>HEAD</code> to ask whether it can render this content; if the response is <code>2xx</code>, it follows up with <code>GET</code> for the payload.
+Both requests carry the same query parameters:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. List of the parameters sent to the widget URL</caption>
+<caption class="title">Table 1. Parameters sent to the widget URL</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -673,42 +807,18 @@ First, <code>HEAD</code> asks <strong>can you render this?</strong>. <code>GET</
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="response"><a class="link" href="#response">Response</a></h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="status_codes"><a class="link" href="#status_codes">Status codes</a></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>2xx</code></dt>
-<dd>
-<p>The widget is willing to render.
-In <strong>Automatic</strong> mode this widget wins the iteration.</p>
-</dd>
-<dt class="hdlist1">non-<code>2xx</code></dt>
-<dd>
-<p>In <strong>Automatic</strong> mode, yields the turn to the next eligible widget.
-There is no special "skip" code: <code>418</code>, <code>404</code>, <code>5xx</code>, and any other status all behave the same way for fall-through.</p>
+<h3 id="response"><a class="link" href="#response">Response</a></h3>
 <div class="paragraph">
-<p>In <strong>Manual</strong> mode (the user picked the widget explicitly) the response is rendered as-is regardless of status as long as it&#8217;s not <code>418 I&#8217;m a teapot</code>.
-This is the conventional choice for intentional skips and will result in a "No preview available" message.</p>
+<p>A <code>2xx</code> status means the widget is willing to render; in <strong>Automatic</strong> mode it wins the iteration.
+Any non-<code>2xx</code> response yields the turn to the next eligible widget — there is no special "skip" code, so <code>418</code>, <code>404</code>, <code>5xx</code>, and any other status all behave the same way for fall-through.
+In <strong>Manual</strong> mode (the user picked the widget explicitly) the response is rendered as-is regardless of status, unless it&#8217;s <code>418 I&#8217;m a teapot</code> — the conventional choice for intentional skips, which results in a "No preview available" message.</p>
 </div>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="body"><a class="link" href="#body">Body</a></h3>
 <div class="paragraph">
-<p>The body is interpreted by <code>contentType</code>.
-All content types supported by an <code>iframe</code> are allowed.</p>
+<p>The body is interpreted by <code>contentType</code> and may be anything an <code>iframe</code> can display.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="headers"><a class="link" href="#headers">Headers</a></h3>
 <div class="paragraph">
-<p>The iframe is hosted inside the admin UI, so the response should set:</p>
+<p>Because the iframe is hosted inside the admin UI, the response should set:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -716,17 +826,13 @@ All content types supported by an <code>iframe</code> are allowed.</p>
 <p><code>X-Frame-Options</code>: <code>SAMEORIGIN</code> — prevents the preview from being framed by a third party.</p>
 </li>
 <li>
-<p><code>Content-Security-Policy</code> — restrict the resources the iframe is allowed to load.
+<p><code>Content-Security-Policy</code> — restricts the resources the iframe is allowed to load.
 The exact policy depends on what the widget renders.</p>
 </li>
 </ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="enonic_widget_data_header"><a class="link" href="#enonic_widget_data_header"><code>enonic-widget-data</code> header</a></h3>
 <div class="paragraph">
-<p>A JSON-encoded sidecar for metadata that travels alongside the rendered body.
-A way for the widget to override Content Studio UI messages or redirect the preview:</p>
+<p>The <code>enonic-widget-data</code> header is a JSON-encoded sidecar for metadata that travels alongside the rendered body — a channel for the widget to surface UI messages or redirect the preview:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -769,7 +875,7 @@ Used by the built-in <strong>Site engine</strong> widget to delegate to the runn
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-These fields are used by Content Studio, other will be silently ignored.
+Other fields in <code>enonic-widget-data</code> are silently ignored.
 </td>
 </tr>
 </table>
@@ -777,143 +883,10 @@ These fields are used by Content Studio, other will be silently ignored.
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="tutorial_building_a_custom_preview_widget"><a class="link" href="#tutorial_building_a_custom_preview_widget">Tutorial: building a custom preview widget</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This walks through a minimal preview widget that renders an HTML view for <code>myapp:article</code> content and falls out of <strong>Automatic</strong> mode for everything else.</p>
-</div>
-<div class="sect2">
-<h3 id="1_folder_layout"><a class="link" href="#1_folder_layout">1. Folder layout</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-files" data-lang="files">src/main/resources/admin/extensions/
-  my-preview/
-    my-preview.yaml
-    my-preview.ts</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="2_descriptor"><a class="link" href="#2_descriptor">2. Descriptor</a></h3>
-<div class="listingblock">
-<div class="title">src/main/resources/admin/extensions/my-preview/my-preview.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminExtension"
-title: "My preview"
-description: "Custom preview for articles"
-interfaces:
-  - "contentstudio.liveview"
-config:
-  auto: "true"
-  order: "60"
-  allowContentType: "myapp:article"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Since the widget has <code>order: 60</code>, it will be invoked after the built-in <strong>Media</strong> (<code>order: 50</code>), but before <strong>Site engine</strong> (<code>order: 90</code>) widget in <strong>Automatic</strong> mode.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="3_implementation"><a class="link" href="#3_implementation">3. Implementation</a></h3>
-<div class="listingblock">
-<div class="title">src/main/resources/admin/extensions/my-preview/my-preview.ts</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const contentLib = require('/lib/xp/content');
-
-const ALLOWED_TYPE = 'myapp:article';
-
-const SECURITY_HEADERS = {
-    'X-Frame-Options': 'SAMEORIGIN',
-    'Content-Security-Policy': "default-src 'self'; style-src 'unsafe-inline'"
-};
-
-exports.HEAD = (req) =&gt; ({
-    status: req.params.type === ALLOWED_TYPE ? 200 : 418
-});
-
-exports.GET = (req) =&gt; {
-    if (req.params.type !== ALLOWED_TYPE) {
-        return { status: 418 };
-    }
-
-    const content = contentLib.get({ key: req.params.contentId });
-    if (!content) {
-        return { status: 404 };
-    }
-
-    const { headline, lead, body } = content.data;
-
-    return {
-        status: 200,
-        contentType: 'text/html',
-        headers: {
-            ...SECURITY_HEADERS,
-            'enonic-widget-data': JSON.stringify({
-                messages: lead ? [] : ['Article has no lead paragraph']
-            })
-        },
-        body: `&lt;!doctype html&gt;
-&lt;html&gt;
-  &lt;body style="font-family: system-ui; padding: 1rem;"&gt;
-    &lt;h1&gt;${headline ?? content.displayName}&lt;/h1&gt;
-    ${lead ? `&lt;p&gt;&lt;strong&gt;${lead}&lt;/strong&gt;&lt;/p&gt;` : ''}
-    ${body ? `&lt;div&gt;${body}&lt;/div&gt;` : ''}
-  &lt;/body&gt;
-&lt;/html&gt;`
-    };
-};</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>HEAD</code> answers the <strong>Automatic</strong> mode probe without doing any work — it returns <code>418</code> for any content that is not an article, so <strong>Automatic</strong> falls through to the next widget. <code>GET</code> mirrors the same gate (so a manual invocation on a non-article content also returns <code>418</code>), then loads the content and emits a small HTML view.
-The <code>enonic-widget-data</code> header surfaces a warning when the article has no lead paragraph.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="4_deploy"><a class="link" href="#4_deploy">4. Deploy</a></h3>
-<div class="paragraph">
-<p>Build and deploy the app the usual way — see <a href="../../tooling/cli.ahtml">Enonic CLI</a>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="5_verify_in_content_studio"><a class="link" href="#5_verify_in_content_studio">5. Verify in Content Studio</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Open a <code>myapp:article</code> content. <strong>My preview</strong> appears in the preview-pane dropdown and renders the headline, lead, and body.</p>
-</li>
-<li>
-<p>Switch to <strong>Automatic</strong>.
-For an article, <strong>My preview</strong> is selected; for any other content type it falls through and the next eligible widget renders.</p>
-</li>
-<li>
-<p>Edit an article so its lead is empty and reload the preview — the warning surfaces via the <code>enonic-widget-data.messages</code> channel.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="see_also"><a class="link" href="#see_also">See also</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="../extensions.ahtml">Building Admin Extensions</a> — descriptor schema, deployment, URL resolution, access control.</p>
-</li>
-<li>
-<p><a href="../tools.ahtml">Building Admin Tools</a> — the host-tool side of the interface contract.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-12 14:47:58 UTC
+Last updated 2026-05-12 17:23:47 UTC
 </div>
 </div>
 </body>

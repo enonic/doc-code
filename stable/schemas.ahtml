@@ -441,8 +441,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#what_schemas_an_app_can_ship">What schemas an app can ship</a></li>
-<li><a href="#folder_layout">Folder layout</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#how_it_works">How it works</a></li>
+<li><a href="#file_structure">File structure</a></li>
 <li><a href="#a_content_type_end_to_end">A content type, end to end</a></li>
 <li><a href="#cms-yaml">The <code>cms.yaml</code> app descriptor</a></li>
 <li><a href="#deployment">Deployment</a></li>
@@ -454,12 +455,46 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>How to ship CMS <strong>content schemas</strong> — content types, form fragments, mixins, page/part/layout schemas, macros, and styles — inside an Enonic app. The schema language and field types themselves are reference documentation in the <a href="https://developer.enonic.com/docs/cms/stable/schemas">CMS docs</a>; this page is the app-side packaging recipe.</p>
+<p>Explains how to ship your <strong>CMS schemas</strong> as code in your Enonic app</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="what_schemas_an_app_can_ship"><a class="link" href="#what_schemas_an_app_can_ship">What schemas an app can ship</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Enonic provides powerful CMS capabilities. A central concept is schemas that control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.</p>
+</div>
+<div class="paragraph">
+<p>For more details on schemas, visit the <a href="https://developer.enonic.com/docs/cms/stable/schemas">CMS docs</a>.</p>
+</div>
+<div class="paragraph">
+<p>If your application will only contain schemas, we recommend using the  <a href="https://market.enonic.com/vendors/enonic/starter-vanilla">the Vanilla starter</a> as a base. It has no dependencies and a minimal build configuration, so it&#8217;s ideal for schema-only apps.</p>
+</div>
+<div class="paragraph">
+<p>Create a new app using Enonic CLI:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>enonic create -r starter-vanilla com.company.myapp</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Choose the app name carefully. It becomes part of the schema namespace and is awkward to change later. The canonical format is <code>com.company.myapp</code>, but you can choose any unique string. Avoid generic names like <code>schemas</code> or <code>content</code> that may conflict with other apps.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how_it_works"><a class="link" href="#how_it_works">How it works</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A single app may contribute any combination of:</p>
@@ -470,17 +505,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dd>
 <p>Define the structure of editorial content (articles, products, media types, …).</p>
 </dd>
-<dt class="hdlist1">Form fragments</dt>
-<dd>
-<p>Reusable pieces of a content form, includable from other schemas.</p>
-</dd>
 <dt class="hdlist1">Mixins</dt>
 <dd>
 <p>Extra metadata attached to existing content types (formerly known as <code>x-data</code>).</p>
 </dd>
-<dt class="hdlist1">Pages, parts, layouts</dt>
+<dt class="hdlist1">Form fragments</dt>
 <dd>
-<p>Schemas paired with rendering implementations to compose pages.</p>
+<p>Reusable pieces of a content form, includable from other schemas.</p>
+</dd>
+<dt class="hdlist1">Components</dt>
+<dd>
+<p>Pages, parts, and layouts for building landing pages</p>
 </dd>
 <dt class="hdlist1">Macros</dt>
 <dd>
@@ -493,48 +528,43 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dl>
 </div>
 <div class="paragraph">
-<p>Schemas are registered when the app is installed and become available immediately in Content Studio and the content APIs. They are namespaced by app key — every schema is referenced as <code>&lt;app-key&gt;:&lt;schema-name&gt;</code> (for example, <code>com.example.myapp:article</code>).</p>
+<p>The schemas are registered when the app is installed and become available immediately in Content Studio and the content APIs. Within their kind, each schema gets registered by namespace and schema name as follows: <code>&lt;app-key&gt;:&lt;schema-name&gt;</code> (for example, <code>com.example.myapp:article</code>).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="folder_layout"><a class="link" href="#folder_layout">Folder layout</a></h2>
+<h2 id="file_structure"><a class="link" href="#file_structure">File structure</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Schemas live under <code>src/main/resources/cms/</code>, with one folder per kind:</p>
+<p>Schemas must be placed under <code>src/main/resources/cms/</code>, with one folder per kind:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">src/main/resources/
   cms/
     cms.yaml                       <i class="conum" data-value="1"></i><b>(1)</b>
-    site.yaml                      <i class="conum" data-value="2"></i><b>(2)</b>
     content-types/
       article/
         article.yaml
         article.svg                <i class="conum" data-value="3"></i><b>(3)</b>
-    form-fragments/
-      address/
-        address.yaml
     mixins/
       seo/
         seo.yaml
+    form-fragments/
+      address/
+        address.yaml
     pages/
       default/
         default.yaml
-        default.ts                 <i class="conum" data-value="4"></i><b>(4)</b>
     parts/
       hero/
         hero.yaml
-        hero.ts
     layouts/
       two-col/
         two-col.yaml
-        two-col.ts
     macros/
       embed/
-        embed.yaml
-        embed.ts</code></pre>
+        embed.yaml</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -545,20 +575,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><code>site.yaml</code> — the <a href="../sites.ahtml">site descriptor</a>, present only when the app contributes a site. Lists mounted APIs, mappings, and processors.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>Optional sibling icon, displayed in Content Studio.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Page, part, layout, and macro schemas pair with an implementation file (<code>&lt;name&gt;.ts</code>) — see <a href="../sites/components.ahtml">components</a> for the rendering side.</td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The folder name, file name, and the schema&#8217;s referenceable name must match: <code>cms/parts/hero/hero.yaml</code> is referenced as <code>&lt;app&gt;:hero</code>. Choose names carefully — they end up in stored content data and are awkward to change later.</p>
+<p>The folder name, file name, and the schema&#8217;s referenceable name must match: <code>cms/parts/hero/hero.yaml</code> is will be available in the system as <code>&lt;app&gt;:hero</code>. Choose names carefully — they end up in stored content data and are awkward to change later.</p>
 </div>
 </div>
 </div>
@@ -581,7 +603,7 @@ final: true
 allowChildContent: true
 allowChildContentType:
   - "base:folder"
-  - "${app}:article-*"
+  - "article-*"
 form:
   - name: "fullName"
     type: "TextLine"
@@ -594,21 +616,17 @@ form:
     label: "Biography"</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Notes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>${app}</code> resolves to the current app&#8217;s key at registration time. Use it instead of hard-coding your own app key, so the same schema works in forks and renamed deployments.</p>
-</li>
-<li>
-<p><code>form:</code> is where input field definitions go. The full set of input types (<code>TextLine</code>, <code>HtmlArea</code>, <code>ContentSelector</code>, <code>ImageSelector</code>, <code>Radio</code>, etc.) is documented in the <a href="https://developer.enonic.com/docs/cms/stable/schemas/forms">CMS forms reference</a>.</p>
-</li>
-<li>
-<p><code>superType</code> defaults to <code>base:structured</code>. Other options like <code>base:media</code> or <code>base:folder</code> are documented under <a href="https://developer.enonic.com/docs/cms/stable/content/content-types">content types</a>.</p>
-</li>
-</ul>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The full set of form items is documented in the <a href="https://developer.enonic.com/docs/cms/stable/schemas/form-items">CMS forms reference</a>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -668,10 +686,10 @@ form:
 <p><a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a> — content modelling, queries, and runtime APIs.</p>
 </li>
 <li>
-<p><a href="../tooling/starters.ahtml">Starters</a> — folder layout for the rest of an Enonic app.</p>
+<p><a href="tooling/starters.ahtml">Starters</a> — folder layout for the rest of an Enonic app.</p>
 </li>
 <li>
-<p><a href="../sites.ahtml">Sites</a> — wiring page/part/layout schemas to rendering implementations.</p>
+<p><a href="sites.ahtml">Sites</a> — wiring page/part/layout schemas to rendering implementations.</p>
 </li>
 </ul>
 </div>
@@ -680,7 +698,7 @@ form:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-12 14:47:58 UTC
+Last updated 2026-05-12 17:23:47 UTC
 </div>
 </div>
 </body>

@@ -103,26 +103,24 @@
       ]
     },
     {
+      "title": "Content Schemas",
+      "document": "schemas"
+    },
+    {
       "title": "APIs",
       "document": "apis"
     },
     {
-      "title": "Admin",
-      "document": "admin",
+      "title": "Admin Tools",
+      "document": "tools"
+    },
+    {
+      "title": "Admin Extensions",
+      "document": "extensions",
       "menuItems": [
         {
-          "title": "Tools",
-          "document": "admin/tools"
-        },
-        {
-          "title": "Extensions",
-          "document": "admin/extensions",
-          "menuItems": [
-            {
-              "title": "Preview widgets",
-              "document": "admin/extensions/preview-widgets"
-            }
-          ]
+          "title": "Liveview",
+          "document": "extensions/liveview"
         }
       ]
     },
@@ -269,32 +267,6 @@
         {
           "title": "Websocket",
           "document": "libraries/lib-websocket"
-        }
-      ]
-    },
-    {
-      "title": "Examples",
-      "document": "examples",
-      "menuItems": [
-        {
-          "title": "Content schemas",
-          "document": "examples/schemas"
-        },
-        {
-          "title": "Asset serving",
-          "document": "static-assets"
-        },
-        {
-          "title": "Webapps",
-          "document": "examples/webapps"
-        },
-        {
-          "title": "Templating",
-          "document": "examples/templating"
-        },
-        {
-          "title": "Metrics",
-          "document": "metrics"
         }
       ]
     },

@@ -576,7 +576,7 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 <h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The implementation lives at <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/&lt;extension-name&gt;.ts</code> and exports an <a href="../http/request-response.ahtml">HTTP function</a> for each method the extension responds to. The response shape is determined by the host tool — UI widgets typically return HTML fragments, but a data-feed extension might return JSON, and an asset-serving extension might return binary content with the appropriate <code>contentType</code>.</p>
+<p>The implementation lives at <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/&lt;extension-name&gt;.ts</code> and exports an <a href="http/request-response.ahtml">HTTP function</a> for each method the extension responds to. The response shape is determined by the host tool — UI widgets typically return HTML fragments, but a data-feed extension might return JSON, and an asset-serving extension might return binary content with the appropriate <code>contentType</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample my-extension.ts</div>
@@ -599,7 +599,7 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 <h2 id="url"><a class="link" href="#url">URL</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The URL at which an extension is reachable is a platform internal and may change between XP releases — <strong>do not hard-code it</strong>. Use <code>extensionUrl()</code> from <a href="../libraries/lib-admin.ahtml#extensionurl">lib-admin</a>; it resolves the URL based on the current admin tool context.</p>
+<p>The URL at which an extension is reachable is a platform internal and may change between XP releases — <strong>do not hard-code it</strong>. Use <code>extensionUrl()</code> from <a href="libraries/lib-admin.ahtml#extensionurl">lib-admin</a>; it resolves the URL based on the current admin tool context.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -682,14 +682,14 @@ const url = adminLib.extensionUrl({
 </div>
 <div class="paragraph">
 <p>Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool&#8217;s documentation for the contract.
-See <a href="extensions/preview-widgets.ahtml">Preview widgets</a> for a worked example: the <code>contentstudio.liveview</code> interface published by Content Studio.</p>
+See <a href="extensions/liveview.ahtml">Liveview</a> for a worked example: the <code>contentstudio.liveview</code> interface published by Content Studio.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-12 14:47:58 UTC
+Last updated 2026-05-12 17:23:47 UTC
 </div>
 </div>
 </body>
