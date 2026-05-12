@@ -441,6 +441,10 @@ form:
     max: 1
 ----
 
+===== Filter mappings now chain
+
+In XP 7, when several `filter` mappings matched the same request, only the lowest-`order` filter ran and `next()` went straight to rendering; higher-order matches were silently dropped. In XP 8, all matching filters run as a chain in ascending `order`, and rendering happens after the last `next()`. A filter that does not call `next()`, or a `controller` mapping that wins on `order`, still short-circuits the chain.
+
 ==== Page descriptor
 
 .XP 7 - site/pages/main/main.xml
