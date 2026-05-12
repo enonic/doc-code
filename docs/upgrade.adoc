@@ -159,6 +159,33 @@ xpVersion=8.0.0-SNAPSHOT #TODO 'dev' is only while XP 8.0 is in development
 version=1.0.0-SNAPSHOT
 ----
 
+=== TypeScript definitions (`@enonic-types`) for apps and libraries
+
+If your project uses TypeScript, update all `@enonic-types` packages in `package.json` to XP 8 compatible versions.
+This applies to both applications and libraries.
+
+XP 7
+[source,json]
+----
+{
+  "devDependencies": {
+    "@enonic-types/global": "^7.0.0",
+    "@enonic-types/lib-content": "^7.0.0"
+  }
+}
+----
+
+XP 8
+[source,json]
+----
+{
+  "devDependencies": {
+    "@enonic-types/global": "^8.0.0",
+    "@enonic-types/lib-content": "^8.0.0"
+  }
+}
+----
+
 === Verify
 
 After completing the steps above, you should now be able to test that your build is working, using the Enonic CLI:
