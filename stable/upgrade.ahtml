@@ -455,6 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#gradle_properties">gradle.properties</a></li>
 <li><a href="#settings_gradle">settings.gradle</a></li>
 <li><a href="#library_upgrade">Library upgrade</a></li>
+<li><a href="#typescript_definitions_enonic_types_for_apps_and_libraries">TypeScript definitions (<code>@enonic-types</code>) for apps and libraries</a></li>
 <li><a href="#verify">Verify</a></li>
 </ul>
 </li>
@@ -490,6 +491,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#jax_rs_api">JAX-RS API</a></li>
 <li><a href="#dropwizard_metrics">Dropwizard Metrics</a></li>
 <li><a href="#java_apis">Java APIs</a></li>
+<li><a href="#widgets">Widgets</a></li>
 </ul>
 </li>
 </ul>
@@ -568,14 +570,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="gradle_wrapper"><a class="link" href="#gradle_wrapper">Gradle Wrapper</a></h3>
 <div class="paragraph">
 <p>XP 8.0 standardizes on the use of Gradle 9.x.
-We recommend bundling Gradle wrapper of version 9.4.1 or later in your project.</p>
+We recommend bundling Gradle wrapper of version 9.5.0 or later in your project.</p>
 </div>
 <div class="paragraph">
 <p>For simple installations, from your project root, run:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>./gradle wrapper --gradle-version 9.4.1</pre>
+<pre>./gradle wrapper --gradle-version 9.5.0</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -754,6 +756,39 @@ version=1.0.0-SNAPSHOT</code></pre>
 </div>
 </div>
 <div class="sect2">
+<h3 id="typescript_definitions_enonic_types_for_apps_and_libraries"><a class="link" href="#typescript_definitions_enonic_types_for_apps_and_libraries">TypeScript definitions (<code>@enonic-types</code>) for apps and libraries</a></h3>
+<div class="paragraph">
+<p>If your project uses TypeScript, update all <code>@enonic-types</code> packages in <code>package.json</code> to XP 8 compatible versions.
+This applies to both applications and libraries.</p>
+</div>
+<div class="paragraph">
+<p>XP 7</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "devDependencies": {
+    "@enonic-types/global": "^7.0.0",
+    "@enonic-types/lib-content": "^7.0.0"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>XP 8</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "devDependencies": {
+    "@enonic-types/global": "^8.0.0",
+    "@enonic-types/lib-content": "^8.0.0"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="verify"><a class="link" href="#verify">Verify</a></h3>
 <div class="paragraph">
 <p>After completing the steps above, you should now be able to test that your build is working, using the Enonic CLI:</p>
@@ -794,7 +829,7 @@ Projects containing Java code might get build errors at this point, otherwise th
 <h2 id="testing_api"><a class="link" href="#testing_api">Testing API</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you are using Enonic testing API (<code>com.enonic.xp:testing</code>). You need to add Junit 5 dependency with the corresponding platform launcher.</p>
+<p>If you are using Enonic testing API (<code>com.enonic.xp:testing</code>), you&#8217;ll need to add Junit 5 dependency with the corresponding platform launcher.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1155,6 +1190,12 @@ form:
   occurrences:
     min: 0
     max: 1</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="filter_mappings_now_chain"><a class="link" href="#filter_mappings_now_chain">Filter mappings now chain</a></h5>
+<div class="paragraph">
+<p>In XP 7, when several <code>filter</code> mappings matched the same request, only the lowest-<code>order</code> filter ran and <code>next()</code> went straight to rendering; higher-order matches were silently dropped. In XP 8, all matching filters run as a chain in ascending <code>order</code>, and rendering happens after the last <code>next()</code>. A filter that does not call <code>next()</code>, or a <code>controller</code> mapping that wins on <code>order</code>, still short-circuits the chain.</p>
 </div>
 </div>
 </div>
@@ -1954,12 +1995,98 @@ Folder-based exports from XP 7 should be converted to a ZIP archive before they 
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="widgets"><a class="link" href="#widgets">Widgets</a></h3>
+<div class="sect3">
+<h4 id="web_components"><a class="link" href="#web_components">Web Components</a></h4>
+<div class="paragraph">
+<p>Dashboard and Context Panel Widgets were required to wrap their HTML with the <code>&lt;widget/&gt;</code> tag. This requirement is now obsolete as widgets are now embedded as Web Components. However, this also means that each widget resides in its own Shadow DOM, so it no longer has access to styles in the main DOM of Content Studio. If your widget piggybacked on Content Studio&#8217;s styles, you&#8217;ll have to change the implementation so that the widget is using its own styles.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="assets"><a class="link" href="#assets">Assets</a></h4>
+<div class="paragraph">
+<p>It&#8217;s no longer allowed to use <code>lib-asset</code> for generating URLs of widget assets, due to security reasons. Use <a href="https://developer.enonic.com/docs/lib-static/stable^">lib-static</a> (and <code>lib-router</code>) instead.</p>
+</div>
+<div class="paragraph">
+<p>XP 7:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
+import {assetUrl} from '/lib/enonic/asset';
+
+export function get() {
+  const view = resolve('./widget.html');
+
+  const params = {
+    jsUri: assetUrl({
+      path: 'js/extensions/widget.mjs'
+    }),
+    stylesUri: assetUrl({
+      path: 'styles/extensions/widget.css'
+    })
+  };
+
+  return {
+    contentType: 'text/html',
+    body: render(view, params)
+  };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>XP 8:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
+import {Request, Response} from '@enonic-types/core';
+import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
+import Router from '/lib/router';
+
+const STATIC_BASE_PATH = `/_static`;
+
+type WidgetRenderer = (staticBaseUrl: string, req?: Request) =&gt; Response;
+
+function createWidgetRouter(renderer: WidgetRenderer) {
+  const router = Router();
+
+  router.get('', (req: Request) =&gt; renderer(`${req.contextPath}${STATIC_BASE_PATH}`, req));
+
+  router.get(`${STATIC_BASE_PATH}/{path:.*}`, (req: Request) =&gt; requestHandler(req, {
+      index: false,
+      root: '/asset',
+      relativePath: mappedRelativePath(STATIC_BASE_PATH),
+  }));
+
+  return router;
+}
+
+const router = createWidgetRouter((staticBaseUrl: string, req: Request) =&gt; {
+  const view = resolve('./widget.html');
+
+  const params = {
+      jsUri: `${staticBaseUrl}/js/widgets/widget.mjs`,
+      stylesUri: `${staticBaseUrl}/styles/widgets/widget.css`
+  };
+
+  return {
+      contentType: 'text/html',
+      body: render(view, params)
+  };
+});
+
+export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-08 12:31:22 UTC
+Last updated 2026-05-12 14:42:58 UTC
 </div>
 </div>
 </body>

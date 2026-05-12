@@ -487,7 +487,7 @@ Upgrading from XP 7? See <a href="../upgrade.ahtml">the Upgrading guide</a>.
 <p>Gradle is built around the popular Maven ecosystem. Gradle is used because Enonic apps are packaged and deployed as .jar (Java) files in the end.</p>
 </div>
 <div class="paragraph">
-<p>Builds run on Gradle 9.x — bundle a Gradle Wrapper of version 9.4.1 or later in your project.</p>
+<p>Builds run on Gradle 9.x — bundle a Gradle Wrapper of version 9.5.0 or later in your project.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -898,7 +898,7 @@ Development mode also disables some of XP&#8217;s caching mechanisms. To make th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-08 12:31:22 UTC
+Last updated 2026-05-12 14:42:58 UTC
 </div>
 </div>
 </body>

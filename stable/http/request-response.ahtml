@@ -594,7 +594,7 @@ exports.all = (req) =&gt; {};</code></pre>
 </tr>
 <tr>
 <td><i class="conum" data-value="14"></i><b>14</b></td>
-<td><span class="image"><span class="alt">XP 8.0.0</span></span> Locale strings in decreasing order of preference, derived from the <code>Accept-Language</code> header. When the client sends no <code>Accept-Language</code> header, the array contains a single element with the server&#8217;s default locale.</td>
+<td>Locale strings in decreasing order of preference, derived from the <code>Accept-Language</code> header. When the client sends no <code>Accept-Language</code> header, the array contains a single element with the server&#8217;s default locale.</td>
 </tr>
 </table>
 </div>
@@ -762,7 +762,7 @@ Modifications to the <code>headers</code> object do not affect the result of <co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-08 12:31:22 UTC
+Last updated 2026-05-12 14:42:58 UTC
 </div>
 </div>
 </body>
