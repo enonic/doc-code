@@ -91,9 +91,9 @@ NOTE: Remove any `java.toolchain.languageVersion` (and `sourceCompatibility` / `
 
 === gradle.properties
 
-The new plugin only `appName` and `xpVersion` properties. 
+The new plugin only `appName` and `xpVersion` properties.
 
-`displayName`, `url`, `vendorName` and `vendorUrl` must be moved to the new _src/main/resources/application.yaml_ 
+`displayName`, `url`, `vendorName` and `vendorUrl` must be moved to the new _src/main/resources/application.yaml_
 
 NOTE: `displayName` is now called `title` in _application.yaml_).
 
@@ -203,7 +203,7 @@ Java 25 is bundled with XP 8.0.0, and is the minimum required version for buildi
 
 == Testing API
 
-If you are using Enonic testing API (`com.enonic.xp:testing`). You need to add Junit 5 dependency with the corresponding platform launcher.
+If you are using Enonic testing API (`com.enonic.xp:testing`), you'll need to add Junit 5 dependency with the corresponding platform launcher.
 
 [source,groovy]
 ----
@@ -1107,3 +1107,80 @@ The most noticeable changes are:
 - Javax Mail is no longer a transitive dependency of XP Core API.
 
 - OSGi classes are no longer part of API. OSGi is still used internally in XP.
+
+=== Widgets
+
+==== Web Components
+
+Dashboard and Context Panel Widgets were required to wrap their HTML with the `<widget/>` tag. This requirement is now obsolete as widgets are now embedded as Web Components. However, this also means that each widget resides in its own Shadow DOM, so it no longer has access to styles in the main DOM of Content Studio. If your widget piggybacked on Content Studio's styles, you'll have to change the implementation so that the widget is using its own styles.
+
+==== Assets
+
+It's no longer allowed to use `lib-asset` for generating URLs of widget assets, due to security reasons. Use https://developer.enonic.com/docs/lib-static/stable[lib-static^] (and `lib-router`) instead.
+
+XP 7:
+[source,typescript]
+----
+import {render} from '/lib/mustache';
+import {assetUrl} from '/lib/enonic/asset';
+
+export function get() {
+  const view = resolve('./widget.html');
+
+  const params = {
+    jsUri: assetUrl({
+      path: 'js/extensions/widget.mjs'
+    }),
+    stylesUri: assetUrl({
+      path: 'styles/extensions/widget.css'
+    })
+  };
+
+  return {
+    contentType: 'text/html',
+    body: render(view, params)
+  };
+----
+
+XP 8:
+[source,typescript]
+----
+import {render} from '/lib/mustache';
+import {Request, Response} from '@enonic-types/core';
+import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
+import Router from '/lib/router';
+
+const STATIC_BASE_PATH = `/_static`;
+
+type WidgetRenderer = (staticBaseUrl: string, req?: Request) => Response;
+
+function createWidgetRouter(renderer: WidgetRenderer) {
+  const router = Router();
+
+  router.get('', (req: Request) => renderer(`${req.contextPath}${STATIC_BASE_PATH}`, req));
+
+  router.get(`${STATIC_BASE_PATH}/{path:.*}`, (req: Request) => requestHandler(req, {
+      index: false,
+      root: '/asset',
+      relativePath: mappedRelativePath(STATIC_BASE_PATH),
+  }));
+
+  return router;
+}
+
+const router = createWidgetRouter((staticBaseUrl: string, req: Request) => {
+  const view = resolve('./widget.html');
+
+  const params = {
+      jsUri: `${staticBaseUrl}/js/widgets/widget.mjs`,
+      stylesUri: `${staticBaseUrl}/styles/widgets/widget.css`
+  };
+
+  return {
+      contentType: 'text/html',
+      body: render(view, params)
+  };
+});
+
+export const all = (req: Request) => router.dispatch(req);
+----

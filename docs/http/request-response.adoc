@@ -73,7 +73,7 @@ The ``request`` object is passed to every HTTP function. It carries the request 
 <11> Query and form parameters.
 <12> HTTP request headers.
 <13> Parsed HTTP request cookies.
-<14> image:xp-8000.svg[XP 8.0.0,opts=inline] Locale strings in decreasing order of preference, derived from the `Accept-Language` header. When the client sends no `Accept-Language` header, the array contains a single element with the server's default locale.
+<14> Locale strings in decreasing order of preference, derived from the `Accept-Language` header. When the client sends no `Accept-Language` header, the array contains a single element with the server's default locale.
 
 Use ``request.getHeader(name)`` to read a header case-insensitively. Prefer it over direct access to the ``headers`` object.
 
