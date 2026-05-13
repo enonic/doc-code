@@ -1116,7 +1116,7 @@ Dashboard and Context Panel Widgets were required to wrap their HTML with the `<
 
 ==== Assets
 
-It's no longer allowed to use `lib-asset` for generating URLs of widget assets, due to security reasons. Use https://developer.enonic.com/docs/lib-static/stable[lib-static^] (and `lib-router`) instead.
+It's no longer allowed to use `lib-asset` for generating URLs of widget assets, due to security reasons. Use https://developer.enonic.com/docs/lib-static/stable[lib-static] (and `lib-router`) instead.
 
 XP 7:
 [source,typescript]

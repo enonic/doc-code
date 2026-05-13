@@ -72,6 +72,8 @@ This project relies on GitHub Actions for building and publishing. There are no 
   - In AsciiDoc files, the `:imagesdir:` is typically set to `images`, mapping files to the respective folders.
   - Example: `image::my-image.png[]` (where `my-image.png` is placed in `docs/content/images/`).
 - **Menu Updates:** When adding new documentation pages, you MUST update `docs/menu.json` to ensure they appear in the docs navigation.
-- **Links:** Use relative links between `.adoc` files (e.g., `<<path/to/doc#,Label>>`).
+- **Links:**
+  - Use relative links between `.adoc` files (e.g., `<<path/to/doc#,Label>>`).
+  - Do *not* use the `^` suffix on link labels (e.g., `[Label^]`) — neither for cross-doc links within `developer.enonic.com` nor for genuinely external sites. Forcing a new tab removes user agency; readers who want one can middle-click or Cmd-click. EDK, CS, CMS, XP platform, and Guillotine docs all render on the same dev portal and behave as sibling navigation, not as "external" destinations.
 - **Variables:** Use attributes defined in `docs/.variables.adoc` for consistent naming (e.g., `{release}`).
 - **Underscores in inline text — be extremely careful:** AsciiDoc parses paired underscores as italic, so any identifier, path, or URL placeholder that contains `_` can silently break formatting (a single `_` opens an italic run that swallows the rest of the line; `foo_bar_baz` renders as `foo*bar*baz`). Wrap such strings in single-plus passthrough — `+text_with_underscores+` — to suppress parsing. For monospaced URL patterns and identifiers, combine with backticks: `` `+/_/<app>:<api>/+` ``, `` `+last_event_id+` ``, `` `+http_management_port+` ``. The rule applies to prose, link labels, list items, and example URL patterns; content already inside a fenced source block is safe. When in doubt, wrap it in `+`.

@@ -4,6 +4,8 @@
 
 LiveView is an admin extension that implements the `contentstudio.liveview` interface.
 
+TIP: More details on what this looks like in the: https://developer.enonic.com/docs/content-studio/stable/workbench/preview[Content Studio preview].
+
 == Introduction
 
 LiveView extensions are used in Content Studio's *Edit* and *Browse* views to render a preview of the currently selected content.
@@ -53,10 +55,12 @@ src/main/resources/admin/extensions/
   my-preview/
     my-preview.yaml   # <1>
     my-preview.ts     # <2>
+    my-preview.svg    # <3>
 ----
 
 <1> Descriptor — see <<#descriptor,below>>.
 <2> Implementation file
+<3> Optional SVG icon shown next to the widget in the preview-pane dropdown.
 
 [#descriptor]
 == Descriptor
@@ -265,7 +269,6 @@ return {
 
 <1> *messages* — strings shown as warnings in the preview pane.
 <2> *redirect* — if set, Content Studio replaces the iframe contents with a fetch of this URL.
-Used by the built-in *Site engine* widget to delegate to the running site.
 <3> *hasControllers* — capability flags that influence which preview-pane controls light up.
 
 NOTE: Other fields in `enonic-widget-data` are silently ignored.
