@@ -466,6 +466,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>LiveView is an admin extension that implements the <code>contentstudio.liveview</code> interface.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+More details on what this looks like in the: <a href="https://developer.enonic.com/docs/content-studio/stable/workbench/preview">Content Studio preview</a>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -558,7 +570,8 @@ If none was able to render, the preview pane shows "No preview available".</p>
 <pre class="highlight"><code class="language-files" data-lang="files">src/main/resources/admin/extensions/
   my-preview/
     my-preview.yaml   <i class="conum" data-value="1"></i><b>(1)</b>
-    my-preview.ts     <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+    my-preview.ts     <i class="conum" data-value="2"></i><b>(2)</b>
+    my-preview.svg    <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -570,6 +583,10 @@ If none was able to render, the preview pane shows "No preview available".</p>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>Implementation file</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Optional SVG icon shown next to the widget in the preview-pane dropdown.</td>
 </tr>
 </table>
 </div>
@@ -859,8 +876,7 @@ return {
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>redirect</strong> — if set, Content Studio replaces the iframe contents with a fetch of this URL.
-Used by the built-in <strong>Site engine</strong> widget to delegate to the running site.</td>
+<td><strong>redirect</strong> — if set, Content Studio replaces the iframe contents with a fetch of this URL.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -886,7 +902,7 @@ Other fields in <code>enonic-widget-data</code> are silently ignored.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-12 17:23:47 UTC
+Last updated 2026-05-13 08:31:28 UTC
 </div>
 </div>
 </body>

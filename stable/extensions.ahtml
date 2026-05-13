@@ -682,14 +682,14 @@ const url = adminLib.extensionUrl({
 </div>
 <div class="paragraph">
 <p>Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool&#8217;s documentation for the contract.
-See <a href="extensions/liveview.ahtml">Liveview</a> for a worked example: the <code>contentstudio.liveview</code> interface published by Content Studio.</p>
+See <a href="extensions/liveview.ahtml">Liveview</a>, <a href="extensions/contextpanel.ahtml">Context panel</a>, and <a href="extensions/menuitem.ahtml">Menu item</a> for worked examples: the <code>contentstudio.liveview</code>, <code>contentstudio.contextpanel</code>, and <code>contentstudio.menuitem</code> interfaces published by Content Studio.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-12 17:23:47 UTC
+Last updated 2026-05-13 08:31:28 UTC
 </div>
 </div>
 </body>

@@ -119,8 +119,16 @@
       "document": "extensions",
       "menuItems": [
         {
+          "title": "Context panel",
+          "document": "extensions/contextpanel"
+        },
+        {
           "title": "Liveview",
           "document": "extensions/liveview"
+        },
+        {
+          "title": "Menu item",
+          "document": "extensions/menuitem"
         }
       ]
     },
