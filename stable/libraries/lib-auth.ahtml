@@ -1624,8 +1624,8 @@ const result = getMemberships('user:system:user1', true);</code></pre>
     },
     {
         type: "role",
-        key: "role:cms.cm.app",
-        displayName: "Content Manager App"
+        key: "role:cms.project.default.editor",
+        displayName: "Default project editor"
     }
 ]</code></pre>
 </div>
@@ -2540,7 +2540,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-13 08:31:28 UTC
+Last updated 2026-05-13 14:46:41 UTC
 </div>
 </div>
 </body>
