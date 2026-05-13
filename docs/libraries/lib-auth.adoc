@@ -685,8 +685,8 @@ const result = getMemberships('user:system:user1', true);
     },
     {
         type: "role",
-        key: "role:cms.cm.app",
-        displayName: "Content Manager App"
+        key: "role:cms.project.default.editor",
+        displayName: "Default project editor"
     }
 ]
 ----

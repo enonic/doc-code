@@ -227,6 +227,20 @@ WARNING: Junit 4 is not supported in XP 8.0.0
 
 In XP8 the contextual repository and branch may return null if they are not set explicitly. Previously the default context was set with `com.enonic.cms.default` repository and `draft` branch.
 
+=== Roles
+
+The legacy role `role:cms.cm.app` (display name "Content Manager App") is deprecated. Fresh XP 8 installs no longer create this role, and it is no longer added to the default ACLs of content, issue, or archive root nodes when new projects are initialized.
+
+Existing installations upgrading from XP 7 keep the role definition and any pre-existing ACEs that reference it. Those entries are harmless but obsolete and should not be relied on going forward. Apps that previously granted `cms.cm.app` to a user or group should switch to the per-project role hierarchy that XP 8 manages per content project:
+
+* `role:cms.project.<name>.owner`
+* `role:cms.project.<name>.editor`
+* `role:cms.project.<name>.author`
+* `role:cms.project.<name>.contributor`
+* `role:cms.project.<name>.viewer`
+
+NOTE: Legacy dumps (model 8) imported into XP 8 are upgraded to model 9 automatically. During that upgrade, `cms.cm.app` is stripped from the legacy `com.enonic.cms.default` repository ACLs and replaced with the per-project role hierarchy. No manual action is required for that case.
+
 === Application Descriptor
 
 The `application.xml` descriptor must be converted to `application.yaml`.
