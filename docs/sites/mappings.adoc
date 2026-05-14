@@ -82,6 +82,18 @@ Examples:
 * Regex with query string: `+pattern: '/endpoint\?bar=\d+&foo=.*'+`
 * Inverted via `invertPattern: true` together with `+pattern: '/section/.*'+`
 
+=== App key substitution
+
+A pattern may include the literal token `+${app}+`, which is expanded at parse time to the owning application's key. This lets you write site-mapping patterns that reference the app's own key without hardcoding it.
+
+.cms/site.yaml in an app whose key is `com.foo.bar`
+[source,yaml]
+----
+mappings:
+  - pattern: "/_/static/${app}/.+"
+    controller: "/site/mappings/static-controller.js"
+----
+
 == Match mappings
 
 Match-based mappings can be used to automatically render content types without using page templates or associating content with an implementation directly. A common case is automatic handling of the content type `portal:fragment`.
