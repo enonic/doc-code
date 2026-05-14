@@ -241,6 +241,65 @@ Existing installations upgrading from XP 7 keep the role definition and any pre-
 
 NOTE: Legacy dumps (model 8) imported into XP 8 are upgraded to model 9 automatically. During that upgrade, `cms.cm.app` is stripped from the legacy `com.enonic.cms.default` repository ACLs and replaced with the per-project role hierarchy. No manual action is required for that case.
 
+[#identity-keys]
+=== Identity keys, names, and IDs
+
+XP 8 tightens the validation rules for identity keys, node/content names, and IDs. Apps that programmatically generate these values (custom ID providers, importers, migration scripts, etc.) must produce values matching the rules below.
+
+All identity keys must satisfy the following common rules:
+
+- must not be an empty string
+- must not be a single underscore `+_+`, dot `.`, or double dot `..`
+- must not include `/` or `\`
+- must not include any whitespace characters, except the regular space `+U+0020+`
+- must not start or end with the space character `+U+0020+`
+
+==== Node, Content, and Issue names and IDs
+
+* Names follow the common rules above.
+* IDs are limited to 256 bytes/characters and no longer accept uppercase letters: `+[a-z0-9_.:-]++`
+
+==== IdProviderKey and PrincipalKey
+
+Follow the common rules with the additional restriction of not including the space character `+U+0020+`, nor any of: `<`, `>`, `:`, `"`, `|`, `?`, `*`, `&`, `'`.
+
+==== DescriptorKey
+
+Applies to:
+
+* All CMS schema descriptor keys, including MacroKey
+* Task key
+* API key
+* HTTP service key
+* Admin Tool key
+* Admin Extension key
+
+Additional restrictions:
+
+* must not include any of: `<`, `>`, `:`, `"`, `|`, `?`, `*`, `&`, `'`
+* must not include the space character `+U+0020+`
+* limited to 64 characters
+
+==== ApplicationKey
+
+* must match the regex `+\w+(?:\.\w+)*+`
+* limited to 63 characters
+
+==== RepositoryId
+
+* must match the regex `+[a-z0-9][a-z0-9._-]*+`
+* limited to 63 characters
+
+==== Branch
+
+* must match the regex `+[a-z0-9][a-z0-9.-]*+`
+* limited to 63 characters
+
+==== ProjectName
+
+* must match the regex `+[a-z0-9][a-z0-9_-]*+`
+* limited to 48 characters
+
 === Application Descriptor
 
 The `application.xml` descriptor must be converted to `application.yaml`.
@@ -411,6 +470,10 @@ form:
     min: 1
     max: 1
 ----
+
+=== Authentication scope
+
+Authentication no longer searches across ID providers for the first matching user. A request resolves against the vhost's default ID provider, or an ID provider you specify explicitly. If your app relied on cross-provider lookup, configure the relevant vhosts explicitly in your XP deployment.
 
 === CMS Schema
 
@@ -957,6 +1020,12 @@ dependencies {
 `editor` of deprecated `modify` method can no longer edit node permissions. Use separate call to `applyPermissions` method instead.
 
 === lib-content
+
+`move` and `rename` methods are merged into a single `move` method.
+
+`setChildOrder` and `reorderChildren` methods are merged into a single `sort` method.
+
+The `hasChildren` property has been removed from content.
 
 `setPermissions` method is removed. Use `applyPermissions` instead.
 
