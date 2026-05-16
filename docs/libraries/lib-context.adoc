@@ -134,6 +134,8 @@ const result = run({
 "Hello from context"
 ----
 
+NOTE: On XP 8, `branch` (and usually `repository`) must be set explicitly when the calling context does not already carry them — otherwise the callback throws `Error: branch is required`. See <<../upgrade#default-context, the upgrade note on default context>>.
+
 == Type Definitions
 
 === GetContext
