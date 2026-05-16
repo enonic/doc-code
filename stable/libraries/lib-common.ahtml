@@ -575,7 +575,7 @@ const sanitizedText = sanitize("Piña CØLADÆ &lt;script&gt;alert('hi!');&lt;/s
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-14 11:33:27 UTC
+Last updated 2026-05-16 09:18:41 UTC
 </div>
 </div>
 </body>

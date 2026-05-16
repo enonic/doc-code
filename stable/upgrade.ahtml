@@ -463,7 +463,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#testing_api">Testing API</a></li>
 <li><a href="#api_deprecations_and_breaking_changes">API Deprecations and Breaking Changes</a>
 <ul class="sectlevel2">
-<li><a href="#default_context">Default context</a></li>
+<li><a href="#default-context">Default context</a></li>
 <li><a href="#roles">Roles</a></li>
 <li><a href="#identity-keys">Identity keys, names, and IDs</a></li>
 <li><a href="#application_descriptor">Application Descriptor</a></li>
@@ -866,9 +866,26 @@ Junit 4 is not supported in XP 8.0.0
 <h2 id="api_deprecations_and_breaking_changes"><a class="link" href="#api_deprecations_and_breaking_changes">API Deprecations and Breaking Changes</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="default_context"><a class="link" href="#default_context">Default context</a></h3>
+<h3 id="default-context"><a class="link" href="#default-context">Default context</a></h3>
 <div class="paragraph">
 <p>In XP8 the contextual repository and branch may return null if they are not set explicitly. Previously the default context was set with <code>com.enonic.cms.default</code> repository and <code>draft</code> branch.</p>
+</div>
+<div class="paragraph">
+<p><strong>Symptom.</strong> Code that previously relied on the implicit defaults — typically <code>contextLib.run({ &#8230;&#8203; }, callback)</code> without a <code>branch:</code> or <code>repository:</code> field — now throws at runtime, e.g. <code>Error: branch is required</code>. The same applies to <code>node.connect({ &#8230;&#8203; })</code> calls that don&#8217;t pass <code>branch</code> / <code>repoId</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Fix.</strong> Set <code>branch</code> (and <code>repository</code>, where relevant) explicitly on every <code>run</code> or <code>connect</code> call that needs to operate against a known repo and branch.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Before — relied on default 'draft' branch
+import {run} from '/lib/xp/context';
+run({}, () =&gt; doStuff());
+
+// After — branch (and usually repository) set explicitly
+import {run} from '/lib/xp/context';
+run({repository: 'com.enonic.cms.default', branch: 'draft'}, () =&gt; doStuff());</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -2287,7 +2304,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-14 11:33:27 UTC
+Last updated 2026-05-16 09:18:41 UTC
 </div>
 </div>
 </body>
