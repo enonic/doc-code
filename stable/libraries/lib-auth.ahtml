@@ -455,6 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#findusers">findUsers</a></li>
 <li><a href="#generatepassword">generatePassword</a></li>
 <li><a href="#getidproviderconfig">getIdProviderConfig</a></li>
+<li><a href="#getidproviders">getIdProviders</a></li>
 <li><a href="#getmembers">getMembers</a></li>
 <li><a href="#getmemberships">getMemberships</a></li>
 <li><a href="#getprincipal">getPrincipal</a></li>
@@ -806,6 +807,14 @@ const group = createGroup({
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idProviderConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Binds this provider to one application. Without it the provider is incomplete and login plumbing won&#8217;t resolve back to an app.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
@@ -858,6 +867,48 @@ const group = createGroup({
 </tbody>
 </table>
 <div class="paragraph lead">
+<p><code>idProviderConfig</code> properties</p>
+</div>
+<table class="tableblock frame-ends grid-none stretch">
+<caption class="title">Properties</caption>
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 96%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Attributes</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">applicationKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Key of the application whose handlers serve requests for this provider.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Per-instance configuration tree passed to the bound application.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
@@ -875,6 +926,12 @@ const idProvider = createIdProvider({
     key: 'myIdProvider',
     displayName: 'My ID Provider',
     description: 'My ID provider description',
+    idProviderConfig: {
+        applicationKey: 'com.example.myidprovider',
+        config: {
+            // app-specific configuration
+        }
+    },
     permissions: [
         {
             principal: 'role:system.admin',
@@ -890,7 +947,13 @@ const idProvider = createIdProvider({
 <pre class="highlight"><code class="language-js" data-lang="js">({
     key: "myIdProvider",
     displayName: "My ID Provider",
-    description: "My ID provider description"
+    description: "My ID provider description",
+    idProviderConfig: {
+        applicationKey: "com.example.myidprovider",
+        config: {
+            // app-specific configuration
+        }
+    }
 })</code></pre>
 </div>
 </div>
@@ -1446,6 +1509,55 @@ const config = getIdProviderConfig&lt;{ field?: string }&gt;();
 if (config) {
     log.info('Field value for the current ID provider config = %s', config.field);
 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getidproviders"><a class="link" href="#getidproviders">getIdProviders</a></h3>
+<div class="paragraph">
+<p>Returns all id providers configured on the system. Each entry&#8217;s <code>idProviderConfig</code> is present only when the provider is bound to an application; incomplete providers come back without it.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p>None</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>object[]</strong>: A list of ID providers.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Retrieving all ID providers</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getIdProviders} from '/lib/xp/auth';
+
+const idProviders = getIdProviders();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Sample response</div>
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">([
+    {
+        key: "system",
+        displayName: "System Id Provider"
+    },
+    {
+        key: "myIdProvider",
+        displayName: "My ID Provider",
+        description: "My ID provider description",
+        idProviderConfig: {
+            applicationKey: "com.example.myidprovider",
+            config: {}
+        }
+    }
+])</code></pre>
 </div>
 </div>
 </div>
@@ -2540,7 +2652,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-16 09:18:41 UTC
+Last updated 2026-05-16 10:22:13 UTC
 </div>
 </div>
 </body>
