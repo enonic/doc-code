@@ -243,8 +243,6 @@ import {run} from '/lib/xp/context';
 run({repository: 'com.enonic.cms.default', branch: 'draft'}, () => doStuff());
 ----
 
-See <<libraries/lib-context#run,context.run>> and <<libraries/lib-node#connect,node.connect>> for the full parameter reference.
-
 === Roles
 
 The legacy role `role:cms.cm.app` (display name "Content Manager App") is deprecated. Fresh XP 8 installs no longer create this role, and it is no longer added to the default ACLs of content, issue, or archive root nodes when new projects are initialized.
