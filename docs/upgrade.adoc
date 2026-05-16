@@ -223,9 +223,25 @@ WARNING: Junit 4 is not supported in XP 8.0.0
 
 == API Deprecations and Breaking Changes
 
+[#default-context]
 === Default context
 
 In XP8 the contextual repository and branch may return null if they are not set explicitly. Previously the default context was set with `com.enonic.cms.default` repository and `draft` branch.
+
+*Symptom.* Code that previously relied on the implicit defaults — typically `contextLib.run({ ... }, callback)` without a `branch:` or `repository:` field — now throws at runtime, e.g. `Error: branch is required`. The same applies to `node.connect({ ... })` calls that don't pass `branch` / `repoId`.
+
+*Fix.* Set `branch` (and `repository`, where relevant) explicitly on every `run` or `connect` call that needs to operate against a known repo and branch.
+
+[source,typescript]
+----
+// Before — relied on default 'draft' branch
+import {run} from '/lib/xp/context';
+run({}, () => doStuff());
+
+// After — branch (and usually repository) set explicitly
+import {run} from '/lib/xp/context';
+run({repository: 'com.enonic.cms.default', branch: 'draft'}, () => doStuff());
+----
 
 === Roles
 
