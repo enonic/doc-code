@@ -465,8 +465,6 @@ const expected = {
 
 Toggles public/private READ access for an existing Content Project. This will modify permissions on ALL the content items inside the project repository by adding or removing READ access for `system.everyone`.
 
-NOTE: Renamed from `modifyReadAccess` in XP 8. The parameter shape flattened from `{readAccess: {public}}` to `{publicRead}`.
-
 NOTE: To modify READ access, user must have `Owner` permissions for the project, or either `system.admin` or `cms.admin` role.
 
 [.lead]
