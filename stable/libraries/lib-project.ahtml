@@ -450,7 +450,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#get">get</a></li>
 <li><a href="#list">list</a></li>
 <li><a href="#modify">modify</a></li>
-<li><a href="#modifyreadaccess">modifyReadAccess</a></li>
+<li><a href="#setpublicread">setPublicRead</a></li>
 <li><a href="#removepermissions">removePermissions</a></li>
 <li><a href="#getavailableapplications">getAvailableApplications</a></li>
 </ul>
@@ -738,31 +738,12 @@ Only <code>system.admin</code> and <code>cms.admin</code> roles have permissions
 </table></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">readAccess</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object.&lt;string, boolean&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publicRead</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Read access settings.</p>
-</div>
-<table class="tableblock frame-all grid-all stripes-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">public</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public read access (READ permissions for <code>system.everyone</code>).</p></td>
-</tr>
-</tbody>
-</table></div></td>
+<p><code>true</code> to grant READ permissions to <code>system.everyone</code>, <code>false</code> otherwise.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -784,9 +765,7 @@ try {
     const project = create({
         id: 'my-project',
         displayName: 'My Content Project',
-        readAccess: {
-            public: true
-        }
+        publicRead: true
     });
 } catch (e) {
     log.error('Failed to create a project: %s', e.message);
@@ -800,9 +779,7 @@ try {
   id: 'my-project',
   displayName: 'My Content Project',
   permissions: {},
-  readAccess: {
-    public: true
-  }
+  publicRead: true
 }</code></pre>
 </div>
 </div>
@@ -835,9 +812,7 @@ const project = create({
                 b: 3.4
             }
         }],
-    readAccess: {
-        public: false
-    }
+    publicRead: false
 });</code></pre>
 </div>
 </div>
@@ -881,9 +856,7 @@ const project = create({
         'user:mystore:user5'
     ]
   },
-  readAccess: {
-    public: false
-  }
+  publicRead: false
 }</code></pre>
 </div>
 </div>
@@ -892,18 +865,6 @@ const project = create({
 <h3 id="deleteproject"><a class="link" href="#deleteproject">deleteProject</a></h3>
 <div class="paragraph">
 <p>Deletes an existing Content Project and the project repository along with all the data inside.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Renamed from <code>delete</code> to avoid the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility.
-</td>
-</tr>
-</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1114,6 +1075,9 @@ const projects = list();</code></pre>
 <div class="paragraph">
 <p>Modifies an existing Content Project.</p>
 </div>
+<div class="paragraph">
+<p>Pass an <code>editor</code> function that receives the current project, mutates fields on it, and returns it. Fields the editor doesn&#8217;t touch are left unchanged. Setting <code>description</code>, <code>language</code>, or <code>siteConfig</code> to <code>null</code> clears them. <code>displayName</code> is required and cannot be cleared.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1133,14 +1097,12 @@ To modify a project, user must have <code>Owner</code> permissions for this proj
 <colgroup>
 <col style="width: 1%;">
 <col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 97%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1148,69 +1110,22 @@ To modify a project, user must have <code>Owner</code> permissions for this proj
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Unique project id (alpha-numeric characters and hyphens allowed).</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Project display name.</p>
+<p>Function that receives the editable project, mutates fields, and returns it.</p>
 </div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Project description.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">language</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Default project language.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">siteConfig</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object.&lt;string, Object&gt;[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Applications (with optional configurations) to be assigned to the project.</p>
-</div>
-<table class="tableblock frame-all grid-all stripes-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 49%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">applicationKey</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Application key</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Application config json</p></td>
-</tr>
-</tbody>
-</table></div></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The editor&#8217;s input has the same shape as a <code>Project</code> plus the editable fields <code>displayName</code>, <code>description</code>, <code>language</code>, and <code>siteConfig</code>.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -1227,21 +1142,19 @@ To modify a project, user must have <code>Owner</code> permissions for this proj
 
 const project = modify({
     id: 'my-project',
-    displayName: 'New project name',
-    description: 'New project description',
-    language: 'en',
-    siteConfig: [{
+    editor: (project) =&gt; {
+        project.displayName = 'New project name';
+        project.description = 'New project description';
+        project.language = 'en';
+        project.siteConfig = [{
             applicationKey: 'app1',
-            config: {
-                a: 'b'
-            }
-        } ,{
+            config: { a: 'b' }
+        }, {
             applicationKey: 'app2',
-            config: {
-                a: true,
-                b: 3.4
-            }
-        }],
+            config: { a: true, b: 3.4 }
+        }];
+        return project;
+    }
 });</code></pre>
 </div>
 </div>
@@ -1269,15 +1182,13 @@ const project = modify({
         }
     ],
     permissions: {},
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="modifyreadaccess"><a class="link" href="#modifyreadaccess">modifyReadAccess</a></h3>
+<h3 id="setpublicread"><a class="link" href="#setpublicread">setPublicRead</a></h3>
 <div class="paragraph">
 <p>Toggles public/private READ access for an existing Content Project. This will modify permissions on ALL the content items inside the project repository by adding or removing READ access for <code>system.everyone</code>.</p>
 </div>
@@ -1299,8 +1210,8 @@ To modify READ access, user must have <code>Owner</code> permissions for the pro
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
-<col style="width: 35%;">
-<col style="width: 64%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
@@ -1318,30 +1229,11 @@ To modify READ access, user must have <code>Owner</code> permissions for the pro
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">readAccess</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object.&lt;string, boolean&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Read access settings.</p>
-</div>
-<table class="tableblock frame-all grid-all stripes-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">public</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publicRead</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public read access (READ permissions for <code>system.everyone</code>).</p></td>
-</tr>
-</tbody>
-</table></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>true</code> to grant READ permissions to <code>system.everyone</code>, <code>false</code> otherwise.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -1349,7 +1241,7 @@ To modify READ access, user must have <code>Owner</code> permissions for the pro
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object</strong> : Current state of public READ access.</p>
+<p><strong>boolean</strong> : Resulting public-read state.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1357,24 +1249,18 @@ To modify READ access, user must have <code>Owner</code> permissions for the pro
 <div class="listingblock">
 <div class="title">Set content project as not available for public READ access</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {modifyReadAccess} from '/lib/xp/project';
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {setPublicRead} from '/lib/xp/project';
 
-const currentReadAccess = modifyReadAccess({
+const publicRead = setPublicRead({
     id: 'my-project',
-    readAccess: {
-        public: false
-    }
+    publicRead: false
 });</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
-    readAccess: {
-        public: false
-    }
-}</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = false;</code></pre>
 </div>
 </div>
 </div>
@@ -1569,7 +1455,7 @@ const project = getAvailableApplications({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-16 10:22:13 UTC
+Last updated 2026-05-18 08:49:08 UTC
 </div>
 </div>
 </body>

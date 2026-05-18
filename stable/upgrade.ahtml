@@ -1952,6 +1952,9 @@ apis:
 <div class="sect2">
 <h3 id="lib_content"><a class="link" href="#lib_content">lib-content</a></h3>
 <div class="paragraph">
+<p>Reading the project&#8217;s root content (path <code>/</code>) via <code>lib-content</code> (<code>get</code>, <code>getByPath</code>, etc.) now returns <code>null</code>. The root is reserved for the platform; use <code>lib-project</code> for project metadata (<code>get({id})</code>, <code>list()</code>) and create/move content under named paths only.</p>
+</div>
+<div class="paragraph">
 <p><code>move</code> and <code>rename</code> methods are merged into a single <code>move</code> method.</p>
 </div>
 <div class="paragraph">
@@ -2014,6 +2017,44 @@ apis:
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">import {deleteProject} from '/lib/xp/project';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong><code>readAccess: { public }</code> → <code>publicRead: boolean</code>.</strong> <code>create({readAccess: {public: true}})</code> is now <code>create({publicRead: true})</code>. The <code>Project</code> shape returned by <code>get</code> / <code>list</code> / <code>create</code> carries <code>publicRead</code> instead of <code>readAccess.public</code>. The nested-object form has been removed entirely; there is no backward-compat shim.</p>
+</div>
+<div class="paragraph">
+<p><strong><code>modifyReadAccess</code> → <code>setPublicRead</code>.</strong> Same flat shape:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// XP 7
+import {modifyReadAccess} from '/lib/xp/project';
+modifyReadAccess({id: 'p', readAccess: {public: true}});
+
+// XP 8
+import {setPublicRead} from '/lib/xp/project';
+setPublicRead({id: 'p', publicRead: true});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong><code>modify</code> now takes an <code>editor</code> function</strong> instead of optional setter-style fields. Fields the editor doesn&#8217;t touch are left unchanged; setting <code>description</code>, <code>language</code>, or <code>siteConfig</code> to <code>null</code> clears them. <code>displayName</code> cannot be cleared.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// XP 7
+import {modify} from '/lib/xp/project';
+modify({id: 'p', displayName: 'New name', language: 'no'});
+
+// XP 8
+import {modify} from '/lib/xp/project';
+modify({
+    id: 'p',
+    editor: (project) =&gt; {
+        project.displayName = 'New name';
+        project.language = 'no';
+        return project;
+    }
+});</code></pre>
 </div>
 </div>
 </div>
@@ -2304,7 +2345,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-16 10:22:13 UTC
+Last updated 2026-05-18 08:49:08 UTC
 </div>
 </div>
 </body>
