@@ -119,13 +119,7 @@ Parameters
 ! role ! string ! Role id (one of `owner`, `editor`, `author`, `contributor`, `viewer`).
 ! principals ! string[] ! Array of principals.
 !===
-| readAccess | Object.<string, boolean> | | Read access settings.
-[stripes=none,cols="1,1,98"]
-!===
-! Name ! Type ! Description
-! public ! boolean ! Public read access (READ permissions for `system.everyone`).
-
-!===
+| publicRead | boolean | | `true` to grant READ permissions to `system.everyone`, `false` otherwise.
 |===
 
 [.lead]
@@ -146,9 +140,7 @@ try {
     const project = create({
         id: 'my-project',
         displayName: 'My Content Project',
-        readAccess: {
-            public: true
-        }
+        publicRead: true
     });
 } catch (e) {
     log.error('Failed to create a project: %s', e.message);
@@ -162,9 +154,7 @@ const expected = {
   id: 'my-project',
   displayName: 'My Content Project',
   permissions: {},
-  readAccess: {
-    public: true
-  }
+  publicRead: true
 }
 ----
 
@@ -197,9 +187,7 @@ const project = create({
                 b: 3.4
             }
         }],
-    readAccess: {
-        public: false
-    }
+    publicRead: false
 });
 ----
 
@@ -243,9 +231,7 @@ const expected = {
         'user:mystore:user5'
     ]
   },
-  readAccess: {
-    public: false
-  }
+  publicRead: false
 }
 ----
 
@@ -397,28 +383,23 @@ const expected = [{
 
 Modifies an existing Content Project.
 
+Pass an `editor` function that receives the current project, mutates fields on it, and returns it. Fields the editor doesn't touch are left unchanged. Setting `description`, `language`, or `siteConfig` to `null` clears them. `displayName` is required and cannot be cleared.
+
 NOTE: To modify a project, user must have `Owner` permissions for this project, or either `system.admin` or `cms.admin` role.
 
 [.lead]
 Parameters
 
-[%header,cols="1,1,1,97a"]
+[%header,cols="1,1,98a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| id | string | | Unique project id (alpha-numeric characters and hyphens allowed).
-| displayName | string | <optional> | Project display name.
-| description | string | <optional> | Project description.
-| language | string | <optional> | Default project language.
-| siteConfig | Object.<string, Object>[] | <optional> | Applications (with optional configurations) to be assigned to the project.
-[stripes=none,cols="1,49,50"]
-!===
-! Name ! Type ! Description
-! applicationKey ! string ! Application key
-! config ! Object ! Application config json
-!===
+| Name | Type | Description
+| id | string | Unique project id (alpha-numeric characters and hyphens allowed).
+| editor | Function | Function that receives the editable project, mutates fields, and returns it.
 |===
+
+The editor's input has the same shape as a `Project` plus the editable fields `displayName`, `description`, `language`, and `siteConfig`.
 
 [.lead]
 Returns
@@ -436,21 +417,19 @@ import {modify} from '/lib/xp/project';
 
 const project = modify({
     id: 'my-project',
-    displayName: 'New project name',
-    description: 'New project description',
-    language: 'en',
-    siteConfig: [{
+    editor: (project) => {
+        project.displayName = 'New project name';
+        project.description = 'New project description';
+        project.language = 'en';
+        project.siteConfig = [{
             applicationKey: 'app1',
-            config: {
-                a: 'b'
-            }
-        } ,{
+            config: { a: 'b' }
+        }, {
             applicationKey: 'app2',
-            config: {
-                a: true,
-                b: 3.4
-            }
-        }],
+            config: { a: true, b: 3.4 }
+        }];
+        return project;
+    }
 });
 ----
 
@@ -478,40 +457,34 @@ const expected = {
         }
     ],
     permissions: {},
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 }
 ----
 
-=== modifyReadAccess
+=== setPublicRead
 
 Toggles public/private READ access for an existing Content Project. This will modify permissions on ALL the content items inside the project repository by adding or removing READ access for `system.everyone`.
+
+NOTE: Renamed from `modifyReadAccess` in XP 8. The parameter shape flattened from `{readAccess: {public}}` to `{publicRead}`.
 
 NOTE: To modify READ access, user must have `Owner` permissions for the project, or either `system.admin` or `cms.admin` role.
 
 [.lead]
 Parameters
 
-[%header,cols="1,35,64a"]
+[%header,cols="1,1,98a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
 | id | string | Unique project id (alpha-numeric characters and hyphens allowed).
-| readAccess | Object.<string, boolean> | Read access settings.
-[stripes=none,cols="1,1,98"]
-!===
-! Name ! Type ! Description
-! public ! boolean ! Public read access (READ permissions for `system.everyone`).
-
-!===
+| publicRead | boolean | `true` to grant READ permissions to `system.everyone`, `false` otherwise.
 |===
 
 [.lead]
 Returns
 
-*Object* : Current state of public READ access.
+*boolean* : Resulting public-read state.
 
 
 [.lead]
@@ -520,24 +493,18 @@ Example
 .Set content project as not available for public READ access
 [source,typescript]
 ----
-import {modifyReadAccess} from '/lib/xp/project';
+import {setPublicRead} from '/lib/xp/project';
 
-const currentReadAccess = modifyReadAccess({
+const publicRead = setPublicRead({
     id: 'my-project',
-    readAccess: {
-        public: false
-    }
+    publicRead: false
 });
 ----
 
 .Sample response
 [source,typescript]
 ----
-const expected = {
-    readAccess: {
-        public: false
-    }
-}
+const expected = false;
 ----
 
 === removePermissions
