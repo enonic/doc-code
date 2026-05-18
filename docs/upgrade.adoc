@@ -1037,6 +1037,8 @@ dependencies {
 
 === lib-content
 
+Reading the project's root content (path `/`) via `lib-content` (`get`, `getByPath`, etc.) now returns `null`. The root is reserved for the platform; use `lib-project` for project metadata (`get({id})`, `list()`) and create/move content under named paths only.
+
 `move` and `rename` methods are merged into a single `move` method.
 
 `setChildOrder` and `reorderChildren` methods are merged into a single `sort` method.
@@ -1081,6 +1083,41 @@ XP 8
 [source,typescript]
 ----
 import {deleteProject} from '/lib/xp/project';
+----
+
+**`readAccess: { public }` → `publicRead: boolean`.** `create({readAccess: {public: true}})` is now `create({publicRead: true})`. The `Project` shape returned by `get` / `list` / `create` carries `publicRead` instead of `readAccess.public`. The nested-object form has been removed entirely; there is no backward-compat shim.
+
+**`modifyReadAccess` → `setPublicRead`.** Same flat shape:
+
+[source,typescript]
+----
+// XP 7
+import {modifyReadAccess} from '/lib/xp/project';
+modifyReadAccess({id: 'p', readAccess: {public: true}});
+
+// XP 8
+import {setPublicRead} from '/lib/xp/project';
+setPublicRead({id: 'p', publicRead: true});
+----
+
+**`modify` now takes an `editor` function** instead of optional setter-style fields. Fields the editor doesn't touch are left unchanged; setting `description`, `language`, or `siteConfig` to `null` clears them. `displayName` cannot be cleared.
+
+[source,typescript]
+----
+// XP 7
+import {modify} from '/lib/xp/project';
+modify({id: 'p', displayName: 'New name', language: 'no'});
+
+// XP 8
+import {modify} from '/lib/xp/project';
+modify({
+    id: 'p',
+    editor: (project) => {
+        project.displayName = 'New name';
+        project.language = 'no';
+        return project;
+    }
+});
 ----
 
 === lib-repo
