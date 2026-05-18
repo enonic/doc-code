@@ -239,8 +239,6 @@ const expected = {
 
 Deletes an existing Content Project and the project repository along with all the data inside.
 
-NOTE: Renamed from `delete` to avoid the JavaScript reserved word. The old `delete` export is still available for backward compatibility.
-
 NOTE: To delete a project, user must have either `system.admin` or `cms.admin` role.
 
 [.lead]
