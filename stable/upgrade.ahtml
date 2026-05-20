@@ -467,16 +467,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#roles">Roles</a></li>
 <li><a href="#identity-keys">Identity keys, names, and IDs</a></li>
 <li><a href="#application_descriptor">Application Descriptor</a></li>
-<li><a href="#admin_api">Admin API</a></li>
-<li><a href="#admin_tool">Admin Tool</a></li>
-<li><a href="#script_globals">Script Globals</a></li>
+<li><a href="#admin_tools">Admin Tools</a></li>
+<li><a href="#widgets_admin_extensions">Widgets / Admin Extensions</a></li>
 <li><a href="#task">Task</a></li>
 <li><a href="#id_provider">ID Provider</a></li>
 <li><a href="#authentication_scope">Authentication scope</a></li>
-<li><a href="#cms_schema">CMS Schema</a></li>
+<li><a href="#site_descriptor_split">Site descriptor split</a></li>
+<li><a href="#page_descriptor">Page descriptor</a></li>
+<li><a href="#layout_descriptor">Layout descriptor</a></li>
+<li><a href="#part_descriptor">Part descriptor</a></li>
+<li><a href="#content_type_descriptor">Content type descriptor</a></li>
+<li><a href="#mixins_renamed_to_form_fragments">Mixins renamed to Form Fragments</a></li>
+<li><a href="#x_data_renamed_to_mixin">X-data renamed to Mixin</a></li>
+<li><a href="#macro_descriptors">Macro descriptors</a></li>
+<li><a href="#styles">Styles</a></li>
+<li><a href="#datetime_and_instant_input_types">DateTime and Instant input types</a></li>
+<li><a href="#script_globals">Script Globals</a></li>
 <li><a href="#http_functions">HTTP functions</a></li>
-<li><a href="#http_services">HTTP Services</a></li>
-<li><a href="#assets_service">Assets service</a></li>
+<li><a href="#lib_util">lib-util</a></li>
 <li><a href="#lib_admin">lib-admin</a></li>
 <li><a href="#lib_node">lib-node</a></li>
 <li><a href="#lib_content">lib-content</a></li>
@@ -489,12 +497,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#lib_auth">lib-auth</a></li>
 <li><a href="#lib_context">lib-context</a></li>
 <li><a href="#lib_export">lib-export</a></li>
+<li><a href="#http_services">HTTP Services</a></li>
+<li><a href="#assets_service">Assets service</a></li>
+<li><a href="#widgets_go_web_components">Widgets go Web Components</a></li>
 <li><a href="#javax_to_jakarta">Javax to Jakarta</a></li>
 <li><a href="#fasterxml_jackson_json_api">FasterXML Jackson JSON API</a></li>
 <li><a href="#jax_rs_api">JAX-RS API</a></li>
 <li><a href="#dropwizard_metrics">Dropwizard Metrics</a></li>
 <li><a href="#java_apis">Java APIs</a></li>
-<li><a href="#widgets">Widgets</a></li>
 </ul>
 </li>
 </ul>
@@ -505,6 +515,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section describes the steps required to upgrade an XP application from 7.x to 8.0</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To run this upgrade automatically with an AI coding agent, use the <a href="https://github.com/enonic/ai-agents-skills">Enonic AI Agents Skills</a> repository — it includes a skill that drives Claude Code (or a compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -523,7 +545,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Check out the project source code to a local folder i.e. myapp/</p>
 </li>
 <li>
-<p>Create an XP8 sandbox for the application using Enonic CLI</p>
+<p>Ensure you have an XP8 sandbox for the application using Enonic CLI</p>
 <div class="literalblock">
 <div class="content">
 <pre>enonic project sandbox</pre>
@@ -658,7 +680,7 @@ Remove any <code>java.toolchain.languageVersion</code> (and <code>sourceCompatib
 <div class="sect2">
 <h3 id="gradle_properties"><a class="link" href="#gradle_properties">gradle.properties</a></h3>
 <div class="paragraph">
-<p>The new plugin only <code>appName</code> and <code>xpVersion</code> properties.</p>
+<p>The new plugin only uses <code>appName</code> and <code>xpVersion</code> properties.</p>
 </div>
 <div class="paragraph">
 <p><code>displayName</code>, <code>url</code>, <code>vendorName</code> and <code>vendorUrl</code> must be moved to the new <em>src/main/resources/application.yaml</em></p>
@@ -753,7 +775,7 @@ via <em>xp.enonicRepo()</em> shortcut
 <div class="content">
 <pre class="highlight"><code class="language-properties" data-lang="properties">group=com.mycompany.lib
 projectName=mylib
-xpVersion=8.0.0-SNAPSHOT #TODO 'dev' is only while XP 8.0 is in development
+xpVersion=8.0.0-SNAPSHOT #TODO '-SNAPSHOT' is only while XP 8.0 is in development
 version=1.0.0-SNAPSHOT</code></pre>
 </div>
 </div>
@@ -1106,25 +1128,7 @@ description: "My app description"</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="admin_api"><a class="link" href="#admin_api">Admin API</a></h3>
-<div class="paragraph">
-<p>All XML descriptor files must now be converted to YAML (<code>.yaml</code>) descriptor files. XML descriptors are no longer supported in XP 8.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Use the <a href="https://github.com/enonic/xp8migrator">xp8migrator</a> tool to automate the conversion of XML descriptors to YAML.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="admin_tool"><a class="link" href="#admin_tool">Admin Tool</a></h3>
+<h3 id="admin_tools"><a class="link" href="#admin_tools">Admin Tools</a></h3>
 <div class="paragraph">
 <p>Admin Tool descriptors must be converted from XML to YAML.</p>
 </div>
@@ -1151,8 +1155,9 @@ allow:
 - "role:system.authenticated"</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="widgets_extensions"><a class="link" href="#widgets_extensions">Widgets / Extensions</a></h4>
+</div>
+<div class="sect2">
+<h3 id="widgets_admin_extensions"><a class="link" href="#widgets_admin_extensions">Widgets / Admin Extensions</a></h3>
 <div class="paragraph">
 <p>Widgets are now part of the Admin Extensions API. The <code>admin/widgets</code> directory has been renamed to <code>admin/extensions</code>, and descriptors must be converted from XML to YAML.</p>
 </div>
@@ -1212,13 +1217,6 @@ allow:
 apis:
 - "admin:extension"</code></pre>
 </div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="script_globals"><a class="link" href="#script_globals">Script Globals</a></h3>
-<div class="paragraph">
-<p><code>resolve</code> function no longer uses <code>src/main/resources/site</code> as its first root folder. Only <code>src/main/resources</code> is used as the root. If your scripts relied on resolving paths relative to the <code>site</code> folder, update them to use full paths from the resources root.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1312,24 +1310,7 @@ form:
 </div>
 </div>
 <div class="sect2">
-<h3 id="cms_schema"><a class="link" href="#cms_schema">CMS Schema</a></h3>
-<div class="paragraph">
-<p>All XML descriptor files must now be converted to YAML (<code>.yaml</code>) descriptor files. XML descriptors are no longer supported in XP 8.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Use the <a href="https://github.com/enonic/xp8migrator">xp8migrator</a> tool to automate the conversion of XML descriptors to YAML.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect3">
-<h4 id="site_descriptor_split"><a class="link" href="#site_descriptor_split">Site descriptor split</a></h4>
+<h3 id="site_descriptor_split"><a class="link" href="#site_descriptor_split">Site descriptor split</a></h3>
 <div class="paragraph">
 <p>The <code>site.xml</code> descriptor has been split into two separate files in XP 8:</p>
 </div>
@@ -1401,15 +1382,15 @@ form:
     max: 1</code></pre>
 </div>
 </div>
-<div class="sect4">
-<h5 id="filter_mappings_now_chain"><a class="link" href="#filter_mappings_now_chain">Filter mappings now chain</a></h5>
+<div class="sect3">
+<h4 id="filter_mappings_now_chain"><a class="link" href="#filter_mappings_now_chain">Filter mappings now chain</a></h4>
 <div class="paragraph">
 <p>In XP 7, when several <code>filter</code> mappings matched the same request, only the lowest-<code>order</code> filter ran and <code>next()</code> went straight to rendering; higher-order matches were silently dropped. In XP 8, all matching filters run as a chain in ascending <code>order</code>, and rendering happens after the last <code>next()</code>. A filter that does not call <code>next()</code>, or a <code>controller</code> mapping that wins on <code>order</code>, still short-circuits the chain.</p>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="page_descriptor"><a class="link" href="#page_descriptor">Page descriptor</a></h4>
+<div class="sect2">
+<h3 id="page_descriptor"><a class="link" href="#page_descriptor">Page descriptor</a></h3>
 <div class="listingblock">
 <div class="title">XP 7 - site/pages/main/main.xml</div>
 <div class="content">
@@ -1436,8 +1417,8 @@ regions:
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="layout_descriptor"><a class="link" href="#layout_descriptor">Layout descriptor</a></h4>
+<div class="sect2">
+<h3 id="layout_descriptor"><a class="link" href="#layout_descriptor">Layout descriptor</a></h3>
 <div class="listingblock">
 <div class="title">XP 7 - site/layouts/2-column/2-column.xml</div>
 <div class="content">
@@ -1466,8 +1447,8 @@ regions:
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="part_descriptor"><a class="link" href="#part_descriptor">Part descriptor</a></h4>
+<div class="sect2">
+<h3 id="part_descriptor"><a class="link" href="#part_descriptor">Part descriptor</a></h3>
 <div class="listingblock">
 <div class="title">XP 7 - site/parts/my-part/my-part.xml</div>
 <div class="content">
@@ -1500,8 +1481,8 @@ form:
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="content_type"><a class="link" href="#content_type">Content type</a></h4>
+<div class="sect2">
+<h3 id="content_type_descriptor"><a class="link" href="#content_type_descriptor">Content type descriptor</a></h3>
 <div class="listingblock">
 <div class="title">XP 7 - site/content-types/article/article.xml</div>
 <div class="content">
@@ -1534,43 +1515,8 @@ form:
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="x_data_renamed_to_mixin"><a class="link" href="#x_data_renamed_to_mixin">X-data renamed to Mixin</a></h4>
-<div class="paragraph">
-<p>X-data has been renamed to Mixin in XP 8. The <code>x-data</code> directory should be renamed to <code>mixins</code>, and descriptor files updated accordingly.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - site/x-data/myattachment/myattachment.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;x-data&gt;
-  &lt;display-name&gt;My Attachment&lt;/display-name&gt;
-  &lt;form&gt;
-    &lt;input name="myAttachment" type="AttachmentUploader"&gt;
-      &lt;label&gt;My Attachment&lt;/label&gt;
-      &lt;occurrences minimum="1" maximum="1"/&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/x-data&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/mixins/myattachment/myattachment.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Mixin"
-title: "My Attachment"
-form:
-- type: "AttachmentUploader"
-  name: "myAttachment"
-  label: "My Attachment"
-  occurrences:
-    min: 1
-    max: 1</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="mixins_renamed_to_form_fragments"><a class="link" href="#mixins_renamed_to_form_fragments">Mixins renamed to Form Fragments</a></h4>
+<div class="sect2">
+<h3 id="mixins_renamed_to_form_fragments"><a class="link" href="#mixins_renamed_to_form_fragments">Mixins renamed to Form Fragments</a></h3>
 <div class="paragraph">
 <p>Mixins (XP 7) have been renamed to Form Fragments in XP 8. The <code>mixins</code> directory should be renamed to <code>form-fragments</code>.</p>
 </div>
@@ -1604,8 +1550,43 @@ form:
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="macro"><a class="link" href="#macro">Macro</a></h4>
+<div class="sect2">
+<h3 id="x_data_renamed_to_mixin"><a class="link" href="#x_data_renamed_to_mixin">X-data renamed to Mixin</a></h3>
+<div class="paragraph">
+<p>X-data has been renamed to Mixin in XP 8. The <code>x-data</code> directory should be renamed to <code>mixins</code>, and descriptor files updated accordingly.</p>
+</div>
+<div class="listingblock">
+<div class="title">XP 7 - site/x-data/myattachment/myattachment.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;x-data&gt;
+  &lt;display-name&gt;My Attachment&lt;/display-name&gt;
+  &lt;form&gt;
+    &lt;input name="myAttachment" type="AttachmentUploader"&gt;
+      &lt;label&gt;My Attachment&lt;/label&gt;
+      &lt;occurrences minimum="1" maximum="1"/&gt;
+    &lt;/input&gt;
+  &lt;/form&gt;
+&lt;/x-data&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">XP 8 - cms/mixins/myattachment/myattachment.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Mixin"
+title: "My Attachment"
+form:
+- type: "AttachmentUploader"
+  name: "myAttachment"
+  label: "My Attachment"
+  occurrences:
+    min: 1
+    max: 1</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="macro_descriptors"><a class="link" href="#macro_descriptors">Macro descriptors</a></h3>
 <div class="paragraph">
 <p>Macro descriptors must be converted from XML to YAML.</p>
 </div>
@@ -1639,8 +1620,8 @@ form:
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="styles"><a class="link" href="#styles">Styles</a></h4>
+<div class="sect2">
+<h3 id="styles"><a class="link" href="#styles">Styles</a></h3>
 <div class="paragraph">
 <p>Style descriptor must be converted from XML to YAML.</p>
 </div>
@@ -1684,8 +1665,8 @@ styles:
 <p>The <code>styles/styles.css</code> file must be removed.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="datetime_and_instant_input_types"><a class="link" href="#datetime_and_instant_input_types">DateTime and Instant input types</a></h4>
+<div class="sect2">
+<h3 id="datetime_and_instant_input_types"><a class="link" href="#datetime_and_instant_input_types">DateTime and Instant input types</a></h3>
 <div class="paragraph">
 <p>The XP 7 <code>DateTime</code> input type with <code>&lt;timezone&gt;true&lt;/timezone&gt;</code> has been split into a separate <code>Instant</code> type in XP 8. <code>DateTime</code> is now used exclusively for local date-time values (without timezone), while <code>Instant</code> represents a point in time.</p>
 </div>
@@ -1724,6 +1705,11 @@ styles:
   label: "Event date"</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="script_globals"><a class="link" href="#script_globals">Script Globals</a></h3>
+<div class="paragraph">
+<p><code>resolve</code> function no longer uses <code>src/main/resources/site</code> as its first root folder. Only <code>src/main/resources</code> is used as the root. If your scripts relied on resolving paths relative to the <code>site</code> folder, update them to use full paths from the resources root.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1794,99 +1780,12 @@ exports.all = function(req) {
 </div>
 </div>
 <div class="sect2">
-<h3 id="http_services"><a class="link" href="#http_services">HTTP Services</a></h3>
+<h3 id="lib_util"><a class="link" href="#lib_util">lib-util</a></h3>
 <div class="paragraph">
-<p>HTTP Services are deprecated. Universal API should be used instead.</p>
-</div>
-<div class="listingblock">
-<div class="title">Old services</div>
-<div class="content">
-<pre class="highlight"><code class="language-files" data-lang="files">src/
-  main/
-    resources/
-      services/
-        coolservice/
-          coolservice.xml
-          coolservice.js
-      myservice/
-        myservice.js
-        myservice.xml</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">New APIs</div>
-<div class="content">
-<pre class="highlight"><code class="language-files" data-lang="files">src/
-  main/
-    resources/
-      apis/
-        coolservice/
-          coolservice.yaml
-          coolservice.js
-        myservice/
-          myservice.js
-          myservice.yaml</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Old service.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;service&gt;
-  &lt;allow&gt;
-    &lt;principal&gt;role:system.admin&lt;/principal&gt;
-  &lt;/allow&gt;
-&lt;/service&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">New api.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "API"
-allow:
-  - "role:system.admin"</code></pre>
-</div>
+<p>Lib util has been deprecated. If your app dependes on any of the methods from lib-util, you should migrate to using the corresponding standard TypeScript or JavaScript code where possible, or inline the relevant logic directly in your code.</p>
 </div>
 <div class="paragraph">
-<p>Use <code>portal.apiUrl()</code> instead of <code>portal.serviceUrl()</code> to generate URLs pointing to APIs.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Unlike services, APIs are not automatically mounted on admin tools web-apps and sites. They must be explicitly mounted via the descriptor.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="title">Example of mounting "coolservice" API in an admin tool</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminTool"
-title: "My Admin Tool"
-allow:
-  - "role:system.admin"
-apis:
-  - "coolservice"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="assets_service"><a class="link" href="#assets_service">Assets service</a></h3>
-<div class="paragraph">
-<p>The built-in assets service has been deprecated since XP 7.15. Replace it with one of:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://developer.enonic.com/docs/lib-asset/stable">lib-asset</a> — best fit for site applications, where it integrates with the site engine and content context.</p>
-</li>
-<li>
-<p><a href="https://developer.enonic.com/docs/lib-static/stable">lib-static</a> — designed for serving static files from contexts where lib-asset does not fit, such as ID providers and admin extensions.</p>
-</li>
-</ul>
+<p>Get more details at <a href="https://github.com/enonic/lib-util/issues/196" class="bare">https://github.com/enonic/lib-util/issues/196</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -2168,6 +2067,185 @@ Folder-based exports from XP 7 should be converted to a ZIP archive before they 
 </div>
 </div>
 <div class="sect2">
+<h3 id="http_services"><a class="link" href="#http_services">HTTP Services</a></h3>
+<div class="paragraph">
+<p>HTTP Services are deprecated. Universal API should be used instead.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under <code>/_/service/&lt;app-name&gt;/&lt;service-name&gt;</code>, while Universal APIs are available directly under <code>/_/&lt;app-name&gt;/&lt;api-name&gt;</code>. Additionally, services were automatically mounted on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Old services</div>
+<div class="content">
+<pre class="highlight"><code class="language-files" data-lang="files">src/
+  main/
+    resources/
+      services/
+        coolservice/
+          coolservice.xml
+          coolservice.js
+      myservice/
+        myservice.js
+        myservice.xml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">New APIs</div>
+<div class="content">
+<pre class="highlight"><code class="language-files" data-lang="files">src/
+  main/
+    resources/
+      apis/
+        coolservice/
+          coolservice.yaml
+          coolservice.js
+        myservice/
+          myservice.js
+          myservice.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Old service.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;service&gt;
+  &lt;allow&gt;
+    &lt;principal&gt;role:system.admin&lt;/principal&gt;
+  &lt;/allow&gt;
+&lt;/service&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">New api.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "API"
+allow:
+  - "role:system.admin"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use <code>portal.apiUrl()</code> instead of <code>portal.serviceUrl()</code> to generate URLs pointing to APIs.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of mounting "coolservice" API in an admin tool</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminTool"
+title: "My Admin Tool"
+allow:
+  - "role:system.admin"
+apis:
+  - "coolservice"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="assets_service"><a class="link" href="#assets_service">Assets service</a></h3>
+<div class="paragraph">
+<p>The built-in assets service has been deprecated since XP 7.15. Replace it with one of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://developer.enonic.com/docs/lib-asset/stable">lib-asset</a> — best fit for site applications, where it integrates with the site engine and content context.</p>
+</li>
+<li>
+<p><a href="https://developer.enonic.com/docs/lib-static/stable">lib-static</a> — designed for serving static files from contexts where lib-asset does not fit, such as ID providers and admin extensions.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="widgets_go_web_components"><a class="link" href="#widgets_go_web_components">Widgets go Web Components</a></h3>
+<div class="paragraph">
+<p>Dashboard and Context Panel Widgets were required to wrap their HTML with the <code>&lt;widget/&gt;</code> tag. This requirement is now obsolete as widgets are now embedded as Web Components. However, this also means that each widget resides in its own Shadow DOM, so it no longer has access to styles in the main DOM of Content Studio. If your widget piggybacked on Content Studio&#8217;s styles, you&#8217;ll have to change the implementation so that the widget is using its own styles.</p>
+</div>
+<div class="sect3">
+<h4 id="assets"><a class="link" href="#assets">Assets</a></h4>
+<div class="paragraph">
+<p>It&#8217;s no longer allowed to use <code>lib-asset</code> for generating URLs of widget assets, due to security reasons. Use <a href="https://developer.enonic.com/docs/lib-static/stable">lib-static</a> (and <code>lib-router</code>) instead.</p>
+</div>
+<div class="paragraph">
+<p>XP 7:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
+import {assetUrl} from '/lib/enonic/asset';
+
+export function get() {
+  const view = resolve('./widget.html');
+
+  const params = {
+    jsUri: assetUrl({
+      path: 'js/extensions/widget.mjs'
+    }),
+    stylesUri: assetUrl({
+      path: 'styles/extensions/widget.css'
+    })
+  };
+
+  return {
+    contentType: 'text/html',
+    body: render(view, params)
+  };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>XP 8:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
+import {Request, Response} from '@enonic-types/core';
+import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
+import Router from '/lib/router';
+
+const STATIC_BASE_PATH = `/_static`;
+
+type WidgetRenderer = (staticBaseUrl: string, req?: Request) =&gt; Response;
+
+function createWidgetRouter(renderer: WidgetRenderer) {
+  const router = Router();
+
+  router.get('', (req: Request) =&gt; renderer(`${req.contextPath}${STATIC_BASE_PATH}`, req));
+
+  router.get(`${STATIC_BASE_PATH}/{path:.*}`, (req: Request) =&gt; requestHandler(req, {
+      index: false,
+      root: '/asset',
+      relativePath: mappedRelativePath(STATIC_BASE_PATH),
+  }));
+
+  return router;
+}
+
+const router = createWidgetRouter((staticBaseUrl: string, req: Request) =&gt; {
+  const view = resolve('./widget.html');
+
+  const params = {
+      jsUri: `${staticBaseUrl}/js/widgets/widget.mjs`,
+      stylesUri: `${staticBaseUrl}/styles/widgets/widget.css`
+  };
+
+  return {
+      contentType: 'text/html',
+      body: render(view, params)
+  };
+});
+
+export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="javax_to_jakarta"><a class="link" href="#javax_to_jakarta">Javax to Jakarta</a></h3>
 <div class="paragraph">
 <p>Most of the Java EE APIs have been migrated to Jakarta EE APIs. For instance <code>javax.servlet</code> is replaced with <code>jakarta.servlet</code>.</p>
@@ -2254,98 +2332,12 @@ Folder-based exports from XP 7 should be converted to a ZIP archive before they 
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="widgets"><a class="link" href="#widgets">Widgets</a></h3>
-<div class="sect3">
-<h4 id="web_components"><a class="link" href="#web_components">Web Components</a></h4>
-<div class="paragraph">
-<p>Dashboard and Context Panel Widgets were required to wrap their HTML with the <code>&lt;widget/&gt;</code> tag. This requirement is now obsolete as widgets are now embedded as Web Components. However, this also means that each widget resides in its own Shadow DOM, so it no longer has access to styles in the main DOM of Content Studio. If your widget piggybacked on Content Studio&#8217;s styles, you&#8217;ll have to change the implementation so that the widget is using its own styles.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="assets"><a class="link" href="#assets">Assets</a></h4>
-<div class="paragraph">
-<p>It&#8217;s no longer allowed to use <code>lib-asset</code> for generating URLs of widget assets, due to security reasons. Use <a href="https://developer.enonic.com/docs/lib-static/stable">lib-static</a> (and <code>lib-router</code>) instead.</p>
-</div>
-<div class="paragraph">
-<p>XP 7:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
-import {assetUrl} from '/lib/enonic/asset';
-
-export function get() {
-  const view = resolve('./widget.html');
-
-  const params = {
-    jsUri: assetUrl({
-      path: 'js/extensions/widget.mjs'
-    }),
-    stylesUri: assetUrl({
-      path: 'styles/extensions/widget.css'
-    })
-  };
-
-  return {
-    contentType: 'text/html',
-    body: render(view, params)
-  };</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>XP 8:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
-import {Request, Response} from '@enonic-types/core';
-import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
-import Router from '/lib/router';
-
-const STATIC_BASE_PATH = `/_static`;
-
-type WidgetRenderer = (staticBaseUrl: string, req?: Request) =&gt; Response;
-
-function createWidgetRouter(renderer: WidgetRenderer) {
-  const router = Router();
-
-  router.get('', (req: Request) =&gt; renderer(`${req.contextPath}${STATIC_BASE_PATH}`, req));
-
-  router.get(`${STATIC_BASE_PATH}/{path:.*}`, (req: Request) =&gt; requestHandler(req, {
-      index: false,
-      root: '/asset',
-      relativePath: mappedRelativePath(STATIC_BASE_PATH),
-  }));
-
-  return router;
-}
-
-const router = createWidgetRouter((staticBaseUrl: string, req: Request) =&gt; {
-  const view = resolve('./widget.html');
-
-  const params = {
-      jsUri: `${staticBaseUrl}/js/widgets/widget.mjs`,
-      stylesUri: `${staticBaseUrl}/styles/widgets/widget.css`
-  };
-
-  return {
-      contentType: 'text/html',
-      body: render(view, params)
-  };
-});
-
-export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
-</div>
-</div>
-</div>
-</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-18 08:49:08 UTC
+Last updated 2026-05-20 09:12:20 UTC
 </div>
 </div>
 </body>
