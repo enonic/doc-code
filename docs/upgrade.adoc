@@ -4,6 +4,7 @@
 
 This section describes the steps required to upgrade an XP application from 7.x to 8.0
 
+NOTE: To run this upgrade automatically with an AI coding agent, use the https://github.com/enonic/ai-agents-skills[Enonic AI Agents Skills] repository — it includes a skill that drives Claude Code (or a compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
 
 == Preparations
 
@@ -11,7 +12,7 @@ Before you start the upgrade procedure:
 
 . Make sure you have https://developer.enonic.com/docs/enonic-cli[Enonic CLI] installed
 . Check out the project source code to a local folder i.e. myapp/
-. Create an XP8 sandbox for the application using Enonic CLI
+. Ensure you have an XP8 sandbox for the application using Enonic CLI
 
     enonic project sandbox
 
@@ -91,7 +92,7 @@ NOTE: Remove any `java.toolchain.languageVersion` (and `sourceCompatibility` / `
 
 === gradle.properties
 
-The new plugin only `appName` and `xpVersion` properties.
+The new plugin only uses `appName` and `xpVersion` properties.
 
 `displayName`, `url`, `vendorName` and `vendorUrl` must be moved to the new _src/main/resources/application.yaml_
 
@@ -155,7 +156,7 @@ via _xp.enonicRepo()_ shortcut
 ----
 group=com.mycompany.lib
 projectName=mylib
-xpVersion=8.0.0-SNAPSHOT #TODO 'dev' is only while XP 8.0 is in development
+xpVersion=8.0.0-SNAPSHOT #TODO '-SNAPSHOT' is only while XP 8.0 is in development
 version=1.0.0-SNAPSHOT
 ----
 
@@ -338,13 +339,7 @@ kind: "Application"
 description: "My app description"
 ----
 
-=== Admin API
-
-All XML descriptor files must now be converted to YAML (`.yaml`) descriptor files. XML descriptors are no longer supported in XP 8.
-
-TIP: Use the https://github.com/enonic/xp8migrator[xp8migrator] tool to automate the conversion of XML descriptors to YAML.
-
-=== Admin Tool
+=== Admin Tools
 
 Admin Tool descriptors must be converted from XML to YAML.
 
@@ -371,7 +366,7 @@ allow:
 - "role:system.authenticated"
 ----
 
-==== Widgets / Extensions
+=== Widgets / Admin Extensions
 
 Widgets are now part of the Admin Extensions API. The `admin/widgets` directory has been renamed to `admin/extensions`, and descriptors must be converted from XML to YAML.
 
@@ -411,11 +406,6 @@ allow:
 apis:
 - "admin:extension"
 ----
-
-=== Script Globals
-
-`resolve` function no longer uses `src/main/resources/site` as its first root folder. Only `src/main/resources` is used as the root. If your scripts relied on resolving paths relative to the `site` folder, update them to use full paths from the resources root.
-
 
 === Task
 
@@ -491,13 +481,7 @@ form:
 
 Authentication no longer searches across ID providers for the first matching user. A request resolves against the vhost's default ID provider, or an ID provider you specify explicitly. If your app relied on cross-provider lookup, configure the relevant vhosts explicitly in your XP deployment.
 
-=== CMS Schema
-
-All XML descriptor files must now be converted to YAML (`.yaml`) descriptor files. XML descriptors are no longer supported in XP 8.
-
-TIP: Use the https://github.com/enonic/xp8migrator[xp8migrator] tool to automate the conversion of XML descriptors to YAML.
-
-==== Site descriptor split
+=== Site descriptor split
 
 The `site.xml` descriptor has been split into two separate files in XP 8:
 
@@ -561,11 +545,11 @@ form:
     max: 1
 ----
 
-===== Filter mappings now chain
+==== Filter mappings now chain
 
 In XP 7, when several `filter` mappings matched the same request, only the lowest-`order` filter ran and `next()` went straight to rendering; higher-order matches were silently dropped. In XP 8, all matching filters run as a chain in ascending `order`, and rendering happens after the last `next()`. A filter that does not call `next()`, or a `controller` mapping that wins on `order`, still short-circuits the chain.
 
-==== Page descriptor
+=== Page descriptor
 
 .XP 7 - site/pages/main/main.xml
 [source,xml]
@@ -592,7 +576,7 @@ regions:
 - "main"
 ----
 
-==== Layout descriptor
+=== Layout descriptor
 
 .XP 7 - site/layouts/2-column/2-column.xml
 [source,xml]
@@ -621,7 +605,7 @@ regions:
 - "right"
 ----
 
-==== Part descriptor
+=== Part descriptor
 
 .XP 7 - site/parts/my-part/my-part.xml
 [source,xml]
@@ -654,7 +638,7 @@ form:
     max: 1
 ----
 
-==== Content type
+=== Content type descriptor
 
 .XP 7 - site/content-types/article/article.xml
 [source,xml]
@@ -687,40 +671,7 @@ form:
     max: 1
 ----
 
-==== X-data renamed to Mixin
-
-X-data has been renamed to Mixin in XP 8. The `x-data` directory should be renamed to `mixins`, and descriptor files updated accordingly.
-
-.XP 7 - site/x-data/myattachment/myattachment.xml
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8"?>
-<x-data>
-  <display-name>My Attachment</display-name>
-  <form>
-    <input name="myAttachment" type="AttachmentUploader">
-      <label>My Attachment</label>
-      <occurrences minimum="1" maximum="1"/>
-    </input>
-  </form>
-</x-data>
-----
-
-.XP 8 - cms/mixins/myattachment/myattachment.yaml
-[source,yaml]
-----
-kind: "Mixin"
-title: "My Attachment"
-form:
-- type: "AttachmentUploader"
-  name: "myAttachment"
-  label: "My Attachment"
-  occurrences:
-    min: 1
-    max: 1
-----
-
-==== Mixins renamed to Form Fragments
+=== Mixins renamed to Form Fragments
 
 Mixins (XP 7) have been renamed to Form Fragments in XP 8. The `mixins` directory should be renamed to `form-fragments`.
 
@@ -753,7 +704,40 @@ form:
     max: 1
 ----
 
-==== Macro
+=== X-data renamed to Mixin
+
+X-data has been renamed to Mixin in XP 8. The `x-data` directory should be renamed to `mixins`, and descriptor files updated accordingly.
+
+.XP 7 - site/x-data/myattachment/myattachment.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<x-data>
+  <display-name>My Attachment</display-name>
+  <form>
+    <input name="myAttachment" type="AttachmentUploader">
+      <label>My Attachment</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+  </form>
+</x-data>
+----
+
+.XP 8 - cms/mixins/myattachment/myattachment.yaml
+[source,yaml]
+----
+kind: "Mixin"
+title: "My Attachment"
+form:
+- type: "AttachmentUploader"
+  name: "myAttachment"
+  label: "My Attachment"
+  occurrences:
+    min: 1
+    max: 1
+----
+
+=== Macro descriptors
 
 Macro descriptors must be converted from XML to YAML.
 
@@ -786,7 +770,7 @@ form:
     max: 1
 ----
 
-==== Styles
+=== Styles
 
 Style descriptor must be converted from XML to YAML.
 
@@ -828,7 +812,7 @@ styles:
 
 The `styles/styles.css` file must be removed.
 
-==== DateTime and Instant input types
+=== DateTime and Instant input types
 
 The XP 7 `DateTime` input type with `<timezone>true</timezone>` has been split into a separate `Instant` type in XP 8. `DateTime` is now used exclusively for local date-time values (without timezone), while `Instant` represents a point in time.
 
@@ -866,6 +850,10 @@ The XP 7 `DateTime` input type with `<timezone>true</timezone>` has been split i
   name: "eventDate"
   label: "Event date"
 ----
+
+=== Script Globals
+
+`resolve` function no longer uses `src/main/resources/site` as its first root folder. Only `src/main/resources` is used as the root. If your scripts relied on resolving paths relative to the `site` folder, update them to use full paths from the resources root.
 
 === HTTP functions
 
@@ -921,80 +909,11 @@ exports.all = function(req) {
 };
 ----
 
+=== lib-util
 
-=== HTTP Services
+Lib util has been deprecated. If your app dependes on any of the methods from lib-util, you should migrate to using the corresponding standard TypeScript or JavaScript code where possible, or inline the relevant logic directly in your code.
 
-HTTP Services are deprecated. Universal API should be used instead.
-
-.Old services
-[source,files]
-----
-src/
-  main/
-    resources/
-      services/
-        coolservice/
-          coolservice.xml
-          coolservice.js
-      myservice/
-        myservice.js
-        myservice.xml
-----
-
-.New APIs
-[source,files]
-----
-src/
-  main/
-    resources/
-      apis/
-        coolservice/
-          coolservice.yaml
-          coolservice.js
-        myservice/
-          myservice.js
-          myservice.yaml
-----
-
-.Old service.xml
-[source,xml]
-----
-<service>
-  <allow>
-    <principal>role:system.admin</principal>
-  </allow>
-</service>
-----
-
-.New api.yaml
-[source,yaml]
-----
-kind: "API"
-allow:
-  - "role:system.admin"
-----
-
-Use `portal.apiUrl()` instead of `portal.serviceUrl()` to generate URLs pointing to APIs.
-
-NOTE: Unlike services, APIs are not automatically mounted on admin tools web-apps and sites. They must be explicitly mounted via the descriptor.
-
-.Example of mounting "coolservice" API in an admin tool
-[source,yaml]
-----
-kind: "AdminTool"
-title: "My Admin Tool"
-allow:
-  - "role:system.admin"
-apis:
-  - "coolservice"
-----
-
-=== Assets service
-
-The built-in assets service has been deprecated since XP 7.15. Replace it with one of:
-
-* https://developer.enonic.com/docs/lib-asset/stable[lib-asset] — best fit for site applications, where it integrates with the site engine and content context.
-* https://developer.enonic.com/docs/lib-static/stable[lib-static] — designed for serving static files from contexts where lib-asset does not fit, such as ID providers and admin extensions.
+Get more details at https://github.com/enonic/lib-util/issues/196
 
 === lib-admin
 
@@ -1190,63 +1109,81 @@ The output file is named `{exportName}.zip` in the exports directory, replacing 
 
 TIP: Folder-based exports from XP 7 should be converted to a ZIP archive before they can be imported in XP 8.
 
-=== Javax to Jakarta
+=== HTTP Services
 
-Most of the Java EE APIs have been migrated to Jakarta EE APIs. For instance `javax.servlet` is replaced with `jakarta.servlet`.
+HTTP Services are deprecated. Universal API should be used instead.
 
-Jetty was updated to version 12.x and now uses Jakarta EE APIs.
+NOTE: Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under `+/_/service/<app-name>/<service-name>+`, while Universal APIs are available directly under `+/_/<app-name>/<api-name>+`. Additionally, services were automatically mounted on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors.
 
-=== FasterXML Jackson JSON API
+.Old services
+[source,files]
+----
+src/
+  main/
+    resources/
+      services/
+        coolservice/
+          coolservice.xml
+          coolservice.js
+      myservice/
+        myservice.js
+        myservice.xml
+----
 
-Java FasterXML Jackson JSON API is no longer a transitive dependency of XP Core API.
+.New APIs
+[source,files]
+----
+src/
+  main/
+    resources/
+      apis/
+        coolservice/
+          coolservice.yaml
+          coolservice.js
+        myservice/
+          myservice.js
+          myservice.yaml
+----
 
-If you need to serialize or deserialize JSON in Java, you need to add the dependency to your project, preferably using a library different from XP internal one (FasterXML Jackson) to avoid conflicts.
+.Old service.xml
+[source,xml]
+----
+<service>
+  <allow>
+    <principal>role:system.admin</principal>
+  </allow>
+</service>
+----
 
-We recommend using https://github.com/FasterXML/jackson-jr
+.New api.yaml
+[source,yaml]
+----
+kind: "API"
+allow:
+  - "role:system.admin"
+----
 
-FasterXML Jackson Annotations `com.fasterxml.jackson.core:jackson-annotations` transitive dependency is still available in JAX-RS API.
+Use `portal.apiUrl()` instead of `portal.serviceUrl()` to generate URLs pointing to APIs.
 
-=== JAX-RS API
+.Example of mounting "coolservice" API in an admin tool
+[source,yaml]
+----
+kind: "AdminTool"
+title: "My Admin Tool"
+allow:
+  - "role:system.admin"
+apis:
+  - "coolservice"
+----
 
-Java JAX-RS API is deprecated. It was not documented and used internally to implement legacy REST APIs.
+=== Assets service
 
-If you have used JAX-RS API in your application, you need to migrate to the new XP 8 Universal API.
+The built-in assets service has been deprecated since XP 7.15. Replace it with one of:
 
-To know if you are using JAX-RS API, check for `com.enonic.xp:jaxrs-api` dependency in the project's Gradle file.
+* https://developer.enonic.com/docs/lib-asset/stable[lib-asset] — best fit for site applications, where it integrates with the site engine and content context.
+* https://developer.enonic.com/docs/lib-static/stable[lib-static] — designed for serving static files from contexts where lib-asset does not fit, such as ID providers and admin extensions.
 
-=== Dropwizard Metrics
-
-Java Dropwizard Metrics is no longer available in XP Core API. Migrate to `com.enonic.xp.metrics` Core API.
-
-=== Java APIs
-
- There are many changes in Java APIs, multiple classes were moved or renamed, as well as their methods. The intention was to keep JavaScript API as compatible as possible, while improving Java API design and removing unnecessary or confusing methods and classes.
-
-The most noticeable changes are:
-
-- Java methods and classes marked as `@Deprecated` were removed.
-
-- Many classes and methods that were only used for internal implementation details and not intended for public use were removed.
-
-- Methods that had names that could cause confusion with JavaScript API we renamed, for instance `ContentService.deleteWithoutFetch` renamed `ContentService.delete`.
-
-- Classes that have direct replacement in Java 25 standard library were removed.
-
-- `ContentService.update` method was split into 3 separate methods: `ContentService.update`, `ContentService.updateMedia` and `ContentService.updatePermissions`.
-
-- Java Portal View Functions are no longer part of XP Core API. They were incorporated into lib-thymeleaf and lib-xslt libraries.
-
-- `com.enonic.xp.page.DescriptorKey` moved to `com.enonic.xp.descriptor.DescriptorKey`.
-
-- Concrete collection types like `LinkedList`, `HashMap`, etc. were replaced with corresponding interfaces like `List`, `Map`, etc.
-
-- Javax Mail is no longer a transitive dependency of XP Core API.
-
-- OSGi classes are no longer part of API. OSGi is still used internally in XP.
-
-=== Widgets
-
-==== Web Components
+=== Widgets go Web Components
 
 Dashboard and Context Panel Widgets were required to wrap their HTML with the `<widget/>` tag. This requirement is now obsolete as widgets are now embedded as Web Components. However, this also means that each widget resides in its own Shadow DOM, so it no longer has access to styles in the main DOM of Content Studio. If your widget piggybacked on Content Studio's styles, you'll have to change the implementation so that the widget is using its own styles.
 
@@ -1320,3 +1257,57 @@ const router = createWidgetRouter((staticBaseUrl: string, req: Request) => {
 
 export const all = (req: Request) => router.dispatch(req);
 ----
+
+=== Javax to Jakarta
+
+Most of the Java EE APIs have been migrated to Jakarta EE APIs. For instance `javax.servlet` is replaced with `jakarta.servlet`.
+
+Jetty was updated to version 12.x and now uses Jakarta EE APIs.
+
+=== FasterXML Jackson JSON API
+
+Java FasterXML Jackson JSON API is no longer a transitive dependency of XP Core API.
+
+If you need to serialize or deserialize JSON in Java, you need to add the dependency to your project, preferably using a library different from XP internal one (FasterXML Jackson) to avoid conflicts.
+
+We recommend using https://github.com/FasterXML/jackson-jr
+
+FasterXML Jackson Annotations `com.fasterxml.jackson.core:jackson-annotations` transitive dependency is still available in JAX-RS API.
+
+=== JAX-RS API
+
+Java JAX-RS API is deprecated. It was not documented and used internally to implement legacy REST APIs.
+
+If you have used JAX-RS API in your application, you need to migrate to the new XP 8 Universal API.
+
+To know if you are using JAX-RS API, check for `com.enonic.xp:jaxrs-api` dependency in the project's Gradle file.
+
+=== Dropwizard Metrics
+
+Java Dropwizard Metrics is no longer available in XP Core API. Migrate to `com.enonic.xp.metrics` Core API.
+
+=== Java APIs
+
+ There are many changes in Java APIs, multiple classes were moved or renamed, as well as their methods. The intention was to keep JavaScript API as compatible as possible, while improving Java API design and removing unnecessary or confusing methods and classes.
+
+The most noticeable changes are:
+
+- Java methods and classes marked as `@Deprecated` were removed.
+
+- Many classes and methods that were only used for internal implementation details and not intended for public use were removed.
+
+- Methods that had names that could cause confusion with JavaScript API we renamed, for instance `ContentService.deleteWithoutFetch` renamed `ContentService.delete`.
+
+- Classes that have direct replacement in Java 25 standard library were removed.
+
+- `ContentService.update` method was split into 3 separate methods: `ContentService.update`, `ContentService.updateMedia` and `ContentService.updatePermissions`.
+
+- Java Portal View Functions are no longer part of XP Core API. They were incorporated into lib-thymeleaf and lib-xslt libraries.
+
+- `com.enonic.xp.page.DescriptorKey` moved to `com.enonic.xp.descriptor.DescriptorKey`.
+
+- Concrete collection types like `LinkedList`, `HashMap`, etc. were replaced with corresponding interfaces like `List`, `Map`, etc.
+
+- Javax Mail is no longer a transitive dependency of XP Core API.
+
+- OSGi classes are no longer part of API. OSGi is still used internally in XP.
