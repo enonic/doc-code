@@ -173,6 +173,48 @@
       ]
     },
     {
+      "title": "Storage",
+      "document": "storage",
+      "menuItems": [
+        {
+          "title": "Querying",
+          "document": "storage/querying"
+        },
+        {
+          "title": "Aggregations",
+          "document": "storage/aggregations"
+        },
+        {
+          "title": "Highlighting",
+          "document": "storage/highlighting"
+        },
+        {
+          "title": "Editors",
+          "document": "storage/editors"
+        },
+        {
+          "title": "Permissions",
+          "document": "storage/permissions"
+        },
+        {
+          "title": "Properties",
+          "document": "storage/properties"
+        },
+        {
+          "title": "Indexing",
+          "document": "storage/indexing"
+        },
+        {
+          "title": "NoQL (legacy)",
+          "document": "storage/noql"
+        },
+        {
+          "title": "Filters (legacy)",
+          "document": "storage/filters"
+        }
+      ]
+    },
+    {
       "title": "Libraries",
       "document": "libraries",
       "menuItems": [

@@ -1870,9 +1870,9 @@ An object with the following keys and their values:
 | Name | Type | Attributes| Default| Description
 | start | number | <optional> | 0 | Start index (used for paging)
 | count | number | <optional> | 10 | Number of contents to fetch
-| query | string \| object | <optional> | | Query string or <<../storage/dsl#, DSL>> expression
+| query | string \| object | <optional> | | Query string or <<../storage/querying#, DSL>> expression
 | filters | object \| object[] | <optional> | | Filters to apply to query result
-| sort | string \| object \| object[] | <optional> | | Sorting string or <<../storage/dsl#sort, DSL>> expression
+| sort | string \| object \| object[] | <optional> | | Sorting string or <<../storage/querying#sort, DSL>> expression
 | aggregations | object | <optional> | | Aggregations expression
 | contentTypes | string[] | <optional> | | Content types to filter on
 | highlight | object | <optional> | | Highlight expression

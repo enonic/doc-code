@@ -5,6 +5,13 @@ include::../.variables.adoc[]
 
 This API provides functions to get, query and manipulate nodes.
 
+[WARNING]
+====
+*Do not use `lib-node` against the CMS (content) repository.* Content is layered on top of nodes with content-type validation, draft/master synchronization, publish-state bookkeeping, audit-log entries, child-project propagation, and indexing of system fields. Direct `lib-node` writes against a content node bypass all of that and corrupt the content model.
+
+Use <<libraries/lib-content#, `lib-content`>> for content. Reach for `lib-node` only when working with custom (non-content) repositories. See <<storage/editors#, Editors>> for the pattern.
+====
+
 == Usage
 
 Add the following to your `build.gradle` file:
@@ -165,7 +172,7 @@ An object with the following keys and their values:
 | Name | Type | Attributes | Details
 | start | number | optional | Start index used for paging - default: 0
 | count | number | optional | Number of content to fetch, used for paging - default: 10
-| query | string/object | | Query string or <<../storage/dsl#, DSL>> expression.
+| query | string/object | | Query string or <<../storage/querying#, DSL>> expression.
 | filters | object | optional | Query filters
 | sort | string | optional | Sorting expression - default: '_score DESC'
 | aggregations | object | optional | <<../storage/aggregations#,Aggregations>> config
@@ -1290,9 +1297,9 @@ An object with the following keys and their values:
 | Name | Type | Attributes | Details
 | start | number | optional | Start index used for paging - default: 0
 | count | number | optional | Number of content to fetch, used for paging - default: 10
-| query | string/object | | Query string or <<../storage/dsl#, DSL>> expression.
+| query | string/object | | Query string or <<../storage/querying#, DSL>> expression.
 | filters | object | optional | Query filters
-| sort | string/object | optional | Sorting string or <<../storage/dsl#sort, DSL>> expression. Default: '_score DESC'
+| sort | string/object | optional | Sorting string or <<../storage/querying#sort, DSL>> expression. Default: '_score DESC'
 | aggregations | object | optional | <<../storage/aggregations#,Aggregations>> config
 | highlight | object | optional | <<../storage/highlighting#,Highlighting>> config
 | explain | boolean | optional | If set to `true`, score calculation explanation will be included in result.
@@ -1478,7 +1485,7 @@ const expected = {
 }
 ----
 
-.Query node using <<../storage/dsl#stemmed, stemmed>> DSL function for specific <<../storage/indexing#languages, language>>.
+.Query node using <<../storage/querying#stemmed, stemmed>> DSL function for specific <<../storage/indexing#languages, language>>.
 
 [source,typescript]
 ----
