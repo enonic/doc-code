@@ -507,7 +507,7 @@ Enonic supports popular TypeScript/JavaScript tooling such as TSUP, NPM and webp
 <div class="sect2">
 <h3 id="gradle_properties"><a class="link" href="#gradle_properties">gradle.properties</a></h3>
 <div class="paragraph">
-<p>This file specifies common project-wide properties: project identity and the XP version. App display and vendor metadata live in <code>application.yaml</code> (see below).</p>
+<p>This file specifies common project-wide properties: project identity and the XP version. App display and vendor metadata live in <code>enonic.yaml</code> (see below).</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample gradle.properties file</div>
@@ -689,7 +689,7 @@ xpVersion = 8.0.0-SNAPSHOT # TODO 'SNAPSHOT' is only while XP 8.0 is in developm
 </div>
 </div>
 <div class="paragraph">
-<p><code>appName</code> and the <code>application.yaml</code> file are application-only — libraries don&#8217;t need either.</p>
+<p><code>appName</code> and the <code>enonic.yaml</code> file are application-only — libraries don&#8217;t need either.</p>
 </div>
 </div>
 </div>
@@ -898,7 +898,7 @@ Development mode also disables some of XP&#8217;s caching mechanisms. To make th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-21 07:20:29 UTC
+Last updated 2026-05-21 12:41:59 UTC
 </div>
 </div>
 </body>

@@ -502,8 +502,8 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
   src/
     main/
       resources/
-        application.svg
-        application.yaml
+        enonic.svg
+        enonic.yaml
         admin/
           tools/
           extensions/
@@ -524,6 +524,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
           pages/
           parts/
           processors/
+          style/style.yaml
         webapp/
         tasks/
       java/
@@ -582,11 +583,11 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 <dd>
 <p><a href="../apis.ahtml">Universal API</a> implementations and descriptors.</p>
 </dd>
-<dt class="hdlist1">application.svg</dt>
+<dt class="hdlist1">enonic.svg</dt>
 <dd>
 <p>Application icon in SVG format. Should be in a square format.</p>
 </dd>
-<dt class="hdlist1">application.yaml</dt>
+<dt class="hdlist1">enonic.yaml</dt>
 <dd>
 <p>Application descriptor (<code>kind: "Application"</code>).</p>
 </dd>
@@ -658,6 +659,10 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 <dd>
 <p>Extra metadata attached to content (formerly known as <code>x-data</code>).</p>
 </dd>
+<dt class="hdlist1">cms/style/style.yaml</dt>
+<dd>
+<p>Custom styles for use in RichText component.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -710,7 +715,7 @@ Check out <a href="https://market.enonic.com/starters/library-starter">the libra
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-21 07:20:29 UTC
+Last updated 2026-05-21 12:41:59 UTC
 </div>
 </div>
 </body>
