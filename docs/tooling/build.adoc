@@ -21,7 +21,7 @@ The Gradle build files are described below
 
 === gradle.properties
 
-This file specifies common project-wide properties: project identity and the XP version. App display and vendor metadata live in `application.yaml` (see below).
+This file specifies common project-wide properties: project identity and the XP version. App display and vendor metadata live in `enonic.yaml` (see below).
 
 .Sample gradle.properties file
 [source,properties]
@@ -128,7 +128,7 @@ version = 1.0.0-SNAPSHOT
 xpVersion = 8.0.0-SNAPSHOT # TODO 'SNAPSHOT' is only while XP 8.0 is in development
 ----
 
-`appName` and the `application.yaml` file are application-only — libraries don't need either.
+`appName` and the `enonic.yaml` file are application-only — libraries don't need either.
 
 == Compiler
 

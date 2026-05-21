@@ -22,8 +22,8 @@ sample-project/
   src/
     main/
       resources/
-        application.svg
-        application.yaml
+        enonic.svg
+        enonic.yaml
         admin/
           tools/
           extensions/
@@ -44,6 +44,7 @@ sample-project/
           pages/
           parts/
           processors/
+          style/style.yaml
         webapp/
         tasks/
       java/
@@ -80,9 +81,9 @@ admin/extensions/:: Admin extensions are user interface components that can be e
 
 apis/:: <<../apis#, Universal API>> implementations and descriptors.
 
-application.svg:: Application icon in SVG format. Should be in a square format.
+enonic.svg:: Application icon in SVG format. Should be in a square format.
 
-application.yaml:: Application descriptor (`kind: "Application"`).
+enonic.yaml:: Application descriptor (`kind: "Application"`).
 
 assets/:: Standard folder for serving static assets such as CSS and JavaScript. Assets are served by the <<../runtime/engines/asset-service#, asset service>>.
 
@@ -117,6 +118,8 @@ cms/pages/:: <<../cms/pages#, Page components>>.
 cms/parts/:: <<../cms/pages/parts#, Part components>>.
 
 cms/mixins/:: Extra metadata attached to content (formerly known as `x-data`).
+
+cms/style/style.yaml:: Custom styles for use in RichText component.
 
 
 === Java
