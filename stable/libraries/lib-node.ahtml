@@ -489,6 +489,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>This API provides functions to get, query and manipulate nodes.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Do not use <code>lib-node</code> against the CMS (content) repository.</strong> Content is layered on top of nodes with content-type validation, draft/master synchronization, publish-state bookkeeping, audit-log entries, child-project propagation, and indexing of system fields. Direct <code>lib-node</code> writes against a content node bypass all of that and corrupt the content model.</p>
+</div>
+<div class="paragraph">
+<p>Use <a href="libraries/lib-content.ahtml"><code>lib-content</code></a> for content. Reach for <code>lib-node</code> only when working with custom (non-content) repositories. See <a href="storage/editors.ahtml">Editors</a> for the pattern.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -752,7 +769,7 @@ const searchConnection = multiRepoConnect({
 <td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Query string or <a href="../storage/dsl.ahtml">DSL</a> expression.</p>
+<p>Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2614,7 +2631,7 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Query string or <a href="../storage/dsl.ahtml">DSL</a> expression.</p>
+<p>Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2630,7 +2647,7 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">optional</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Sorting string or <a href="../storage/dsl.ahtml#sort">DSL</a> expression. Default: '_score DESC'</p>
+<p>Sorting string or <a href="../storage/querying.ahtml#sort">DSL</a> expression. Default: '_score DESC'</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2839,7 +2856,7 @@ const patchedNode = repo.patch({
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Query node using <a href="../storage/dsl.ahtml#stemmed">stemmed</a> DSL function for specific <a href="../storage/indexing.ahtml#languages">language</a>.</div>
+<div class="title">Query node using <a href="../storage/querying.ahtml#stemmed">stemmed</a> DSL function for specific <a href="../storage/indexing.ahtml#languages">language</a>.</div>
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.query({
     query: {
@@ -3318,7 +3335,7 @@ const patchedNode = repo.patch({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-20 09:12:20 UTC
+Last updated 2026-05-21 07:20:29 UTC
 </div>
 </div>
 </body>

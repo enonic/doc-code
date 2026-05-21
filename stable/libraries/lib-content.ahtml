@@ -3743,7 +3743,7 @@ const expected = {
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Query string or <a href="../storage/dsl.ahtml">DSL</a> expression</p>
+<p>Query string or <a href="../storage/querying.ahtml">DSL</a> expression</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3761,7 +3761,7 @@ const expected = {
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Sorting string or <a href="../storage/dsl.ahtml#sort">DSL</a> expression</p>
+<p>Sorting string or <a href="../storage/querying.ahtml#sort">DSL</a> expression</p>
 </div></div></td>
 </tr>
 <tr>
@@ -5120,7 +5120,7 @@ const expected = [
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-20 09:12:20 UTC
+Last updated 2026-05-21 07:20:29 UTC
 </div>
 </div>
 </body>
