@@ -484,19 +484,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#datetime_and_instant_input_types">DateTime and Instant input types</a></li>
 <li><a href="#script_globals">Script Globals</a></li>
 <li><a href="#http_functions">HTTP functions</a></li>
-<li><a href="#lib_util">lib-util</a></li>
-<li><a href="#lib_admin">lib-admin</a></li>
-<li><a href="#lib_node">lib-node</a></li>
-<li><a href="#lib_content">lib-content</a></li>
-<li><a href="#lib_project">lib-project</a></li>
-<li><a href="#lib_repo">lib-repo</a></li>
-<li><a href="#lib_scheduler">lib-scheduler</a></li>
-<li><a href="#lib_cluster">lib-cluster</a></li>
-<li><a href="#lib_i18n">lib-i18n</a></li>
-<li><a href="#lib_task">lib-task</a></li>
-<li><a href="#lib_auth">lib-auth</a></li>
+<li><a href="#system_libraries">System libraries</a></li>
 <li><a href="#lib_context">lib-context</a></li>
-<li><a href="#lib_export">lib-export</a></li>
+<li><a href="#other_libraries">Other libraries</a></li>
 <li><a href="#http_services">HTTP Services</a></li>
 <li><a href="#assets_service">Assets service</a></li>
 <li><a href="#widgets_go_web_components">Widgets go Web Components</a></li>
@@ -1780,16 +1770,9 @@ exports.all = function(req) {
 </div>
 </div>
 <div class="sect2">
-<h3 id="lib_util"><a class="link" href="#lib_util">lib-util</a></h3>
-<div class="paragraph">
-<p>Lib util has been deprecated. If your app dependes on any of the methods from lib-util, you should migrate to using the corresponding standard TypeScript or JavaScript code where possible, or inline the relevant logic directly in your code.</p>
-</div>
-<div class="paragraph">
-<p>Get more details at <a href="https://github.com/enonic/lib-util/issues/196" class="bare">https://github.com/enonic/lib-util/issues/196</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="lib_admin"><a class="link" href="#lib_admin">lib-admin</a></h3>
+<h3 id="system_libraries"><a class="link" href="#system_libraries">System libraries</a></h3>
+<div class="sect3">
+<h4 id="lib_admin"><a class="link" href="#lib_admin">lib-admin</a></h4>
 <div class="paragraph">
 <p><code>getAssetsUri</code> method is removed. This method was never in use since XP 7.</p>
 </div>
@@ -1833,8 +1816,8 @@ exports.all = function(req) {
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_node"><a class="link" href="#lib_node">lib-node</a></h3>
+<div class="sect3">
+<h4 id="lib_node"><a class="link" href="#lib_node">lib-node</a></h4>
 <div class="paragraph">
 <p><code>_inheritsPermissions</code> node property is removed. It can only be used as an argument in <code>create</code> method - to copy permissions from the parent node.</p>
 </div>
@@ -1848,8 +1831,8 @@ exports.all = function(req) {
 <p><code>editor</code> of deprecated <code>modify</code> method can no longer edit node permissions. Use separate call to <code>applyPermissions</code> method instead.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_content"><a class="link" href="#lib_content">lib-content</a></h3>
+<div class="sect3">
+<h4 id="lib_content"><a class="link" href="#lib_content">lib-content</a></h4>
 <div class="paragraph">
 <p>Reading the project&#8217;s root content (path <code>/</code>) via <code>lib-content</code> (<code>get</code>, <code>getByPath</code>, etc.) now returns <code>null</code>. The root is reserved for the platform; use <code>lib-project</code> for project metadata (<code>get({id})</code>, <code>list()</code>) and create/move content under named paths only.</p>
 </div>
@@ -1897,8 +1880,8 @@ exports.all = function(req) {
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_project"><a class="link" href="#lib_project">lib-project</a></h3>
+<div class="sect3">
+<h4 id="lib_project"><a class="link" href="#lib_project">lib-project</a></h4>
 <div class="paragraph">
 <p><code>delete</code> method is renamed to <code>deleteProject</code> to avoid conflicts with the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility, but it&#8217;s recommended to use the new name directly.</p>
 </div>
@@ -1957,8 +1940,8 @@ modify({
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_repo"><a class="link" href="#lib_repo">lib-repo</a></h3>
+<div class="sect3">
+<h4 id="lib_repo"><a class="link" href="#lib_repo">lib-repo</a></h4>
 <div class="paragraph">
 <p><code>delete</code> method is renamed to <code>deleteRepo</code> to avoid conflicts with the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility, but it&#8217;s recommended to use the new name directly.</p>
 </div>
@@ -1982,8 +1965,8 @@ modify({
 <p><code>create</code> method <code>settings</code> param is removed. This was a direct exposure of internal implementation details.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_scheduler"><a class="link" href="#lib_scheduler">lib-scheduler</a></h3>
+<div class="sect3">
+<h4 id="lib_scheduler"><a class="link" href="#lib_scheduler">lib-scheduler</a></h4>
 <div class="paragraph">
 <p><code>delete</code> method is renamed to <code>deleteJob</code> to avoid conflicts with the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility, but it&#8217;s recommended to use the new name directly.</p>
 </div>
@@ -2004,14 +1987,14 @@ modify({
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_cluster"><a class="link" href="#lib_cluster">lib-cluster</a></h3>
+<div class="sect3">
+<h4 id="lib_cluster"><a class="link" href="#lib_cluster">lib-cluster</a></h4>
 <div class="paragraph">
 <p><code>isMaster</code> method is deprecated. Use <code>isLeader</code> instead.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_i18n"><a class="link" href="#lib_i18n">lib-i18n</a></h3>
+<div class="sect3">
+<h4 id="lib_i18n"><a class="link" href="#lib_i18n">lib-i18n</a></h4>
 <div class="paragraph">
 <p><code>localize</code> method no longer accepts <code>application</code> parameter -  because application load order is not guaranteed, trying to load foreign application localization might fail. Required localize phrases should be copied over the applications instead.</p>
 </div>
@@ -2019,8 +2002,8 @@ modify({
 <p>Methods no longer use the undocumented <code>/site/i18n/phrases</code> bundle location by default. Only the standard <code>/i18n/phrases</code> location is used. If your application relied on <code>/site/i18n/phrases</code>, move the files to <code>/i18n/phrases</code> or use your own custom bundle location.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_task"><a class="link" href="#lib_task">lib-task</a></h3>
+<div class="sect3">
+<h4 id="lib_task"><a class="link" href="#lib_task">lib-task</a></h4>
 <div class="paragraph">
 <p><code>submitNamed</code> method is removed. Use <code>submitTask</code> instead.</p>
 </div>
@@ -2028,11 +2011,12 @@ modify({
 <p><code>submit</code> method is removed. Use <code>executeFunction</code> instead.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="lib_auth"><a class="link" href="#lib_auth">lib-auth</a></h3>
+<div class="sect3">
+<h4 id="lib_auth"><a class="link" href="#lib_auth">lib-auth</a></h4>
 <div class="paragraph">
 <p><code>login</code> method <code>idProvider</code> parameter now defaults to <code>system</code> if not provided, instead of trying all available id providers. It is also not possible to specify multiple values anymore.
 This change ensures consistent id provider selection during login.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -2040,11 +2024,11 @@ This change ensures consistent id provider selection during login.</p>
 <div class="paragraph">
 <p><code>run</code> method <code>context.user.idProvider</code> parameter now defaults to <code>system</code> if not provided, instead of trying all available id providers.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="lib_export"><a class="link" href="#lib_export">lib-export</a></h3>
 <div class="sect3">
-<h4 id="exportnodes"><a class="link" href="#exportnodes">exportNodes</a></h4>
+<h4 id="lib_export"><a class="link" href="#lib_export">lib-export</a></h4>
+<div class="paragraph">
+<p><strong>exportNodes</strong></p>
+</div>
 <div class="paragraph">
 <p><code>includeNodeIds</code> and <code>includeVersions</code> parameters are removed.</p>
 </div>
@@ -2067,21 +2051,33 @@ Folder-based exports from XP 7 should be converted to a ZIP archive before they 
 </div>
 </div>
 <div class="sect2">
+<h3 id="other_libraries"><a class="link" href="#other_libraries">Other libraries</a></h3>
+<div class="sect3">
+<h4 id="lib_util"><a class="link" href="#lib_util">lib-util</a></h4>
+<div class="paragraph">
+<p>Lib util has been deprecated. If your app dependes on any of the methods from lib-util, you should migrate to using the corresponding standard TypeScript or JavaScript code where possible, or inline the relevant logic directly in your code.</p>
+</div>
+<div class="paragraph">
+<p>Get more details at <a href="https://github.com/enonic/lib-util/issues/196" class="bare">https://github.com/enonic/lib-util/issues/196</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="lib_guillotine"><a class="link" href="#lib_guillotine">lib-guillotine</a></h4>
+<div class="paragraph">
+<p>Lib guillotine has been deprecated for a long time, and is not supported for XP8. If your app uses lib-guillotine you need to migrate to the standard Guillotine app available on the Enonic Market: <a href="https://market.enonic.com/vendors/enonic/guillotine" class="bare">https://market.enonic.com/vendors/enonic/guillotine</a> before upgrading to XP8.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="http_services"><a class="link" href="#http_services">HTTP Services</a></h3>
 <div class="paragraph">
-<p>HTTP Services are deprecated. Universal API should be used instead.</p>
+<p>HTTP Services are now deprecated, but continues to work in XP 8. We recommend upgrading to Universal API instead.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under <code>/_/service/&lt;app-name&gt;/&lt;service-name&gt;</code>, while Universal APIs are available directly under <code>/_/&lt;app-name&gt;/&lt;api-name&gt;</code>. Additionally, services were automatically mounted on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under <code>/<em>/service/&lt;app-name&gt;/&lt;service-name&gt;</code>, while Universal APIs are contextually available directly under <code>/</em>/&lt;app-name&gt;:&lt;api-name&gt;</code> in addition to the new <code>/api</code> mount point.</p>
+</div>
+<div class="paragraph">
+<p>HTTP Services were "unsecure by default" by automatically mounting on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors where you need it.</p>
 </div>
 <div class="listingblock">
 <div class="title">Old services</div>
@@ -2337,7 +2333,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-21 12:41:59 UTC
+Last updated 2026-05-22 15:01:34 UTC
 </div>
 </div>
 </body>
