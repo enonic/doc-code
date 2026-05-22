@@ -909,13 +909,10 @@ exports.all = function(req) {
 };
 ----
 
-=== lib-util
+=== System libraries
 
-Lib util has been deprecated. If your app dependes on any of the methods from lib-util, you should migrate to using the corresponding standard TypeScript or JavaScript code where possible, or inline the relevant logic directly in your code.
 
-Get more details at https://github.com/enonic/lib-util/issues/196
-
-=== lib-admin
+==== lib-admin
 
 `getAssetsUri` method is removed. This method was never in use since XP 7.
 
@@ -944,7 +941,7 @@ dependencies {
     include xplibs.portal
 }
 
-=== lib-node
+==== lib-node
 
 `_inheritsPermissions` node property is removed. It can only be used as an argument in `create` method - to copy permissions from the parent node.
 
@@ -954,7 +951,7 @@ dependencies {
 
 `editor` of deprecated `modify` method can no longer edit node permissions. Use separate call to `applyPermissions` method instead.
 
-=== lib-content
+==== lib-content
 
 Reading the project's root content (path `/`) via `lib-content` (`get`, `getByPath`, etc.) now returns `null`. The root is reserved for the platform; use `lib-project` for project metadata (`get({id})`, `list()`) and create/move content under named paths only.
 
@@ -988,7 +985,7 @@ XP 8
 import {deleteContent} from '/lib/xp/content';
 ----
 
-=== lib-project
+==== lib-project
 
 `delete` method is renamed to `deleteProject` to avoid conflicts with the JavaScript reserved word. The old `delete` export is still available for backward compatibility, but it's recommended to use the new name directly.
 
@@ -1039,7 +1036,7 @@ modify({
 });
 ----
 
-=== lib-repo
+==== lib-repo
 
 `delete` method is renamed to `deleteRepo` to avoid conflicts with the JavaScript reserved word. The old `delete` export is still available for backward compatibility, but it's recommended to use the new name directly.
 
@@ -1057,7 +1054,7 @@ import {deleteRepo} from '/lib/xp/repo';
 
 `create` method `settings` param is removed. This was a direct exposure of internal implementation details.
 
-=== lib-scheduler
+==== lib-scheduler
 
 `delete` method is renamed to `deleteJob` to avoid conflicts with the JavaScript reserved word. The old `delete` export is still available for backward compatibility, but it's recommended to use the new name directly.
 
@@ -1073,23 +1070,23 @@ XP 8
 import {deleteJob} from '/lib/xp/scheduler';
 ----
 
-=== lib-cluster
+==== lib-cluster
 
 `isMaster` method is deprecated. Use `isLeader` instead.
 
-=== lib-i18n
+==== lib-i18n
 
 `localize` method no longer accepts `application` parameter -  because application load order is not guaranteed, trying to load foreign application localization might fail. Required localize phrases should be copied over the applications instead.
 
 Methods no longer use the undocumented `/site/i18n/phrases` bundle location by default. Only the standard `/i18n/phrases` location is used. If your application relied on `/site/i18n/phrases`, move the files to `/i18n/phrases` or use your own custom bundle location.
 
-=== lib-task
+==== lib-task
 
 `submitNamed` method is removed. Use `submitTask` instead.
 
 `submit` method is removed. Use `executeFunction` instead.
 
-=== lib-auth
+==== lib-auth
 
 `login` method `idProvider` parameter now defaults to `system` if not provided, instead of trying all available id providers. It is also not possible to specify multiple values anymore.
 This change ensures consistent id provider selection during login.
@@ -1098,9 +1095,9 @@ This change ensures consistent id provider selection during login.
 
 `run` method `context.user.idProvider` parameter now defaults to `system` if not provided, instead of trying all available id providers.
 
-=== lib-export
+==== lib-export
 
-==== exportNodes
+*exportNodes*
 
 `includeNodeIds` and `includeVersions` parameters are removed.
 
@@ -1109,11 +1106,27 @@ The output file is named `{exportName}.zip` in the exports directory, replacing 
 
 TIP: Folder-based exports from XP 7 should be converted to a ZIP archive before they can be imported in XP 8.
 
+=== Other libraries
+
+==== lib-util
+
+Lib util has been deprecated. If your app dependes on any of the methods from lib-util, you should migrate to using the corresponding standard TypeScript or JavaScript code where possible, or inline the relevant logic directly in your code.
+
+Get more details at https://github.com/enonic/lib-util/issues/196
+
+
+==== lib-guillotine
+
+Lib guillotine has been deprecated for a long time, and is not supported for XP8. If your app uses lib-guillotine you need to migrate to the standard Guillotine app available on the Enonic Market: https://market.enonic.com/vendors/enonic/guillotine before upgrading to XP8.
+
+
 === HTTP Services
 
-HTTP Services are deprecated. Universal API should be used instead.
+HTTP Services are now deprecated, but continues to work in XP 8. We recommend upgrading to Universal API instead.
 
-NOTE: Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under `+/_/service/<app-name>/<service-name>+`, while Universal APIs are available directly under `+/_/<app-name>/<api-name>+`. Additionally, services were automatically mounted on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors.
+Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under `/_/service/<app-name>/<service-name>`, while Universal APIs are contextually available directly under `/_/<app-name>:<api-name>` in addition to the new `/api` mount point. 
+
+HTTP Services were "unsecure by default" by automatically mounting on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors where you need it.
 
 .Old services
 [source,files]

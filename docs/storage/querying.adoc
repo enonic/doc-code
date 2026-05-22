@@ -858,7 +858,7 @@ NOTE: Order defaults to DESC when sorting by `_score`, and ASC when sorting by a
 
 To change a direction of sorting use `direction` property:
 
-.Score sorting
+.Field sorting
 [source,json]
 ----
 {
@@ -870,7 +870,7 @@ To change a direction of sorting use `direction` property:
 ----
 
 To sort by a few fields just set them in the right order:
-.Score sorting
+.Multi-field sorting
 [source,json]
 ----
 {
@@ -885,6 +885,24 @@ To sort by a few fields just set them in the right order:
   ]
 }
 ----
+
+=== Locale-aware sorting
+
+In addition to the default UNICODE sorting, text fields can be sorted using locale-aware collations, such as DUCET or language-specific collations. This allows for more natural sorting of text for specific languages.
+
+.Field sorting
+[source,json]
+----
+{
+  "sort": {
+    "field": "myField",
+    "collation": "no",
+    "direction": "ASC"
+  }
+}
+----
+
+
 === geoDistance
 The geoDistance allows to order the results according to distance to a given geo-point.
 
@@ -942,3 +960,5 @@ The geoDistance allows to order the results according to distance to a given geo
     ]
 }
 ----
+
+

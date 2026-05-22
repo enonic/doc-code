@@ -74,9 +74,15 @@ The path-elements (separated by default path-separator '/') are indexed as token
 
 === orderby
 
-Any indexed property automatically gets indexed with the orderby mapping as well.
-The "orderby" index mapping lets us sort text and numbers in a natural way across properties with different value types.
+Any indexed property automatically gets the orderby index mapping as well.
+The "orderby" index mapping lets us sort text and numbers in a natural way across properties and different value types.
 
+*Collation*
+By default, orderby uses UNICODE collation, which is fast but comes with some limitations in regards to locale-specific sorting, as well as capital-case vs lowercase. Locale-specific collation can optionally enabled on a per-field basis via <<Index config>>. This means you may force sorting for a specific language, such as sorting "ä" after "z" in Swedish, or use DUCET collation for a more general approach to locale-aware sorting. 
+
+TIP: The CMS api automatically adds locale-aware indexing for the displayName property, should you need it in your queries.
+
+Read more about collation in the <<storage/querying#orderby, orderby>> section.
 
 [#_allText]
 == _allText
@@ -89,6 +95,7 @@ The allText's indexing is customizable via the node's <<Index config>>.
 The property is commonly used in "search everything" approaches.
 
 NOTE: When defining custom index configurations, you may choose if a property will be included in _allText, or not. (`includeInAllText` is set to `true/false`)
+
 
 == Index config
 
@@ -260,6 +267,9 @@ To enable stemming for specific properties, you need to specify the language in 
 Use the <<storage/querying#stemmed, DSL>> query (or the legacy <<storage/noql#stemmed, NoQL>> function) to search against stemmed indices.
 
 
+
+
+
 == Config options
 
 The following options can be added to a configuration entry:
@@ -275,11 +285,11 @@ I.e. numeric values are indexed as both string and numeric.
 
 === fulltext
 
-Values are indexed as 'ngram', 'analyzed' and also added to the _allText system property
+Values are indexed as `analyzed`, enabling the <<storage/querying#fulltext, fulltext>> query expression
 
-=== ngram
+=== nGram
 
-Values are indexed as 'ngram'
+Values are indexed as `ngram`, enabling the nGram-function in queries
 
 === path
 
@@ -304,121 +314,111 @@ Language codes are specified in the `la[-co]`` format, where:
 .Supported languages for stemming
 [cols="1,2"]
 |===
-|Code |Language
+| Code | Language
 
-|ar
-|Arabic
-
-|bg
-|Bulgarian
-
-|bn
-|Bengali
-
-|ca
-|Catalan
-
-|cs
-|Czech
-
-|da
-|Danish
-
-|de
-|German
-
-|el
-|Greek
-
-|en
-|English
-
-|eu
-|Basque
-
-|fa
-|Persian
-
-|fi
-|Finnish
-
-|fr
-|French
-
-|ga
-|Irish
-
-|gl
-|Galician
-
-|hi
-|Hindi
-
-|hu
-|Hungarian
-
-|hy
-|Armenian
-
-|id
-|Indonesian
-
-|it
-|Italian
-
-|ja
-|Japanese
-
-|ko
-|Korean
-
-|ku
-|Sorani
-
-|lt
-|Lithuanian
-
-|lv
-|Latvian
-
-|nl
-|Dutch
-
-|no
-|Norwegian
-
-|pt
-|Portuguese
-
-|pt-br
-|Brazilian
-
-|ro
-|Romanian
-
-|ru
-|Russian
-
-|es
-|Spanish
-
-|sv
-|Swedish
-
-|tr
-|Turkish
-
-|th
-|Thai
-
-|zh
-|Chinese
-
+| ar | Arabic
+| bg | Bulgarian
+| bn | Bengali
+| ca | Catalan
+| cs | Czech
+| da | Danish
+| de | German
+| el | Greek
+| en | English
+| eu | Basque
+| fa | Persian
+| fi | Finnish
+| fr | French
+| ga | Irish
+| gl | Galician
+| hi | Hindi
+| hu | Hungarian
+| hy | Armenian
+| id | Indonesian
+| it | Italian
+| ja | Japanese
+| ko | Korean
+| ku | Sorani
+| lt | Lithuanian
+| lv | Latvian
+| nl | Dutch
+| no | Norwegian
+| pt | Portuguese
+| pt-br | Brazilian
+| ro | Romanian
+| ru | Russian
+| es | Spanish
+| sv | Swedish
+| tr | Turkish
+| th | Thai
+| zh | Chinese
 |===
 
-Use the <<storage/querying#stemmed, stemmed>> query expression (or the legacy <<storage/noql#stemmed, stemmed()>> NoQL function) to query data based on these indices.
+=== Collation
 
-== Config templates
+TOOD: WOrk in progress!
+
+In order to support locale-aware sorting, you can specify a collation language-aware sorting.
+These only applies to the orderby index mapping, and thus only affects sorting, not equality or range queries etc.
+
+NOTE: Collation-specific sorting is slower than the default UNICODE collation, and increase the index size, so it should only be used when explicitly needed.
+
+Adding additional collations to a property will create additional orderby indices for that property, which can be used for in sorting queries.
+
+[cols="1,2,5", options="header"]
+|===
+| ISO Code | Language | Description
+
+| _None_ | DUCET | Default Unicode Collation Element Table. The fallback, language-neutral sorting standard.
+| ar | Arabic | Correctly handles script-specific shaping and ignores non-spacing vowels by default.
+| hy | Armenian | Follows classical Armenian alphabetical sequence rules.
+| az | Azerbaijani | Correctly handles the distinction between dotted İ and dotless I.
+| eu | Basque | Tailored modern Spanish-adjacent layout excluding character combinations like ch.
+| be | Belarusian | Custom Cyrillic sorting prioritizing the letter ў appropriately.
+| bn | Bengali | Groups and sorts based on traditional Indic script phonetic structure.
+| bs | Bosnian | Supports both Latin and Cyrillic variants, accommodating specific digraphs (lj, nj, dž).
+| bg | Bulgarian | Standard Cyrillic rules mapping ь and ъ distinctively.
+| ca | Catalan | Treats characters like l·l (ela geminada) according to Spanish/French-hybrid rules.
+| zh | Chinese | Supports multi-rule sets like Pinyin sorting or traditional radical/stroke count.
+| hr | Croatian | Sorts custom Latin digraphs (č, ć, dž, đ, lj, nj, š, ž) as independent letters.
+| cs | Czech | Treats the two-letter combination ch as a distinct entity sorting after h.
+| da | Danish | Places specific vowels Æ, Ø, and Å sequentially at the absolute end of the alphabet.
+| nl | Dutch | Standardized Latin sorting; optionally handles IJ variations depending on context.
+| en | English | Standard Latin alphabet sorting with case/accent sensitivity levels.
+| et | Estonian | Places modified characters õ, ä, ö, ü between v and x.
+| fi | Finnish | Treats V and W as primarily identical, sorting custom vowels Å, Ä, Ö at the end.
+| fr | French | Evaluates accent changes backwards (from right to left) for secondary string tie-breaking.
+| gl | Galician | Adapts traditional Spanish rules to match standard local dictionary frameworks.
+| ka | Georgian | Maps the unique Mkhedruli script characters sequentially.
+| de | German | Supports standard sorting or Phonebook (ä expands to ae) via variants.
+| el | Greek | Correctly aligns modern Greek characters and ignores diacritics on uppercase variants.
+| he | Hebrew | Properly sequences right-to-left Hebrew script characters, ignoring cantillation points.
+| hi | Hindi | Alphabetizes native Devanagari script according to strict phonetic vowel/consonant orders.
+| hu | Hungarian | Recognizes compound consonants (cs, dz, dzs, gy) as distinct, singular letters.
+| is | Icelandic | Retains classical letters like Þ (thorn) and Ð (eth) in historical positions.
+| id | Indonesian | Standard Latin alphabet sorting order.
+| ga | Irish | Handles specialized Gaelic prefix sorting rules (e.g., ignoring mutations like t- or n-).
+| it | Italian | Standard Latin rules with typical accent-insensitive initial matching.
+| ja | Japanese | Supports intricate Kanji/Kana sorting structures including Hiragana vs. Katakana levels.
+| ko | Korean | Sorts according to the foundational structural order of Hangul Jamo syllables.
+| lv | Latvian | Sorts modified characters (like č, ģ, ķ) directly behind their unmodified base.
+| lt | Lithuanian | Places the character Y distinctly between I and J.
+| no | Norwegian | Aligns identically with Danish rules, grouping Æ, Ø, and Å at the end.
+| fa | Persian | Customizes standard Arabic script ordering to account for distinct Persian extensions (پ, چ, ژ, گ).
+| pl | Polish | Standardized to place accented elements (ą, ć, ę, ł, ń, ó, ś, ź, ż) after base characters.
+| pt | Portuguese | Standard Latin alphabetic sorting matching Iberian/Brazilian requirements.
+| ro | Romanian | Groups specific characters (ă, â, î, ș, ț) sequentially behind their base counterparts.
+| ru | Russian | Standard modern Cyrillic ordering, treating Е and Ё distinctly based on context levels.
+| sk | Slovak | Treats unique digraphs like ch and accented sets (ä, č, ď) with independent spacing.
+| es | Spanish | Supports standard layout or traditional option sets treating ch and ll as unique letters.
+| sv | Swedish | Places Å, Ä, and Ö at the end; traditionally treats W as a variant of V.
+| th | Thai | Automatically rearranges leading vowels when preceding consonants for accurate grouping.
+| tr | Turkish | Strictly separates I (uppercase dotless) to ı from İ (uppercase dotted) to i.
+|===
+
+
+
+== Templates
 
 For simplicity, index configs may also be defined using a shorthand format.
 Rather than providing a full config object, you may instead reference a standard template.
@@ -513,7 +513,6 @@ Turns on path specific indexing
 
 === minimal
 
-// TODO: verify
 Will only create orderby indexes
 
 .Minimal template output
