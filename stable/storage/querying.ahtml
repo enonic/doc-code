@@ -1781,14 +1781,26 @@ Order defaults to DESC when sorting by <code>_score</code>, and ASC when sorting
 <div class="paragraph">
 <p>In addition to the default UNICODE sorting, text fields can be sorted using locale-aware collations, such as DUCET or language-specific collations. This allows for more natural sorting of text for specific languages.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Locale-aware sorting is only supported for text fields that are indexed with a language-specific analyzer. The language for sorting can be specified using the <code>language</code> property in the sort definition.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="title">Field sorting</div>
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
   "sort": {
     "field": "myField",
-    "collation": "no",
-    "direction": "ASC"
+    "direction": "ASC",
+    "language": "no"
   }
 }</code></pre>
 </div>
@@ -1918,7 +1930,7 @@ Order defaults to DESC when sorting by <code>_score</code>, and ASC when sorting
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-22 15:01:34 UTC
+Last updated 2026-05-26 20:55:25 UTC
 </div>
 </div>
 </body>

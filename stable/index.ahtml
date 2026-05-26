@@ -441,6 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#audience">Audience</a></li>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#tutorials">Tutorials</a></li>
 <li><a href="#where_to_start">Where to start</a></li>
@@ -451,10 +452,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Enonic Development Kit (EDK) is the server-side TypeScript/JavaScript framework Enonic XP exposes to app developers.</p>
+<p>The Enonic Development Kit (EDK) is the combined server-side TypeScript framework and tools that for Enonic app development.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/coder.svg" alt="Ready, set, code!" width="720w">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="audience"><a class="link" href="#audience">Audience</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Looking to customize Enonic XP, you&#8217;ve come to the right place.</p>
 </div>
 <div class="paragraph">
-<p>Write your code in TypeScript, deploy it as an <a href="fundamentals/apps.ahtml">Enonic app</a>, and get full access to XP&#8217;s persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <a href="fundamentals/runtime.ahtml">XP runtime</a>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.</p>
+<p>Code in TypeScript, build and deploy your <a href="fundamentals/apps.ahtml">Enonic app</a> with full access to XP&#8217;s persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <a href="fundamentals/runtime.ahtml">XP runtime</a>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.</p>
 </div>
 <div class="paragraph">
 <p>This documentation covers the app-development surface only, other relevant documentation includes:</p>
@@ -535,7 +549,7 @@ For a hands-on introduction to development with Enonic XP, visit the <a href="ht
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-22 15:01:34 UTC
+Last updated 2026-05-26 20:55:25 UTC
 </div>
 </div>
 </body>
