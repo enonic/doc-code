@@ -31,10 +31,6 @@
       ]
     },
     {
-      "title": "CMS Schemas",
-      "document": "schemas"
-    },
-    {
       "title": "Fundamentals",
       "document": "fundamentals",
       "menuItems": [
@@ -213,72 +209,6 @@
       ]
     },
     {
-      "title": "APIs",
-      "document": "apis"
-    },
-    {
-      "title": "Admin Tools",
-      "document": "tools"
-    },
-    {
-      "title": "Admin Extensions",
-      "document": "extensions",
-      "menuItems": [
-        {
-          "title": "Context panel",
-          "document": "extensions/contextpanel"
-        },
-        {
-          "title": "Liveview",
-          "document": "extensions/liveview"
-        },
-        {
-          "title": "Menu item",
-          "document": "extensions/menuitem"
-        }
-      ]
-    },
-    {
-      "title": "Sites",
-      "document": "sites",
-      "menuItems": [
-        {
-          "title": "Mappings",
-          "document": "sites/mappings"
-        },
-        {
-          "title": "Components",
-          "document": "sites/components"
-        },
-        {
-          "title": "Contributions",
-          "document": "sites/contributions"
-        },
-        {
-          "title": "Processors",
-          "document": "sites/processors"
-        }
-      ]
-    },
-    {
-      "title": "Webapps",
-      "document": "webapps"
-    },
-    {
-      "title": "Background",
-      "document": "background",
-      "menuItems": [
-        {
-          "title": "Tasks",
-          "document": "background/tasks"
-        },
-        {
-          "title": "Scheduler",
-          "document": "background/scheduler"
-        }
-      ]
-    },
-    {
       "title": "Storage",
       "document": "storage",
       "menuItems": [
@@ -319,6 +249,76 @@
           "document": "storage/filters"
         }
       ]
+    },
+    {
+      "title": "APIs",
+      "document": "apis"
+    },
+    {
+      "title": "Admin Tools",
+      "document": "tools"
+    },
+    {
+      "title": "Admin Extensions",
+      "document": "extensions",
+      "menuItems": [
+        {
+          "title": "Context panel",
+          "document": "extensions/contextpanel"
+        },
+        {
+          "title": "Liveview",
+          "document": "extensions/liveview"
+        },
+        {
+          "title": "Menu item",
+          "document": "extensions/menuitem"
+        }
+      ]
+    },
+    {
+      "title": "Background",
+      "document": "background",
+      "menuItems": [
+        {
+          "title": "Tasks",
+          "document": "background/tasks"
+        },
+        {
+          "title": "Scheduler",
+          "document": "background/scheduler"
+        }
+      ]
+    },
+    {
+      "title": "CMS Schemas",
+      "document": "schemas"
+    },
+    {
+      "title": "Sites",
+      "document": "sites",
+      "menuItems": [
+        {
+          "title": "Mappings",
+          "document": "sites/mappings"
+        },
+        {
+          "title": "Components",
+          "document": "sites/components"
+        },
+        {
+          "title": "Contributions",
+          "document": "sites/contributions"
+        },
+        {
+          "title": "Processors",
+          "document": "sites/processors"
+        }
+      ]
+    },
+    {
+      "title": "Webapps",
+      "document": "webapps"
     },
     {
       "title": "Upgrading",
