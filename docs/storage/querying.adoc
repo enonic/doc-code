@@ -890,14 +890,16 @@ To sort by a few fields just set them in the right order:
 
 In addition to the default UNICODE sorting, text fields can be sorted using locale-aware collations, such as DUCET or language-specific collations. This allows for more natural sorting of text for specific languages.
 
+NOTE: Locale-aware sorting is only supported for text fields that are indexed with a language-specific analyzer. The language for sorting can be specified using the `language` property in the sort definition.
+
 .Field sorting
 [source,json]
 ----
 {
   "sort": {
     "field": "myField",
-    "collation": "no",
-    "direction": "ASC"
+    "direction": "ASC",
+    "language": "no"
   }
 }
 ----
