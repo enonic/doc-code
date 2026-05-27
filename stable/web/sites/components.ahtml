@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>HTTP</title>
+<title>Components</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,13 +437,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>HTTP</h1>
+<h1>Components</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#services">Services</a></li>
-<li><a href="#common_request_pipeline">Request flow</a></li>
-<li><a href="#pages_in_this_section">Pages in this section</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#context">Context</a></li>
+<li><a href="#pages">Pages</a></li>
+<li><a href="#parts">Parts</a></li>
+<li><a href="#layouts">Layouts</a></li>
+<li><a href="#regions">Regions</a>
+<ul class="sectlevel2">
+<li><a href="#component_placeholders">Component placeholders</a></li>
+<li><a href="#basic_example">Basic example</a></li>
+<li><a href="#templating_example">Templating example</a></li>
+</ul>
+</li>
+<li><a href="#fragments">Fragments</a></li>
+<li><a href="#text_components">Text components</a></li>
 </ul>
 </div>
 </div>
@@ -451,143 +462,339 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every client interaction with Enonic XP — browser request, API call, admin tool, websocket upgrade — flows through the same HTTP gateway. This page covers the common request pipeline that every request passes through, the four services XP dispatches to, and the primitives (request/response shapes, filters, error handlers, websockets, SSE, ID providers) that make up the HTTP layer.</p>
+<p>Explicit Page, part, and layout components rendereing.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="services"><a class="link" href="#services">Services</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>XP listens on <code>port 8080</code> (configurable) and dispatches requests to one of four <strong>services</strong>, each with a fixed URL prefix and a distinct role:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 16.6666%;">
-<col style="width: 33.3333%;">
-<col style="width: 50.0001%;">
-</colgroup>
-<thead>
+<div class="admonitionblock tip">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">Service</th>
-<th class="tableblock halign-left valign-top">Prefix</th>
-<th class="tableblock halign-left valign-top">Use it for</th>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+For a hands-on introduction tutorial, visit the <a href="https://developer.enonic.com/docs/my-first-site">My first site tutorial</a>.
+</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="apis.ahtml">API</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom HTTP APIs, microservices, headless integrations.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="tools.ahtml">Admin</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="sites.ahtml">Site</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/site</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CMS-driven websites: pages, parts, layouts, content rendering.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="webapps.ahtml">Webapp</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/webapp</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standalone web applications — served by your app, no CMS context.</p></td>
-</tr>
-</tbody>
 </table>
+</div>
 <div class="paragraph">
-<p>A single app can contribute to any number of these services simultaneously — a CMS site, a webapp dashboard, a custom API, and an admin tool — all from the same bundle.</p>
+<p>A component implementation is created in the same folder as its <a href="https://developer.enonic.com/docs/cms/stable/pages/page">CMS component schema</a>. It exports the same HTTP functions as any other endpoint, but is always executed in the context of a content item. It may also make use of <a href="contributions.ahtml">page contributions</a>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Markup returned by a component must have a single root element.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="common_request_pipeline"><a class="link" href="#common_request_pipeline">Request flow</a></h2>
+<h2 id="context"><a class="link" href="#context">Context</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every request, regardless of which service ultimately handles it, passes through a common pre-processing pipeline before reaching your code:</p>
+<p>The implementation gets invoked when a client requests a specific content item, which resolves to a page:</p>
 </div>
-<div class="imageblock">
+<div class="paragraph">
+<p><code>HTTP request</code> &#8594; <code>/site/&lt;project&gt;/&lt;branch&gt;/path/to/content</code> &#8594; <code>resolve component</code> &#8594; <code>invoke implementation</code>.</p>
+</div>
+<div class="paragraph">
+<p>During the rendering, the specific content item will be available in the context, and API functions such as <a href="../libraries/lib-portal.ahtml#getContent">portalLib.getContent()</a> and <a href="../libraries/lib-portal.ahtml#getComponent">portalLib.getComponent()</a> automatically return values based on that context.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The site service uses the underlying permissions of the content, which means the current user is guaranteed to have read permissions to the contextually rendered content item. Meaning you do not need to worry about permissions when rendering components.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="pages"><a class="link" href="#pages">Pages</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The page implementation lives next to its <a href="https://developer.enonic.com/docs/cms/stable/pages/page">Page schema</a> at <code>src/main/resources/cms/pages/&lt;page-name&gt;/&lt;page-name&gt;.ts</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample page implementation using the context</div>
 <div class="content">
-<img src="http/images/common-pipeline.svg" alt="Common HTTP request pipeline" width="768px">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+
+exports.GET = (req) =&gt; {
+  const content = portal.getContent();
+  return {
+    body: `&lt;html&gt;
+            &lt;body&gt;
+              &lt;h1&gt;${content.displayName}&lt;/h1&gt;
+            &lt;/body&gt;
+          &lt;/html&gt;`
+  };
+};</code></pre>
 </div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Vhost filters</dt>
-<dd>
-<p>Request routing based on <a href="deployment/vhosts.ahtml">virtual hosts</a>.</p>
-</dd>
-<dt class="hdlist1">Platform filters</dt>
-<dd>
-<p>Optional system level request filters.</p>
-</dd>
-<dt class="hdlist1">Autologin filter</dt>
-<dd>
-<p>The <a href="deployment/vhosts.ahtml">virtual host contextual ID provider</a> is invoked, unless a user already exists in the context.</p>
-</dd>
-<dt class="hdlist1">Service pipeline</dt>
-<dd>
-<p>The pipeline of the matching service is executed (API invocation, admin tool routing, site rendering, or webapp dispatch).</p>
-</dd>
-<dt class="hdlist1">Auth handler</dt>
-<dd>
-<p>Triggered if the pipeline returns a <code>401 Unauthorized</code>. The contextual <a href="http/id-providers.ahtml">ID provider</a> is invoked and may handle the request.</p>
-</dd>
-<dt class="hdlist1">Error handler</dt>
-<dd>
-<p>If the pipeline returns an unhandled error (everything but <code>200 OK</code>) that was not handled by an ID provider, the contextual <a href="http/error.ahtml">error handler</a> kicks in.</p>
-</dd>
-<dt class="hdlist1">Platform response filters</dt>
-<dd>
-<p>Optional system level response filters.</p>
-</dd>
-<dt class="hdlist1">Standard error handler</dt>
-<dd>
-<p>Finally, if the request fails with an error that is still unhandled, XP&#8217;s standard error handler kicks in.</p>
-</dd>
-</dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="pages_in_this_section"><a class="link" href="#pages_in_this_section">Pages in this section</a></h2>
+<h2 id="parts"><a class="link" href="#parts">Parts</a></h2>
 <div class="sectionbody">
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><a href="http/request-response.ahtml">Request &amp; Response</a></dt>
-<dd>
-<p>The Request and Response object shapes — headers, body, cookies, status codes — and the way XP populates and reads them.</p>
-</dd>
-<dt class="hdlist1"><a href="http/filters.ahtml">Filters</a></dt>
-<dd>
-<p>Reusable wrappers that run before and after HTTP functions in the pipeline. Used for cross-cutting concerns: auth gates, logging, caching, response rewriting.</p>
-</dd>
-<dt class="hdlist1"><a href="http/error.ahtml">Error handler</a></dt>
-<dd>
-<p>Custom error pages and exception-to-response mapping. Replaces the default stack-trace response.</p>
-</dd>
-<dt class="hdlist1"><a href="http/websocket.ahtml">WebSocket</a></dt>
-<dd>
-<p>Two-way communication channels. Any HTTP function can upgrade an incoming request into a websocket session by returning a <code>webSocket</code> object.</p>
-</dd>
-<dt class="hdlist1"><a href="http/sse.ahtml">SSE</a></dt>
-<dd>
-<p>Server-Sent Events streams. One-way streaming from server to client over a long-lived HTTP response.</p>
-</dd>
-<dt class="hdlist1"><a href="http/id-providers.ahtml">ID providers</a></dt>
-<dd>
-<p>Pluggable authentication that hooks the request pipeline — <code>handle401</code>, <code>autoLogin</code>, <code>login</code>/<code>logout</code> endpoints, and ID-provider-as-HTTP-function.</p>
-</dd>
-</dl>
+<div class="paragraph">
+<p>A part implementation lives next to its <a href="https://developer.enonic.com/docs/cms/stable/pages/parts">Part schema</a> at <code>src/main/resources/cms/parts/&lt;part-name&gt;/&lt;part-name&gt;.ts</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample part implementation using the form value</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+
+exports.GET = (req) =&gt; {
+  const config = portal.getComponent();
+  return {
+    body: `&lt;div&gt;
+              &lt;h1&gt;${config.heading}&lt;/h1&gt;
+          &lt;/div&gt;`
+  };
+};</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="layouts"><a class="link" href="#layouts">Layouts</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The layout implementation lives next to its <a href="https://developer.enonic.com/docs/cms/stable/pages/parts">Layout schema</a> at <code>src/main/resources/cms/layouts/&lt;layout-name&gt;/&lt;layout-name&gt;.ts</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample layout using Thymeleaf to render two regions</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+const thymeleaf = require('/lib/thymeleaf');
+
+exports.GET = (req) =&gt; {
+    const component = portal.getComponent();
+
+    return {
+        body: thymeleaf.render(resolve('./layout-two-column.html'), {
+            leftRegion: component.regions["left"],
+            rightRegion: component.regions["right"],
+        })
+    };
+};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Thymeleaf view to render layout</div>
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html">&lt;div class="row"&gt;
+  &lt;div data-portal-region="left"&gt;
+    &lt;div data-th-each="component : ${leftRegion.components}" data-th-remove="tag"&gt;
+      &lt;div data-portal-component="${component.path}" data-th-remove="tag" /&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div data-portal-region="right"&gt;
+    &lt;div data-th-each="component : ${rightRegion.components}" data-th-remove="tag"&gt;
+      &lt;div data-portal-component="${component.path}" data-th-remove="tag" /&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="regions"><a class="link" href="#regions">Regions</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Rendering a region essentially boils down to rendering the components of that region.</p>
+</div>
+<div class="paragraph">
+<p>To render a component, leave a component placeholder in the page or layout&#8217;s response markup. Placeholders are then identified and iteratively rendered bys the site service. Components may contain new regions with new placeholders, so the process repeats until no placeholders remain in the response.</p>
+</div>
+<div class="sect2">
+<h3 id="component_placeholders"><a class="link" href="#component_placeholders">Component placeholders</a></h3>
+<div class="paragraph">
+<p>Placeholders are formatted as HTML comments and include the component path. For example:</p>
+</div>
+<div class="paragraph">
+<p><code>&lt;!--# COMPONENT /main/0/left/1 --&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>For <code>text/html</code> responses exclusively, the site engine looks for component placeholders. For each placeholder, the component&#8217;s implementation is invoked and the output merged into the response.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="basic_example"><a class="link" href="#basic_example">Basic example</a></h3>
+<div class="paragraph">
+<p>A basic approach to rendering the main region of a page might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">Manually create component placeholders</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+
+exports.GET = (req) =&gt; {
+  // Get components of the main region
+  const content = portal.getContent();
+  const components = content.page.regions["main"].components || [];
+
+  // Render with placeholders
+  return {
+    body: `&lt;html&gt;&lt;head&gt;Placeholder demo&lt;/head&gt;
+            &lt;body&gt;
+              &lt;main data-portal-region="main"&gt;
+                ${components.map((c) =&gt; `&lt;!--# COMPONENT ${c.path} --&gt;`).join('\n')}
+              &lt;/main&gt;
+            &lt;/body&gt;
+          &lt;/html&gt;`
+  };
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="templating_example"><a class="link" href="#templating_example">Templating example</a></h3>
+<div class="paragraph">
+<p>Using Thymeleaf templating, placeholder generation might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">Page implementation passing region to template</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+const thymeleaf = require('/lib/thymeleaf');
+
+exports.GET = (req) =&gt; {
+  // Get the contextual content item
+  const content = portal.getContent();
+  const mainRegion = content.page.regions["main"];
+
+  // Render and return the result
+  return {
+    body: thymeleaf.render(view, mainRegion)
+  };
+};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Thymeleaf template creating placeholders</div>
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Page with placeholders&lt;/h1&gt;
+    &lt;main data-portal-region="main"&gt;
+      &lt;div data-th-each="component : ${mainRegion.components}" data-th-remove="tag"&gt;
+        &lt;div data-portal-component="${component.path}" data-th-remove="tag" /&gt;
+      &lt;/div&gt;
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="fragments"><a class="link" href="#fragments">Fragments</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Fragments are rendered via their existing implementations. However, since a fragment is just a subset of a page, it may render without any styling, header, or footer.</p>
+</div>
+<div class="paragraph">
+<p>To mitigate this, add a <a href="mappings.ahtml">site mapping</a> for the <code>portal:fragment</code> content type. The mapped implementation then runs every time a fragment is rendered.</p>
+</div>
+<div class="listingblock">
+<div class="title">cms/site.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
+mappings:
+- controller: "/cms/pages/default/default.ts"
+  match: "type:'portal:fragment'"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Reusing your page implementation is often convenient, since it already does the job.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the markup produced by the implementation, leave a placeholder for the fragment:</p>
+</div>
+<div class="paragraph">
+<p><code>&lt;!--# COMPONENT / --&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>The site engine then renders the fragment&#8217;s components there.</p>
+</div>
+<div class="paragraph">
+<p>Using Thymeleaf, the placeholder may be generated with the following line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html">&lt;div data-portal-component="fragment" data-th-remove="tag"/&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="text_components"><a class="link" href="#text_components">Text components</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Text components have been deprecated in XP8 in favor of using regular parts with a text field. The built-in text component implementation will continue to work, but it is recommended to migrate to regular components.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Unlike other component types, text components are built-in to XP and include a standard rendering implementation.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Bypass the built-in implementation by running your own code instead of injecting a text component placeholder in your markup.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

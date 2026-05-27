@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Content Studio Menu Item (contentstudio.menuitem)</title>
+<title>Building Admin Extensions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,20 +437,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Content Studio Menu Item (contentstudio.menuitem)</h1>
+<h1>Building Admin Extensions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#lifecycle">Lifecycle</a></li>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#descriptor">Descriptor</a></li>
 <li><a href="#implementation">Implementation</a></li>
-<li><a href="#requestresponse">Request/response</a>
-<ul class="sectlevel2">
-<li><a href="#request">Request</a></li>
-</ul>
-</li>
+<li><a href="#url">URL</a></li>
+<li><a href="#access_control">Access control</a></li>
+<li><a href="#discovery">Discovery</a></li>
+<li><a href="#interfaces">Interfaces</a></li>
 </ul>
 </div>
 </div>
@@ -458,19 +456,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Menu Item is an admin extension that implements the <code>contentstudio.menuitem</code> interface.</p>
+<p>Admin extensions are app-provided HTTP endpoints that mount into existing <a href="web/tools.ahtml">admin tools</a> at named interface points. (previously known as <strong>widgets</strong>).</p>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-More details on what this looks like in the: <a href="https://developer.enonic.com/docs/content-studio/next/workbench#menuitem">Content Studio menu item</a>.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>The most common usage is rendering an embedded UI fragment, but an extension is just an HTTP module — it can equally well serve JSON, binary assets, or any other payload the host tool agrees to consume.</p>
 </div>
 </div>
 </div>
@@ -478,34 +467,23 @@ More details on what this looks like in the: <a href="https://developer.enonic.c
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Menu Item extensions add entries to the main menu in Content Studio. When the user selects one, the extension takes over the main view area and runs as a mini-application within Content Studio.</p>
+<p>An admin extension:</p>
 </div>
-<div class="paragraph">
-<p>The <strong>Navigator</strong> (content browser) is a built-in menu-item. Other examples include the <strong>GraphQL Playground</strong> from <a href="https://market.enonic.com/vendors/enonic/guillotine">Guillotine</a>, and the <strong>Archive</strong> browser from <a href="https://market.enonic.com/vendors/enonic/content-studio-plus">Content Studio+</a>.</p>
-</div>
-<div class="paragraph">
-<p>How it works:</p>
-</div>
-<div class="paragraph">
-<p>Menu items work in context of the currently selected project. Content Studio fetches the extension when the user activates the menu item and renders the response inside a web component that isolates the menu item&#8217;s CSS and JS from the rest of the admin UI.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
-<p><strong>Discovery.</strong> Content Studio populates the top-left menu with extensions declaring the <code>contentstudio.menuitem</code> interface, scoped to the active project.</p>
+<p>Is contributed by an app and discovered by the host admin tool through a string identifier called an <strong>interface</strong>.</p>
 </li>
 <li>
-<p><strong>Activation.</strong> The user selects the menu item from the top menu.</p>
+<p>Mounts only into tools that publish a matching interface name. The reserved name <code>"generic"</code> matches any tool.</p>
 </li>
 <li>
-<p><strong>Render.</strong> Content Studio issues a <code>GET</code> to the extension URL and embeds the response in the main view&#8217;s web component.</p>
+<p>Is served by the admin engine through the <code>admin:extension</code> dispatcher API at <code>/admin/&lt;app&gt;/&lt;tool&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;</code>.</p>
 </li>
-</ol>
+<li>
+<p>Returns whatever HTTP payload the host tool expects — HTML fragments for UI widgets, JSON for data feeds, binary assets, etc.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -513,15 +491,15 @@ More details on what this looks like in the: <a href="https://developer.enonic.c
 <h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A Menu Item extension is declared like any admin extension — descriptor and implementation under <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/</code>:</p>
+<p>To declare an extension, place a descriptor and an implementation under <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-files" data-lang="files">src/main/resources/admin/extensions/
-  my-menu/
-    my-menu.yaml   <i class="conum" data-value="1"></i><b>(1)</b>
-    my-menu.ts     <i class="conum" data-value="2"></i><b>(2)</b>
-    my-menu.svg    <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+  my-extension/
+    my-extension.yaml   <i class="conum" data-value="1"></i><b>(1)</b>
+    my-extension.ts     <i class="conum" data-value="2"></i><b>(2)</b>
+    my-extension.svg    <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -532,13 +510,16 @@ More details on what this looks like in the: <a href="https://developer.enonic.c
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Implementation file</td>
+<td>HTTP function implementation for the extension URL.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Optional SVG icon shown next to the entry in the Content Studio menu.</td>
+<td>Optional SVG icon, served by the discovery endpoint.</td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The folder name, descriptor base name, and implementation base name must all match <code>&lt;extension-name&gt;</code>.</p>
 </div>
 </div>
 </div>
@@ -546,43 +527,46 @@ More details on what this looks like in the: <a href="https://developer.enonic.c
 <h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The descriptor is the same <code>AdminExtension</code> kind as any other extension; only the <code>interfaces:</code> list and the <code>config.context</code> key are specific to menu items.
-See <a href="../extensions.ahtml#descriptor">the parent descriptor reference</a> for the shared fields.</p>
+<p>The descriptor is YAML only — <code>.yaml</code> and <code>.yml</code> are both accepted.</p>
 </div>
 <div class="listingblock">
-<div class="title">src/main/resources/admin/extensions/my-menu/my-menu.yaml</div>
+<div class="title">src/main/resources/admin/extensions/&lt;extension-name&gt;/&lt;extension-name&gt;.yaml</div>
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminExtension"
-title: "My tool"
-description: "Custom project-level tool"
-interfaces:
-  - "contentstudio.menuitem"          <i class="conum" data-value="1"></i><b>(1)</b>
-config:
-  context: "project"                  <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+title:                                <i class="conum" data-value="1"></i><b>(1)</b>
+  text: "My extension"
+  i18n: "i18n.my-extension.title"
+description: "My extension"           <i class="conum" data-value="2"></i><b>(2)</b>
+interfaces:                           <i class="conum" data-value="3"></i><b>(3)</b>
+  - "com.example.app.sidebar"
+  - "com.example.myinterface"
+allow:                                <i class="conum" data-value="4"></i><b>(4)</b>
+  - "role:system.authenticated"
+config:                               <i class="conum" data-value="5"></i><b>(5)</b>
+  property_1: "value_1"</code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>Interface name</strong> — must be the exact string <code>contentstudio.menuitem</code> for Content Studio to discover the extension as a menu item.</td>
+<td><strong>title</strong> — string, or <code>{ text, i18n }</code> for localization. Used wherever the host tool renders an extension list.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>context</strong> — scopes the menu item within Content Studio.
-Use <code>"project"</code> for project-scoped tools — the same value used by the built-in <strong>Archive</strong> browser and <strong>GraphQL Playground</strong>.</td>
+<td><strong>description</strong> — string, or <code>{ text, i18n }</code>.</td>
 </tr>
-</table>
-</div>
-<div class="admonitionblock tip">
-<table>
 <tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-To restrict the menu item to specific roles or principals, use the standard <code>allow:</code> field documented in <a href="../extensions.ahtml">Building Admin Extensions</a> — for example, <code>allow: ["role:system.admin", "role:cms.admin"]</code> for admin-only tools.
-</td>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><strong>interfaces</strong> — names of interface points the extension plugs into. The host tool must publish a matching name in its own <code>interfaces:</code> list. Use the reserved value <code>"generic"</code> to make the extension mountable from any admin tool.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><strong>allow</strong> — principal keys granted access. <code>role:system.admin</code> is always permitted in addition to anything listed here. Required to expose the extension to non-admins.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td><strong>config</strong> — free-form key/value map readable from the implementation and surfaced in the discovery endpoint.</td>
 </tr>
 </table>
 </div>
@@ -592,81 +576,120 @@ To restrict the menu item to specific roles or principals, use the standard <cod
 <h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The implementation exports <code>GET</code>. Content Studio calls it when the user activates the menu item and renders the response inside the main-view web component.</p>
+<p>The implementation lives at <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/&lt;extension-name&gt;.ts</code> and exports an <a href="web/request-response.ahtml">HTTP function</a> for each method the extension responds to. The response shape is determined by the host tool — UI widgets typically return HTML fragments, but a data-feed extension might return JSON, and an asset-serving extension might return binary content with the appropriate <code>contentType</code>.</p>
 </div>
 <div class="listingblock">
-<div class="title">src/main/resources/admin/extensions/my-menu/my-menu.ts</div>
+<div class="title">Sample my-extension.ts</div>
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+    const contentId = req.params.contentId;
     return {
-        status: 200,
-        contentType: 'text/html',
-        body: `&lt;style&gt;
-  .panel { padding: 2rem; font-family: system-ui; max-width: 720px; }
-  .panel h1 { margin-top: 0; }
-&lt;/style&gt;
-&lt;div class="panel"&gt;
-  &lt;h1&gt;Welcome, ${req.user.displayName}&lt;/h1&gt;
-  &lt;p&gt;This is a custom Content Studio menu item.&lt;/p&gt;
-&lt;/div&gt;`
+        body: `&lt;div&gt;Inspecting content ${contentId}&lt;/div&gt;`,
+        contentType: 'text/html'
     };
 };</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code>, <code>require('/lib/xp/project')</code>, and any other standard library are available, along with 3rd-party modules the app bundles.</p>
-</div>
-<div class="paragraph">
-<p>For anything beyond a single static page — the built-in <strong>Archive</strong> browser and <strong>GraphQL Playground</strong> are good reference points — separate the HTML, CSS, and JS into asset files and reference them via <code>portal.assetUrl()</code> from <code>lib-portal</code>.
-The initial <code>GET</code> then becomes a thin shell that loads a bundled SPA, which drives the rest of the experience and makes its own HTTP calls back to the extension or to any mounted Universal APIs.</p>
+<p>For anything beyond a couple of static endpoints, use the <a href="https://market.enonic.com/vendors/enonic/router-lib">router library</a> for method dispatch, parameter extraction, and pattern matching.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="requestresponse"><a class="link" href="#requestresponse">Request/response</a></h2>
+<h2 id="url"><a class="link" href="#url">URL</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="request"><a class="link" href="#request">Request</a></h3>
 <div class="paragraph">
-<p>Content Studio dispatches a <code>GET</code> to the extension URL when the user activates the menu item.</p>
+<p>The URL at which an extension is reachable is a platform internal and may change between XP releases — <strong>do not hard-code it</strong>. Use <code>extensionUrl()</code> from <a href="libraries/lib-admin.ahtml#extensionurl">lib-admin</a>; it resolves the URL based on the current admin tool context.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const adminLib = require('/lib/xp/admin');
+
+const url = adminLib.extensionUrl({
+    application: 'com.example.app',
+    extension: 'my-extension',
+    params: { contentId: '123' }
+});</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Content Studio dispatches a <code>GET</code> to the extension URL with the selected content as query parameters:</p>
+<p>(<code>widgetUrl()</code> exists for backward compatibility but is deprecated; use <code>extensionUrl()</code> in new code.)</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Parameters sent to the extension URL</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Repository id, e.g. <code>com.enonic.cms.default</code>.</p>
-<p class="tableblock">The standard XP request fields are available: <code>req.user</code> for the active user, <code>req.locales</code> for i18n negotiation, and so on.</p>
-<p class="tableblock">=== Response</p>
-<p class="tableblock">The response body is HTML.
-Content Studio renders it inside a web component, which isolates the menu item&#8217;s CSS and JS from the rest of the admin UI:</p>
-<p class="tableblock">* Selectors in your <code>&lt;style&gt;</code> blocks don&#8217;t conflict with Content Studio&#8217;s styles.
-* Content Studio&#8217;s styles don&#8217;t apply to the menu item&#8217;s contents either — start from base CSS rather than inheriting admin-UI defaults.
-* <code>&lt;script&gt;</code> tags execute in the menu item&#8217;s scope; queries like <code>document.querySelector</code> operate on the menu item&#8217;s own DOM.</p>
-<p class="tableblock">Return <code>404</code> if the request can&#8217;t be served; <code>2xx</code> otherwise.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Two preconditions still apply to every invocation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The host tool&#8217;s descriptor must include <code>"admin:extension"</code> in its <code>apis:</code> list, so the dispatcher is mounted under that tool.</p>
+</li>
+<li>
+<p>The interface match rule: unless the extension&#8217;s <code>interfaces:</code> list contains <code>"generic"</code>, at least one of its interfaces must also be present in the host tool&#8217;s <code>interfaces:</code> list — otherwise the request returns <strong>404 Not Found</strong>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="access_control"><a class="link" href="#access_control">Access control</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two checks are enforced:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The caller must hold <code>role:system.admin.login</code>.</p>
+</li>
+<li>
+<p>The extension&#8217;s descriptor must permit the caller — <code>role:system.admin</code> is always permitted; otherwise the caller must match at least one principal in <code>allow:</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="discovery"><a class="link" href="#discovery">Discovery</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The host tool typically queries <code>?interface=&lt;name&gt;</code> to find which extensions are available to the current user at a given interface point. The response is a JSON array, one entry per allowed extension:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">[
+  {
+    "key": "com.example.app:my-extension",
+    "title": "My extension",
+    "description": "My extension",
+    "iconUrl": "/admin/.../_/admin:extension?icon&amp;app=com.example.app&amp;extension=my-extension&amp;v=...",
+    "url": "/admin/.../_/admin:extension/com.example.app:my-extension",
+    "interfaces": ["com.example.app.sidebar"],
+    "config": { "property_1": "value_1" }
+  }
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The listing is filtered by the caller&#8217;s principals — extensions the caller cannot access are omitted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="interfaces"><a class="link" href="#interfaces">Interfaces</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Interface names are free-form strings, not a closed enum. The contract is purely a string match between the extension&#8217;s <code>interfaces:</code> and the host tool&#8217;s <code>interfaces:</code>. To define a new interface point in your own admin tool, declare a stable name (e.g. <code>&lt;app-key&gt;.&lt;purpose&gt;</code>) in the tool&#8217;s descriptor and document the request/response shape your tool expects from extensions.</p>
+</div>
+<div class="paragraph">
+<p>Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool&#8217;s documentation for the contract.
+See <a href="web/extensions/liveview.ahtml">Liveview</a>, <a href="web/extensions/contextpanel.ahtml">Context panel</a>, and <a href="web/extensions/menuitem.ahtml">Menu item</a> for worked examples: the <code>contentstudio.liveview</code>, <code>contentstudio.contextpanel</code>, and <code>contentstudio.menuitem</code> interfaces published by Content Studio.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

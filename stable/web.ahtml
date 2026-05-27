@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Response Processors</title>
+<title>Web</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,14 +437,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Response Processors</h1>
+<h1>Web</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#usage">Usage</a></li>
-<li><a href="#triggering">Triggering</a></li>
-<li><a href="#execution_order">Execution order</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#common_request_pipeline">Request flow</a></li>
+<li><a href="#pages_in_this_section">Pages in this section</a></li>
 </ul>
 </div>
 </div>
@@ -452,140 +451,143 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>A special filter, mainly used to inject page contributions.</p>
+<p>Every client interaction with Enonic XP — browser request, API call, admin tool, websocket upgrade — flows through the same HTTP gateway. This page covers the common request pipeline that every request passes through, the four services XP dispatches to, and the primitives (request/response shapes, filters, error handlers, websockets, SSE, ID providers) that make up the HTTP layer.</p>
 </div>
-<div class="admonitionblock note">
-<table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="services"><a class="link" href="#services">Services</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XP listens on <code>port 8080</code> (configurable) and dispatches requests to one of four <strong>services</strong>, each with a fixed URL prefix and a distinct role:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Response processors are only available in <a href="components.ahtml">component rendering</a>, not via mappings.
-</td>
+<th class="tableblock halign-left valign-top">Service</th>
+<th class="tableblock halign-left valign-top">Prefix</th>
+<th class="tableblock halign-left valign-top">Use it for</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/apis.ahtml">API</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom HTTP APIs, microservices, headless integrations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/tools.ahtml">Admin</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/sites.ahtml">Site</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/site</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CMS-driven websites: pages, parts, layouts, content rendering.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/webapps.ahtml">Webapp</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/webapp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standalone web applications — served by your app, no CMS context.</p></td>
+</tr>
+</tbody>
 </table>
+<div class="paragraph">
+<p>A single app can contribute to any number of these services simultaneously — a CMS site, a webapp dashboard, a custom API, and an admin tool — all from the same bundle.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<h2 id="common_request_pipeline"><a class="link" href="#common_request_pipeline">Request flow</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Processors get executed between the <code>component rendering</code> step, and the <code>contributions filter</code> in the <a href="../runtime/engines/site-engine.ahtml">site engine</a> pipeline. Response processors are commonly used by apps that need to inject <a href="contributions.ahtml">page contributions</a> without placing a component on the page.</p>
+<p>Every request, regardless of which service ultimately handles it, passes through a common pre-processing pipeline before reaching your code:</p>
 </div>
-<div class="paragraph">
-<p>Use cases are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Dynamically adding page contributions (i.e. script tags)</p>
-</li>
-<li>
-<p>General manipulation of the response markup i.e. headers or body (i.e. adding SEO tags).</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Consider using regular <a href="../http/filters.ahtml">HTTP Filters</a> for other use-cases.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Create a response processor by placing an implementation under <code>src/main/resources/cms/processors/</code>, for example <code>cms/processors/tracker.ts</code>.</p>
-</div>
-<div class="paragraph">
-<p>The implementation must export a <code>responseProcessor</code> function. It receives a request and a response object. The example below dynamically adds a <code>bodyEnd</code> <a href="contributions.ahtml">page contribution</a> to the response.</p>
-</div>
-<div class="listingblock">
-<div class="title">cms/processors/tracker.ts</div>
+<div class="imageblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.responseProcessor = (req, res) =&gt; {
-    const trackingScript = '&lt;script src="http://some.cdn/js/tracker.js"&gt;&lt;/script&gt;';
-
-    if (!res.pageContributions.bodyEnd) {
-        res.pageContributions.bodyEnd = [];
-    }
-    res.pageContributions.bodyEnd.push(trackingScript);
-
-    return res;
-};</code></pre>
+<img src="web/images/common-pipeline.svg" alt="Common HTTP request pipeline" width="768px">
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="triggering"><a class="link" href="#triggering">Triggering</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To wire a processor into the execution pipeline, declare it in the app&#8217;s <a href="../cms/sites.ahtml#site_xml">site descriptor</a>, and add the application to the site.</p>
-</div>
-<div class="listingblock">
-<div class="title">cms/site.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
-processors:
-- name: "tracker" <i class="conum" data-value="1"></i><b>(1)</b>
-  order: 10       <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>name</strong> is the filename of the processor (without extension).</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>order</strong> sets execution order; lower runs first.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Response processors may change any of the values of the response object, including: HTTP status code, response body, HTTP headers, cookies and page contributions.
-It is also possible to return the response object received without any changes.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Vhost filters</dt>
+<dd>
+<p>Request routing based on <a href="deployment/vhosts.ahtml">virtual hosts</a>.</p>
+</dd>
+<dt class="hdlist1">Platform filters</dt>
+<dd>
+<p>Optional system level request filters.</p>
+</dd>
+<dt class="hdlist1">Autologin filter</dt>
+<dd>
+<p>The <a href="deployment/vhosts.ahtml">virtual host contextual ID provider</a> is invoked, unless a user already exists in the context.</p>
+</dd>
+<dt class="hdlist1">Service pipeline</dt>
+<dd>
+<p>The pipeline of the matching service is executed (API invocation, admin tool routing, site rendering, or webapp dispatch).</p>
+</dd>
+<dt class="hdlist1">Auth handler</dt>
+<dd>
+<p>Triggered if the pipeline returns a <code>401 Unauthorized</code>. The contextual <a href="web/id-providers.ahtml">ID provider</a> is invoked and may handle the request.</p>
+</dd>
+<dt class="hdlist1">Error handler</dt>
+<dd>
+<p>If the pipeline returns an unhandled error (everything but <code>200 OK</code>) that was not handled by an ID provider, the contextual <a href="web/error.ahtml">error handler</a> kicks in.</p>
+</dd>
+<dt class="hdlist1">Platform response filters</dt>
+<dd>
+<p>Optional system level response filters.</p>
+</dd>
+<dt class="hdlist1">Standard error handler</dt>
+<dd>
+<p>Finally, if the request fails with an error that is still unhandled, XP&#8217;s standard error handler kicks in.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="execution_order"><a class="link" href="#execution_order">Execution order</a></h2>
+<h2 id="pages_in_this_section"><a class="link" href="#pages_in_this_section">Pages in this section</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>An application may contain multiple processors.
-Multiple applications can be added to a Site.
-When a page is rendered, all processors are ordered and executed accordingly.</p>
-</div>
-<div class="paragraph">
-<p>The order of execution is determined by the <code>order</code> value (as defined in the <a href="../cms/sites.ahtml#site_xml">site descriptor</a>) combined with the order of the application list within the site.</p>
-</div>
-<div class="paragraph">
-<p>Processors with a <strong>lower</strong> order will be executed first (across all apps within the site).</p>
-</div>
-<div class="paragraph">
-<p>In case there are several filters with the same <code>order</code> number, the position of the applications (as configured on the site) determines the order of execution.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If <code>applyFilters</code> is set to <code>false</code> in the <a href="../http/request-response.ahtml#response">response object</a>, any further response processing or filters will be ignored. Default value is <code>true</code>.
-</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="web/request-response.ahtml">Request &amp; Response</a></dt>
+<dd>
+<p>The Request and Response object shapes — headers, body, cookies, status codes — and the way XP populates and reads them.</p>
+</dd>
+<dt class="hdlist1"><a href="web/filters.ahtml">Filters</a></dt>
+<dd>
+<p>Reusable wrappers that run before and after HTTP functions in the pipeline. Used for cross-cutting concerns: auth gates, logging, caching, response rewriting.</p>
+</dd>
+<dt class="hdlist1"><a href="web/error.ahtml">Error handler</a></dt>
+<dd>
+<p>Custom error pages and exception-to-response mapping. Replaces the default stack-trace response.</p>
+</dd>
+<dt class="hdlist1"><a href="web/websocket.ahtml">WebSocket</a></dt>
+<dd>
+<p>Two-way communication channels. Any HTTP function can upgrade an incoming request into a websocket session by returning a <code>webSocket</code> object.</p>
+</dd>
+<dt class="hdlist1"><a href="web/sse.ahtml">SSE</a></dt>
+<dd>
+<p>Server-Sent Events streams. One-way streaming from server to client over a long-lived HTTP response.</p>
+</dd>
+<dt class="hdlist1"><a href="web/id-providers.ahtml">ID providers</a></dt>
+<dd>
+<p>Pluggable authentication that hooks the request pipeline — <code>handle401</code>, <code>autoLogin</code>, <code>login</code>/<code>logout</code> endpoints, and ID-provider-as-HTTP-function.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

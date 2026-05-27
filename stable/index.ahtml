@@ -492,7 +492,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <a href="schemas.ahtml">content schemas</a>, custom <a href="apis.ahtml">APIs</a>, <a href="tools.ahtml">admin tools</a> and <a href="extensions.ahtml">extensions</a>, <a href="http/id-providers.ahtml">ID providers</a>, <a href="webapps.ahtml">webapps</a>, or full <a href="sites.ahtml">websites</a> — all powered by the same JS/TS runtime and the same standard <a href="libraries.ahtml">libraries</a>.</p>
+<p>XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <a href="schemas.ahtml">content schemas</a>, custom <a href="web/apis.ahtml">APIs</a>, <a href="web/tools.ahtml">admin tools</a> and <a href="web/extensions.ahtml">extensions</a>, <a href="web/id-providers.ahtml">ID providers</a>, <a href="web/webapps.ahtml">webapps</a>, or full <a href="web/sites.ahtml">websites</a> — all powered by the same JS/TS runtime and the same standard <a href="libraries.ahtml">libraries</a>.</p>
 </div>
 </div>
 </div>
@@ -526,11 +526,11 @@ For a hands-on introduction to development with Enonic XP, visit the <a href="ht
 <dd>
 <p>The runtime, the app model, the module system, lifecycle hooks, and the cluster-wide event bus.</p>
 </dd>
-<dt class="hdlist1"><a href="http.ahtml">HTTP</a></dt>
+<dt class="hdlist1"><a href="web.ahtml">Web</a></dt>
 <dd>
 <p>The shared request pipeline, primitives (request/response, filters, error handlers, websockets, SSE), ID providers, and the four services XP dispatches to.</p>
 </dd>
-<dt class="hdlist1"><a href="apis.ahtml">APIs</a>, <a href="tools.ahtml">Admin Tools</a> and <a href="extensions.ahtml">Extensions</a>, <a href="sites.ahtml">Sites</a>, <a href="webapps.ahtml">Webapps</a></dt>
+<dt class="hdlist1"><a href="web/apis.ahtml">APIs</a>, <a href="web/tools.ahtml">Admin Tools</a> and <a href="web/extensions.ahtml">Extensions</a>, <a href="web/sites.ahtml">Sites</a>, <a href="web/webapps.ahtml">Webapps</a></dt>
 <dd>
 <p>The four services exposed by XP — custom APIs, admin UIs and extensions, CMS-driven sites, and standalone web applications.</p>
 </dd>
@@ -549,7 +549,7 @@ For a hands-on introduction to development with Enonic XP, visit the <a href="ht
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

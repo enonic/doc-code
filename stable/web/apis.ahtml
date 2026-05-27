@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Content Studio Context Panel (contentstudio.contextpanel)</title>
+<title>Universal APIs</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,21 +437,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Content Studio Context Panel (contentstudio.contextpanel)</h1>
+<h1>Universal APIs</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#lifecycle">Lifecycle</a></li>
-<li><a href="#usage">Usage</a></li>
-<li><a href="#descriptor">Descriptor</a></li>
-<li><a href="#implementation">Implementation</a></li>
-<li><a href="#requestresponse">Request/response</a>
+<li><a href="#features">Features</a></li>
+<li><a href="#usage">Usage</a>
 <ul class="sectlevel2">
-<li><a href="#request">Request</a></li>
-<li><a href="#response">Response</a></li>
+<li><a href="#subpath_routing">Subpath routing</a></li>
+<li><a href="#websocket_and_sse">WebSocket and SSE</a></li>
 </ul>
 </li>
+<li><a href="#descriptor">Descriptor</a></li>
+<li><a href="#where_apis_are_reachable">Where APIs are reachable</a></li>
+<li><a href="#service-point">Service point</a></li>
+<li><a href="#portal-endpoint">Portal (aka Web) Endpoint</a></li>
+<li><a href="#management-endpoint">Management Endpoint</a></li>
+<li><a href="#api_discovery">API discovery</a></li>
+<li><a href="#apiurl">apiUrl()</a></li>
+<li><a href="#tracing">Tracing</a></li>
+<li><a href="#reserved_api_application_names">Reserved API application names</a></li>
 </ul>
 </div>
 </div>
@@ -459,19 +465,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Context Panel is an admin extension that implements the <code>contentstudio.contextpanel</code> interface.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-More details on what this looks like in the: <a href="https://developer.enonic.com/docs/content-studio/next/workbench/contextpanel">Content Studio context panel</a>.
-</td>
-</tr>
-</table>
+<p>A core feature of Enonic XP is the ability to build custom APIs and reuse them across the platform — aka the Universal API.</p>
 </div>
 </div>
 </div>
@@ -479,35 +473,44 @@ More details on what this looks like in the: <a href="https://developer.enonic.c
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Context Panel extensions render supplementary information about the selected content, in the right side panel of Content Studio. They are ideal for contextual information or interactions relating the selected content.</p>
-</div>
-<div class="paragraph">
-<p>How it works:</p>
-</div>
-<div class="paragraph">
-<p>Content Studio fetches the extension when the user activates the panel and renders the response inside a web component that isolates the panel&#8217;s CSS and JS from the rest of the admin UI.
-Multiple Context Panel extensions coexist — the user picks which one is active from a dropdown, and the same extension is re-fetched whenever the selected content changes.</p>
+<p>The Universal API is a powerful feature of the Enonic XP platform that lets developers create custom APIs. It enables applications to dynamically extend the platform&#8217;s API surface as they are installed.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
+<h2 id="features"><a class="link" href="#features">Features</a></h2>
 <div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
+<div class="paragraph">
+<p>The main features of the Universal API are:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p><strong>Discovery.</strong> Content Studio populates the side-panel dropdown with extensions declaring the <code>contentstudio.contextpanel</code> interface.</p>
+<p>Secure by default.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>APIs are not mounted anywhere by default, so there is no risk of accidentally exposing an admin API on a site.</p>
 </li>
 <li>
-<p><strong>Activation.</strong> The user opens the panel and picks an extension (or the previously active one is restored).</p>
+<p>Nobody can access an API without explicitly specifying access rights in the descriptor.</p>
 </li>
 <li>
-<p><strong>Render.</strong> Content Studio issues a <code>GET</code> to the extension URL with the selected content as parameters and embeds the response in the side panel&#8217;s web component.</p>
+<p>APIs mount at a single, fixed location, never at arbitrary points along the URL.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p><strong>Re-fetch.</strong> If the user selects a different content, switches branch, or otherwise changes any of the request parameters, Content Studio repeats the <code>GET</code> for the new selection.</p>
+<p>Headless friendly. APIs can be mounted under the <code>/api</code> endpoint, so they can be used by any client.</p>
 </li>
-</ol>
+<li>
+<p>Granular. Mounting must be explicitly specified in engine descriptor files.</p>
+</li>
+<li>
+<p>Modular. APIs can be borrowed from other applications, so you can reuse existing APIs in your application.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -515,32 +518,35 @@ Multiple Context Panel extensions coexist — the user picks which one is active
 <h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A Context Panel extension is declared like any admin extension — descriptor and implementation under <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/</code>:</p>
+<p>To create an API, place an implementation under <code>src/main/resources/apis/</code> in a folder matching its name, e.g. <code>src/main/resources/apis/myapi/myapi.ts</code>.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
 </div>
 <div class="listingblock">
+<div class="title">src/main/resources/apis/&lt;api-name&gt;/&lt;api-name&gt;.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-files" data-lang="files">src/main/resources/admin/extensions/
-  my-panel/
-    my-panel.yaml   <i class="conum" data-value="1"></i><b>(1)</b>
-    my-panel.ts     <i class="conum" data-value="2"></i><b>(2)</b>
-    my-panel.svg    <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+  return {
+    body: {
+      time: new Date()
+    },
+    contentType: 'application/json; charset=utf-8'
+  };
+};</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Descriptor — see <a href="#descriptor">below</a>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Implementation file</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Optional SVG icon shown next to the panel in the side-panel dropdown.</td>
-</tr>
-</table>
+<div class="sect2">
+<h3 id="subpath_routing"><a class="link" href="#subpath_routing">Subpath routing</a></h3>
+<div class="paragraph">
+<p>A request to <code>/api/&lt;app&gt;:&lt;api&gt;/foo/bar</code> (or the equivalent service-point URL) reaches the same implementation; everything after the descriptor segment arrives as <code>req.path</code>. The implementation is free to dispatch on <code>req.path</code> any way it likes, but for anything beyond a couple of static endpoints, use the <a href="https://market.enonic.com/vendors/enonic/router-lib">router library</a> for method dispatch, parameter extraction, and pattern matching.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="websocket_and_sse"><a class="link" href="#websocket_and_sse">WebSocket and SSE</a></h3>
+<div class="paragraph">
+<p>A custom API can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. Return a <code>webSocket</code> or <code>sse</code> object from the request handler. See <a href="web/websocket.ahtml">WebSocket</a> and <a href="web/sse.ahtml">SSE</a> for the details.</p>
+</div>
 </div>
 </div>
 </div>
@@ -548,142 +554,385 @@ Multiple Context Panel extensions coexist — the user picks which one is active
 <h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The descriptor is the same <code>AdminExtension</code> kind as any other extension; only the <code>interfaces:</code> list is specific to context panels.
-See <a href="../extensions.ahtml#descriptor">the parent descriptor reference</a> for the shared fields.</p>
+<p>An API descriptor is required. It defines the API&#8217;s access control, the endpoints it is mounted on, and metadata such as title, description, and documentation URL.</p>
+</div>
+<div class="paragraph">
+<p>Example of a full API descriptor:</p>
 </div>
 <div class="listingblock">
-<div class="title">src/main/resources/admin/extensions/my-panel/my-panel.yaml</div>
+<div class="title">src/main/resources/apis/&lt;api-name&gt;/&lt;api-name&gt;.yaml</div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminExtension"
-title: "My panel"
-description: "Show key facts about the selected content"
-interfaces:
-  - "contentstudio.contextpanel"          <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "API"
+title: "My API" <i class="conum" data-value="1"></i><b>(1)</b>
+description: "API for My App" <i class="conum" data-value="2"></i><b>(2)</b>
+documentationUrl: "https://developer.enonic.com/docs/api" <i class="conum" data-value="3"></i><b>(3)</b>
+mount: ["web"] <i class="conum" data-value="4"></i><b>(4)</b>
+allow: <i class="conum" data-value="5"></i><b>(5)</b>
+  - "role:system.admin"
+  - "role:myapp.myrole"</code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>Interface name</strong> — must be the exact string <code>contentstudio.contextpanel</code> for Content Studio to discover the extension as a context panel.</td>
+<td><strong>title</strong> is the name of the API that will be shown in the UI.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>description</strong> is a short description of the API that will be shown in the UI.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><strong>documentationUrl</strong> is a link to the API documentation that will be shown in the UI.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>By default, APIs are not mounted on the <a href="#portal-endpoint">Portal endpoint</a>.
+To enable it, add <code>"web"</code> to the <code>mount</code> list.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>APIs must list principals that have access to it. It is required to specify at least one principal. Use <code>role:system.everyone</code> to make the API public.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A request to an API that is not mounted on the matched URL returns <strong>404 Not Found</strong> — the absence is indistinguishable from a missing API. A request by a principal not in the <code>allow</code> list returns <strong>401 Unauthorized</strong> if the configured ID provider asks for credentials, otherwise <strong>403 Forbidden</strong>. Calls to APIs mounted under <code>/admin/&#8230;&#8203;</code> additionally require the caller to hold <code>role:system.admin.login</code>, regardless of what the API&#8217;s <code>allow</code> list grants.
+</td>
 </tr>
 </table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
+<h2 id="where_apis_are_reachable"><a class="link" href="#where_apis_are_reachable">Where APIs are reachable</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The implementation exports <code>GET</code>. Content Studio calls it with the selected content&#8217;s id and renders the response inside the side-panel web component.</p>
+<p>A Universal API can be exposed through three <strong>independent</strong> axes — they don&#8217;t substitute for each other and any combination is valid:</p>
 </div>
-<div class="listingblock">
-<div class="title">src/main/resources/admin/extensions/my-panel/my-panel.ts</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const contentLib = require('/lib/xp/content');
-
-exports.GET = (req) =&gt; {
-    const content = contentLib.get({ key: req.params.contentId });
-    if (!content) {
-        return { status: 404 };
-    }
-
-    return {
-        status: 200,
-        contentType: 'text/html',
-        body: `&lt;style&gt;
-  .panel { padding: 1rem; font-family: system-ui; font-size: 13px; }
-  .panel dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1rem; margin: 0; }
-  .panel dt { font-weight: 600; }
-  .panel dd { margin: 0; }
-&lt;/style&gt;
-&lt;div class="panel"&gt;
-  &lt;dl&gt;
-    &lt;dt&gt;Type&lt;/dt&gt;&lt;dd&gt;${content.type}&lt;/dd&gt;
-    &lt;dt&gt;Path&lt;/dt&gt;&lt;dd&gt;${content.path}&lt;/dd&gt;
-    &lt;dt&gt;Modified&lt;/dt&gt;&lt;dd&gt;${content.modifiedTime}&lt;/dd&gt;
-  &lt;/dl&gt;
-&lt;/div&gt;`
-    };
-};</code></pre>
-</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Service point</strong> — the API is mounted into a <code>site</code>, <code>webapp</code>, or <code>admin tool</code> engine via that engine&#8217;s descriptor.</p>
+</li>
+<li>
+<p><strong>Portal endpoint</strong> — the API opts in with <code>mount: "web"</code> and becomes reachable on the <strong>Portal</strong> endpoint (the public XP port, aka Web) under <code>/api/</code>.</p>
+</li>
+<li>
+<p><strong>Management endpoint</strong> — the API opts in with <code>mount: "management"</code> and becomes reachable on the <strong>Management</strong> endpoint, which listens on its own port.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code> for the full Content API, plus any other standard library (<code>lib-portal</code>, <code>lib-i18n</code>, <code>lib-node</code>, &#8230;&#8203;) and 3rd-party modules the app bundles.</p>
-</div>
-<div class="paragraph">
-<p>For non-trivial panels, separate the HTML, CSS, and JS into asset files and reference them via <code>portal.assetUrl()</code> from <code>lib-portal</code> — the response then becomes a small <code>&lt;link&gt;</code> + <code>&lt;script&gt;</code> shell that pulls in the bundled assets, keeping the implementation focused on data and the bundle focused on presentation.</p>
+<p>The <code>/api/</code> URL prefix is the same on both endpoints, but the two are served on <strong>different ports</strong>. The Management endpoint is not reachable through the Portal endpoint and vice versa.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="requestresponse"><a class="link" href="#requestresponse">Request/response</a></h2>
+<h2 id="service-point"><a class="link" href="#service-point">Service point</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="request"><a class="link" href="#request">Request</a></h3>
 <div class="paragraph">
-<p>Content Studio dispatches a <code>GET</code> to the extension URL with the selected content as query parameters:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Parameters sent to the extension URL</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Content UUID — the primary way to identify the selected content.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Repository id, e.g. <code>com.enonic.cms.default</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>branch</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draft</code> or <code>master</code>.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>The standard XP request fields are available too: <code>req.locales</code> for i18n negotiation, <code>req.user</code> for the active user, and so on.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="response"><a class="link" href="#response">Response</a></h3>
-<div class="paragraph">
-<p>The response body is HTML.
-Content Studio renders it inside a web component, which isolates the panel&#8217;s CSS and JS from the rest of the admin UI:</p>
+<p>In the <code>site</code>, <code>webapp</code>, and <code>admin</code> engines, APIs are reachable as service points under the engine&#8217;s URL space. The <code>_</code> segment separates the engine&#8217;s content path from service paths (services, components, idprovider, and APIs):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Selectors in your <code>&lt;style&gt;</code> blocks don&#8217;t conflict with Content Studio&#8217;s styles.</p>
+<p>For the <code>site</code> engine: <code>/site/&lt;site-path&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
 </li>
 <li>
-<p>Content Studio&#8217;s styles don&#8217;t apply to the panel contents either — start from base CSS rather than inheriting admin-UI defaults.</p>
+<p>For the <code>webapp</code> engine: <code>/webapp/&lt;webapp-app&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
 </li>
 <li>
-<p><code>&lt;script&gt;</code> tags in the body execute in the panel&#8217;s scope; queries like <code>document.querySelector</code> operate on the panel&#8217;s own DOM.</p>
+<p>For the <code>admin</code> engine: <code>/admin/&lt;admin-app&gt;/&lt;tool&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Return <code>404</code> if the content can&#8217;t be loaded; <code>2xx</code> otherwise.</p>
+<p>Each engine descriptor declares the APIs it exposes via its <code>apis</code> list. For <code>webapp</code> and <code>admin</code> this is sufficient — the descriptor of the hosting application controls the mount. For <code>site</code>, two conditions must both hold:</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The application providing the site descriptor must be <strong>configured on the site instance</strong>  Without this, the site descriptor&#8217;s <code>apis</code> list is not consulted at all for that site.</p>
+</li>
+<li>
+<p>That application&#8217;s site descriptor must list the API in its <code>apis</code> field.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The site mount is also limited to the <strong>site root</strong>: the path between <code>&lt;branch&gt;</code> and <code>/_/</code> must be the site&#8217;s root content path. Deeper content paths like <code>/site/&lt;project&gt;/&lt;branch&gt;/some/page/_/&lt;app&gt;:&lt;api&gt;/</code> do not resolve as APIs.</p>
+</div>
+<div class="paragraph">
+<p>All three engine descriptors use the same <code>apis:</code> list shape:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/cms/site.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
+apis:
+  - "ws" <i class="conum" data-value="1"></i><b>(1)</b>
+  - "app:graphql" <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A bare name resolves to an API in the current application — here, <code>ws</code> defined in <code>src/main/resources/apis/ws/</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The <code>&lt;app-key&gt;:&lt;api-name&gt;</code> form mounts an API from a different application, letting the engine borrow APIs deployed by other apps.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The webapp and admin tool descriptors take the same <code>apis:</code> list:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/webapp/webapp.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "WebApp"
+apis:
+  - "ws"
+  - "app:graphql"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/admin/tools/&lt;tool-name&gt;/&lt;tool-name&gt;.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminTool"
+apis:
+  - "ws"
+  - "app:graphql"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Wildcards and "expose all APIs from app X" rules are intentionally not supported here. Each API must be listed by its descriptor key. The reason is security: it prevents new or insecure APIs from being silently exposed on a service path when an app is upgraded or a new dependency is added. Publishing an additional API always requires an explicit change to the hosting descriptor.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="portal-endpoint"><a class="link" href="#portal-endpoint">Portal (aka Web) Endpoint</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The dedicated <code>/api</code> URL on the <strong>Portal</strong> endpoint (the public XP port) exposes APIs independently of any engine, so they can be consumed by any HTTP client:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generic API endpoint: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To opt in, an API must include <code>"web"</code> in its <code>mount</code> list (see <a href="#descriptor">API descriptor</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="management-endpoint"><a class="link" href="#management-endpoint">Management Endpoint</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The <code>mount: "management"</code> feature is experimental and subject to change. The API shape, behavior, and configuration may change in future releases without the usual deprecation cycle. Avoid relying on it for production workloads.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Management endpoint is for <strong>advanced use only</strong>. It is intended for extending XP&#8217;s management capabilities (cluster operations, internal tooling, infrastructure integrations) — not for regular application APIs.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>An API can also be exposed on the <strong>Management</strong> endpoint by adding <code>"management"</code> to its <code>mount</code> list. The Management endpoint is a separate listener on its own port, distinct from the Portal endpoint — use it for internal or operational APIs that should not be reachable from the public network.</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/apis/&lt;api-name&gt;/&lt;api-name&gt;.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "API"
+title: "Cluster ops"
+mount: ["management"]
+allow:
+  - "role:system.admin"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both mounts can be combined: <code>mount: ["web", "management"]</code> makes the API reachable on both endpoints. The <code>allow</code> principal list is enforced on every request regardless of which endpoint served it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="api_discovery"><a class="link" href="#api_discovery">API discovery</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>GET /api</code> (or <code>GET /api/</code>) returns a JSON index of every API mounted on the <strong>endpoint that received the request</strong>. Calling it on the Portal endpoint lists APIs with <code>"web"</code> in <code>mount</code>; calling it on the Management endpoint lists APIs with <code>"management"</code> in <code>mount</code>. The response is a <code>resources</code> array, one entry per API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "resources": [
+    {
+      "descriptor": "com.example.app:myapi",
+      "application": "com.example.app",
+      "name": "myapi",
+      "title": "My API",
+      "description": "API for my app",
+      "documentationUrl": "https://example.com/docs",
+      "mount": ["web"],
+      "allowedPrincipals": ["role:system.admin", "role:myapp.role"]
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Behavior worth knowing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Service points (APIs mounted only under sites, webapps, or admin tools) do not appear in either listing.</p>
+</li>
+<li>
+<p>Both YAML-declared APIs and dynamically registered Java handlers are included.</p>
+</li>
+<li>
+<p>The listing is <strong>not</strong> filtered by the caller&#8217;s principals — clients see every API mounted on the endpoint and are expected to compare against the <code>allowedPrincipals</code> field themselves before invoking.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Discovery is intended for development. By default it is enabled only when XP runs in dev mode and disabled in production.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="apiurl"><a class="link" href="#apiurl">apiUrl()</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To safely generate an API URL, use the <code>apiUrl()</code> function from the <a href="../libraries/lib-portal.ahtml">Portal library</a>. It picks the right URL form based on the calling context — a service-point under the active engine when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portalLib = require('/lib/xp/portal');
+
+const url = portalLib.apiUrl({
+    api: 'com.example.myapp:myapi', <i class="conum" data-value="1"></i><b>(1)</b>
+    path: '/items',                 <i class="conum" data-value="2"></i><b>(2)</b>
+    params: { id: '42' }            <i class="conum" data-value="3"></i><b>(3)</b>
+});</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Descriptor key in <code>&lt;app&gt;:&lt;api&gt;</code> form. Required.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Optional path appended after the API segment. Accepts a string or a string array.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Optional query parameters.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tracing"><a class="link" href="#tracing">Tracing</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each Universal API request emits a <code>universalAPI</code> trace event with the API descriptor key and response status, observable through XP&#8217;s standard tracing infrastructure.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reserved_api_application_names"><a class="link" href="#reserved_api_application_names">Reserved API application names</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A few application names are reserved.
+This list includes but is not limited to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>media</code></p>
+</li>
+<li>
+<p><code>admin</code></p>
+</li>
+<li>
+<p><code>component</code></p>
+</li>
+<li>
+<p><code>attachment</code></p>
+</li>
+<li>
+<p><code>image</code></p>
+</li>
+<li>
+<p><code>asset</code></p>
+</li>
+<li>
+<p><code>service</code></p>
+</li>
+<li>
+<p><code>error</code></p>
+</li>
+<li>
+<p><code>idprovider</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

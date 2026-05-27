@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>HTTP Error handler</title>
+<title>Sites</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,13 +437,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>HTTP Error handler</h1>
+<h1>Sites</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#error_js">error.js</a></li>
-<li><a href="#the_error_object">The Error object</a></li>
+<li><a href="#introduction">Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#usage">Usage</a></li>
+</ul>
+</li>
+<li><a href="#site_request_pipeline">Site Request pipeline</a></li>
+<li><a href="#multiple_apps_per_site">Multiple apps per site</a></li>
 </ul>
 </div>
 </div>
@@ -451,7 +455,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The framework supports the definition of custom error handlers.</p>
+<p>Serving CMS driven sites at  <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-content&gt;</code>. Combine with Vhosts for custom domains and paths.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For hands on tutorials on building native Enonic XP sites, visit <a href="https://developer.enonic.com/learn/react4xp/stable">React4XP tutorial</a> or the <a href="https://developer.enonic.com/docs/my-first-site">My first site tutorial</a>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -459,17 +475,49 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP ships with a default error handler that will produce a stack trace whenever an error occurs.
-Stack traces may not be the best way to greet your users.
-By implementing an error handler this will effectively replace the default error handler.</p>
+<p>As an alternative to using 3rd party front-end frameworks like Next.js, the site service is a purpose-built web engine for delivering content-driven websites, and is closesly linked to the CMS features of the platform.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Visit the <a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a> for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
+</td>
+</tr>
+</table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="error_js"><a class="link" href="#error_js">error.js</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="usage"><a class="link" href="#usage">Usage</a></h3>
 <div class="paragraph">
-<p>You may add a site-specific error handler to your application by creating the file <code>src/main/resources/cms/error/error.js</code>.</p>
+<p>To activate the site service, you will need a site descriptor in your app.</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/cms/site.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
+mappings: <i class="conum" data-value="1"></i><b>(1)</b>
+  - controller: "/lib/preview.js"
+    order: 50
+    match: "type:'(?!media:).*'"
+apis:
+  - "ws"  <i class="conum" data-value="3"></i><b>(3)</b>
+  - "app:graphql" <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A mapping to take over the request for all non-media content items, and render a preview.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Contextually mounts an API in the same application on the site&#8217;s underscore endpoint.</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -478,17 +526,62 @@ By implementing an error handler this will effectively replace the default error
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-A generic error handler can be defined at <code>src/main/resources/error/error.js</code>. This handler also catches errors that are not site related (admin tools, extensions, …).
+You will also need implementations of <a href="web/sites/mappings.ahtml">Mapping function</a> or <a href="web/sites/components.ahtml">component functions</a> to start rendering.
 </td>
 </tr>
 </table>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="site_request_pipeline"><a class="link" href="#site_request_pipeline">Site Request pipeline</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>When an error occurs in the request processing pipeline, the XP framework will look for an error handler to execute.
-For sites specifically, it will (iteratively, in order) go through all applications added to the site,
-and attempt to execute the handler functions until an <a href="request-response.ahtml#response">HTTP response</a> object is returned.
-This essentially means that developers may choose not to handle particular errors explicitly.
-If the error is not properly handled, it will fallback to the default XP error handler.</p>
+<p>The site pipeline is executed as a subset of the <a href="web.ahtml#common_request_pipeline">common pipeline</a>:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="sites/images/site-pipeline.svg" alt="Site rendering pipeline" width="768px">
+</div>
+</div>
+<div class="paragraph">
+<p>This section describes the standard pipeline involved in processing a page request, e.g. <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-page&gt;</code>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Mappings</dt>
+<dd>
+<p>Uses path or content-based mappings from the site descriptor to trigger filters and HTTP functions.</p>
+</dd>
+<dt class="hdlist1">Page resolver</dt>
+<dd>
+<p>Looks up the content at the path and resolves its implementation and config (optionally via a page template).</p>
+<div class="paragraph">
+<p>For two content types the page resolver does not resolve any implementation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For <code>base:shortcut</code>, the referenced content path is returned with status <code>307 Temporary Redirect</code>.</p>
+</li>
+<li>
+<p>For <code>portal:fragment</code>, no implementation is needed — a fragment is rendered directly.</p>
+<div class="paragraph">
+<p>For other content types, implementations are considered in the following order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Implementation set directly on the content.</p>
+</li>
+<li>
+<p>Implementation set on a page template for the content. If the page template is unavailable (e.g. deleted), the page resolver treats it as if no page template was set.</p>
+</li>
+<li>
+<p>Implementation set on the first page template found in <code>{site}/_templates</code> that supports the content&#8217;s type.</p>
+<div class="paragraph">
+<p>If no implementation is found, the response status is <code>404 Not Found</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -497,90 +590,60 @@ If the error is not properly handled, it will fallback to the default XP error h
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Should an error occur inside an error handler, the framework will take over and fallback to the default error handler.
+In <code>inline</code> rendering mode the status is <code>418</code> instead of <code>404</code>, so Content Studio can switch to alternative rendering. In <code>edit</code> rendering mode the status is <code>200</code> instead of <code>404</code>, to allow Content Studio to render the in-place component selector.
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>Rather than exporting HTTP methods like regular HTTP functions and filters, the error handler exports "error code handlers".</p>
+</li>
+</ol>
 </div>
-<div class="paragraph">
-<p>For instance, if the current error is a 404, the framework will first attempt to execute the export <code>handle404</code>.
-If not found, it will attempt to execute the fallback export <code>handleError</code>.</p>
+</li>
+</ul>
 </div>
-<div class="listingblock">
-<div class="title">Basic error handler example</div>
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.handle404 = function (err) {
-  return {
-    contentType: 'text/html',
-    body: `
-&lt;html&gt;
-  &lt;body&gt;
-      &lt;h1&gt;No page for you!&lt;/h1&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-`
-  }
-};
-
-exports.handleError = function (err) {
-  return {
-    contentType: 'text/html',
-    body: `
-&lt;html&gt;
-  &lt;body&gt;
-      &lt;h1&gt;Error code "${err.status}" &lt;/h1&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-`
-  }
-};</code></pre>
+</dd>
+<dt class="hdlist1">Page renderer</dt>
+<dd>
+<p>Resolves the implementation and optional configuration (which may also come from a page template).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If no implementation is found, returns <code>404 Not Found</code>.</p>
+</li>
+<li>
+<p>Otherwise invokes the implementation and returns <code>200 OK</code> by default. The output may include component placeholders.</p>
+</li>
+</ul>
 </div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Error handlers should be implemented to execute as fast as possible, and preferably without additional API requests, i.e. fetching content.
-The reason for this is that the error handler itself may then recursively fail. Also, slow error pages may impact the performance of a node negatively if errors occur frequently.
-You can choose different handling based on the type of error. A 404 might for instance be handled differently than other errors.</p>
-</div>
-</td>
-</tr>
-</table>
+</dd>
+<dt class="hdlist1">Response processors</dt>
+<dd>
+<p>For <code>text/html</code> responses, any response processors defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding page contributions.</p>
+</dd>
+<dt class="hdlist1">Contributions filter</dt>
+<dd>
+<p>For <code>text/html</code> responses, any <code>pageContributions</code> in the response object are merged into the response body.</p>
+</dd>
+<dt class="hdlist1">Response filters</dt>
+<dd>
+<p>Any filters registered through a mapping execute their final processing before the response is returned from the pipeline.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="the_error_object"><a class="link" href="#the_error_object">The Error object</a></h2>
+<h2 id="multiple_apps_per_site"><a class="link" href="#multiple_apps_per_site">Multiple apps per site</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The input parameter for handler functions is an error JSON object.
-The object contains the status code, error message, Exception object, and the original <a href="request-response.ahtml#request">HTTP request</a> object:</p>
-</div>
-<div class="listingblock">
-<div class="title">Sample error object</div>
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
-    "status": 404,
-    "message": "Some error message",
-    "exception": "&lt;the actual exception object in Java&gt;",
-    "request": "&lt;original request JSON&gt;"
-}</code></pre>
-</div>
+<p>Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. Similar to webapps, developers can use filters and mappings to take control over URL patterns when needed.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

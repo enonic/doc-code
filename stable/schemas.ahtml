@@ -689,7 +689,7 @@ form:
 <p><a href="tooling/starters.ahtml">Starters</a> — folder layout for the rest of an Enonic app.</p>
 </li>
 <li>
-<p><a href="sites.ahtml">Sites</a> — wiring page/part/layout schemas to rendering implementations.</p>
+<p><a href="web/sites.ahtml">Sites</a> — wiring page/part/layout schemas to rendering implementations.</p>
 </li>
 </ul>
 </div>
@@ -698,7 +698,7 @@ form:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

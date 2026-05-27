@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Building ID Providers</title>
+<title>Webapps</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,22 +437,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building ID Providers</h1>
+<h1>Webapps</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#request_pipeline">Request pipeline</a></li>
+<li><a href="#implementation">Implementation</a></li>
+<li><a href="#websocket_and_sse">WebSocket and SSE</a></li>
 <li><a href="#descriptor">Descriptor</a></li>
-<li><a href="#idprovider_ts">idprovider.ts</a>
-<ul class="sectlevel2">
-<li><a href="#handle401">handle401</a></li>
-<li><a href="#login">login</a></li>
-<li><a href="#logout">logout</a></li>
-<li><a href="#autologin">autoLogin</a></li>
-<li><a href="#getpost_etc">GET/POST etc</a></li>
-</ul>
-</li>
-<li><a href="#sample">Sample</a></li>
+<li><a href="#tracing">Tracing</a></li>
 </ul>
 </div>
 </div>
@@ -460,7 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The XP framework offers a solution for pluggable authentication called ID providers</p>
+<p>The webapp service handles requests on the endpoint <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/*</code>.</p>
 </div>
 </div>
 </div>
@@ -468,27 +462,59 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As part of the XP <a href="../iam.ahtml">IAM</a> (Identity and Access management), apps and sites may be loosely associated with an ID provider.
-The ID provider is responsible for providing  user authentication, independent of the source identity system.</p>
+<p>Enonic is capable of delivering web applications natively, without the need for a 3rd party infrastructure. The webapp service provides a flexible platform for building applications of all kinds, from simple static sites to dynamic applications with server-side rendering, real-time updates, and more.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The webapp pipeline is executed as a subset of the <a href="web.ahtml#common_request_pipeline">common pipeline</a>:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="webapps/images/webapp-pipeline.svg" alt="Webapp rendering pipeline" width="768px">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Webapp</dt>
+<dd>
+<p>Invokes the webapp&#8217;s HTTP function matching the request method.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To turn an application into a webapp, place an implementation at <code>/src/main/resources/webapp/webapp.ts</code> that exports one function per HTTP method it handles (<code>GET</code>, <code>POST</code>, etc.) — see <a href="web/request-response.ahtml">HTTP functions</a>.</p>
 </div>
 <div class="paragraph">
-<p>ID providers are wired tightly into the <a href="../http.ahtml#common_request_pipeline">common HTTP request pipeline</a>.
-They participate both in pipeline execution steps, and through the <a href="../runtime/engines/idprovider-service.ahtml">ID provider service endpoint</a>.</p>
+<p>Once deployed, the webapp is reachable at <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/</code> (e.g. <code>localhost:8080/webapp/my.webapp/</code>).</p>
 </div>
-<div class="paragraph">
-<p>This section describes how to implement an ID provider application.</p>
-</div>
-<div class="admonitionblock tip">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Two ready-made ID providers are published on <a href="https://market.enonic.com">Enonic Market</a> and cover most common needs without writing code: <strong>OIDC ID Provider</strong> — for any OpenID Connect-compliant identity system (Auth0, Okta, Microsoft Entra, Keycloak, etc.) — and <strong>Simple ID Provider</strong> — a turn-key local identity store with a built-in login form. Reach for those first; implement a custom ID provider only when neither fits.
+For anything beyond a couple of static endpoints, use the <a href="https://market.enonic.com/vendors/enonic/router-lib">router library</a> for method dispatch, parameter extraction, and pattern matching.
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="websocket_and_sse"><a class="link" href="#websocket_and_sse">WebSocket and SSE</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A webapp can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. But we generally recommend contextually mounting WebSocket and SSE APIs via the <a href="web/apis.ahtml">API service</a> instead of using the webapp service directly.</p>
 </div>
 </div>
 </div>
@@ -496,235 +522,37 @@ Two ready-made ID providers are published on <a href="https://market.enonic.com"
 <h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An IDprovider application requires a descriptor file.
-The descriptor should be placed in your project as <code>src/main/resources/idprovider/idprovider.yaml</code>.</p>
+<p>A webapp descriptor is <strong>optional</strong>. A webapp consisting of just <code>webapp.ts</code> runs without one.</p>
+</div>
+<div class="paragraph">
+<p>The descriptor <strong>can be used to mount <a href="web/apis.ahtml">Universal APIs</a> as service points</strong>. Place a <code>webapp.yaml</code> alongside <code>webapp.ts</code> and list the APIs in its <code>apis:</code> field:</p>
 </div>
 <div class="listingblock">
-<div class="title">Sample idprovider.yaml</div>
+<div class="title">src/main/resources/webapp/webapp.yaml</div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "IdProvider"
-mode: "LOCAL" <i class="conum" data-value="1"></i><b>(1)</b>
-form:         <i class="conum" data-value="2"></i><b>(2)</b>
-- type: "TextLine"
-  name: "title"
-  label: "Title"
-  default: "User Login"
-  occurrences:
-    min: 0
-    max: 1</code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "WebApp"
+apis:
+  - "ws"
+  - "app:graphql"</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>mode</strong> specifies how users and groups are process and stored in XP. Allowed values are:
-<div class="ulist">
-<ul>
-<li>
-<p><strong>LOCAL</strong> - Users and groups are fully managed by the IDprovider (i.e. no integrations or external ID systems).</p>
-</li>
-<li>
-<p><strong>EXTERNAL</strong> - Users and groups exist in a remote system. The IDprovider acts as a "broker" between XP and the remote Identity system.</p>
-</li>
-<li>
-<p><strong>MIXED</strong> - Users exist in a remote system, but the groups are created and managed locally in XP.</p>
-</li>
-</ul>
-</div></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>form</strong> defines config options that can be defined from the UI when setting up ID providers.
-Forms are based on the <a href="../cms/schemas.ahtml">schema system</a>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This forms does not support CMS-specific input types, such as contentSelector and htmlArea.
-</td>
-</tr>
-</table>
-</div></td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Each listed API becomes reachable as a service point at <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/_/&lt;app&gt;:&lt;api&gt;/</code>. See <a href="web/apis.ahtml#service-point">Universal API: Service point</a> for the full mounting rules.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="idprovider_ts"><a class="link" href="#idprovider_ts">idprovider.ts</a></h2>
+<h2 id="tracing"><a class="link" href="#tracing">Tracing</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Add an ID provider implementation at <code>src/main/resources/idprovider/idprovider.ts</code>. An application may only implement a single ID provider.</p>
-</div>
-<div class="paragraph">
-<p>To implement your ID provider, export one or more of the following functions:</p>
-</div>
-<div class="sect2">
-<h3 id="handle401"><a class="link" href="#handle401">handle401</a></h3>
-<div class="paragraph">
-<p>Perhaps the most common use of ID providers is handling 401 errors (Unauthorized).
-When a user attempts to access a resource or service that requires authentication, the pipeline will produce an HTTP 401 response.
-The IDprovider may intercept the response before this is sent to the client (browser) and perform an action that enables the user to authenticate,
-hopefully giving access to the resource.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="login"><a class="link" href="#login">login</a></h3>
-<div class="paragraph">
-<p>Clients may request a login directly through a pre-defined endpoint, available for all ID providers.
-This provides a deterministic endpoint for accessing the login page of any ID provider.</p>
-</div>
-<div class="paragraph">
-<p>The URL to the endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#_loginurl">loginUrl() function in the portal library</a></p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If the "login" endpoint is called with a "redirect" parameter, a validation of the origin is performed.
-The result of this validation is then passed to the ID Provider as a request property "validTicket".</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="logout"><a class="link" href="#logout">logout</a></h3>
-<div class="paragraph">
-<p>Clients may request a logout directly through a pre-defined endpoint, available for all ID providers.
-This provides a deterministic endpoint for logging out of any ID provider.</p>
-</div>
-<div class="paragraph">
-<p>The URL for this endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#_logouturl">logoutUrl() function in the portal library</a></p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If the "logout" endpoint is called with a "redirect" parameter, a validation of the origin is performed.
-The result of this validation is then passed to the ID Provider as a request property "validTicket".</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="autologin"><a class="link" href="#autologin">autoLogin</a></h3>
-<div class="paragraph">
-<p>An ID provider may optionally include an AutoLogin filter.
-The purpose of this filter is to automatically sign in users, before they may access other parts of the execution pipeline.
-This effectively blocks all unauthorised access attempts for the protected service.</p>
-</div>
-<div class="paragraph">
-<p>If no user already exists in the context, the autoLogin filter is executed early in the HTTP engine&#8217;s pipeline.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p><code>autoLogin</code> works only for identity providers that are configured as <code>default</code> in the virtual host mapping. Visit the <a href="../deployment/config.ahtml#vhost">vhost configuration</a> section for more details.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getpost_etc"><a class="link" href="#getpost_etc">GET/POST etc</a></h3>
-<div class="paragraph">
-<p>Additionally, an ID provider may also act as a regular <a href="../http/request-response.ahtml">HTTP function</a> — supporting any interaction as desired.
-Communication with the implementation is handled via the ID provider endpoint.</p>
-</div>
-<div class="paragraph">
-<p>The URL to this endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#_idproviderurl">idProviderUrl() function in the portal library</a></p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="sample"><a class="link" href="#sample">Sample</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The code below demonstrates how an ID provider may be implemented</p>
-</div>
-<div class="listingblock">
-<div class="title">Sample idprovider.js</div>
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">var authLib = require('/lib/xp/auth');
-
-// Filter every request
-exports.autoLogin = function (req) {
-    log.info('Invoked only unless user is already authenticated');
-};
-
-// Override error handler when authentication is required
-exports.handle401 = function (req) {
-    var body = generateLoginPage();
-    return {
-        status: 401,
-        contentType: 'text/html',
-        body: body
-    };
-};
-
-// Triggered when user visits the ID providers login endpoint
-exports.login = function (req) {
-
-    var redirectUrl = req.validTicket ? req.params.redirect : undefined;
-
-    var body = generateLoginPage(redirectUrl);
-    return {
-        contentType: 'text/html',
-        body: body
-    };
-};
-
-// Triggered when user visits the ID providers logout endpoint
-exports.logout = function (req) {
-
-    // Sign user out of XP
-    authLib.logout();
-
-    var redirectUrl = req.validTicket ? req.params.redirect : undefined;
-
-    if (redirectUrl) {
-        return {
-            redirect: redirectUrl
-        };
-    } else {
-        var body = generateLoginPage();
-        return {
-            contentType: 'text/html',
-            body: body
-        };
-    }
-};</code></pre>
-</div>
+<p>Each webapp request emits a <code>renderApp</code> trace event with the application key and request path, observable through XP&#8217;s standard tracing infrastructure.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

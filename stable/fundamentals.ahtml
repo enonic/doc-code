@@ -509,14 +509,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>The runtime is the foundation: a JVM-based execution environment with a CommonJS module system, multithreading, clustering, and a platform&#8217;s worth of services attached. Functions are the units of code the runtime invokes — most of what you write is regular module code, with a smaller subset bound to framework contracts. <code>main.ts</code> is the lifecycle contract. Events are the cluster-wide pub/sub primitive, available from any function. Globals, TypeScript, the Java bridge, and localization are tools you reach for inside any function, regardless of which contract called it.</p>
 </div>
 <div class="paragraph">
-<p>For HTTP-bound contracts (request handlers, filters, error handlers, websockets, SSE, ID providers), see <a href="http.ahtml">HTTP</a>. For asynchronous background execution (tasks, scheduled jobs), see <a href="background.ahtml">Background</a>.</p>
+<p>For HTTP-bound contracts (request handlers, filters, error handlers, websockets, SSE, ID providers), see <a href="web.ahtml">Web</a>. For asynchronous background execution (tasks, scheduled jobs), see <a href="background.ahtml">Background</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

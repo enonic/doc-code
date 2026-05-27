@@ -1161,7 +1161,7 @@ skip the <code>name</code> parameter and specify a <code>displayName</code>.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Use <a href="noql.ahtml#stemmed">stemmed()</a> function to query data based on these indices.
+Use <a href="../storage/noql.ahtml#stemmed">stemmed()</a> function to query data based on these indices.
 </td>
 </tr>
 </table>
@@ -3335,7 +3335,7 @@ const patchedNode = repo.patch({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

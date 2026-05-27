@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Request &amp; Response</title>
+<title>Response Processors</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,14 +437,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Request &amp; Response</h1>
+<h1>Response Processors</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#http_functions">HTTP functions</a></li>
-<li><a href="#request">Request</a></li>
-<li><a href="#response">Response</a></li>
-<li><a href="#cookies">Cookies</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#triggering">Triggering</a></li>
+<li><a href="#execution_order">Execution order</a></li>
 </ul>
 </div>
 </div>
@@ -452,154 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>HTTP functions, the request and response objects they receive and return, and the cookie model.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="http_functions"><a class="link" href="#http_functions">HTTP functions</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>An HTTP function is a <a href="../fundamentals/functions.ahtml">function</a> that responds to an HTTP request. The file where it lives is invoked by one of XP&#8217;s engines (webapp, site, API) based on URL routing defined in descriptors or path conventions.</p>
-</div>
-<div class="paragraph">
-<p>Declare one export per HTTP method the function handles: <code>GET</code>, <code>POST</code>, <code>DELETE</code>, <code>PATCH</code>, <code>PUT</code>, <code>HEAD</code>, <code>OPTIONS</code>. A special <code>all</code> export catches any method that doesn&#8217;t have a specific handler.</p>
-</div>
-<div class="listingblock">
-<div class="title">Exports</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Handles a GET request
-exports.GET = (req) =&gt; {};
-
-// Handles a POST request
-exports.POST = (req) =&gt; {};
-
-// Handles all requests, other than GET or POST which are handled by the functions above
-exports.all = (req) =&gt; {};</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Every function receives a <a href="#request">Request</a> object and returns a <a href="#response">Response</a> object.</p>
-</div>
-<div class="listingblock">
-<div class="title">Example</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (request) =&gt; {
-  if (request.mode === 'edit') {
-    // do something...
-  }
-
-  const name = request.params.name;
-  log.info('Name = %s', name);
-
-  return {
-    body: `Hello ${name}`,
-    contentType: 'text/plain'
-  };
-};</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="request"><a class="link" href="#request">Request</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The <code>request</code> object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus two XP-specific properties, <code>mode</code> and <code>branch</code>, which the site engine sets to indicate the current rendering mode and repository branch.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "method": "GET",  <i class="conum" data-value="1"></i><b>(1)</b>
-  "scheme": "http",  <i class="conum" data-value="2"></i><b>(2)</b>
-  "host": "enonic.com",  <i class="conum" data-value="3"></i><b>(3)</b>
-  "port": "80",  <i class="conum" data-value="4"></i><b>(4)</b>
-  "path": "/my/page",  <i class="conum" data-value="5"></i><b>(5)</b>
-  "url": "https://enonic.com/my/page?debug=true",  <i class="conum" data-value="6"></i><b>(6)</b>
-  "remoteAddress": "10.0.0.1",  <i class="conum" data-value="7"></i><b>(7)</b>
-  "mode": "edit",  <i class="conum" data-value="8"></i><b>(8)</b>
-  "branch": "master",  <i class="conum" data-value="9"></i><b>(9)</b>
-  "body": null,  <i class="conum" data-value="10"></i><b>(10)</b>
-  "params": {  <i class="conum" data-value="11"></i><b>(11)</b>
-    "debug": "true"
-  },
-  "headers": {  <i class="conum" data-value="12"></i><b>(12)</b>
-    "Language": "en",
-    "Cookies": "mycookie=123; other=abc;"
-  },
-  "cookies": {  <i class="conum" data-value="13"></i><b>(13)</b>
-    "mycookie": "123",
-    "other": "abc"
-  },
-  "locales": [  <i class="conum" data-value="14"></i><b>(14)</b>
-    "en",
-    "no"
-  ]
-}</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>HTTP method of the request.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Scheme — <code>http</code> or <code>https</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Host name of the server to which the request was sent.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Port of the server to which the request was sent.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Path of the request.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Full URL of the request.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Client IP address. If the <code>X-Forwarded-For</code> <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> header is set, its value overrides the client IP.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>Site-engine rendering mode: <code>inline</code>, <code>edit</code>, <code>preview</code>, or <code>live</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>Site-engine repository branch: <code>draft</code> or <code>master</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="10"></i><b>10</b></td>
-<td>Request body, as a string, or <code>null</code> when absent.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="11"></i><b>11</b></td>
-<td>Query and form parameters.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="12"></i><b>12</b></td>
-<td>HTTP request headers.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="13"></i><b>13</b></td>
-<td>Parsed HTTP request cookies.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="14"></i><b>14</b></td>
-<td>Locale strings in decreasing order of preference, derived from the <code>Accept-Language</code> header. When the client sends no <code>Accept-Language</code> header, the array contains a single element with the server&#8217;s default locale.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Use <code>request.getHeader(name)</code> to read a header case-insensitively. Prefer it over direct access to the <code>headers</code> object.</p>
+<p>A special filter, mainly used to inject page contributions.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -608,7 +461,7 @@ exports.all = (req) =&gt; {};</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Modifications to the <code>headers</code> object do not affect the result of <code>getHeader(name)</code>.
+Response processors are only available in <a href="components.ahtml">component rendering</a>, not via mappings.
 </td>
 </tr>
 </table>
@@ -616,153 +469,123 @@ Modifications to the <code>headers</code> object do not affect the result of <co
 </div>
 </div>
 <div class="sect1">
-<h2 id="response"><a class="link" href="#response">Response</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The HTTP function returns a <code>response</code> object that XP converts to the outgoing HTTP response.</p>
+<p>Processors get executed between the <code>component rendering</code> step, and the <code>contributions filter</code> in the <a href="../runtime/engines/site-engine.ahtml">site engine</a> pipeline. Response processors are commonly used by apps that need to inject <a href="contributions.ahtml">page contributions</a> without placing a component on the page.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "status": 200,  <i class="conum" data-value="1"></i><b>(1)</b>
-  "body": "Hello World",  <i class="conum" data-value="2"></i><b>(2)</b>
-  "contentType": "text/plain",  <i class="conum" data-value="3"></i><b>(3)</b>
-  "headers": {  <i class="conum" data-value="4"></i><b>(4)</b>
-      "key": "value"
-  },
-  "cookies": {},  <i class="conum" data-value="5"></i><b>(5)</b>
-  "redirect": "/another/page",  <i class="conum" data-value="6"></i><b>(6)</b>
-  "postProcess": true,  <i class="conum" data-value="7"></i><b>(7)</b>
-  "pageContributions": {},  <i class="conum" data-value="8"></i><b>(8)</b>
-  "applyFilters": true  <i class="conum" data-value="9"></i><b>(9)</b>
-}</code></pre>
+<div class="paragraph">
+<p>Use cases are:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Dynamically adding page contributions (i.e. script tags)</p>
+</li>
+<li>
+<p>General manipulation of the response markup i.e. headers or body (i.e. adding SEO tags).</p>
+</li>
+</ul>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>HTTP status code (default <code>200</code>).</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Response body — a string or a JavaScript object.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>MIME type (default <code>text/plain; charset=utf-8</code>).</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Response headers. A value of <code>null</code> or <code>undefined</code> removes a header set by an upstream function or filter.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Cookies to set on the response. See <a href="#cookies">Cookies</a>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>URI to redirect to. If set, XP places it in the <code>Location</code> header and sets the status to <code>303</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Site engine only. If <code>true</code>, the rendered page is post-processed for component tags (default <code>true</code>).</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>Site engine only. HTML fragments contributed to the rendered markup — see <a href="sites/contributions.ahtml">page contributions</a>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>Site engine only. If <code>false</code>, no further <a href="sites/processors.ahtml">response processors</a> or filters run (default <code>true</code>).</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Consider using regular <a href="web/filters.ahtml">HTTP Filters</a> for other use-cases.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="cookies"><a class="link" href="#cookies">Cookies</a></h2>
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Cookie values in the response object can be set as plain strings or as objects carrying full cookie configuration.</p>
+<p>Create a response processor by placing an implementation under <code>src/main/resources/cms/processors/</code>, for example <code>cms/processors/tracker.ts</code>.</p>
+</div>
+<div class="paragraph">
+<p>The implementation must export a <code>responseProcessor</code> function. It receives a request and a response object. The example below dynamically adds a <code>bodyEnd</code> <a href="contributions.ahtml">page contribution</a> to the response.</p>
 </div>
 <div class="listingblock">
+<div class="title">cms/processors/tracker.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">return {
-    status: 200,
-    body: "Hello World",
-    cookies: {
-        "plain": "value",  <i class="conum" data-value="1"></i><b>(1)</b>
-        "complex": {  <i class="conum" data-value="2"></i><b>(2)</b>
-            value: "value",  <i class="conum" data-value="3"></i><b>(3)</b>
-            path: "/valid/path",  <i class="conum" data-value="4"></i><b>(4)</b>
-            domain: "enonic.com",  <i class="conum" data-value="5"></i><b>(5)</b>
-            comment: "Some cookie comments",  <i class="conum" data-value="6"></i><b>(6)</b>
-            maxAge: 2000,  <i class="conum" data-value="7"></i><b>(7)</b>
-            secure: false,  <i class="conum" data-value="8"></i><b>(8)</b>
-            httpOnly: false,  <i class="conum" data-value="9"></i><b>(9)</b>
-            sameSite: "Lax"  <i class="conum" data-value="10"></i><b>(10)</b>
-        }
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.responseProcessor = (req, res) =&gt; {
+    const trackingScript = '&lt;script src="http://some.cdn/js/tracker.js"&gt;&lt;/script&gt;';
+
+    if (!res.pageContributions.bodyEnd) {
+        res.pageContributions.bodyEnd = [];
     }
+    res.pageContributions.bodyEnd.push(trackingScript);
+
+    return res;
 };</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="triggering"><a class="link" href="#triggering">Triggering</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To wire a processor into the execution pipeline, declare it in the app&#8217;s <a href="../cms/sites.ahtml#site_xml">site descriptor</a>, and add the application to the site.</p>
+</div>
+<div class="listingblock">
+<div class="title">cms/site.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
+processors:
+- name: "tracker" <i class="conum" data-value="1"></i><b>(1)</b>
+  order: 10       <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>String value — cookie created with defaults.</td>
+<td><strong>name</strong> is the filename of the processor (without extension).</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Object value — the settings below are applied.</td>
+<td><strong>order</strong> sets execution order; lower runs first.</td>
 </tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Response processors may change any of the values of the response object, including: HTTP status code, response body, HTTP headers, cookies and page contributions.
+It is also possible to return the response object received without any changes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="execution_order"><a class="link" href="#execution_order">Execution order</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An application may contain multiple processors.
+Multiple applications can be added to a Site.
+When a page is rendered, all processors are ordered and executed accordingly.</p>
+</div>
+<div class="paragraph">
+<p>The order of execution is determined by the <code>order</code> value (as defined in the <a href="../cms/sites.ahtml#site_xml">site descriptor</a>) combined with the order of the application list within the site.</p>
+</div>
+<div class="paragraph">
+<p>Processors with a <strong>lower</strong> order will be executed first (across all apps within the site).</p>
+</div>
+<div class="paragraph">
+<p>In case there are several filters with the same <code>order</code> number, the position of the applications (as configured on the site) determines the order of execution.</p>
+</div>
+<div class="admonitionblock note">
+<table>
 <tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><strong>Value</strong> (required). The value stored in the cookie.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Paths on the site where the cookie is available (and all contained paths). Default empty.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Additional sites allowed to read the cookie. Default empty — only the origin server can read it.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>Cookie comment. Deprecated; will be removed in a future XP version.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Lifetime in <strong>seconds</strong>. Default <code>-1</code> — the cookie lives until the browser is closed.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>If <code>true</code>, the cookie is only sent over HTTPS. Default <code>false</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>If <code>true</code>, the cookie is inaccessible to client-side JavaScript. Default <code>false</code>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="10"></i><b>10</b></td>
-<td><code>SameSite</code> flag. One of <code>lax</code>, <code>strict</code>, <code>none</code>, or empty for "not set" (browser default).</td>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If <code>applyFilters</code> is set to <code>false</code> in the <a href="web/request-response.ahtml#response">response object</a>, any further response processing or filters will be ignored. Default value is <code>true</code>.
+</td>
 </tr>
 </table>
 </div>
 </div>
 </div>
 </div>
-<div id="footnotes">
-<hr>
-<div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. <a href="https://en.wikipedia.org/wiki/X-Forwarded-For" class="bare">https://en.wikipedia.org/wiki/X-Forwarded-For</a>
-</div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>

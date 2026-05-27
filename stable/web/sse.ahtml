@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Mappings</title>
+<title>Server-Sent Events</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,23 +437,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Mappings</h1>
+<h1>Server-Sent Events</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
-<li><a href="#usage">Usage</a>
-<ul class="sectlevel2">
-<li><a href="#execution_order">Execution order</a></li>
-</ul>
-</li>
-<li><a href="#pattern_mappings">Pattern mappings</a>
-<ul class="sectlevel2">
-<li><a href="#app_key_substitution">App key substitution</a></li>
-</ul>
-</li>
-<li><a href="#match_mappings">Match mappings</a></li>
-<li><a href="#service_mappings">Service mappings</a></li>
+<li><a href="#http-sse">SSE</a></li>
+<li><a href="#sending_messages">Sending messages</a></li>
 </ul>
 </div>
 </div>
@@ -461,229 +450,158 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Bind HTTP functions and filters to specific content types or site-relative URLs</p>
+<p>Server-Sent Events (SSE) provide one-way streaming from server to client over HTTP.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+An SSE stream keeps an HTTP connection open for its entire lifetime. Over HTTP/1.x, browsers cap concurrent connections per origin to a small number (typically 6 in current Chrome, Firefox, and Safari), so a handful of open SSE streams — across tabs or endpoints on the same origin — can saturate that budget and block the rest of the page&#8217;s requests. Serve SSE over HTTP/2 (or HTTP/3), where many streams multiplex on a single connection and this limit does not apply.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<h2 id="http-sse"><a class="link" href="#http-sse">SSE</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Mappings are the first custom processing step in the <a href="../sites.ahtml">site service</a>. Mappings execute before the component rendering. You may define mappings for both <a href="../http/request-response.ahtml">HTTP functions</a> and <a href="../http/filters.ahtml">filters</a>. The use cases are vast.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Mappings are defined in the <a href="../sites.ahtml">site descriptor</a> (<code>cms/site.yaml</code>). Examples of use cases:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Bind an HTTP function to a specific URL pattern (e.g. <code>/mypath</code>).</p>
-</li>
-<li>
-<p>Bind an HTTP function to a specific set of content via content matches (e.g. only the <code>portal:fragment</code> content type).</p>
-</li>
-<li>
-<p>Bind a filter to part or all of the site structure.</p>
-</li>
-</ul>
+<p>An implementation becomes an SSE endpoint by returning an <code>sse</code> object from its <code>GET</code> function. Each connected client reuses the same module instance; per-connection state lives in <code>attributes</code>.</p>
 </div>
 <div class="listingblock">
-<div class="title">cms/site.yaml mapping examples</div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
-mappings:
-- controller: "/cms/foobar/api.ts" <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
-  pattern: '/api/v\d+/.*'          <i class="conum" data-value="3"></i><b>(3)</b>
-  order: 10
-- controller: "/cms/pages/default/default.ts"
-  match: "type:'portal:fragment'"  <i class="conum" data-value="4"></i><b>(4)</b>
-- filter: "/cms/foobar/filter.ts"  <i class="conum" data-value="5"></i><b>(5)</b>
-  pattern: '/dont-match-me/.*'
-  invertPattern: true
-  order: 10
-- filter: "/cms/services/image.ts" <i class="conum" data-value="6"></i><b>(6)</b>
-  service: "image"</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+    return {
+        sse: {
+            attributes: { startedAt: Date.now() }, <i class="conum" data-value="1"></i><b>(1)</b>
+            retry: 5000,                           <i class="conum" data-value="2"></i><b>(2)</b>
+            timeout: 0                             <i class="conum" data-value="3"></i><b>(3)</b>
+        }
+    };
+};</code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>controller</strong> — path to an <a href="../http/request-response.ahtml">HTTP function</a> implementation.</td>
+<td>Per-connection object, exposed as <code>event.attributes</code> on every lifecycle event. Set once at SSE setup and immutable thereafter — events always see the original snapshot. Defaults to an empty object if omitted.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>order</strong> — execution order across apps. Default <code>50</code>. Lower number means higher priority, with <code>1</code> being the pole position. See <a href="#execution_order">Execution order</a>.</td>
+<td>Client reconnect hint in milliseconds. Optional. Default: <code>-1</code>, which omits the hint and lets the browser pick its own.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><strong>pattern</strong> — regular expression matched against the site-relative URL. Default <code>/.*</code>. See <a href="#pattern_mappings">Pattern mappings</a>.</td>
+<td>Async context timeout in milliseconds. Optional. Default: <code>0</code>, which means no timeout.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The implementation can react to lifecycle events by exporting an <code>sseEvent</code> function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.sseEvent = (event) =&gt; {
+    if (event.type === 'open') {
+        // send a message back using event.clientId, or add it to a group for later broadcasts
+    } else if (event.type === 'close') {
+        // optional teardown — group membership is cleaned up automatically
+    }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lifecycle event:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-JSON" data-lang="JSON">{
+    "type": "open",                            <i class="conum" data-value="1"></i><b>(1)</b>
+    "clientId": "f1c2...",                     <i class="conum" data-value="2"></i><b>(2)</b>
+    "lastEventId": "42",                       <i class="conum" data-value="3"></i><b>(3)</b>
+    "attributes": { "startedAt": 1700000000 }  <i class="conum" data-value="4"></i><b>(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Event type. One of <code>open</code>, <code>close</code>, <code>timeout</code>, <code>error</code>. <code>close</code> is always the terminal event — it fires after <code>timeout</code> and after <code>error</code>, so use it for teardown and reserve <code>timeout</code>/<code>error</code> for diagnostics.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Server-generated id of the SSE connection. Capture it on <code>open</code> and use it with <code>lib/xp/sse</code> to push messages.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Value of the client&#8217;s <code>Last-Event-ID</code> header on reconnection, or <code>null</code> on the first connect. Use it to resume a stream from a known point.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><strong>match</strong> — property condition evaluated against the contextual content. See <a href="#match_mappings">Match mappings</a>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td><strong>filter</strong> — path to an <a href="../http/filters.ahtml">HTTP filter</a> implementation.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td><strong>service</strong> — system service handled by this mapping (e.g. the <code>.../_/image/...</code> endpoint). See <a href="#service_mappings">Service mappings</a>.</td>
+<td>The same <code>attributes</code> object passed to the response, shared across the connection&#8217;s lifetime.</td>
 </tr>
 </table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Each mapping must specify either <code>filter:</code> or <code>controller:</code> — never both — and at least one of <code>pattern:</code> or <code>match:</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="execution_order"><a class="link" href="#execution_order">Execution order</a></h3>
-<div class="paragraph">
-<p>An application may contain multiple mappings, and multiple applications can be added to a site. If two apps within a site share the same mapping path or match expression, the mapping with the <strong>lower</strong> <code>order</code> value wins.</p>
-</div>
-<div class="paragraph">
-<p>If several mappings have the same <code>order</code> value, the sort order of the applications on the site determines which mapping is used.</p>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="pattern_mappings"><a class="link" href="#pattern_mappings">Pattern mappings</a></h2>
+<h2 id="sending_messages"><a class="link" href="#sending_messages">Sending messages</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Pattern-based mappings can be used to take over the request for a specific URL before content rendering. Common cases include exposing an API endpoint on a contextual URL like <code>/api</code>, or triggering a filter for every request within the site.</p>
-</div>
-<div class="paragraph">
-<p>The <code>pattern</code> property specifies a regular expression matched against the request URL.</p>
-</div>
-<div class="paragraph">
-<p>The part of the URL involved is the path relative to the site where the application is configured. For example, if a site is deployed via the virtual host <code>example.com/mysite/</code>, then <code>pattern: '/api/.*'</code> matches requests with URL ending in <code>example.com/mysite/api/.*</code>. Protocol, host, and port are not involved in the pattern matching.</p>
-</div>
-<div class="paragraph">
-<p>If the pattern contains the question mark <code>?</code> character, the URL to match also includes query parameters. The query parameters are normalized, so they are always in alphabetical order.</p>
-</div>
-<div class="paragraph">
-<p>For example, the pattern <code>pattern: '/api\?category=foo&amp;key=\d'+</code> matches both:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>/api?category=foo&amp;key=123</code></p>
-</li>
-<li>
-<p>and <code>/api?key=123&amp;category=foo</code></p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The question mark <code>?</code> is escaped with a backslash in the pattern because it is a quantifier in regular expressions. Use <strong>single-quoted</strong> YAML strings for any pattern containing backslashes — YAML&#8217;s double-quoted form interprets backslash escapes and would corrupt regex tokens like <code>\d</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Set <code>invertPattern: true</code> on a mapping to negate the result of evaluating the regular expression.</p>
-</div>
-<div class="paragraph">
-<p>The pattern string must be a valid <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html">regular expression</a>.</p>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Anything ending with <code>.json</code> within the <code>/api/*</code> path: <code>pattern: '/api/.*\.json'</code></p>
-</li>
-<li>
-<p>All items within the site, including the site itself: <code>pattern: '/.*'</code></p>
-</li>
-<li>
-<p>Regex with query string: <code>pattern: '/endpoint\?bar=\d&amp;foo=.*'+</code></p>
-</li>
-<li>
-<p>Inverted via <code>invertPattern: true</code> together with <code>pattern: '/section/.*'</code></p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="app_key_substitution"><a class="link" href="#app_key_substitution">App key substitution</a></h3>
-<div class="paragraph">
-<p>A pattern may include the literal token <code>${app}</code>, which is expanded at parse time to the owning application&#8217;s key. This lets you write site-mapping patterns that reference the app&#8217;s own key without hardcoding it.</p>
+<p>A connection is identified by <code>event.clientId</code>, delivered to the <code>sseEvent</code> function when the connection opens. The example below sends a welcome message back to the client that just connected:</p>
 </div>
 <div class="listingblock">
-<div class="title">cms/site.yaml in an app whose key is <code>com.foo.bar</code></div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">mappings:
-  - pattern: "/_/static/${app}/.+"
-    controller: "/site/mappings/static-controller.js"</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const sseLib = require('/lib/xp/sse');
+
+exports.sseEvent = (event) =&gt; {
+    if (event.type === 'open') {
+        sseLib.send({
+            clientId: event.clientId,
+            message: { event: 'welcome', data: 'Hello!' }
+        });
+    }
+};</code></pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="match_mappings"><a class="link" href="#match_mappings">Match mappings</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Match-based mappings can be used to automatically render content types without using page templates or associating content with an implementation directly. A common case is automatic handling of the content type <code>portal:fragment</code>.</p>
 </div>
 <div class="paragraph">
-<p>The <code>match</code> property specifies a condition related to the content corresponding with the requested URL path.</p>
+<p><code>message.id</code> updates the client&#8217;s last-event-id buffer for reconnects. <code>message.comment</code> emits an SSE comment line — useful for keep-alive pings. A message with no <code>data</code> does not dispatch a client event but any <code>id</code> still updates the buffer.</p>
 </div>
 <div class="paragraph">
-<p>The condition takes the form of a property path followed by a <code>:</code>, and a value.</p>
-</div>
-<div class="paragraph">
-<p>The property path can be one of the content properties (<code>_id</code>, <code>_name</code>, <code>_path</code>, <code>type</code>, <code>displayName</code>, <code>hasChildren</code>, <code>language</code>, <code>valid</code>) or any other custom property within the content.</p>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
+<p>To address a client from outside the <code>sseEvent</code> function, do not store <code>event.clientId</code> in module-scope state — module code runs multi-threaded/multi-engine and ad-hoc shared collections of ids are not safe. Use one of the following instead:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Match fragment content type: <code>match: "type:'portal:fragment'"</code></p>
+<p>For a <strong>task</strong> or other background job, capture the <code>clientId</code> when the task is started and hold it in the task&#8217;s own local scope. Each task instance then targets exactly the connection it was started for.</p>
 </li>
 <li>
-<p>Match content within the <code>/features/</code> path: <code>match: "_path:'/features/.*'"</code></p>
-</li>
-<li>
-<p>Match custom property with string value: <code>match: "data.employee.type:'developer'"</code></p>
-</li>
-<li>
-<p>Match custom property with a number: <code>match: "data.product.category:42"</code></p>
-</li>
-<li>
-<p>Match custom property with a boolean: <code>match: "x.com-enonic-myapp.menuItem.show:true"</code></p>
-</li>
-<li>
-<p>Match any content: <code>match: "type:'.+'"</code></p>
+<p>For an <strong>event listener</strong>, use named groups: add the connection on <code>open</code>, then call <code>sendToGroup</code> from the listener.</p>
 </li>
 </ul>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const sseLib = require('/lib/xp/sse');
+
+exports.sseEvent = (event) =&gt; {
+    if (event.type === 'open') {
+        sseLib.addToGroup({ group: 'live', clientId: event.clientId });
+    }
+};
+
+// from an event listener:
+sseLib.sendToGroup({ group: 'live', message: { data: 'Update' } });</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>The expected value can be either a regular expression matched against the property value, or simply a string, number, or boolean (<code>true</code> | <code>false</code>).</p>
+<p>See <a href="../libraries/lib-sse.ahtml">SSE library</a> for the full reference.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -692,46 +610,7 @@ The question mark <code>?</code> is escaped with a backslash in the pattern beca
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Missing/unavailable content does not match any condition. Omit <code>match</code> if you need to map an HTTP function or filter to a URL that does not correspond to any content.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="service_mappings"><a class="link" href="#service_mappings">Service mappings</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Service-based mappings bind service requests directly to HTTP functions or filters.</p>
-</div>
-<div class="paragraph">
-<p>Supported services:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>image</code> (deprecated)</dt>
-<dd>
-<p>Maps requests to the legacy image service at <code>/_/image/&lt;id&gt;[:&lt;fingerprint&gt;]/&lt;scale&gt;/&lt;name&gt;</code> (e.g. <code>/_/image/123456/scale-100-100/photo.jpg</code>). Replaced by the <code>media:image</code> Universal API.</p>
-</dd>
-<dt class="hdlist1"><code>attachment</code> (deprecated)</dt>
-<dd>
-<p>Maps requests to the legacy attachment service at <code>/_/attachment/&lt;mode&gt;/&lt;id&gt;[:&lt;fingerprint&gt;]/&lt;name&gt;</code> (e.g. <code>/_/attachment/inline/123456/logo.png</code>). Replaced by the <code>media:attachment</code> Universal API.</p>
-</dd>
-<dt class="hdlist1"><code>component</code></dt>
-<dd>
-<p>Maps requests to contextual page components at <code>/_/component/&lt;component-path&gt;</code>.</p>
-</dd>
-</dl>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<a href="../apis.ahtml">Universal APIs</a> mounted as service points (<code>/_/&lt;app&gt;:&lt;api&gt;/</code>) cannot be remapped through site mappings — they are routed before the site engine processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+<code>send</code> is a safe no-op for closed connections — do not guard with <code>isOpen</code> to avoid races. Use <code>isOpen</code> to abort expensive work when a client has disconnected.
 </td>
 </tr>
 </table>
@@ -741,7 +620,7 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-26 21:04:35 UTC
+Last updated 2026-05-27 12:10:59 UTC
 </div>
 </div>
 </body>
