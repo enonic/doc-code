@@ -455,7 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Explains how to ship your <strong>CMS schemas</strong> as code in your Enonic app</p>
+<p>Desciption of how to ship your <strong>CMS schemas</strong> as code as part of your Enonic app</p>
 </div>
 </div>
 </div>
@@ -463,13 +463,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic provides powerful CMS capabilities. A central concept is schemas that control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.</p>
+<p>The CMS schemas control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Visit the <a href="https://developer.enonic.com/docs/cms/stable/schemas">CMS docs</a> for details on content modeling.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>For more details on schemas, visit the <a href="https://developer.enonic.com/docs/cms/stable/schemas">CMS docs</a>.</p>
-</div>
-<div class="paragraph">
-<p>If your application will only contain schemas, we recommend using the  <a href="https://market.enonic.com/vendors/enonic/starter-vanilla">the Vanilla starter</a> as a base. It has no dependencies and a minimal build configuration, so it&#8217;s ideal for schema-only apps.</p>
+<p>You may bundle schemas in any Enonic app. <a href="https://market.enonic.com/vendors/enonic/starter-vanilla">The Vanilla starter</a> is a minimalistic approach.</p>
 </div>
 <div class="paragraph">
 <p>Create a new app using Enonic CLI:</p>
@@ -698,7 +707,7 @@ form:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-27 14:09:11 UTC
+Last updated 2026-05-27 14:57:47 UTC
 </div>
 </div>
 </body>
