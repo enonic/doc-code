@@ -8,7 +8,7 @@ The XP framework offers a solution for pluggable authentication called ID provid
 As part of the XP <<../iam#,IAM>> (Identity and Access management), apps and sites may be loosely associated with an ID provider.
 The ID provider is responsible for providing  user authentication, independent of the source identity system.
 
-ID providers are wired tightly into the <<../http#common_request_pipeline, common HTTP request pipeline>>.
+ID providers are wired tightly into the <<web#common_request_pipeline, common HTTP request pipeline>>.
 They participate both in pipeline execution steps, and through the <<../runtime/engines/idprovider-service#, ID provider service endpoint>>.
 
 This section describes how to implement an ID provider application.
@@ -99,7 +99,7 @@ If no user already exists in the context, the autoLogin filter is executed early
 
 === GET/POST etc
 
-Additionally, an ID provider may also act as a regular <<../http/request-response#, HTTP function>> — supporting any interaction as desired.
+Additionally, an ID provider may also act as a regular <<web/request-response#, HTTP function>> — supporting any interaction as desired.
 Communication with the implementation is handled via the ID provider endpoint.
 
 The URL to this endpoint can be generated using the <<../libraries/lib-portal#_idproviderurl, idProviderUrl() function in the portal library>>

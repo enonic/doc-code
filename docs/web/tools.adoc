@@ -10,8 +10,8 @@ An admin tool is a single-page application (or any HTTP-served UI) that:
 
 * Mounts at `+/admin/<app-key>/<tool-name>+` — one URL per declared tool, served by the admin service.
 * Appears in the admin Launcher menu, picking up its title, description, and SVG icon from the descriptor.
-* Can mount <<apis#,Universal APIs>> as service points beneath itself.
-* Can host <<extensions#,Admin extensions>> by declaring named interface points that extensions plug into.
+* Can mount <<web/apis#,Universal APIs>> as service points beneath itself.
+* Can host <<web/extensions#,Admin extensions>> by declaring named interface points that extensions plug into.
 
 Access always requires the caller to hold `role:system.admin.login`. Per-tool access is then granted to anyone in `role:system.admin` or to any principal listed in the tool's `allow:` field.
 
@@ -60,7 +60,7 @@ config:                          # <6>
 <1> *title* — string, or `{ text, i18n }` for localization. Shown in the Launcher.
 <2> *description* — string, or `{ text, i18n }`.
 <3> *allow* — principal keys (roles, groups, users) granted access. The implicit `role:system.admin` always has access regardless. Required to expose the tool to non-admins.
-<4> *apis* — list of <<apis#,Universal API>> descriptor keys mounted under this tool's URL. Bare names refer to APIs in the same app; `<app>:<api>` form borrows from another app. APIs become reachable as service points at `+/admin/<app-key>/<tool-name>/_/<app>:<api>/+`.
+<4> *apis* — list of <<web/apis#,Universal API>> descriptor keys mounted under this tool's URL. Bare names refer to APIs in the same app; `<app>:<api>` form borrows from another app. APIs become reachable as service points at `+/admin/<app-key>/<tool-name>/_/<app>:<api>/+`.
 <5> *interfaces* — named interface points this tool exposes. Admin extensions whose `interfaces:` list intersects with this list are eligible to be mounted into the tool. Names are free-form strings — pick stable identifiers and document them.
 <6> *config* — free-form key/value map readable from the implementation.
 
@@ -74,7 +74,7 @@ title:
 
 == Implementation
 
-The implementation lives at `+src/main/resources/admin/tools/<tool-name>/<tool-name>.ts+` and exports an <<http/request-response#, HTTP function>> for each method the tool should respond to.
+The implementation lives at `+src/main/resources/admin/tools/<tool-name>/<tool-name>.ts+` and exports an <<web/request-response#, HTTP function>> for each method the tool should respond to.
 
 .Sample my-tool.ts
 [source,typescript]
@@ -109,11 +109,11 @@ A failed check returns *401 Unauthorized* if the configured ID provider asks for
 
 == Mounting Universal APIs
 
-Any API listed in `apis:` is mounted as a service point under the tool's URL. The same API can simultaneously be mounted on the Portal endpoint (`mount: ["web"]` in the API descriptor) — the two mounts are independent. See <<apis#service-point,Universal API: Service point>>.
+Any API listed in `apis:` is mounted as a service point under the tool's URL. The same API can simultaneously be mounted on the Portal endpoint (`mount: ["web"]` in the API descriptor) — the two mounts are independent. See <<web/apis#service-point,Universal API: Service point>>.
 
 == Hosting admin extensions
 
-A tool publishes the interface names it exposes in `interfaces:`. Any deployed admin extension whose own `interfaces:` list intersects with this set becomes eligible to be mounted into the tool, subject to the extension's own `allow:` list. The reserved interface name `"generic"` matches any tool. See <<extensions#,Admin extensions>> for the consumer side.
+A tool publishes the interface names it exposes in `interfaces:`. Any deployed admin extension whose own `interfaces:` list intersects with this set becomes eligible to be mounted into the tool, subject to the extension's own `allow:` list. The reserved interface name `"generic"` matches any tool. See <<web/extensions#,Admin extensions>> for the consumer side.
 
 == Launcher
 

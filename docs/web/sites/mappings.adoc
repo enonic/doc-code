@@ -6,7 +6,7 @@ Bind HTTP functions and filters to specific content types or site-relative URLs
 
 == Introduction
 
-Mappings are the first custom processing step in the <<../sites#, site service>>. Mappings execute before the component rendering. You may define mappings for both <<../http/request-response#, HTTP functions>> and <<../http/filters#, filters>>. The use cases are vast.
+Mappings are the first custom processing step in the <<../sites#, site service>>. Mappings execute before the component rendering. You may define mappings for both <<web/request-response#, HTTP functions>> and <<web/filters#, filters>>. The use cases are vast.
 
 == Usage
 
@@ -34,7 +34,7 @@ mappings:
   service: "image"
 ----
 
-<1> *controller* — path to an <<../http/request-response#, HTTP function>> implementation.
+<1> *controller* — path to an <<web/request-response#, HTTP function>> implementation.
 
 <2> *order* — execution order across apps. Default `50`. Lower number means higher priority, with `1` being the pole position. See <<Execution order>>.
 
@@ -42,7 +42,7 @@ mappings:
 
 <4> *match* — property condition evaluated against the contextual content. See <<Match mappings>>.
 
-<5> *filter* — path to an <<../http/filters#, HTTP filter>> implementation.
+<5> *filter* — path to an <<web/filters#, HTTP filter>> implementation.
 
 <6> *service* — system service handled by this mapping (e.g. the `+.../_/image/...+` endpoint). See <<Service mappings>>.
 
@@ -130,4 +130,4 @@ Supported services:
 
 `component`:: Maps requests to contextual page components at `+/_/component/<component-path>+`.
 
-NOTE: <<../apis#, Universal APIs>> mounted as service points (`+/_/<app>:<api>/+`) cannot be remapped through site mappings — they are routed before the site engine processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+NOTE: <<web/apis#, Universal APIs>> mounted as service points (`+/_/<app>:<api>/+`) cannot be remapped through site mappings — they are routed before the site engine processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.

@@ -26,6 +26,58 @@ You are now ready to use the API.
 
 == Functions
 
+=== apiUrl
+
+Generates a URL pointing to a <<web/apis#, Universal API>>. Picks the right URL form based on the calling context — a service-point under the active engine when called from a site, webapp, or admin tool, and `/api/` otherwise.
+
+[.lead]
+Parameters
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name   | Type   | Description
+| params | object | Input parameters as JSON
+
+[%header,cols="1%,1%,1%,1%,96%a"]
+[frame="topbot"]
+[grid="none"]
+[caption=""]
+.Properties
+!===
+! Name    ! Type     ! Attributes ! Default ! Description
+! api     ! string   !            !         ! Descriptor key in `+<app>:<api>+` form.
+! type    ! string   ! <optional> ! server  ! URL type. Either `server` (server-relative), `absolute`, or `websocket`.
+! path    ! string \| string[] ! <optional> !  ! Path appended after the API segment. Accepts a string or a string array.
+! params  ! object   ! <optional> !         ! Custom query parameters to append to the URL.
+! baseUrl ! string   ! <optional> !         ! Override the resolved base URL.
+!===
+
+|===
+
+[.lead]
+Returns
+
+*string* : The generated URL.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {apiUrl} from '/lib/xp/portal';
+
+const url = apiUrl({
+  api: 'com.example.myapp:myapi',
+  path: '/items',
+  params: {
+    id: '42'
+  }
+});
+----
+
+
 === assetUrl
 ====
 `assetUrl` is deprecated and will be removed in future versions.
@@ -130,6 +182,58 @@ const url = attachmentUrl({
   download: true
 });
 ----
+
+=== baseUrl
+
+Generates a base URL.
+
+[.lead]
+Parameters
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name   | Type   | Description
+| params | object | Input parameters as JSON
+
+[%header,cols="1%,1%,1%,1%,96%a"]
+[frame="topbot"]
+[grid="none"]
+[caption=""]
+.Properties
+!===
+! Name    ! Type   ! Attributes ! Default ! Description
+! type    ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute` or `websocket`.
+! id      ! string ! <optional> !         ! ID of the content.
+! path    ! string ! <optional> !         ! Path to the content.
+! project ! string ! <optional> !         ! Name of the project to use for resolving the URL.
+! branch  ! string ! <optional> !         ! Name of the branch to use for resolving the URL.
+!===
+
+|===
+
+[.lead]
+Returns
+
+*string* : The generated URL.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {baseUrl} from '/lib/xp/portal';
+
+const url = baseUrl({
+  type: 'server',
+  path: '/path',
+  project: 'explicit-project',
+  branch: 'explicit-branch'
+});
+----
+
+
 
 === componentUrl
 
@@ -896,110 +1000,9 @@ const sanitizedHtml = sanitizeHtml(unsafeHtml);
 const expected = '<p><a href="https://example.com/">Link</a></p>';
 ----
 
-=== apiUrl
-
-Generates a URL pointing to a <<../apis#, Universal API>>. Picks the right URL form based on the calling context — a service-point under the active engine when called from a site, webapp, or admin tool, and `/api/` otherwise.
-
-[.lead]
-Parameters
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name    ! Type     ! Attributes ! Default ! Description
-! api     ! string   !            !         ! Descriptor key in `+<app>:<api>+` form.
-! type    ! string   ! <optional> ! server  ! URL type. Either `server` (server-relative), `absolute`, or `websocket`.
-! path    ! string \| string[] ! <optional> !  ! Path appended after the API segment. Accepts a string or a string array.
-! params  ! object   ! <optional> !         ! Custom query parameters to append to the URL.
-! baseUrl ! string   ! <optional> !         ! Override the resolved base URL.
-!===
-
-|===
-
-[.lead]
-Returns
-
-*string* : The generated URL.
-
-[.lead]
-Example
-
-[source,typescript]
-----
-import {apiUrl} from '/lib/xp/portal';
-
-const url = apiUrl({
-  api: 'com.example.myapp:myapi',
-  path: '/items',
-  params: {
-    id: '42'
-  }
-});
-----
-
-=== baseUrl
-
-Generates a base URL.
-
-[.lead]
-Parameters
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name    ! Type   ! Attributes ! Default ! Description
-! type    ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute` or `websocket`.
-! id      ! string ! <optional> !         ! ID of the content.
-! path    ! string ! <optional> !         ! Path to the content.
-! project ! string ! <optional> !         ! Name of the project to use for resolving the URL.
-! branch  ! string ! <optional> !         ! Name of the branch to use for resolving the URL.
-!===
-
-|===
-
-[.lead]
-Returns
-
-*string* : The generated URL.
-
-[.lead]
-Example
-
-[source,typescript]
-----
-import {baseUrl} from '/lib/xp/portal';
-
-const url = baseUrl({
-  type: 'server',
-  path: '/path',
-  project: 'explicit-project',
-  branch: 'explicit-branch'
-});
-----
-
 === serviceUrl
 
-WARNING: HTTP services are deprecated in XP 8 in favor of <<../apis#, Universal APIs>>. Use <<apiUrl>> for new code; `serviceUrl()` is retained for backward compatibility with legacy services in `src/main/resources/services/`.
+WARNING: HTTP services are deprecated in XP 8 in favor of <<web/apis#, Universal APIs>>. Use <<apiUrl>> for new code; `serviceUrl()` is retained for backward compatibility with legacy services in `src/main/resources/services/`.
 
 Generates URL to a service.
 

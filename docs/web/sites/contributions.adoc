@@ -25,7 +25,7 @@ bodyEnd:: Before the `</body>` closing tag.
 
 == Usage
 
-The component or HTTP function must add a `pageContributions` property to the <<../http/request-response#response, HTTP response object>>.
+The component or HTTP function must add a `pageContributions` property to the <<web/request-response#response, HTTP response object>>.
 
 Example response adding a script element to `headEnd`:
 

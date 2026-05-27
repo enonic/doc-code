@@ -79,7 +79,7 @@ admin/tools/:: Admin tools are defined here. Tools are administrative apps liste
 
 admin/extensions/:: Admin extensions are user interface components that can be embedded within admin tools (formerly known as widgets).
 
-apis/:: <<../apis#, Universal API>> implementations and descriptors.
+apis/:: <<web/apis#, Universal API>> implementations and descriptors.
 
 enonic.svg:: Application icon in SVG format. Should be in a square format.
 
@@ -87,17 +87,17 @@ enonic.yaml:: Application descriptor (`kind: "Application"`).
 
 assets/:: Standard folder for serving static assets such as CSS and JavaScript. Assets are served by the <<../runtime/engines/asset-service#, asset service>>.
 
-error/error.ts:: The <<../http/error#, HTTP error handler>>.
+error/error.ts:: The <<web/error#, HTTP error handler>>.
 
 main.ts:: The application's <<../fundamentals/main#, main lifecycle>>. Runs when the application starts and stops.
 
 i18n/:: Short for internationalization, this folder contains <<../libraries/lib-i18n#,app localization files>>.
 
-idprovider/:: The application may implement an <<../http/id-providers#,ID Provider>> here.
+idprovider/:: The application may implement an <<web/id-providers#,ID Provider>> here.
 
 tasks/:: May contain <<../background/tasks#, task implementations>> for asynchronous and background processing.
 
-webapp/:: Optional <<../webapps#, webapp>> entry point. Contains `webapp.ts` (implementation) and an optional `webapp.yaml` (descriptor).
+webapp/:: Optional <<web/webapps#, webapp>> entry point. Contains `webapp.ts` (implementation) and an optional `webapp.yaml` (descriptor).
 
 cms/site.yaml:: Site configuration — API mounts, processors, and mappings.
 
@@ -105,7 +105,7 @@ cms/cms.yaml:: Site form and mixin references.
 
 cms/content-types/:: <<../cms/content-types#, Content type>> definitions.
 
-cms/processors/:: <<../sites/processors#, Response processors>> for post-processing the HTML response from sites.
+cms/processors/:: <<web/sites/processors#, Response processors>> for post-processing the HTML response from sites.
 
 cms/layouts/:: <<../cms/pages/layouts#, Layout components>>.
 

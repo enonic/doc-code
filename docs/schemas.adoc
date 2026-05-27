@@ -134,4 +134,4 @@ There is no separate "publish schemas" step. The bundle *is* the source of truth
 * https://developer.enonic.com/docs/cms/stable/schemas[CMS schemas reference] — the schema language, field types, and per-kind documentation.
 * https://developer.enonic.com/docs/cms/stable[CMS documentation] — content modelling, queries, and runtime APIs.
 * <<tooling/starters#, Starters>> — folder layout for the rest of an Enonic app.
-* <<sites#, Sites>> — wiring page/part/layout schemas to rendering implementations.
+* <<web/sites#, Sites>> — wiring page/part/layout schemas to rendering implementations.

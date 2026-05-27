@@ -57,7 +57,7 @@ Apps run inside a fully equipped platform. The runtime gives you, without extra 
 
 * *Persistence* — content, nodes, repositories, blobs, all queryable and clusterable.
 * *HTTP routing* — the <<../portal#, Portal>> dispatches incoming requests to four services (`/api`, `/admin`, `/site`, `/webapp`); you provide the implementations.
-* *Identity & access management* — pluggable <<../http/id-providers#, ID providers>>, role-based permissions, audit logging.
+* *Identity & access management* — pluggable <<web/id-providers#, ID providers>>, role-based permissions, audit logging.
 * *Cluster-wide events* — see <<events#, Events>>.
 * *Background work* — <<../background/tasks#, tasks>> and <<../background/scheduler#, scheduled jobs>>.
 * *Localization* — see <<i18n#, Localization>>.

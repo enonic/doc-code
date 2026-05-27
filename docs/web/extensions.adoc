@@ -2,7 +2,7 @@
 :toc: right
 :imagesdir: images
 
-Admin extensions are app-provided HTTP endpoints that mount into existing <<tools#,admin tools>> at named interface points. (previously known as *widgets*).
+Admin extensions are app-provided HTTP endpoints that mount into existing <<web/tools#,admin tools>> at named interface points. (previously known as *widgets*).
 
 The most common usage is rendering an embedded UI fragment, but an extension is just an HTTP module — it can equally well serve JSON, binary assets, or any other payload the host tool agrees to consume.
 
@@ -64,7 +64,7 @@ config:                               # <5>
 
 == Implementation
 
-The implementation lives at `+src/main/resources/admin/extensions/<extension-name>/<extension-name>.ts+` and exports an <<http/request-response#, HTTP function>> for each method the extension responds to. The response shape is determined by the host tool — UI widgets typically return HTML fragments, but a data-feed extension might return JSON, and an asset-serving extension might return binary content with the appropriate `contentType`.
+The implementation lives at `+src/main/resources/admin/extensions/<extension-name>/<extension-name>.ts+` and exports an <<web/request-response#, HTTP function>> for each method the extension responds to. The response shape is determined by the host tool — UI widgets typically return HTML fragments, but a data-feed extension might return JSON, and an asset-serving extension might return binary content with the appropriate `contentType`.
 
 .Sample my-extension.ts
 [source,typescript]
@@ -135,4 +135,4 @@ The listing is filtered by the caller's principals — extensions the caller can
 Interface names are free-form strings, not a closed enum. The contract is purely a string match between the extension's `interfaces:` and the host tool's `interfaces:`. To define a new interface point in your own admin tool, declare a stable name (e.g. `<app-key>.<purpose>`) in the tool's descriptor and document the request/response shape your tool expects from extensions.
 
 Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool's documentation for the contract.
-See <<extensions/liveview#,Liveview>>, <<extensions/contextpanel#,Context panel>>, and <<extensions/menuitem#,Menu item>> for worked examples: the `contentstudio.liveview`, `contentstudio.contextpanel`, and `contentstudio.menuitem` interfaces published by Content Studio.
+See <<web/extensions/liveview#,Liveview>>, <<web/extensions/contextpanel#,Context panel>>, and <<web/extensions/menuitem#,Menu item>> for worked examples: the `contentstudio.liveview`, `contentstudio.contextpanel`, and `contentstudio.menuitem` interfaces published by Content Studio.

@@ -31,6 +31,52 @@
       ]
     },
     {
+      "title": "CMS Schemas",
+      "document": "schemas"
+    },
+    {
+      "title": "Storage",
+      "document": "storage",
+      "menuItems": [
+        {
+          "title": "Querying",
+          "document": "storage/querying"
+        },
+        {
+          "title": "Aggregations",
+          "document": "storage/aggregations"
+        },
+        {
+          "title": "Highlighting",
+          "document": "storage/highlighting"
+        },
+        {
+          "title": "Editors",
+          "document": "storage/editors"
+        },
+        {
+          "title": "Permissions",
+          "document": "storage/permissions"
+        },
+        {
+          "title": "Properties",
+          "document": "storage/properties"
+        },
+        {
+          "title": "Indexing",
+          "document": "storage/indexing"
+        },
+        {
+          "title": "NoQL (legacy)",
+          "document": "storage/noql"
+        },
+        {
+          "title": "Filters (legacy)",
+          "document": "storage/filters"
+        }
+      ]
+    },
+    {
       "title": "Fundamentals",
       "document": "fundamentals",
       "menuItems": [
@@ -179,100 +225,84 @@
       ]
     },
     {
-      "title": "HTTP",
-      "document": "http",
+      "title": "Web",
+      "document": "web",
       "menuItems": [
         {
-          "title": "Request & Response",
-          "document": "http/request-response"
+          "title": "APIs",
+          "document": "web/apis"
         },
         {
-          "title": "Filters",
-          "document": "http/filters"
+          "title": "Admin Tools",
+          "document": "web/tools"
         },
         {
-          "title": "Error handler",
-          "document": "http/error"
-        },
-        {
-          "title": "Websocket",
-          "document": "http/websocket"
-        },
-        {
-          "title": "SSE",
-          "document": "http/sse"
+          "title": "Admin Extensions",
+          "document": "web/extensions",
+          "menuItems": [
+            {
+              "title": "Context panel",
+              "document": "web/extensions/contextpanel"
+            },
+            {
+              "title": "Liveview",
+              "document": "web/extensions/liveview"
+            },
+            {
+              "title": "Menu item",
+              "document": "web/extensions/menuitem"
+            }
+          ]
         },
         {
           "title": "ID providers",
-          "document": "http/id-providers"
-        }
-      ]
-    },
-    {
-      "title": "Storage",
-      "document": "storage",
-      "menuItems": [
-        {
-          "title": "Querying",
-          "document": "storage/querying"
+          "document": "web/id-providers"
         },
         {
-          "title": "Aggregations",
-          "document": "storage/aggregations"
+          "title": "Sites",
+          "document": "web/sites",
+          "menuItems": [
+            {
+              "title": "Mappings",
+              "document": "web/sites/mappings"
+            },
+            {
+              "title": "Components",
+              "document": "web/sites/components"
+            },
+            {
+              "title": "Contributions",
+              "document": "web/sites/contributions"
+            },
+            {
+              "title": "Processors",
+              "document": "web/sites/processors"
+            }
+          ]
         },
         {
-          "title": "Highlighting",
-          "document": "storage/highlighting"
+          "title": "Webapps",
+          "document": "web/webapps"
         },
         {
-          "title": "Editors",
-          "document": "storage/editors"
+          "title": "Request & Response",
+          "document": "web/request-response"
         },
         {
-          "title": "Permissions",
-          "document": "storage/permissions"
+          "title": "Filters",
+          "document": "web/filters"
         },
         {
-          "title": "Properties",
-          "document": "storage/properties"
+          "title": "Error handler",
+          "document": "web/error"
         },
         {
-          "title": "Indexing",
-          "document": "storage/indexing"
+          "title": "Websocket",
+          "document": "web/websocket"
         },
         {
-          "title": "NoQL (legacy)",
-          "document": "storage/noql"
-        },
-        {
-          "title": "Filters (legacy)",
-          "document": "storage/filters"
-        }
-      ]
-    },
-    {
-      "title": "APIs",
-      "document": "apis"
-    },
-    {
-      "title": "Admin Tools",
-      "document": "tools"
-    },
-    {
-      "title": "Admin Extensions",
-      "document": "extensions",
-      "menuItems": [
-        {
-          "title": "Context panel",
-          "document": "extensions/contextpanel"
-        },
-        {
-          "title": "Liveview",
-          "document": "extensions/liveview"
-        },
-        {
-          "title": "Menu item",
-          "document": "extensions/menuitem"
+          "title": "SSE",
+          "document": "web/sse"
         }
       ]
     },
@@ -289,36 +319,6 @@
           "document": "background/scheduler"
         }
       ]
-    },
-    {
-      "title": "CMS Schemas",
-      "document": "schemas"
-    },
-    {
-      "title": "Sites",
-      "document": "sites",
-      "menuItems": [
-        {
-          "title": "Mappings",
-          "document": "sites/mappings"
-        },
-        {
-          "title": "Components",
-          "document": "sites/components"
-        },
-        {
-          "title": "Contributions",
-          "document": "sites/contributions"
-        },
-        {
-          "title": "Processors",
-          "document": "sites/processors"
-        }
-      ]
-    },
-    {
-      "title": "Webapps",
-      "document": "webapps"
     },
     {
       "title": "Upgrading",

@@ -34,12 +34,12 @@ apis:
 <1> A mapping to take over the request for all non-media content items, and render a preview.
 <2> Contextually mounts an API in the same application on the site's underscore endpoint.
 
-NOTE: You will also need implementations of <<mappings#, Mapping function>> or <<components#, component functions>> to start rendering.
+NOTE: You will also need implementations of <<web/sites/mappings#, Mapping function>> or <<web/sites/components#, component functions>> to start rendering.
 
 
 == Site Request pipeline
 
-The site pipeline is executed as a subset of the <<http#common_request_pipeline, common pipeline>>:
+The site pipeline is executed as a subset of the <<web#common_request_pipeline, common pipeline>>:
 
 image::site-pipeline.svg[Site rendering pipeline, 768px]
 

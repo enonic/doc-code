@@ -10,7 +10,7 @@ Enonic is capable of delivering web applications natively, without the need for 
 
 == Request pipeline
 
-The webapp pipeline is executed as a subset of the <<http#common_request_pipeline, common pipeline>>:
+The webapp pipeline is executed as a subset of the <<web#common_request_pipeline, common pipeline>>:
 
 image::webapp-pipeline.svg[Webapp rendering pipeline, 768px]
 
@@ -18,7 +18,7 @@ Webapp:: Invokes the webapp's HTTP function matching the request method.
 
 == Implementation
 
-To turn an application into a webapp, place an implementation at `+/src/main/resources/webapp/webapp.ts+` that exports one function per HTTP method it handles (`GET`, `POST`, etc.) — see <<http/request-response#, HTTP functions>>.
+To turn an application into a webapp, place an implementation at `+/src/main/resources/webapp/webapp.ts+` that exports one function per HTTP method it handles (`GET`, `POST`, etc.) — see <<web/request-response#, HTTP functions>>.
 
 Once deployed, the webapp is reachable at `+<server>:<port>/webapp/<app-name>/+` (e.g. `+localhost:8080/webapp/my.webapp/+`).
 
@@ -26,13 +26,13 @@ NOTE: For anything beyond a couple of static endpoints, use the https://market.e
 
 == WebSocket and SSE
 
-A webapp can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. But we generally recommend contextually mounting WebSocket and SSE APIs via the <<apis#, API service>> instead of using the webapp service directly.
+A webapp can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. But we generally recommend contextually mounting WebSocket and SSE APIs via the <<web/apis#, API service>> instead of using the webapp service directly.
 
 == Descriptor
 
 A webapp descriptor is *optional*. A webapp consisting of just `+webapp.ts+` runs without one.
 
-The descriptor *can be used to mount <<apis#,Universal APIs>> as service points*. Place a `+webapp.yaml+` alongside `webapp.ts` and list the APIs in its `apis:` field:
+The descriptor *can be used to mount <<web/apis#,Universal APIs>> as service points*. Place a `+webapp.yaml+` alongside `webapp.ts` and list the APIs in its `apis:` field:
 
 .src/main/resources/webapp/webapp.yaml
 [source,yaml]
@@ -43,7 +43,7 @@ apis:
   - "app:graphql"
 ----
 
-Each listed API becomes reachable as a service point at `+<server>:<port>/webapp/<app-name>/_/<app>:<api>/+`. See <<apis#service-point,Universal API: Service point>> for the full mounting rules.
+Each listed API becomes reachable as a service point at `+<server>:<port>/webapp/<app-name>/_/<app>:<api>/+`. See <<web/apis#service-point,Universal API: Service point>> for the full mounting rules.
 
 == Tracing
 
