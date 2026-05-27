@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Web</title>
+<title>Developing for the web</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,13 +437,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Web</h1>
+<h1>Developing for the web</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#services">Services</a></li>
+<li><a href="#id_providers">ID providers</a></li>
 <li><a href="#common_request_pipeline">Request flow</a></li>
-<li><a href="#pages_in_this_section">Pages in this section</a></li>
 </ul>
 </div>
 </div>
@@ -451,7 +451,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every client interaction with Enonic XP — browser request, API call, admin tool, websocket upgrade — flows through the same HTTP gateway. This page covers the common request pipeline that every request passes through, the four services XP dispatches to, and the primitives (request/response shapes, filters, error handlers, websockets, SSE, ID providers) that make up the HTTP layer.</p>
+<p>Every client interaction with Enonic XP — browser request, API call, admin tool, websocket upgrade etc flow through a common http gateway in XP, aka the Web endpoint.</p>
 </div>
 </div>
 </div>
@@ -459,46 +459,48 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="services"><a class="link" href="#services">Services</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP listens on <code>port 8080</code> (configurable) and dispatches requests to one of four <strong>services</strong>, each with a fixed URL prefix and a distinct role:</p>
+<p>The Web endpoint listens on <code>port 8080</code> (configurable) and dispatches requests to one of four <strong>services</strong>, each with a fixed URL prefix and a distinct role:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 16.6666%;">
-<col style="width: 33.3333%;">
-<col style="width: 50.0001%;">
+<col style="width: 25%;">
+<col style="width: 75%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Service</th>
-<th class="tableblock halign-left valign-top">Prefix</th>
-<th class="tableblock halign-left valign-top">Use it for</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/apis.ahtml">API</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/apis.ahtml">/api</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom HTTP APIs, microservices, headless integrations.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/tools.ahtml">Admin</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/tools.ahtml">/admin</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/sites.ahtml">Site</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/site</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/sites.ahtml">/site</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CMS-driven websites: pages, parts, layouts, content rendering.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/webapps.ahtml">Webapp</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/webapp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/webapps.ahtml">/webapp</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Standalone web applications — served by your app, no CMS context.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="id_providers"><a class="link" href="#id_providers">ID providers</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>A single app can contribute to any number of these services simultaneously — a CMS site, a webapp dashboard, a custom API, and an admin tool — all from the same bundle.</p>
+<p><a href="web/id-providers.ahtml">ID providers</a> work across the services to provide pluggable authentication and that hooks into the request pipeline — <code>handle401</code>, <code>autoLogin</code>, <code>login</code>/<code>logout</code> endpoints, and ID-provider-as-HTTP-function.</p>
+</div>
+<div class="paragraph">
+<p>A single application can contribute to any number of these simultaneously — a custom API, an admin extension and a website, all in the same app, all sharing the same code and libraries.</p>
 </div>
 </div>
 </div>
@@ -551,43 +553,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="pages_in_this_section"><a class="link" href="#pages_in_this_section">Pages in this section</a></h2>
-<div class="sectionbody">
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><a href="web/request-response.ahtml">Request &amp; Response</a></dt>
-<dd>
-<p>The Request and Response object shapes — headers, body, cookies, status codes — and the way XP populates and reads them.</p>
-</dd>
-<dt class="hdlist1"><a href="web/filters.ahtml">Filters</a></dt>
-<dd>
-<p>Reusable wrappers that run before and after HTTP functions in the pipeline. Used for cross-cutting concerns: auth gates, logging, caching, response rewriting.</p>
-</dd>
-<dt class="hdlist1"><a href="web/error.ahtml">Error handler</a></dt>
-<dd>
-<p>Custom error pages and exception-to-response mapping. Replaces the default stack-trace response.</p>
-</dd>
-<dt class="hdlist1"><a href="web/websocket.ahtml">WebSocket</a></dt>
-<dd>
-<p>Two-way communication channels. Any HTTP function can upgrade an incoming request into a websocket session by returning a <code>webSocket</code> object.</p>
-</dd>
-<dt class="hdlist1"><a href="web/sse.ahtml">SSE</a></dt>
-<dd>
-<p>Server-Sent Events streams. One-way streaming from server to client over a long-lived HTTP response.</p>
-</dd>
-<dt class="hdlist1"><a href="web/id-providers.ahtml">ID providers</a></dt>
-<dd>
-<p>Pluggable authentication that hooks the request pipeline — <code>handle401</code>, <code>autoLogin</code>, <code>login</code>/<code>logout</code> endpoints, and ID-provider-as-HTTP-function.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-27 12:10:59 UTC
+Last updated 2026-05-27 14:09:11 UTC
 </div>
 </div>
 </body>
