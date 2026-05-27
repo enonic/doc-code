@@ -1,23 +1,26 @@
-= Web
+= Developing for the web
 :toc: right
 :imagesdir: web/images
 
-Every client interaction with Enonic XP — browser request, API call, admin tool, websocket upgrade — flows through the same HTTP gateway. This page covers the common request pipeline that every request passes through, the four services XP dispatches to, and the primitives (request/response shapes, filters, error handlers, websockets, SSE, ID providers) that make up the HTTP layer.
+Every client interaction with Enonic XP — browser request, API call, admin tool, websocket upgrade etc flow through a common http gateway in XP, aka the Web endpoint.
 
 == Services
 
-XP listens on `port 8080` (configurable) and dispatches requests to one of four *services*, each with a fixed URL prefix and a distinct role:
+The Web endpoint listens on `port 8080` (configurable) and dispatches requests to one of four *services*, each with a fixed URL prefix and a distinct role:
 
-[cols="1,2,3", options="header"]
+[cols="1,3", options="header"]
 |===
-| Service | Prefix | Use it for
-| <<web/apis#, API>> | `/api` | Custom HTTP APIs, microservices, headless integrations.
-| <<web/tools#, Admin>> | `/admin` | XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.
-| <<web/sites#, Site>> | `/site` | CMS-driven websites: pages, parts, layouts, content rendering.
-| <<web/webapps#, Webapp>> | `/webapp` | Standalone web applications — served by your app, no CMS context.
+| Service | Purpose
+| <<web/apis#, /api>> | Custom HTTP APIs, microservices, headless integrations.
+| <<web/tools#, /admin>> | XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.
+| <<web/sites#, /site>> | CMS-driven websites: pages, parts, layouts, content rendering.
+| <<web/webapps#, /webapp>> | Standalone web applications — served by your app, no CMS context.
 |===
 
-A single app can contribute to any number of these services simultaneously — a CMS site, a webapp dashboard, a custom API, and an admin tool — all from the same bundle.
+== ID providers
+<<web/id-providers#, ID providers>> work across the services to provide pluggable authentication and that hooks into the request pipeline — `handle401`, `autoLogin`, `login`/`logout` endpoints, and ID-provider-as-HTTP-function.
+
+A single application can contribute to any number of these simultaneously — a custom API, an admin extension and a website, all in the same app, all sharing the same code and libraries.
 
 [[common_request_pipeline]]
 == Request flow
@@ -41,17 +44,3 @@ Error handler:: If the pipeline returns an unhandled error (everything but `200 
 Platform response filters:: Optional system level response filters.
 
 Standard error handler:: Finally, if the request fails with an error that is still unhandled, XP's standard error handler kicks in.
-
-== Pages in this section
-
-<<web/request-response#, Request & Response>>:: The Request and Response object shapes — headers, body, cookies, status codes — and the way XP populates and reads them.
-
-<<web/filters#, Filters>>:: Reusable wrappers that run before and after HTTP functions in the pipeline. Used for cross-cutting concerns: auth gates, logging, caching, response rewriting.
-
-<<web/error#, Error handler>>:: Custom error pages and exception-to-response mapping. Replaces the default stack-trace response.
-
-<<web/websocket#, WebSocket>>:: Two-way communication channels. Any HTTP function can upgrade an incoming request into a websocket session by returning a `webSocket` object.
-
-<<web/sse#, SSE>>:: Server-Sent Events streams. One-way streaming from server to client over a long-lived HTTP response.
-
-<<web/id-providers#, ID providers>>:: Pluggable authentication that hooks the request pipeline — `handle401`, `autoLogin`, `login`/`logout` endpoints, and ID-provider-as-HTTP-function.
