@@ -1,15 +1,15 @@
 = Content schemas
 :toc: right
 
-Explains how to ship your *CMS schemas* as code in your Enonic app
+Desciption of how to ship your *CMS schemas* as code as part of your Enonic app
 
 == Introduction
 
-Enonic provides powerful CMS capabilities. A central concept is schemas that control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.
+The CMS schemas control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.
 
-For more details on schemas, visit the https://developer.enonic.com/docs/cms/stable/schemas[CMS docs].
+NOTE: Visit the https://developer.enonic.com/docs/cms/stable/schemas[CMS docs] for details on content modeling.
 
-If your application will only contain schemas, we recommend using the  https://market.enonic.com/vendors/enonic/starter-vanilla[the Vanilla starter] as a base. It has no dependencies and a minimal build configuration, so it's ideal for schema-only apps.
+You may bundle schemas in any Enonic app. https://market.enonic.com/vendors/enonic/starter-vanilla[The Vanilla starter] is a minimalistic approach.
 
 Create a new app using Enonic CLI:
 
