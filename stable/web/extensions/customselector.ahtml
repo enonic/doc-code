@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Content Studio CustomSelector (contentstudio.customselector)</title>
+<title>Custom Selector Extension for Content Studio</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Content Studio CustomSelector (contentstudio.customselector)</h1>
+<h1>Custom Selector Extension for Content Studio</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -454,7 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Implements a back-end for the <a href="https://developer.enonic.com/docs/cms/schemas/form-items/customselector">CustomSelector form item</a> when used in Content Studio.</p>
+<p>Implements the <code>contentstudio.customselector</code> interface.</p>
 </div>
 </div>
 </div>
@@ -462,10 +462,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>CustomSelectors allow editors to easily select values from a programmatically populated list of options. The options are fetched from a named admin extension of type  <code>contentstudio.customselector</code>.</p>
+<p>Provides a back-end for the <a href="https://developer.enonic.com/docs/cms/schemas/form-items/customselector">CustomSelector form item</a> when used in Content Studio.</p>
 </div>
 <div class="paragraph">
-<p>Content Studio fetches the options from the extension whenever the user opens the dropdown, types in the search field, or when the content is loaded with pre-selected options. The extension receives the selected options and the search query as parameters and returns a list of matching options.</p>
+<p>The CustomSelector form item fetches options from this extension whenever the user opens the dropdown, types in the search field, or when the content is loaded with pre-selected options. The extension receives the selected options and the search query as parameters and returns a list of matching options.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -799,7 +799,7 @@ interfaces:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-28 12:26:04 UTC
+Last updated 2026-05-28 13:32:16 UTC
 </div>
 </div>
 </body>

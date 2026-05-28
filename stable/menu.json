@@ -233,11 +233,11 @@
           "document": "web/apis"
         },
         {
-          "title": "Admin Tools",
+          "title": "Tools",
           "document": "web/tools"
         },
         {
-          "title": "Admin Extensions",
+          "title": "Extensions",
           "document": "web/extensions",
           "menuItems": [
             {
@@ -249,7 +249,7 @@
               "document": "web/extensions/customselector"
             },
             {
-              "title": "Liveview",
+              "title": "Live view",
               "document": "web/extensions/liveview"
             },
             {
