@@ -245,6 +245,10 @@
               "document": "web/extensions/contextpanel"
             },
             {
+              "title": "Custom selector",
+              "document": "web/extensions/customselector"
+            },
+            {
               "title": "Liveview",
               "document": "web/extensions/liveview"
             },
