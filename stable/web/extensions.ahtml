@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Building Admin Extensions</title>
+<title>Admin Extensions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building Admin Extensions</h1>
+<h1>Admin Extensions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -445,7 +445,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#usage">Usage</a></li>
 <li><a href="#descriptor">Descriptor</a></li>
 <li><a href="#implementation">Implementation</a></li>
-<li><a href="#url">URL</a></li>
+<li><a href="#extension_url">Extension URL</a></li>
 <li><a href="#access_control">Access control</a></li>
 <li><a href="#discovery">Discovery</a></li>
 <li><a href="#interfaces">Interfaces</a></li>
@@ -456,10 +456,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Admin extensions are app-provided HTTP endpoints that mount into existing <a href="web/tools.ahtml">admin tools</a> at named interface points. (previously known as <strong>widgets</strong>).</p>
-</div>
-<div class="paragraph">
-<p>The most common usage is rendering an embedded UI fragment, but an extension is just an HTTP module — it can equally well serve JSON, binary assets, or any other payload the host tool agrees to consume.</p>
+<p>Admin extensions are dynamic endpoints that plug into into existing <a href="web/tools.ahtml">admin tools</a> at their named interfaces.</p>
 </div>
 </div>
 </div>
@@ -467,18 +464,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An admin extension:</p>
+<p>The most common usage is rendering an embedded UI fragment, but an extension is basically a dynamic HTTP endpoint — it can equally well serve JSON, binary assets, or any other payload the host tool agrees to consume.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Is contributed by an app and discovered by the host admin tool through a string identifier called an <strong>interface</strong>.</p>
+<p>Contributed by an app and discovered by the host admin tool through a string identifier called an <strong>interface</strong>.</p>
 </li>
 <li>
-<p>Mounts only into tools that publish a matching interface name. The reserved name <code>"generic"</code> matches any tool.</p>
+<p>Mounts only into tools that publish a matching interface name. The reserved name <code>generic</code> matches any tool.</p>
 </li>
 <li>
-<p>Is served by the admin engine through the <code>admin:extension</code> dispatcher API at <code>/admin/&lt;app&gt;/&lt;tool&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;</code>.</p>
+<p>Is served by the admin engine through the <code>admin:extension</code> dispatcher API at <code>/admin/&lt;app&gt;/&lt;tool&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;/</code>.</p>
 </li>
 <li>
 <p>Returns whatever HTTP payload the host tool expects — HTML fragments for UI widgets, JSON for data feeds, binary assets, etc.</p>
@@ -596,7 +593,7 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 </div>
 </div>
 <div class="sect1">
-<h2 id="url"><a class="link" href="#url">URL</a></h2>
+<h2 id="extension_url"><a class="link" href="#extension_url">Extension URL</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The URL at which an extension is reachable is a platform internal and may change between XP releases — <strong>do not hard-code it</strong>. Use <code>extensionUrl()</code> from <a href="libraries/lib-admin.ahtml#extensionurl">lib-admin</a>; it resolves the URL based on the current admin tool context.</p>
@@ -681,15 +678,14 @@ const url = adminLib.extensionUrl({
 <p>Interface names are free-form strings, not a closed enum. The contract is purely a string match between the extension&#8217;s <code>interfaces:</code> and the host tool&#8217;s <code>interfaces:</code>. To define a new interface point in your own admin tool, declare a stable name (e.g. <code>&lt;app-key&gt;.&lt;purpose&gt;</code>) in the tool&#8217;s descriptor and document the request/response shape your tool expects from extensions.</p>
 </div>
 <div class="paragraph">
-<p>Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool&#8217;s documentation for the contract.
-See <a href="web/extensions/liveview.ahtml">Liveview</a>, <a href="web/extensions/contextpanel.ahtml">Context panel</a>, and <a href="web/extensions/menuitem.ahtml">Menu item</a> for worked examples: the <code>contentstudio.liveview</code>, <code>contentstudio.contextpanel</code>, and <code>contentstudio.menuitem</code> interfaces published by Content Studio.</p>
+<p>Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool&#8217;s documentation for the contract.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-28 13:32:16 UTC
+Last updated 2026-05-28 15:49:50 UTC
 </div>
 </div>
 </body>

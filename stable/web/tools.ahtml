@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Building Admin Tools</title>
+<title>Admin Tools</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building Admin Tools</h1>
+<h1>Admin Tools</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -457,7 +457,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Admin tools are app-provided UIs that appear in the XP admin Launcher and run inside the admin service. Content Studio is itself an admin tool.</p>
+<p>Admin tools are custom adminitrative interfaces made availabe within the XP admin.</p>
 </div>
 </div>
 </div>
@@ -465,21 +465,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An admin tool is a single-page application (or any HTTP-served UI) that:</p>
+<p>An admin tool are self-contained mini-applications that run within the XP admin.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Mounts at <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;</code> — one URL per declared tool, served by the admin service.</p>
+<p>Secured via the same authentication and authorization as the rest of the admin.</p>
 </li>
 <li>
-<p>Appears in the admin Launcher menu, picking up its title, description, and SVG icon from the descriptor.</p>
+<p>Listed in the XP menu with icon and name</p>
 </li>
 <li>
-<p>Can mount <a href="web/apis.ahtml">Universal APIs</a> as service points beneath itself.</p>
+<p>Can mount contextual <a href="web/apis.ahtml">Universal APIs</a> .</p>
 </li>
 <li>
-<p>Can host <a href="web/extensions.ahtml">Admin extensions</a> by declaring named interface points that extensions plug into.</p>
+<p>Can connect to <a href="web/extensions.ahtml">Admin extensions</a> by declaring named interfaces that extensions implement.</p>
+</li>
+<li>
+<p>Mounts at <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;</code> — one URL per tool.</p>
 </li>
 </ul>
 </div>
@@ -621,7 +624,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 <p>API service point under the tool: <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/&lt;app&gt;:&lt;api-name&gt;/</code></p>
 </li>
 <li>
-<p>Admin extension dispatcher under the tool: <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;</code></p>
+<p>Admin extension dispatcher under the tool: <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;/</code></p>
 </li>
 </ul>
 </div>
@@ -678,7 +681,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-28 13:32:16 UTC
+Last updated 2026-05-28 15:49:50 UTC
 </div>
 </div>
 </body>
