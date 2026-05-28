@@ -443,14 +443,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#lifecycle">Lifecycle</a></li>
-<li><a href="#usage">Usage</a></li>
 <li><a href="#descriptor">Descriptor</a></li>
-<li><a href="#implementation">Implementation</a></li>
-<li><a href="#requestresponse">Request/response</a>
-<ul class="sectlevel2">
 <li><a href="#request">Request</a></li>
-</ul>
-</li>
+<li><a href="#response">Response</a></li>
+<li><a href="#sample_implementation">Sample implementation</a></li>
 </ul>
 </div>
 </div>
@@ -510,39 +506,6 @@ More details on what this looks like in the: <a href="https://developer.enonic.c
 </div>
 </div>
 <div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A Menu Item extension is declared like any admin extension — descriptor and implementation under <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-files" data-lang="files">src/main/resources/admin/extensions/
-  my-menu/
-    my-menu.yaml   <i class="conum" data-value="1"></i><b>(1)</b>
-    my-menu.ts     <i class="conum" data-value="2"></i><b>(2)</b>
-    my-menu.svg    <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Descriptor — see <a href="#descriptor">below</a>.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Implementation file</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Optional SVG icon shown next to the entry in the Content Studio menu.</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -589,7 +552,95 @@ To restrict the menu item to specific roles or principals, use the standard <cod
 </div>
 </div>
 <div class="sect1">
-<h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
+<h2 id="request"><a class="link" href="#request">Request</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Content Studio dispatches a <code>GET</code> to the extension URL when the user activates the menu item:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Parameters sent to the extension URL</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repository id, e.g. <code>com.enonic.cms.default</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The standard XP request fields are available too: <code>req.user</code> for the active user, <code>req.locales</code> for i18n negotiation, and so on.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="response"><a class="link" href="#response">Response</a></h2>
+<div class="sectionbody">
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">status</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>2xx</code> on success; <code>404</code> if the request can&#8217;t be served.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contentType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Typically <code>text/html</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">body</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>HTML markup rendered inside the main-view web component (see notes below).</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The web component isolates the menu item&#8217;s CSS and JS from the rest of the admin UI:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Selectors in your <code>&lt;style&gt;</code> blocks don&#8217;t conflict with Content Studio&#8217;s styles.</p>
+</li>
+<li>
+<p>Content Studio&#8217;s styles don&#8217;t apply to the menu item&#8217;s contents either — start from base CSS rather than inheriting admin-UI defaults.</p>
+</li>
+<li>
+<p><code>&lt;script&gt;</code> tags execute in the menu item&#8217;s scope; queries like <code>document.querySelector</code> operate on the menu item&#8217;s own DOM.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sample_implementation"><a class="link" href="#sample_implementation">Sample implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The implementation exports <code>GET</code>. Content Studio calls it when the user activates the menu item and renders the response inside the main-view web component.</p>
@@ -622,51 +673,10 @@ The initial <code>GET</code> then becomes a thin shell that loads a bundled SPA,
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="requestresponse"><a class="link" href="#requestresponse">Request/response</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="request"><a class="link" href="#request">Request</a></h3>
-<div class="paragraph">
-<p>Content Studio dispatches a <code>GET</code> to the extension URL when the user activates the menu item.</p>
-</div>
-<div class="paragraph">
-<p>Content Studio dispatches a <code>GET</code> to the extension URL with the selected content as query parameters:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Parameters sent to the extension URL</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Repository id, e.g. <code>com.enonic.cms.default</code>.</p>
-<p class="tableblock">The standard XP request fields are available: <code>req.user</code> for the active user, <code>req.locales</code> for i18n negotiation, and so on.</p>
-<p class="tableblock">=== Response</p>
-<p class="tableblock">The response body is HTML.
-Content Studio renders it inside a web component, which isolates the menu item&#8217;s CSS and JS from the rest of the admin UI:</p>
-<p class="tableblock">* Selectors in your <code>&lt;style&gt;</code> blocks don&#8217;t conflict with Content Studio&#8217;s styles.
-* Content Studio&#8217;s styles don&#8217;t apply to the menu item&#8217;s contents either — start from base CSS rather than inheriting admin-UI defaults.
-* <code>&lt;script&gt;</code> tags execute in the menu item&#8217;s scope; queries like <code>document.querySelector</code> operate on the menu item&#8217;s own DOM.</p>
-<p class="tableblock">Return <code>404</code> if the request can&#8217;t be served; <code>2xx</code> otherwise.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-27 14:57:47 UTC
+Last updated 2026-05-28 11:54:49 UTC
 </div>
 </div>
 </body>
