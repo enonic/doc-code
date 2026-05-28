@@ -22,24 +22,6 @@ Multiple Context Panel extensions coexist — the user picks which one is active
 . *Render.* Content Studio issues a `GET` to the extension URL with the selected content as parameters and embeds the response in the side panel's web component.
 . *Re-fetch.* If the user selects a different content, switches branch, or otherwise changes any of the request parameters, Content Studio repeats the `GET` for the new selection.
 
-== Usage
-
-A Context Panel extension is declared like any admin extension — descriptor and implementation under `+src/main/resources/admin/extensions/<extension-name>/+`:
-
-[source,files]
-----
-src/main/resources/admin/extensions/
-  my-panel/
-    my-panel.yaml   # <1>
-    my-panel.ts     # <2>
-    my-panel.svg    # <3>
-----
-
-<1> Descriptor — see <<#descriptor,below>>.
-<2> Implementation file
-<3> Optional SVG icon shown next to the panel in the side-panel dropdown.
-
-[#descriptor]
 == Descriptor
 
 The descriptor is the same `AdminExtension` kind as any other extension; only the `interfaces:` list is specific to context panels.
@@ -57,7 +39,47 @@ interfaces:
 
 <1> *Interface name* — must be the exact string `contentstudio.contextpanel` for Content Studio to discover the extension as a context panel.
 
-== Implementation
+== Request
+
+Content Studio dispatches a `GET` to the extension URL with the selected content as query parameters:
+
+.Parameters sent to the extension URL
+[cols="1,3"]
+|===
+| Parameter | Description
+
+| `contentId`
+| Content UUID — the primary way to identify the selected content.
+
+| `repo`
+| Repository id, e.g. `+com.enonic.cms.default+`.
+
+| `branch`
+| `draft` or `master`.
+|===
+
+The standard XP request fields are available too: `req.locales` for i18n negotiation, `req.user` for the active user, and so on.
+
+== Response
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+
+| status | integer | `2xx` on success; `404` if the content can't be loaded.
+| contentType | string | Typically `text/html`.
+| body | string | HTML markup rendered inside the side-panel web component (see notes below).
+|===
+
+The web component isolates the panel's CSS and JS from the rest of the admin UI:
+
+* Selectors in your `<style>` blocks don't conflict with Content Studio's styles.
+* Content Studio's styles don't apply to the panel contents either — start from base CSS rather than inheriting admin-UI defaults.
+* `<script>` tags in the body execute in the panel's scope; queries like `document.querySelector` operate on the panel's own DOM.
+
+== Sample implementation
 
 The implementation exports `GET`. Content Studio calls it with the selected content's id and renders the response inside the side-panel web component.
 
@@ -95,38 +117,3 @@ exports.GET = (req) => {
 The implementation is a regular server-side XP module: `require('/lib/xp/content')` for the full Content API, plus any other standard library (`lib-portal`, `lib-i18n`, `lib-node`, ...) and 3rd-party modules the app bundles.
 
 For non-trivial panels, separate the HTML, CSS, and JS into asset files and reference them via `portal.assetUrl()` from `lib-portal` — the response then becomes a small `<link>` + `<script>` shell that pulls in the bundled assets, keeping the implementation focused on data and the bundle focused on presentation.
-
-== Request/response
-
-=== Request
-
-Content Studio dispatches a `GET` to the extension URL with the selected content as query parameters:
-
-.Parameters sent to the extension URL
-[cols="1,3"]
-|===
-| Parameter | Description
-
-| `contentId`
-| Content UUID — the primary way to identify the selected content.
-
-| `repo`
-| Repository id, e.g. `+com.enonic.cms.default+`.
-
-| `branch`
-| `draft` or `master`.
-|===
-
-The standard XP request fields are available too: `req.locales` for i18n negotiation, `req.user` for the active user, and so on.
-
-=== Response
-
-The response body is HTML.
-Content Studio renders it inside a web component, which isolates the panel's CSS and JS from the rest of the admin UI:
-
-* Selectors in your `<style>` blocks don't conflict with Content Studio's styles.
-* Content Studio's styles don't apply to the panel contents either — start from base CSS rather than inheriting admin-UI defaults.
-* `<script>` tags in the body execute in the panel's scope; queries like `document.querySelector` operate on the panel's own DOM.
-
-Return `404` if the content can't be loaded; `2xx` otherwise.
-

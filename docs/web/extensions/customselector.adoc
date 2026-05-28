@@ -1,0 +1,178 @@
+= Content Studio CustomSelector (contentstudio.customselector)
+:toc: right
+:imagesdir: images
+
+Implements a back-end for the https://developer.enonic.com/docs/cms/schemas/form-items/customselector[CustomSelector form item] when used in Content Studio.
+
+== Introduction
+
+CustomSelectors allow editors to easily select values from a programmatically populated list of options. The options are fetched from a named admin extension of type  `contentstudio.customselector`.
+
+Content Studio fetches the options from the extension whenever the user opens the dropdown, types in the search field, or when the content is loaded with pre-selected options. The extension receives the selected options and the search query as parameters and returns a list of matching options.
+
+TIP: Visit the https://developer.enonic.com/learn/building-custom-selectors[Building custom selectors] tutorial for an extensive example of how to build and use a CustomSelector.
+
+
+== Lifecycle
+
+. *Fetch* Content Studio lazily invokes the extension when the user opens the dropdown or types in the search field.
+. *Re-fetch.* If the user types in the search field or the content is loaded with pre-selected options, Content Studio repeats the `GET` for the new parameters.
+
+
+== Descriptor
+
+The descriptor follows the standard <<../extensions#descriptor, AdminExtension>> pattern.
+
+.src/main/resources/admin/extensions/my-panel/my-panel.yaml
+[source,yaml]
+----
+kind: "AdminExtension"
+title: "My Selector"
+description: "Fetches custom options for selection"
+interfaces:
+  - "contentstudio.customselector"          # <1>
+----
+<1> *Interface name* — must be the exact string `contentstudio.customselector` for Content Studio to discover the extension.
+
+
+== Request
+
+Content Studio dispatches a `GET` to the extension URL with the selected content as query parameters:
+
+.Parameters sent to the extension URL
+[cols="1,3"]
+|===
+| Parameter | Description
+
+| `ids`
+| Array of item ids already selected in the CustomSelector. The service is expected to return the items with the specified ids.
+
+| `start`
+| Index of the first item expected. Used for pagination of the results.
+
+| `count`
+| Maximum number of items expected. Used for pagination of the results.
+
+| `query`
+| String with the search text typed by the user in the CustomSelector input field.
+|===
+
+In the implementation, all standard XP request fields are available too: `req.locales` for i18n negotiation, `req.user` for the active user, and so on.
+
+== Response
+
+The implementation returns an XP HTTP response with the following shape:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+
+| status | integer | `2xx` on success; `404` if the content can't be loaded.
+| contentType | string | `application/json`.
+| body | string | JSON-encoded <<body, Body>>.
+|===
+
+[#body]
+.Body
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+
+| total | integer | The total number of items available.
+| count | integer | The number of items returned in this response.
+| hits | <<hit, Hit>>[] | An array of items matching the count. Each hit becomes a selectable option.
+|===
+
+[#hit]
+.Hit properties
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+
+| id | string | A unique string reference to the item.
+| displayName | string | The title shown in the dropdown when the item is selected.
+| description | string | Optional. Short description visible under the title.
+| iconUrl | string | Optional. URL to an icon image.
+| icon | <<icon, Icon>> | Optional. Inline SVG markup.
+|===
+
+[#icon]
+.Icon properties
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+
+| data | string | The SVG content (raw markup).
+| type | string | The MIME type, typically `image/svg+xml`.
+|===
+
+.Sample response body
+[source,JSON]
+----
+{
+  "total": 10,
+  "count": 2,
+  "hits": [
+    {
+      "id": "1",
+      "displayName": "Option number 1",
+      "description": "Short description shown under the title",
+      "iconUrl": "/some/path/images/number_1.svg"
+    },
+    {
+      "id": "2",
+      "displayName": "Option number 2",
+      "description": "Inline SVG markup is used as icon",
+      "icon": {
+        "data": "<svg xmlns=\"http://www.w3.org/2000/svg\"/>",
+        "type": "image/svg+xml"
+      }
+    }
+  ]
+}
+----
+
+
+== Sample implementation
+
+Below is a minimal example that returns a static list of selectable options. In a real-world scenario, the implementation would often fetch from an external system or compute the options based on the request parameters.
+
+.src/main/resources/admin/extensions/my-selector/my-selector.ts
+[source,typescript]
+----
+exports.get = function (request) {
+    return {
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+            hits: [
+                {
+                    id: 'norway',
+                    displayName: 'Norway',
+                    description: 'this is Norway'
+                },
+                {
+                    id: 'france',
+                    displayName: 'France',
+                    description: 'this is France'
+                },
+                {
+                    id: 'portugal',
+                    displayName: 'Portugal',
+                    description: 'this is Portugal'
+                }
+            ],
+            count: 3,
+            total: 3
+        }),
+    };
+ }
+----
