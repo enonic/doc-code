@@ -1,23 +1,21 @@
-= Building Admin Extensions
+= Admin Extensions
 :toc: right
 :imagesdir: images
 
-Admin extensions are app-provided HTTP endpoints that mount into existing <<web/tools#,admin tools>> at named interface points. (previously known as *widgets*).
-
-The most common usage is rendering an embedded UI fragment, but an extension is just an HTTP module — it can equally well serve JSON, binary assets, or any other payload the host tool agrees to consume.
+Admin extensions are dynamic endpoints that plug into into existing <<web/tools#,admin tools>> at their named interfaces.
 
 == Introduction
 
-An admin extension:
+The most common usage is rendering an embedded UI fragment, but an extension is basically a dynamic HTTP endpoint — it can equally well serve JSON, binary assets, or any other payload the host tool agrees to consume.
 
-* Is contributed by an app and discovered by the host admin tool through a string identifier called an *interface*.
-* Mounts only into tools that publish a matching interface name. The reserved name `"generic"` matches any tool.
-* Is served by the admin engine through the `admin:extension` dispatcher API at `+/admin/<app>/<tool>/_/admin:extension/<app>:<extension-name>+`.
+* Contributed by an app and discovered by the host admin tool through a string identifier called an *interface*.
+* Mounts only into tools that publish a matching interface name. The reserved name `generic` matches any tool.
+* Is served by the admin engine through the `admin:extension` dispatcher API at `/admin/<app>/<tool>/_/admin:extension/<app>:<extension-name>/`.
 * Returns whatever HTTP payload the host tool expects — HTML fragments for UI widgets, JSON for data feeds, binary assets, etc.
 
 == Usage
 
-To declare an extension, place a descriptor and an implementation under `+src/main/resources/admin/extensions/<extension-name>/+`:
+To declare an extension, place a descriptor and an implementation under `src/main/resources/admin/extensions/<extension-name>/`:
 
 [source,files]
 ----
@@ -80,7 +78,7 @@ exports.GET = (req) => {
 
 For anything beyond a couple of static endpoints, use the https://market.enonic.com/vendors/enonic/router-lib[router library] for method dispatch, parameter extraction, and pattern matching.
 
-== URL
+== Extension URL
 
 The URL at which an extension is reachable is a platform internal and may change between XP releases — *do not hard-code it*. Use `extensionUrl()` from <<libraries/lib-admin#extensionurl, lib-admin>>; it resolves the URL based on the current admin tool context.
 
@@ -135,4 +133,3 @@ The listing is filtered by the caller's principals — extensions the caller can
 Interface names are free-form strings, not a closed enum. The contract is purely a string match between the extension's `interfaces:` and the host tool's `interfaces:`. To define a new interface point in your own admin tool, declare a stable name (e.g. `<app-key>.<purpose>`) in the tool's descriptor and document the request/response shape your tool expects from extensions.
 
 Each consuming admin tool defines its own set of interface names along with the request/response shape extensions must conform to — consult the host tool's documentation for the contract.
-See <<web/extensions/liveview#,Liveview>>, <<web/extensions/contextpanel#,Context panel>>, and <<web/extensions/menuitem#,Menu item>> for worked examples: the `contentstudio.liveview`, `contentstudio.contextpanel`, and `contentstudio.menuitem` interfaces published by Content Studio.

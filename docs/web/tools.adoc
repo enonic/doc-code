@@ -1,17 +1,18 @@
-= Building Admin Tools
+= Admin Tools
 :toc: right
 :imagesdir: images
 
-Admin tools are app-provided UIs that appear in the XP admin Launcher and run inside the admin service. Content Studio is itself an admin tool.
+Admin tools are custom adminitrative interfaces made availabe within the XP admin. 
 
 == Introduction
 
-An admin tool is a single-page application (or any HTTP-served UI) that:
+An admin tool are self-contained mini-applications that run within the XP admin.
 
-* Mounts at `+/admin/<app-key>/<tool-name>+` — one URL per declared tool, served by the admin service.
-* Appears in the admin Launcher menu, picking up its title, description, and SVG icon from the descriptor.
-* Can mount <<web/apis#,Universal APIs>> as service points beneath itself.
-* Can host <<web/extensions#,Admin extensions>> by declaring named interface points that extensions plug into.
+* Secured via the same authentication and authorization as the rest of the admin.
+* Listed in the XP menu with icon and name
+* Can mount contextual <<web/apis#,Universal APIs>> .
+* Can connect to <<web/extensions#,Admin extensions>> by declaring named interfaces that extensions implement.
+* Mounts at `/admin/<app-key>/<tool-name>` — one URL per tool.
 
 Access always requires the caller to hold `role:system.admin.login`. Per-tool access is then granted to anyone in `role:system.admin` or to any principal listed in the tool's `allow:` field.
 
@@ -92,9 +93,9 @@ The implementation is the entry point for `+/admin/<app-key>/<tool-name>+` and a
 
 == URL
 
-* Tool entry point: `+/admin/<app-key>/<tool-name>+`
-* API service point under the tool: `+/admin/<app-key>/<tool-name>/_/<app>:<api-name>/+`
-* Admin extension dispatcher under the tool: `+/admin/<app-key>/<tool-name>/_/admin:extension/<app>:<extension-name>+`
+* Tool entry point: `/admin/<app-key>/<tool-name>`
+* API service point under the tool: `/admin/<app-key>/<tool-name>/_/<app>:<api-name>/`
+* Admin extension dispatcher under the tool: `/admin/<app-key>/<tool-name>/_/admin:extension/<app>:<extension-name>/`
 
 Generate URLs from the implementation with the <<libraries/lib-portal#,Portal library>>: `adminUrl()` for the tool itself, `apiUrl()` for mounted APIs.
 
