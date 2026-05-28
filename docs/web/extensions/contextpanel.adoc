@@ -1,4 +1,4 @@
-= Content Studio Context Panel (contentstudio.contextpanel)
+= Context Panel Extension for Content Studio
 :toc: right
 :imagesdir: images
 

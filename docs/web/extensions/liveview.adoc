@@ -1,4 +1,4 @@
-= Content Studio Liveview (contentstudio.liveview)
+= Live View Extension for Content Studio
 :toc: right
 :imagesdir: images
 

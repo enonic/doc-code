@@ -1,4 +1,4 @@
-= Content Studio Menu Item (contentstudio.menuitem)
+= Menu Item Extension for Content Studio
 :toc: right
 :imagesdir: images
 

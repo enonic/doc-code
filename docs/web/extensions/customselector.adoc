@@ -1,14 +1,14 @@
-= Content Studio CustomSelector (contentstudio.customselector)
+= Custom Selector Extension for Content Studio
 :toc: right
 :imagesdir: images
 
-Implements a back-end for the https://developer.enonic.com/docs/cms/schemas/form-items/customselector[CustomSelector form item] when used in Content Studio.
+Implements the `contentstudio.customselector` interface.
 
 == Introduction
 
-CustomSelectors allow editors to easily select values from a programmatically populated list of options. The options are fetched from a named admin extension of type  `contentstudio.customselector`.
+Provides a back-end for the https://developer.enonic.com/docs/cms/schemas/form-items/customselector[CustomSelector form item] when used in Content Studio.
 
-Content Studio fetches the options from the extension whenever the user opens the dropdown, types in the search field, or when the content is loaded with pre-selected options. The extension receives the selected options and the search query as parameters and returns a list of matching options.
+The CustomSelector form item fetches options from this extension whenever the user opens the dropdown, types in the search field, or when the content is loaded with pre-selected options. The extension receives the selected options and the search query as parameters and returns a list of matching options.
 
 TIP: Visit the https://developer.enonic.com/learn/building-custom-selectors[Building custom selectors] tutorial for an extensive example of how to build and use a CustomSelector.
 
