@@ -93,4 +93,3 @@ include::code/websockets-4.js[]
 
 The function runs synchronously during the handshake, before any `webSocketEvent` callback. It should be a pure function of the `origin` string; capture any per-request data with a closure inside the `GET` handler. A function that throws or returns a non-boolean rejects the upgrade.
 
-NOTE: The default check compares against the request as seen by Jetty. Behind a TLS-terminating reverse proxy, ensure the connector is configured to honour `X-Forwarded-Proto/Host/Port` so the public-facing values are used. If that is not possible, an operator can fall back to permissive defaults with the `websocket.defaultOriginCheck` flag on the system configuration; per-controller `checkOrigin` functions still take precedence.
