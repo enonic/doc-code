@@ -473,7 +473,7 @@ The ID provider is responsible for providing  user authentication, independent o
 </div>
 <div class="paragraph">
 <p>ID providers are wired tightly into the <a href="web.ahtml#common_request_pipeline">common HTTP request pipeline</a>.
-They participate both in pipeline execution steps, and through the <a href="../runtime/engines/idprovider-service.ahtml">ID provider service endpoint</a>.</p>
+They participate both in pipeline execution steps, and through the contextually mounted ID provider API.</p>
 </div>
 <div class="paragraph">
 <p>This section describes how to implement an ID provider application.</p>
@@ -724,7 +724,7 @@ exports.logout = function (req) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-28 15:49:50 UTC
+Last updated 2026-06-02 10:45:10 UTC
 </div>
 </div>
 </body>

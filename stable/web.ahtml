@@ -441,9 +441,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#services">Services</a></li>
+<li><a href="#common_request_pipeline">Request pipeline</a></li>
 <li><a href="#id_providers">ID providers</a></li>
-<li><a href="#common_request_pipeline">Request flow</a></li>
 </ul>
 </div>
 </div>
@@ -456,56 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="services"><a class="link" href="#services">Services</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Web endpoint listens on <code>port 8080</code> (configurable) and dispatches requests to one of four <strong>services</strong>, each with a fixed URL prefix and a distinct role:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Service</th>
-<th class="tableblock halign-left valign-top">Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/apis.ahtml">/api</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom HTTP APIs, microservices, headless integrations.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/tools.ahtml">/admin</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/sites.ahtml">/site</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CMS-driven websites: pages, parts, layouts, content rendering.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="web/webapps.ahtml">/webapp</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standalone web applications — served by your app, no CMS context.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="id_providers"><a class="link" href="#id_providers">ID providers</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="web/id-providers.ahtml">ID providers</a> work across the services to provide pluggable authentication and that hooks into the request pipeline — <code>handle401</code>, <code>autoLogin</code>, <code>login</code>/<code>logout</code> endpoints, and ID-provider-as-HTTP-function.</p>
-</div>
-<div class="paragraph">
-<p>A single application can contribute to any number of these simultaneously — a custom API, an admin extension and a website, all in the same app, all sharing the same code and libraries.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="common_request_pipeline"><a class="link" href="#common_request_pipeline">Request flow</a></h2>
+<h2 id="common_request_pipeline"><a class="link" href="#common_request_pipeline">Request pipeline</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Every request, regardless of which service ultimately handles it, passes through a common pre-processing pipeline before reaching your code:</p>
@@ -523,7 +473,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1">Platform filters</dt>
 <dd>
-<p>Optional system level request filters.</p>
+<p>Optional system-level request filters. Implemented in Java as OSGi components — a platform extension mechanism, not part of the JS/TS app surface.</p>
 </dd>
 <dt class="hdlist1">Autologin filter</dt>
 <dd>
@@ -531,21 +481,37 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1">Service pipeline</dt>
 <dd>
-<p>The pipeline of the matching service is executed (API invocation, admin tool routing, site rendering, or webapp dispatch).</p>
-</dd>
-<dt class="hdlist1">Auth handler</dt>
+<p>The Web endpoint (default port <code>8080</code>) dispatches the request to one of four services — each with a fixed URL prefix and a distinct role — and runs the matching service&#8217;s own pipeline:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="web/apis.ahtml">/api</a></dt>
 <dd>
-<p>Triggered if the pipeline returns a <code>401 Unauthorized</code>. The contextual <a href="web/id-providers.ahtml">ID provider</a> is invoked and may handle the request.</p>
+<p>Custom web APIs, microservices, headless integrations etc.</p>
 </dd>
-<dt class="hdlist1">Error handler</dt>
+<dt class="hdlist1"><a href="web/tools.ahtml">/admin</a></dt>
 <dd>
-<p>If the pipeline returns an unhandled error (everything but <code>200 OK</code>) that was not handled by an ID provider, the contextual <a href="web/error.ahtml">error handler</a> kicks in.</p>
+<p>XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.</p>
 </dd>
-<dt class="hdlist1">Platform response filters</dt>
+<dt class="hdlist1"><a href="web/sites.ahtml">/site</a></dt>
 <dd>
-<p>Optional system level response filters.</p>
+<p>Content-driven websites: pages, parts, layouts, content rendering.</p>
 </dd>
-<dt class="hdlist1">Standard error handler</dt>
+<dt class="hdlist1"><a href="web/webapps.ahtml">/webapp</a></dt>
+<dd>
+<p>Standalone web applications — served by your app, no CMS context.</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1">ID provider</dt>
+<dd>
+<p>Triggered if the pipeline returns a <code>401 Unauthorized</code>. The contextually mounted <a href="web/id-providers.ahtml">ID provider</a> is invoked and may handle the request.</p>
+</dd>
+<dt class="hdlist1">Custom error handler</dt>
+<dd>
+<p>If the pipeline returns an unhandled error (400/500 status witout a response body) the contextual <a href="web/error.ahtml">error handler</a> kicks in.</p>
+</dd>
+<dt class="hdlist1">Fallback error handler</dt>
 <dd>
 <p>Finally, if the request fails with an error that is still unhandled, XP&#8217;s standard error handler kicks in.</p>
 </dd>
@@ -553,10 +519,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="id_providers"><a class="link" href="#id_providers">ID providers</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="web/id-providers.ahtml">ID providers</a> work across the services to provide pluggable authentication and that hooks into the request pipeline — <code>handle401</code>, <code>autoLogin</code>, <code>login</code>/<code>logout</code> endpoints, and ID-provider-as-HTTP-function.</p>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-28 15:49:50 UTC
+Last updated 2026-06-02 10:45:10 UTC
 </div>
 </div>
 </body>
