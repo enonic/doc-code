@@ -11,7 +11,7 @@ Every request, regardless of which service ultimately handles it, passes through
 
 // Diagram source: web/images/.common-pipeline.mmd (dot-prefixed, not imported to the CMS).
 // Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.common-pipeline.mmd -o docs/web/images/common-pipeline.svg -b transparent
-image::common-pipeline.svg[Common HTTP request pipeline, 768px]
+image::common-pipeline.svg[Common HTTP request pipeline, 500px]
 
 Vhost filters:: Request routing based on <<deployment/vhosts#, virtual hosts>>.
 
