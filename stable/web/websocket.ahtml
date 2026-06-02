@@ -442,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#http-websockets">Websockets</a></li>
+<li><a href="#origin-check">Origin check</a></li>
 </ul>
 </div>
 </div>
@@ -616,10 +617,61 @@ exports.webSocketEvent = function (event) {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="origin-check"><a class="link" href="#origin-check">Origin check</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>WebSockets do not follow the same-origin policy that browsers enforce on regular HTTP requests, which means a page on any origin can open a WebSocket to your application. The platform mitigates this by checking the request&#8217;s <code>Origin</code> header against the host the request arrived on before completing the handshake.</p>
+</div>
+<div class="paragraph">
+<p>The default rules, applied when a controller does not supply its own <code>checkOrigin</code> function:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>No <code>Origin</code> header — accepted. Non-browser clients (<code>curl</code>, native apps, server-to-server) omit <code>Origin</code>, and they are not the cross-site-WebSocket-hijacking threat model.</p>
+</li>
+<li>
+<p><code>Origin</code> matches the request&#8217;s own scheme/host/port (with RFC 6454 default-port normalisation) — accepted.</p>
+</li>
+<li>
+<p>Anything else, including the literal opaque origin <code>null</code> — rejected with HTTP <code>403</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To allow other origins, or to apply application-specific logic, return a <code>checkOrigin</code> function on the <code>webSocket</code> config. It receives the raw <code>Origin</code> header value (or <code>null</code> when absent) and must return a boolean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Allow only specific origins to open the WebSocket
+exports.GET = function (req) {
+
+  if (!req.webSocket) {
+    return { status: 404 };
+  }
+
+  return {
+    webSocket: {
+      subProtocols: ['text'],
+      checkOrigin: function (origin) {
+        return origin === 'https://app.example.com'
+            || origin.endsWith('.example.com');
+      }
+    }
+  };
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The function runs synchronously during the handshake, before any <code>webSocketEvent</code> callback. It should be a pure function of the <code>origin</code> string; capture any per-request data with a closure inside the <code>GET</code> handler. A function that throws or returns a non-boolean rejects the upgrade.</p>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 11:02:08 UTC
+Last updated 2026-06-02 18:46:00 UTC
 </div>
 </div>
 </body>
