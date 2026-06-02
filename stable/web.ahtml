@@ -462,7 +462,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="web/images/common-pipeline.svg" alt="Common HTTP request pipeline" width="768px">
+<img src="web/images/common-pipeline.svg" alt="Common HTTP request pipeline" width="500px">
 </div>
 </div>
 <div class="dlist">
@@ -530,7 +530,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 10:45:10 UTC
+Last updated 2026-06-02 11:02:08 UTC
 </div>
 </div>
 </body>
