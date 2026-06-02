@@ -1,0 +1,48 @@
+---
+config:
+  layout: elk
+  elk:
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+flowchart TB
+  req(["HTTP request"])
+
+  subgraph pre[" "]
+    direction LR
+    vhost["Vhost filters"] --> pfilt["Platform filters"] --> auto["Autologin filter"]
+  end
+
+  subgraph services["Services (match one)"]
+    direction LR
+    api["/api"]
+    admin["/admin"]
+    site["/site"]
+    webapp["/webapp"]
+  end
+
+  subgraph post[" "]
+    direction LR
+    auth["ID provider"] --> rfilt["Platform filters"]
+    err["Custom error handler"] --> rfilt
+    rfilt --> stderr["Fallback error handler"]
+  end
+
+  out(["HTTP response"])
+
+  req --> vhost
+  auto --> services
+  services -->|401| auth
+  services -->|"Unhandled: 400,500"| err
+  services -->|"Status: 200,300"| rfilt
+  stderr --> out
+
+  classDef configurable fill:#DFFEC0,stroke:#979797,color:#000;
+  classDef programmable fill:#C6DDFF,stroke:#979797,color:#000;
+  classDef endpoint fill:#FFFFFF,stroke:#333,color:#000;
+  class vhost,stderr configurable;
+  class auth,err,admin,pfilt,auto,rfilt,api,site,webapp programmable;
+  class req,out endpoint;
+
+  style pre fill:transparent,stroke:#979797;
+  style services fill:transparent,stroke:#979797;
+  style post fill:transparent,stroke:#979797;

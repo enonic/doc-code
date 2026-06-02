@@ -59,7 +59,7 @@ This project relies on GitHub Actions for building and publishing. There are no 
 - **Format:** Content is written in [AsciiDoc](https://asciidoc.org/) (`.adoc`).
 - **Publishing:** The build crunches and imports the result into Enonic XP, where it will be only one of many aggregated documentation packages. 
 - **Location:** This documentation will be published in a specific location on developer.enonic.com, but controlled from the CMS.
-- **Structure:** The structure of the adoc files are mapped to a corresponding relative URL. For example `/docs/actions.adoc` and `/docs/actions/yikes.adoc` in this repo will have url pattern `/framework` and `/framework/yikes` respectively
+- **Structure:** The structure of the adoc files are mapped to a corresponding relative URL. For example `/docs/actions.adoc` and `/docs/actions/yikes.adoc` in this repo will have url pattern `/code` and `/code/yikes` respectively
 - **Navigation:** The site navigation and menu structure are defined in `docs/menu.json`.
 - **Versioning:** Documentation versions are configured in `docs/versions.json`.
 - **Variables:** Common variables and attributes are defined in `docs/.variables.adoc`.
@@ -71,6 +71,18 @@ This project relies on GitHub Actions for building and publishing. There are no 
   - Images are stored in `images/` subdirectories relative to the referencing `.adoc` file (e.g., `docs/content/images/`, `docs/schemas/form-items/images/`).
   - In AsciiDoc files, the `:imagesdir:` is typically set to `images`, mapping files to the respective folders.
   - Example: `image::my-image.png[]` (where `my-image.png` is placed in `docs/content/images/`).
+- **Diagrams (Mermaid):**
+  - Flow/architecture diagrams are authored as [Mermaid](https://mermaid.js.org/) text, not drawn by hand. The text is the source of truth; the rendered `.svg` is a committed build artifact.
+  - **Source file:** store the Mermaid source next to the image it produces, dot-prefixed so the CMS import ignores it — e.g. `docs/web/images/.common-pipeline.mmd` renders to `docs/web/images/common-pipeline.svg`. Reference the `.svg` from the `.adoc` with a normal `image::` macro.
+  - **Layout engine:** use the ELK layout (`config: { layout: elk }` in the file's frontmatter). It honours subgraph `direction` (e.g. laying a set of services out in a horizontal row) and packs tighter than the default dagre layout. Rendering ELK requires the extra `@mermaid-js/layout-elk` package — see the command below.
+  - **Render command** (no global install; run from the repo root, adjust paths):
+    ```
+    npx -y -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk \
+      mmdc -i docs/web/images/.common-pipeline.mmd \
+           -o docs/web/images/common-pipeline.svg -b transparent
+    ```
+    First run downloads `mermaid-cli` and a headless Chromium (~1.4 GB) into `~/.npm/_npx` and `~/.cache/puppeteer` — a one-time cost, nothing is added to the repo. Re-render and commit both the `.mmd` and the `.svg` after any edit.
+  - The exact source file and re-render command are also kept in an AsciiDoc comment directly above each diagram's `image::` line, so the recipe travels with the page.
 - **Menu Updates:** When adding new documentation pages, you MUST update `docs/menu.json` to ensure they appear in the docs navigation.
 - **Links:**
   - Use relative links between `.adoc` files (e.g., `<<path/to/doc#,Label>>`).

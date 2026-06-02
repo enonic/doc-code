@@ -4,43 +4,36 @@
 
 Every client interaction with Enonic XP — browser request, API call, admin tool, websocket upgrade etc flow through a common http gateway in XP, aka the Web endpoint.
 
-== Services
-
-The Web endpoint listens on `port 8080` (configurable) and dispatches requests to one of four *services*, each with a fixed URL prefix and a distinct role:
-
-[cols="1,3", options="header"]
-|===
-| Service | Purpose
-| <<web/apis#, /api>> | Custom HTTP APIs, microservices, headless integrations.
-| <<web/tools#, /admin>> | XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.
-| <<web/sites#, /site>> | CMS-driven websites: pages, parts, layouts, content rendering.
-| <<web/webapps#, /webapp>> | Standalone web applications — served by your app, no CMS context.
-|===
-
-== ID providers
-<<web/id-providers#, ID providers>> work across the services to provide pluggable authentication and that hooks into the request pipeline — `handle401`, `autoLogin`, `login`/`logout` endpoints, and ID-provider-as-HTTP-function.
-
-A single application can contribute to any number of these simultaneously — a custom API, an admin extension and a website, all in the same app, all sharing the same code and libraries.
-
 [[common_request_pipeline]]
-== Request flow
+== Request pipeline
 
 Every request, regardless of which service ultimately handles it, passes through a common pre-processing pipeline before reaching your code:
 
+// Diagram source: web/images/.common-pipeline.mmd (dot-prefixed, not imported to the CMS).
+// Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.common-pipeline.mmd -o docs/web/images/common-pipeline.svg -b transparent
 image::common-pipeline.svg[Common HTTP request pipeline, 768px]
 
 Vhost filters:: Request routing based on <<deployment/vhosts#, virtual hosts>>.
 
-Platform filters:: Optional system level request filters.
+Platform filters:: Optional system-level request filters. Implemented in Java as OSGi components — a platform extension mechanism, not part of the JS/TS app surface.
 
 Autologin filter:: The <<deployment/vhosts#, virtual host contextual ID provider>> is invoked, unless a user already exists in the context.
 
-Service pipeline:: The pipeline of the matching service is executed (API invocation, admin tool routing, site rendering, or webapp dispatch).
+Service pipeline:: The Web endpoint (default port `8080`) dispatches the request to one of four services — each with a fixed URL prefix and a distinct role — and runs the matching service's own pipeline:
+<<web/apis#, /api>>::: Custom web APIs, microservices, headless integrations etc.
+<<web/tools#, /admin>>::: XP administration UIs (Content Studio is itself an admin tool) and extensions that mount inside them.
+<<web/sites#, /site>>::: Content-driven websites: pages, parts, layouts, content rendering.
+<<web/webapps#, /webapp>>::: Standalone web applications — served by your app, no CMS context.
 
-Auth handler:: Triggered if the pipeline returns a `401 Unauthorized`. The contextual <<web/id-providers#, ID provider>> is invoked and may handle the request.
+ID provider:: Triggered if the pipeline returns a `401 Unauthorized`. The contextually mounted <<web/id-providers#, ID provider>> is invoked and may handle the request.
 
-Error handler:: If the pipeline returns an unhandled error (everything but `200 OK`) that was not handled by an ID provider, the contextual <<web/error#, error handler>> kicks in.
+Custom error handler:: If the pipeline returns an unhandled error (400/500 status witout a response body) the contextual <<web/error#, error handler>> kicks in.
 
-Platform response filters:: Optional system level response filters.
+Fallback error handler:: Finally, if the request fails with an error that is still unhandled, XP's standard error handler kicks in.
 
-Standard error handler:: Finally, if the request fails with an error that is still unhandled, XP's standard error handler kicks in.
+
+
+== ID providers
+<<web/id-providers#, ID providers>> work across the services to provide pluggable authentication and that hooks into the request pipeline — `handle401`, `autoLogin`, `login`/`logout` endpoints, and ID-provider-as-HTTP-function.
+
+

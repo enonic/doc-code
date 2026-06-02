@@ -9,7 +9,7 @@ As part of the XP <<../iam#,IAM>> (Identity and Access management), apps and sit
 The ID provider is responsible for providing  user authentication, independent of the source identity system.
 
 ID providers are wired tightly into the <<web#common_request_pipeline, common HTTP request pipeline>>.
-They participate both in pipeline execution steps, and through the <<../runtime/engines/idprovider-service#, ID provider service endpoint>>.
+They participate both in pipeline execution steps, and through the contextually mounted ID provider API.
 
 This section describes how to implement an ID provider application.
 
