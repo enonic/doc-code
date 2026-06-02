@@ -1189,7 +1189,7 @@ Also, a number of minimum matching elements that must match could be set.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>List of <a href="storage/noql.ahtml#propertyPath">propertyPaths</a> to match.</p>
+<p>List of propertyPaths to match.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1930,7 +1930,7 @@ Locale-aware sorting is only supported for text fields that are indexed with a l
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

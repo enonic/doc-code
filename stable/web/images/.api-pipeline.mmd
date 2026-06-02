@@ -1,0 +1,30 @@
+---
+config:
+  layout: elk
+  elk:
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+flowchart TB
+  in(["Common pipeline"])
+
+  subgraph apisvc["Universal API"]
+    direction TB
+    guard{"mounted here and<br/>caller allowed?"}
+    guard -->|"no"| deny["404 / 401 / 403"]
+    guard -->|"yes"| impl["&lt;api-name&gt;.ts<br/>GET / POST / …"]
+  end
+
+  out(["Common pipeline"])
+
+  in -->|"/api/&lt;app&gt;:&lt;api&gt;<br/>or _/&lt;app&gt;:&lt;api&gt;"| guard
+  impl --> out
+  deny --> out
+
+  classDef platform fill:#ECECEC,stroke:#999,color:#000;
+  classDef programmable fill:#C6DDFF,stroke:#979797,color:#000;
+  classDef endpoint fill:#FFE0B2,stroke:#D79B00,color:#000;
+  class guard,deny platform;
+  class impl programmable;
+  class in,out endpoint;
+
+  style apisvc fill:transparent,stroke:#9370DB;

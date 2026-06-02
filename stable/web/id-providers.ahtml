@@ -442,8 +442,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#idprovider-endpoints">Endpoints and mounting</a></li>
 <li><a href="#descriptor">Descriptor</a></li>
-<li><a href="#idprovider_ts">idprovider.ts</a>
+<li><a href="#idproviderts">idprovider.ts</a>
 <ul class="sectlevel2">
 <li><a href="#handle401">handle401</a></li>
 <li><a href="#login">login</a></li>
@@ -468,8 +469,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As part of the XP <a href="../iam.ahtml">IAM</a> (Identity and Access management), apps and sites may be loosely associated with an ID provider.
-The ID provider is responsible for providing  user authentication, independent of the source identity system.</p>
+<p>As part of the XP&#8217;s Identity and Access Management (IAM) system, services may be loosely associated with an ID provider via vhost configuration.</p>
+</div>
+<div class="paragraph">
+<p>The ID provider is responsible for providing  user authentication, independent of the source identity system.</p>
 </div>
 <div class="paragraph">
 <p>ID providers are wired tightly into the <a href="web.ahtml#common_request_pipeline">common HTTP request pipeline</a>.
@@ -486,6 +489,73 @@ They participate both in pipeline execution steps, and through the contextually 
 </td>
 <td class="content">
 Two ready-made ID providers are published on <a href="https://market.enonic.com">Enonic Market</a> and cover most common needs without writing code: <strong>OIDC ID Provider</strong> — for any OpenID Connect-compliant identity system (Auth0, Okta, Microsoft Entra, Keycloak, etc.) — and <strong>Simple ID Provider</strong> — a turn-key local identity store with a built-in login form. Reach for those first; implement a custom ID provider only when neither fits.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="idprovider-endpoints"><a class="link" href="#idprovider-endpoints">Endpoints and mounting</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Unlike the four <a href="web.ahtml">services</a>, an ID provider has no URL prefix of its own. Instead, every ID provider is reachable through a single fixed mountpoint:</p>
+</div>
+<div class="paragraph">
+<p><code>/_/idprovider/&lt;idprovider-name&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>This mountpoint is <strong>contextual</strong> — the same <code>/_/idprovider/</code> space resolves within the site, webapp, and admin services (the flat <code>/api</code> endpoint has no <code>/_/</code> space), so an ID provider can serve its login flow and custom requests regardless of which service the user is interacting with. <code>&lt;idprovider-name&gt;</code> is the name given to the ID provider when it is configured — it is unrelated to the key of the application that implements it.</p>
+</div>
+<div class="paragraph">
+<p>Three behaviours are reachable under the mountpoint, each invoking the matching <a href="#idproviderts">implementation</a> function:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/idprovider-pipeline.svg" alt="ID provider endpoint pipeline" width="350px">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This diagram covers the ID provider&#8217;s <strong>endpoint</strong> surfaces. Its two <strong>pipeline hooks</strong> — <code>autoLogin</code> (the autologin filter) and <code>handle401</code> — are triggered by the request pipeline rather than the endpoint, and appear in the <a href="web.ahtml#common_request_pipeline">common pipeline</a> diagram.
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>/_/idprovider/&lt;name&gt;/login</code></dt>
+<dd>
+<p>Invokes <code>login</code> — a deterministic login endpoint, available for every provider.</p>
+</dd>
+<dt class="hdlist1"><code>/_/idprovider/&lt;name&gt;/logout</code></dt>
+<dd>
+<p>Invokes <code>logout</code>.</p>
+</dd>
+<dt class="hdlist1"><code>/_/idprovider/&lt;name&gt;</code></dt>
+<dd>
+<p>The base endpoint dispatches to the provider&#8217;s <code>GET</code>/<code>POST</code>/… HTTP functions.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Rather than hardcoding these paths, generate them with the portal library helpers — <a href="../libraries/lib-portal.ahtml#_loginurl">loginUrl()</a>, <a href="../libraries/lib-portal.ahtml#_logouturl">logoutUrl()</a> and <a href="../libraries/lib-portal.ahtml#_idproviderurl">idProviderUrl()</a> — which resolve the correct contextual URL for the current request.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The endpoint is <strong>mounted</strong> everywhere, but an ID provider only <strong>activates</strong> for a request when it is bound to the request&#8217;s virtual host. The vhost mapping declares which ID provider(s) apply, and the one marked <code>default</code> is the provider whose <code>autoLogin</code> filter runs. See the <a href="../deployment/config.ahtml#vhost">vhost configuration</a> for the binding rules.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -555,13 +625,25 @@ This forms does not support CMS-specific input types, such as contentSelector an
 </div>
 </div>
 <div class="sect1">
-<h2 id="idprovider_ts"><a class="link" href="#idprovider_ts">idprovider.ts</a></h2>
+<h2 id="idproviderts"><a class="link" href="#idproviderts">idprovider.ts</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Add an ID provider implementation at <code>src/main/resources/idprovider/idprovider.ts</code>. An application may only implement a single ID provider.</p>
 </div>
 <div class="paragraph">
 <p>To implement your ID provider, export one or more of the following functions:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To serve static assets (CSS, JS, images — e.g. for a login page), use the <a href="https://developer.enonic.com/docs/lib-static"><code>lib-static</code></a> library, <strong>not</strong> <code>lib-asset</code>. Like admin extensions, an ID provider runs in a context where <code>lib-asset</code> does not fit; <code>lib-static</code> (typically paired with <code>lib-router</code>) is designed for serving static files from here.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
 <h3 id="handle401"><a class="link" href="#handle401">handle401</a></h3>
@@ -630,7 +712,7 @@ The purpose of this filter is to automatically sign in users, before they may ac
 This effectively blocks all unauthorised access attempts for the protected service.</p>
 </div>
 <div class="paragraph">
-<p>If no user already exists in the context, the autoLogin filter is executed early in the HTTP engine&#8217;s pipeline.</p>
+<p>If no user already exists in the context, the autoLogin filter is executed early in the request pipeline.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -724,7 +806,7 @@ exports.logout = function (req) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

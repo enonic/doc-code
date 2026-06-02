@@ -710,17 +710,17 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>component</code></dt>
+<dd>
+<p>Override the direct component rendering at <code>/_/component/&lt;component-path&gt;</code>.</p>
+</dd>
 <dt class="hdlist1"><code>image</code> (deprecated)</dt>
 <dd>
-<p>Maps requests to the legacy image service at <code>/_/image/&lt;id&gt;[:&lt;fingerprint&gt;]/&lt;scale&gt;/&lt;name&gt;</code> (e.g. <code>/_/image/123456/scale-100-100/photo.jpg</code>). Replaced by the <code>media:image</code> Universal API.</p>
+<p>Override the legacy image service at <code>/_/image/&lt;id&gt;[:&lt;fingerprint&gt;]/&lt;scale&gt;/&lt;name&gt;</code> (e.g. <code>/_/image/123456/scale-100-100/photo.jpg</code>). Replaced by the <code>media:image</code> Universal API.</p>
 </dd>
 <dt class="hdlist1"><code>attachment</code> (deprecated)</dt>
 <dd>
-<p>Maps requests to the legacy attachment service at <code>/_/attachment/&lt;mode&gt;/&lt;id&gt;[:&lt;fingerprint&gt;]/&lt;name&gt;</code> (e.g. <code>/_/attachment/inline/123456/logo.png</code>). Replaced by the <code>media:attachment</code> Universal API.</p>
-</dd>
-<dt class="hdlist1"><code>component</code></dt>
-<dd>
-<p>Maps requests to contextual page components at <code>/_/component/&lt;component-path&gt;</code>.</p>
+<p>Override the legacy attachment service at <code>/_/attachment/&lt;mode&gt;/&lt;id&gt;[:&lt;fingerprint&gt;]/&lt;name&gt;</code> (e.g. <code>/_/attachment/inline/123456/logo.png</code>). Replaced by the <code>media:attachment</code> Universal API.</p>
 </dd>
 </dl>
 </div>
@@ -731,7 +731,7 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<a href="web/apis.ahtml">Universal APIs</a> mounted as service points (<code>/_/&lt;app&gt;:&lt;api&gt;/</code>) cannot be remapped through site mappings — they are routed before the site engine processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+<a href="web/apis.ahtml">Universal APIs</a> mounted as points (<code>/_/&lt;app&gt;:&lt;api&gt;</code>) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
 </td>
 </tr>
 </table>
@@ -741,7 +741,7 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

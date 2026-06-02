@@ -460,7 +460,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="http_functions"><a class="link" href="#http_functions">HTTP functions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An HTTP function is a <a href="../fundamentals/functions.ahtml">function</a> that responds to an HTTP request. The file where it lives is invoked by one of XP&#8217;s engines (webapp, site, API) based on URL routing defined in descriptors or path conventions.</p>
+<p>An HTTP function is a <a href="../fundamentals/functions.ahtml">function</a> that responds to an HTTP request. The file where it lives is invoked by one of XP&#8217;s services (webapp, site, API) based on URL routing defined in descriptors or path conventions.</p>
 </div>
 <div class="paragraph">
 <p>Declare one export per HTTP method the function handles: <code>GET</code>, <code>POST</code>, <code>DELETE</code>, <code>PATCH</code>, <code>PUT</code>, <code>HEAD</code>, <code>OPTIONS</code>. A special <code>all</code> export catches any method that doesn&#8217;t have a specific handler.</p>
@@ -505,7 +505,7 @@ exports.all = (req) =&gt; {};</code></pre>
 <h2 id="request"><a class="link" href="#request">Request</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>request</code> object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus two XP-specific properties, <code>mode</code> and <code>branch</code>, which the site engine sets to indicate the current rendering mode and repository branch.</p>
+<p>The <code>request</code> object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus two XP-specific properties, <code>mode</code> and <code>branch</code>, which the site service sets to indicate the current rendering mode and repository branch.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -570,11 +570,11 @@ exports.all = (req) =&gt; {};</code></pre>
 </tr>
 <tr>
 <td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>Site-engine rendering mode: <code>inline</code>, <code>edit</code>, <code>preview</code>, or <code>live</code>.</td>
+<td>Site service rendering mode: <code>inline</code>, <code>edit</code>, <code>preview</code>, or <code>live</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>Site-engine repository branch: <code>draft</code> or <code>master</code>.</td>
+<td>Site service repository branch: <code>draft</code> or <code>master</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="10"></i><b>10</b></td>
@@ -666,15 +666,15 @@ Modifications to the <code>headers</code> object do not affect the result of <co
 </tr>
 <tr>
 <td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>Site engine only. If <code>true</code>, the rendered page is post-processed for component tags (default <code>true</code>).</td>
+<td>Site service only. If <code>true</code>, the rendered page is post-processed for component tags (default <code>true</code>).</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>Site engine only. HTML fragments contributed to the rendered markup — see <a href="web/sites/contributions.ahtml">page contributions</a>.</td>
+<td>Site service only. HTML fragments contributed to the rendered markup — see <a href="web/sites/contributions.ahtml">page contributions</a>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="9"></i><b>9</b></td>
-<td>Site engine only. If <code>false</code>, no further <a href="web/sites/processors.ahtml">response processors</a> or filters run (default <code>true</code>).</td>
+<td>Site service only. If <code>false</code>, no further <a href="web/sites/processors.ahtml">response processors</a> or filters run (default <code>true</code>).</td>
 </tr>
 </table>
 </div>
@@ -762,7 +762,7 @@ Modifications to the <code>headers</code> object do not affect the result of <co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

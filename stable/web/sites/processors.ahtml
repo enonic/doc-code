@@ -472,7 +472,7 @@ Response processors are only available in <a href="components.ahtml">component r
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Processors get executed between the <code>component rendering</code> step, and the <code>contributions filter</code> in the <a href="../runtime/engines/site-engine.ahtml">site engine</a> pipeline. Response processors are commonly used by apps that need to inject <a href="contributions.ahtml">page contributions</a> without placing a component on the page.</p>
+<p>Processors get executed between the <code>component rendering</code> step, and the <code>contributions filter</code> in the <a href="../sites.ahtml">site service</a> pipeline. Response processors are commonly used by apps that need to inject <a href="contributions.ahtml">page contributions</a> without placing a component on the page.</p>
 </div>
 <div class="paragraph">
 <p>Use cases are:</p>
@@ -585,7 +585,7 @@ If <code>applyFilters</code> is set to <code>false</code> in the <a href="web/re
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

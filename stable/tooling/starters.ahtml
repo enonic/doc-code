@@ -593,7 +593,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">assets/</dt>
 <dd>
-<p>Standard folder for serving static assets such as CSS and JavaScript. Assets are served by the <a href="../runtime/engines/asset-service.ahtml">asset service</a>.</p>
+<p>Standard folder for static assets such as CSS and JavaScript. Serve them with the <a href="https://developer.enonic.com/docs/lib-asset">lib-asset</a> library, available on <a href="https://market.enonic.com">Enonic Market</a>.</p>
 </dd>
 <dt class="hdlist1">error/error.ts</dt>
 <dd>
@@ -715,7 +715,7 @@ Check out <a href="https://market.enonic.com/starters/library-starter">the libra
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

@@ -513,7 +513,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="apiurl"><a class="link" href="#apiurl">apiUrl</a></h3>
 <div class="paragraph">
-<p>Generates a URL pointing to a <a href="web/apis.ahtml">Universal API</a>. Picks the right URL form based on the calling context — a service-point under the active engine when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
+<p>Generates a URL pointing to a <a href="web/apis.ahtml">Universal API</a>. Picks the right URL form based on the calling context — a service-point under the active service when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
@@ -2704,7 +2704,7 @@ const url = buildUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

@@ -458,11 +458,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>Tasks may be executed as inline functions, or as named tasks. Named tasks are defined by creating a folder, e.g. <code>src/main/resources/tasks/&lt;taskname&gt;</code>, in your project.</p>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="images/task-engine.svg" alt="Task execution process" width="768px">
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -498,7 +493,7 @@ form:
 <h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A named task&#8217;s implementation lives at <code>src/main/resources/tasks/&lt;taskname&gt;/&lt;taskname&gt;.ts</code> and must export a <code>run</code> function. The task engine invokes <code>run</code> with the task parameters as the first argument and the assigned <code>taskId</code> as the second.</p>
+<p>A named task&#8217;s implementation lives at <code>src/main/resources/tasks/&lt;taskname&gt;/&lt;taskname&gt;.ts</code> and must export a <code>run</code> function. XP invokes <code>run</code> with the task parameters as the first argument and the assigned <code>taskId</code> as the second.</p>
 </div>
 <div class="listingblock">
 <div class="title">Example task implementation</div>
@@ -613,7 +608,7 @@ For fine-grained control which nodes should be capable to execute distributable 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

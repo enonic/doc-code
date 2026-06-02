@@ -453,6 +453,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#templating_example">Templating example</a></li>
 </ul>
 </li>
+<li><a href="#direct-rendering">Direct component rendering</a></li>
 <li><a href="#fragments">Fragments</a></li>
 <li><a href="#text_components">Text components</a></li>
 </ul>
@@ -508,7 +509,7 @@ Markup returned by a component must have a single root element.
 <p><code>HTTP request</code> &#8594; <code>/site/&lt;project&gt;/&lt;branch&gt;/path/to/content</code> &#8594; <code>resolve component</code> &#8594; <code>invoke implementation</code>.</p>
 </div>
 <div class="paragraph">
-<p>During the rendering, the specific content item will be available in the context, and API functions such as <a href="../libraries/lib-portal.ahtml#getContent">portalLib.getContent()</a> and <a href="../libraries/lib-portal.ahtml#getComponent">portalLib.getComponent()</a> automatically return values based on that context.</p>
+<p>During the rendering, the specific content item will be available in the context, and API functions such as <a href="../../libraries/lib-portal.ahtml#getContent">portalLib.getContent()</a> and <a href="../../libraries/lib-portal.ahtml#getComponent">portalLib.getComponent()</a> automatically return values based on that context.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -634,7 +635,7 @@ exports.GET = (req) =&gt; {
 <p><code>&lt;!--# COMPONENT /main/0/left/1 --&gt;</code></p>
 </div>
 <div class="paragraph">
-<p>For <code>text/html</code> responses exclusively, the site engine looks for component placeholders. For each placeholder, the component&#8217;s implementation is invoked and the output merged into the response.</p>
+<p>For <code>text/html</code> responses exclusively, the site service looks for component placeholders. For each placeholder, the component&#8217;s implementation is invoked and the output merged into the response.</p>
 </div>
 </div>
 <div class="sect2">
@@ -711,6 +712,37 @@ exports.GET = (req) =&gt; {
 </div>
 </div>
 <div class="sect1">
+<h2 id="direct-rendering"><a class="link" href="#direct-rendering">Direct component rendering</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A single component can be rendered on its own — without rendering the surrounding page — through the contextual component endpoint:</p>
+</div>
+<div class="paragraph">
+<p><code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-page&gt;/_/component/&lt;component-path&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>The component path is the region name and index, so <code>.../_/component/main/0</code> renders the first component of the page&#8217;s <code>main</code> region. In this mode only the <strong>component rendering</strong> step runs — page resolution, response processors, and contributions are skipped.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>By exporting <code>POST</code> (or any other HTTP method) from the component implementation, the component can also act as its own backend.</p>
+</div>
+<div class="paragraph">
+<p>A component can detect whether it is being rendered inline (as part of a page) or directly, via the request context — useful for returning JSON in direct mode while still producing HTML for inline rendering.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="fragments"><a class="link" href="#fragments">Fragments</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -747,7 +779,7 @@ Reusing your page implementation is often convenient, since it already does the 
 <p><code>&lt;!--# COMPONENT / --&gt;</code></p>
 </div>
 <div class="paragraph">
-<p>The site engine then renders the fragment&#8217;s components there.</p>
+<p>The site service then renders the fragment&#8217;s components there.</p>
 </div>
 <div class="paragraph">
 <p>Using Thymeleaf, the placeholder may be generated with the following line:</p>
@@ -794,7 +826,7 @@ Bypass the built-in implementation by running your own code instead of injecting
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

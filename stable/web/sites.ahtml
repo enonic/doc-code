@@ -447,7 +447,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#site_request_pipeline">Site Request pipeline</a></li>
-<li><a href="#multiple_apps_per_site">Multiple apps per site</a></li>
+<li><a href="#one_site_multiple_apps">One site, multiple apps</a></li>
 </ul>
 </div>
 </div>
@@ -455,7 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Serving CMS driven sites at  <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-content&gt;</code>. Combine with Vhosts for custom domains and paths.</p>
+<p>Serving content driven sites using XP apps. The service responds at <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-content&gt;</code>. Combine with Vhosts for custom domains and paths.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -475,7 +475,7 @@ For hands on tutorials on building native Enonic XP sites, visit <a href="https:
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As an alternative to using 3rd party front-end frameworks like Next.js, the site service is a purpose-built web engine for delivering content-driven websites, and is closesly linked to the CMS features of the platform.</p>
+<p>As an alternative to using 3rd party front-end frameworks like Next.js, the site service is purpose-built for delivering content-driven websites, and is closesly linked to the CMS features of the platform.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -542,7 +542,7 @@ You will also need implementations of <a href="web/sites/mappings.ahtml">Mapping
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="sites/images/site-pipeline.svg" alt="Site rendering pipeline" width="768px">
+<img src="images/site-pipeline.svg" alt="Site rendering pipeline" width="500px">
 </div>
 </div>
 <div class="paragraph">
@@ -550,25 +550,47 @@ You will also need implementations of <a href="web/sites/mappings.ahtml">Mapping
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1">Render component</dt>
+<dd>
+<p>If a component is matched, the matching component implementation is invoked to render it — also directly addressable via the <a href="sites/components.ahtml#direct-rendering">component endpoint</a>. The result may include nested components, which are resolved and rendered iteratively (via component placeholders) until all placeholders are resolved and rendered.</p>
+</dd>
+<dt class="hdlist1">Universal APIs</dt>
+<dd>
+<p>Sites support contextual APIs mounted in the same URL space. They are are available on the <code>/_/&lt;app&gt;:&lt;api&gt;</code> path. APIs are mounted via the site descriptor.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The image and attachment APIs are implicitly mounted by the site service, and are available at <code>/<em>/media:image</code> and <code>/</em>/media:attachment</code> respectively. Use portal library functions to generate URLs for these, and they will be served with the appropriate caching and optimizations.
+</td>
+</tr>
+</table>
+</div>
+</dd>
 <dt class="hdlist1">Mappings</dt>
 <dd>
-<p>Uses path or content-based mappings from the site descriptor to trigger filters and HTTP functions.</p>
+<p>Use path or content-based <a href="sites/mappings.ahtml">site mappings</a>. Each mapping will trigger a function, acting as a filter or a controller (returning a response directly). Filters will iteratively execute until a controller is reached, or the mappings are exhausted. If no mapping matches, the request continues to the default page rendering step.</p>
 </dd>
-<dt class="hdlist1">Page resolver</dt>
+<dt class="hdlist1">Render page</dt>
 <dd>
-<p>Looks up the content at the path and resolves its implementation and config (optionally via a page template).</p>
-<div class="paragraph">
-<p>For two content types the page resolver does not resolve any implementation:</p>
+<p>Looks up the content at the path and resolves the page implementation and config (optionally via a page template) or returns a matching 404 if not found. 401 if protected, and 403 if user lacks permissions.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The content types <code>base:shortcut</code> is automatically handled with a <code>307 Temporary Redirect</code>, and <code>portal:fragment</code> is only rendered when referend from another page.
+</td>
+</tr>
+</table>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>For <code>base:shortcut</code>, the referenced content path is returned with status <code>307 Temporary Redirect</code>.</p>
-</li>
-<li>
-<p>For <code>portal:fragment</code>, no implementation is needed — a fragment is rendered directly.</p>
 <div class="paragraph">
-<p>For other content types, implementations are considered in the following order:</p>
+<p><strong>Implementation resolution:</strong></p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -598,52 +620,41 @@ In <code>inline</code> rendering mode the status is <code>418</code> instead of 
 </li>
 </ol>
 </div>
-</li>
-</ul>
+</dd>
+</dl>
 </div>
-</dd>
-<dt class="hdlist1">Page renderer</dt>
-<dd>
-<p>Resolves the implementation and optional configuration (which may also come from a page template).</p>
-<div class="ulist">
-<ul>
-<li>
-<p>If no implementation is found, returns <code>404 Not Found</code>.</p>
-</li>
-<li>
-<p>Otherwise invokes the implementation and returns <code>200 OK</code> by default. The output may include component placeholders.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p><strong>Component rendering:</strong></p>
 </div>
-</dd>
-<dt class="hdlist1">Response processors</dt>
+<div class="paragraph">
+<p>Once the page component is rendered, the rendering iteratively continues until all nested components placeholders are resolved and rendered.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Text/html processors</dt>
 <dd>
-<p>For <code>text/html</code> responses, any response processors defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding page contributions.</p>
-</dd>
-<dt class="hdlist1">Contributions filter</dt>
-<dd>
-<p>For <code>text/html</code> responses, any <code>pageContributions</code> in the response object are merged into the response body.</p>
+<p>For <code>text/html</code> responses, any <a href="sites/processors.ahtml">response processors</a> defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding <a href="sites/contributions.ahtml">page contributions</a>. Once all processors are done, available <code>pageContributions</code> in the response object are merged into the html response body.</p>
 </dd>
 <dt class="hdlist1">Response filters</dt>
 <dd>
-<p>Any filters registered through a mapping execute their final processing before the response is returned from the pipeline.</p>
+<p>Finally, any filters registered via through a mapping iteratively execute their response processing step before the response is returned from the pipeline.</p>
 </dd>
 </dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="multiple_apps_per_site"><a class="link" href="#multiple_apps_per_site">Multiple apps per site</a></h2>
+<h2 id="one_site_multiple_apps"><a class="link" href="#one_site_multiple_apps">One site, multiple apps</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. Similar to webapps, developers can use filters and mappings to take control over URL patterns when needed.</p>
+<p>Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. I.e. via filters APIs and response processors. This allows you to modularize functionality across multiple apps, and reuse apps across sites. Visit Enonic Market for existing apps and inspiration: <a href="https://market.enonic.com/apps" class="bare">https://market.enonic.com/apps</a></p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

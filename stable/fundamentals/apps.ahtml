@@ -484,13 +484,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site engine merges at request time.</p>
+<p>A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site service merges at request time.</p>
 </li>
 <li>
 <p>Admin tools and admin extensions from any installed app are listed in the admin Launcher and may mount each other through declared interface points.</p>
 </li>
 <li>
-<p>Universal APIs from any app are reachable under <code>/api/&lt;app&gt;:&lt;api&gt;/</code>, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.</p>
+<p>Universal APIs from any app are reachable under <code>/api/&lt;app&gt;:&lt;api&gt;</code>, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.</p>
 </li>
 </ul>
 </div>
@@ -586,7 +586,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

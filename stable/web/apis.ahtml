@@ -442,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#request_pipeline">Request pipeline</a></li>
 <li><a href="#features">Features</a></li>
 <li><a href="#usage">Usage</a>
 <ul class="sectlevel2">
@@ -450,9 +451,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#descriptor">Descriptor</a></li>
-<li><a href="#where_apis_are_reachable">Where APIs are reachable</a></li>
+<li><a href="#where-apis-are-reachable">Where APIs are reachable</a></li>
 <li><a href="#service-point">Service point</a></li>
-<li><a href="#portal-endpoint">Portal (aka Web) Endpoint</a></li>
+<li><a href="#web-endpoint">Web endpoint</a></li>
 <li><a href="#management-endpoint">Management Endpoint</a></li>
 <li><a href="#api_discovery">API discovery</a></li>
 <li><a href="#apiurl">apiUrl()</a></li>
@@ -474,6 +475,34 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Universal API is a powerful feature of the Enonic XP platform that lets developers create custom APIs. It enables applications to dynamically extend the platform&#8217;s API surface as they are installed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A Universal API is not tied to a single URL — the same implementation is reachable as the <a href="#web-endpoint">Web endpoint</a> (<code>/api/&lt;app&gt;:&lt;api&gt;</code>) and as a <a href="#service-point">service point</a> inside the site, webapp, and admin services (<code>/_/&lt;app&gt;:&lt;api&gt;</code>). However it arrives, every request is gated the same way:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/api-pipeline.svg" alt="Universal API request pipeline" width="500px">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Access control</dt>
+<dd>
+<p>The API must be mounted on the location the request arrived through, and the caller must satisfy its <code>allow</code> list. Not mounted there returns <strong>404</strong>; a caller without access gets <strong>401</strong> or <strong>403</strong> (see the <a href="#descriptor">descriptor</a>). The <code>allow</code> list is enforced on every request, regardless of endpoint.</p>
+</dd>
+<dt class="hdlist1"><code>&lt;api-name&gt;.ts</code></dt>
+<dd>
+<p>The matched API&#8217;s exported function for the request method (<code>GET</code>, <code>POST</code>, …) handles the request; subpaths arrive as <code>req.path</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>See <a href="#where-apis-are-reachable">Where APIs are reachable</a> for the rules governing each mount point.</p>
 </div>
 </div>
 </div>
@@ -505,7 +534,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Headless friendly. APIs can be mounted under the <code>/api</code> endpoint, so they can be used by any client.</p>
 </li>
 <li>
-<p>Granular. Mounting must be explicitly specified in engine descriptor files.</p>
+<p>Granular. Mounting must be explicitly specified in service descriptor files.</p>
 </li>
 <li>
 <p>Modular. APIs can be borrowed from other applications, so you can reuse existing APIs in your application.</p>
@@ -588,7 +617,7 @@ allow: <i class="conum" data-value="5"></i><b>(5)</b>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>By default, APIs are not mounted on the <a href="#portal-endpoint">Portal endpoint</a>.
+<td>By default, APIs are not mounted on the <a href="#web-endpoint">Web endpoint</a>.
 To enable it, add <code>"web"</code> to the <code>mount</code> list.</td>
 </tr>
 <tr>
@@ -612,7 +641,7 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 </div>
 </div>
 <div class="sect1">
-<h2 id="where_apis_are_reachable"><a class="link" href="#where_apis_are_reachable">Where APIs are reachable</a></h2>
+<h2 id="where-apis-are-reachable"><a class="link" href="#where-apis-are-reachable">Where APIs are reachable</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A Universal API can be exposed through three <strong>independent</strong> axes — they don&#8217;t substitute for each other and any combination is valid:</p>
@@ -620,10 +649,10 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Service point</strong> — the API is mounted into a <code>site</code>, <code>webapp</code>, or <code>admin tool</code> engine via that engine&#8217;s descriptor.</p>
+<p><strong>Service point</strong> — the API is mounted into a <code>site</code>, <code>webapp</code>, or <code>admin tool</code> service via that service&#8217;s descriptor.</p>
 </li>
 <li>
-<p><strong>Portal endpoint</strong> — the API opts in with <code>mount: "web"</code> and becomes reachable on the <strong>Portal</strong> endpoint (the public XP port, aka Web) under <code>/api/</code>.</p>
+<p><strong>Web endpoint</strong> — the API opts in with <code>mount: "web"</code> and becomes reachable on the <strong>Web</strong> endpoint (the public XP port) under <code>/api/</code>.</p>
 </li>
 <li>
 <p><strong>Management endpoint</strong> — the API opts in with <code>mount: "management"</code> and becomes reachable on the <strong>Management</strong> endpoint, which listens on its own port.</p>
@@ -631,7 +660,7 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 </ol>
 </div>
 <div class="paragraph">
-<p>The <code>/api/</code> URL prefix is the same on both endpoints, but the two are served on <strong>different ports</strong>. The Management endpoint is not reachable through the Portal endpoint and vice versa.</p>
+<p>The <code>/api/</code> URL prefix is the same on both endpoints, but the two are served on <strong>different ports</strong>. The Management endpoint is not reachable through the Web endpoint and vice versa.</p>
 </div>
 </div>
 </div>
@@ -639,23 +668,23 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 <h2 id="service-point"><a class="link" href="#service-point">Service point</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the <code>site</code>, <code>webapp</code>, and <code>admin</code> engines, APIs are reachable as service points under the engine&#8217;s URL space. The <code>_</code> segment separates the engine&#8217;s content path from service paths (services, components, idprovider, and APIs):</p>
+<p>In the <code>site</code>, <code>webapp</code>, and <code>admin</code> services, APIs are reachable as service points under the service&#8217;s URL space. The <code>_</code> segment separates the service&#8217;s content path from service paths (services, components, idprovider, and APIs):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>For the <code>site</code> engine: <code>/site/&lt;site-path&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
+<p>For the <code>site</code> service: <code>/site/&lt;site-path&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
 </li>
 <li>
-<p>For the <code>webapp</code> engine: <code>/webapp/&lt;webapp-app&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
+<p>For the <code>webapp</code> service: <code>/webapp/&lt;webapp-app&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
 </li>
 <li>
-<p>For the <code>admin</code> engine: <code>/admin/&lt;admin-app&gt;/&lt;tool&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
+<p>For the <code>admin</code> service: <code>/admin/&lt;admin-app&gt;/&lt;tool&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Each engine descriptor declares the APIs it exposes via its <code>apis</code> list. For <code>webapp</code> and <code>admin</code> this is sufficient — the descriptor of the hosting application controls the mount. For <code>site</code>, two conditions must both hold:</p>
+<p>Each service descriptor declares the APIs it exposes via its <code>apis</code> list. For <code>webapp</code> and <code>admin</code> this is sufficient — the descriptor of the hosting application controls the mount. For <code>site</code>, two conditions must both hold:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -668,10 +697,10 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 </ol>
 </div>
 <div class="paragraph">
-<p>The site mount is also limited to the <strong>site root</strong>: the path between <code>&lt;branch&gt;</code> and <code>/_/</code> must be the site&#8217;s root content path. Deeper content paths like <code>/site/&lt;project&gt;/&lt;branch&gt;/some/page/_/&lt;app&gt;:&lt;api&gt;/</code> do not resolve as APIs.</p>
+<p>The site mount is also limited to the <strong>site root</strong>: the path between <code>&lt;branch&gt;</code> and <code>/_/</code> must be the site&#8217;s root content path. Deeper content paths like <code>/site/&lt;project&gt;/&lt;branch&gt;/some/page/_/&lt;app&gt;:&lt;api&gt;</code> do not resolve as APIs.</p>
 </div>
 <div class="paragraph">
-<p>All three engine descriptors use the same <code>apis:</code> list shape:</p>
+<p>All three service descriptors use the same <code>apis:</code> list shape:</p>
 </div>
 <div class="listingblock">
 <div class="title">src/main/resources/cms/site.yaml</div>
@@ -690,7 +719,7 @@ apis:
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The <code>&lt;app-key&gt;:&lt;api-name&gt;</code> form mounts an API from a different application, letting the engine borrow APIs deployed by other apps.</td>
+<td>The <code>&lt;app-key&gt;:&lt;api-name&gt;</code> form mounts an API from a different application, letting the service borrow APIs deployed by other apps.</td>
 </tr>
 </table>
 </div>
@@ -730,15 +759,15 @@ Wildcards and "expose all APIs from app X" rules are intentionally not supported
 </div>
 </div>
 <div class="sect1">
-<h2 id="portal-endpoint"><a class="link" href="#portal-endpoint">Portal (aka Web) Endpoint</a></h2>
+<h2 id="web-endpoint"><a class="link" href="#web-endpoint">Web endpoint</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The dedicated <code>/api</code> URL on the <strong>Portal</strong> endpoint (the public XP port) exposes APIs independently of any engine, so they can be consumed by any HTTP client:</p>
+<p>The dedicated <code>/api</code> URL on the <strong>Web</strong> endpoint (the public XP port) exposes APIs independently of any service, so they can be consumed by any HTTP client:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Generic API endpoint: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;/</code></p>
+<p>Generic API endpoint: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
 </li>
 </ul>
 </div>
@@ -775,7 +804,7 @@ The Management endpoint is for <strong>advanced use only</strong>. It is intende
 </table>
 </div>
 <div class="paragraph">
-<p>An API can also be exposed on the <strong>Management</strong> endpoint by adding <code>"management"</code> to its <code>mount</code> list. The Management endpoint is a separate listener on its own port, distinct from the Portal endpoint — use it for internal or operational APIs that should not be reachable from the public network.</p>
+<p>An API can also be exposed on the <strong>Management</strong> endpoint by adding <code>"management"</code> to its <code>mount</code> list. The Management endpoint is a separate listener on its own port, distinct from the Web endpoint — use it for internal or operational APIs that should not be reachable from the public network.</p>
 </div>
 <div class="listingblock">
 <div class="title">src/main/resources/apis/&lt;api-name&gt;/&lt;api-name&gt;.yaml</div>
@@ -796,7 +825,7 @@ allow:
 <h2 id="api_discovery"><a class="link" href="#api_discovery">API discovery</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>GET /api</code> (or <code>GET /api/</code>) returns a JSON index of every API mounted on the <strong>endpoint that received the request</strong>. Calling it on the Portal endpoint lists APIs with <code>"web"</code> in <code>mount</code>; calling it on the Management endpoint lists APIs with <code>"management"</code> in <code>mount</code>. The response is a <code>resources</code> array, one entry per API:</p>
+<p><code>GET /api</code> (or <code>GET /api/</code>) returns a JSON index of every API mounted on the <strong>endpoint that received the request</strong>. Calling it on the Web endpoint lists APIs with <code>"web"</code> in <code>mount</code>; calling it on the Management endpoint lists APIs with <code>"management"</code> in <code>mount</code>. The response is a <code>resources</code> array, one entry per API:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -850,7 +879,7 @@ Discovery is intended for development. By default it is enabled only when XP run
 <h2 id="apiurl"><a class="link" href="#apiurl">apiUrl()</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To safely generate an API URL, use the <code>apiUrl()</code> function from the <a href="../libraries/lib-portal.ahtml">Portal library</a>. It picks the right URL form based on the calling context — a service-point under the active engine when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
+<p>To safely generate an API URL, use the <code>apiUrl()</code> function from the <a href="../libraries/lib-portal.ahtml">Portal library</a>. It picks the right URL form based on the calling context — a service-point under the active service when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -932,7 +961,7 @@ This list includes but is not limited to:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

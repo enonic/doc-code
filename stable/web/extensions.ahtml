@@ -475,7 +475,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Mounts only into tools that publish a matching interface name. The reserved name <code>generic</code> matches any tool.</p>
 </li>
 <li>
-<p>Is served by the admin engine through the <code>admin:extension</code> dispatcher API at <code>/admin/&lt;app&gt;/&lt;tool&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;/</code>.</p>
+<p>Is served by the admin service through the <code>admin:extension</code> dispatcher API at <code>/admin/&lt;app&gt;/&lt;tool&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;/</code>.</p>
 </li>
 <li>
 <p>Returns whatever HTTP payload the host tool expects — HTML fragments for UI widgets, JSON for data feeds, binary assets, etc.</p>
@@ -685,7 +685,7 @@ const url = adminLib.extensionUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

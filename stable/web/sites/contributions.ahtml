@@ -577,7 +577,7 @@ Page contributions will only be triggered if the response type is <code>text/htm
 <h2 id="contribution_merging"><a class="link" href="#contribution_merging">Contribution merging</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Page contributions are merged into the response markup during a specific step in the <a href="../runtime/engines/site-engine.ahtml">site engine</a>, called <code>Contributions filter</code>. It occurs after <a href="processors.ahtml">page processors</a> and before <a href="mappings.ahtml">the site filters</a>.</p>
+<p>Page contributions are merged into the response markup during a specific step in the <a href="../sites.ahtml">site service</a>, called <code>Contributions filter</code>. It occurs after <a href="processors.ahtml">page processors</a> and before <a href="mappings.ahtml">the site filters</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -596,7 +596,7 @@ Duplicate page contributions are automatically removed, so if multiple component
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

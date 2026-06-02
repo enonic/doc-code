@@ -1,0 +1,44 @@
+---
+config:
+  layout: elk
+  elk:
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+flowchart TB
+  in(["Common pipeline"])
+
+  subgraph site["/site (Site service)"]
+    direction TB
+    route{"route by<br/>path"}
+    map["Mappings"]
+    uapi["Universal API"]
+    rendercomp["Render component"]
+    render["Render page"]
+    htmlfilters["text/html processors"]
+    mappedfilters["Response filters"]
+
+    route -->|"_/component/&lt;path&gt;"| rendercomp
+    route -->|"/_/&lt;app&gt;:&lt;api-name&gt;"| uapi
+    route -->|"all others"| map
+
+    map --> render
+    map -.-> htmlfilters
+    render --> htmlfilters
+    htmlfilters --> mappedfilters
+  end
+
+  out(["Common pipeline"])
+
+  in -->|"/site/&lt;project&gt;/&lt;branch&gt;/&lt;content-path&gt;"| route
+  mappedfilters --> out
+  rendercomp --> out
+  uapi --> out
+
+  classDef platform fill:#ECECEC,stroke:#999,color:#000;
+  classDef programmable fill:#C6DDFF,stroke:#979797,color:#000;
+  classDef endpoint fill:#FFE0B2,stroke:#D79B00,color:#000;
+  class route platform;
+  class map,uapi,rendercomp,render,htmlfilters,mappedfilters programmable;
+  class in,out endpoint;
+
+  style site fill:transparent,stroke:#9370DB;

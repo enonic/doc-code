@@ -588,7 +588,7 @@ Default is off; widgets without this flag only run when picked manually.</td>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td><strong>order</strong> — sort key in the dropdown and the <strong>Automatic</strong> probe sequence.
 Lower values appear first; the built-in <strong>Automatic</strong> widget itself sits at <code>0</code>.
-With <code>order: 60</code>, this widget is probed after the built-in <strong>Media</strong> widget (<code>50</code>) but before <strong>Site engine</strong> (<code>90</code>).</td>
+With <code>order: 60</code>, this widget is probed after the built-in <strong>Media</strong> widget (<code>50</code>) but before <strong>Site rendering</strong> (<code>90</code>).</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -813,7 +813,7 @@ return {
 </ul>
 </div>
 <div class="paragraph">
-<p>The two variants are equally first-class; the built-in <strong>Site engine</strong> widget uses redirect, the <strong>JSON</strong> widget uses inline body.</p>
+<p>The two variants are equally first-class; the built-in <strong>Site rendering</strong> widget uses redirect, the <strong>JSON</strong> widget uses inline body.</p>
 </div>
 <div class="sect2">
 <h3 id="inline_body"><a class="link" href="#inline_body">Inline body</a></h3>
@@ -918,7 +918,7 @@ Pass through <code>branch</code> and any other request parameters the external p
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>

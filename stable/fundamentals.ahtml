@@ -466,6 +466,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dd>
 <p>How XP executes server-side JavaScript — the JVM-hosted engine, threading model, clustering, and the platform features your code inherits for free.</p>
 </dd>
+<dt class="hdlist1"><a href="fundamentals/typescript.ahtml">TypeScript</a></dt>
+<dd>
+<p>TypeScript is the authoring language for Enonic apps — set it up first. How to install and use the official <code>@enonic-types</code> packages so your editor and build understand the platform APIs.</p>
+</dd>
 <dt class="hdlist1"><a href="fundamentals/apps.ahtml">Apps</a></dt>
 <dd>
 <p>What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.</p>
@@ -482,21 +486,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dd>
 <p>Global objects and functions available in every module — <code>app</code>, <code>log</code>, <code>require</code>, <code>resolve</code>, and friends.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/typescript.ahtml">TypeScript</a></dt>
+<dt class="hdlist1"><a href="fundamentals/events.ahtml">Events</a></dt>
 <dd>
-<p>How to install and use the official <code>@enonic-types</code> packages so your editor and build understand the platform APIs.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/java-bridge.ahtml">Java bridge</a></dt>
-<dd>
-<p>Calling JVM code from JavaScript via the <code>__</code> global. Required reading for library authors and anyone integrating with existing Java codebases.</p>
+<p>The cluster-wide pub/sub bus. Publish from anywhere — request handlers, tasks, <code>main.ts</code> — and subscribe to platform events (content writes, repo updates) or your own custom domain events.</p>
 </dd>
 <dt class="hdlist1"><a href="fundamentals/i18n.ahtml">Localization</a></dt>
 <dd>
 <p>Localizing text in your app and the schemas it deploys, using <code>phrases</code> files and the localization API.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/events.ahtml">Events</a></dt>
+<dt class="hdlist1"><a href="fundamentals/java-bridge.ahtml">Java bridge</a></dt>
 <dd>
-<p>The cluster-wide pub/sub bus. Publish from anywhere — request handlers, tasks, <code>main.ts</code> — and subscribe to platform events (content writes, repo updates) or your own custom domain events.</p>
+<p>Calling JVM code from JavaScript via the <code>__</code> global. Required reading for library authors and anyone integrating with existing Java codebases.</p>
 </dd>
 </dl>
 </div>
@@ -516,7 +516,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 18:46:00 UTC
+Last updated 2026-06-02 22:10:52 UTC
 </div>
 </div>
 </body>
