@@ -1,15 +1,15 @@
 = Sites
 :toc: right
-:imagesdir: sites/images
+:imagesdir: images
 
-Serving CMS driven sites at  `:8080/site/<project>/<branch>/<path-to-content>`. Combine with Vhosts for custom domains and paths.
+Serving content driven sites using XP apps. The service responds at `:8080/site/<project>/<branch>/<path-to-content>`. Combine with Vhosts for custom domains and paths.
 
 NOTE: For hands on tutorials on building native Enonic XP sites, visit https://developer.enonic.com/learn/react4xp/stable[React4XP tutorial] or the https://developer.enonic.com/docs/my-first-site[My first site tutorial].
 
 
 == Introduction
 
-As an alternative to using 3rd party front-end frameworks like Next.js, the site service is a purpose-built web engine for delivering content-driven websites, and is closesly linked to the CMS features of the platform.
+As an alternative to using 3rd party front-end frameworks like Next.js, the site service is purpose-built for delivering content-driven websites, and is closesly linked to the CMS features of the platform.
 
 TIP: Visit the https://developer.enonic.com/docs/cms/stable[CMS documentation] for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
 
@@ -41,20 +41,25 @@ NOTE: You will also need implementations of <<web/sites/mappings#, Mapping funct
 
 The site pipeline is executed as a subset of the <<web#common_request_pipeline, common pipeline>>:
 
-image::site-pipeline.svg[Site rendering pipeline, 768px]
+// Diagram source: web/images/.site-pipeline.mmd (dot-prefixed, not imported to the CMS).
+// Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.site-pipeline.mmd -o docs/web/images/site-pipeline.svg -b transparent
+image::site-pipeline.svg[Site rendering pipeline, 500px]
 
 This section describes the standard pipeline involved in processing a page request, e.g. `:8080/site/<project>/<branch>/<path-to-page>`.
 
-Mappings:: Uses path or content-based mappings from the site descriptor to trigger filters and HTTP functions.
+Render component:: If a component is matched, the matching component implementation is invoked to render it — also directly addressable via the <<sites/components#direct-rendering, component endpoint>>. The result may include nested components, which are resolved and rendered iteratively (via component placeholders) until all placeholders are resolved and rendered.
 
-Page resolver:: Looks up the content at the path and resolves its implementation and config (optionally via a page template).
+Universal APIs:: Sites support contextual APIs mounted in the same URL space. They are are available on the `/_/<app>:<api>` path. APIs are mounted via the site descriptor.
 +
-For two content types the page resolver does not resolve any implementation:
+NOTE: The image and attachment APIs are implicitly mounted by the site service, and are available at `/_/media:image` and `/_/media:attachment` respectively. Use portal library functions to generate URLs for these, and they will be served with the appropriate caching and optimizations.
+
+Mappings:: Use path or content-based <<sites/mappings#, site mappings>>. Each mapping will trigger a function, acting as a filter or a controller (returning a response directly). Filters will iteratively execute until a controller is reached, or the mappings are exhausted. If no mapping matches, the request continues to the default page rendering step.
+
+Render page:: Looks up the content at the path and resolves the page implementation and config (optionally via a page template) or returns a matching 404 if not found. 401 if protected, and 403 if user lacks permissions.
 +
-* For `base:shortcut`, the referenced content path is returned with status `307 Temporary Redirect`.
-* For `portal:fragment`, no implementation is needed — a fragment is rendered directly.
+NOTE: The content types `base:shortcut` is automatically handled with a `307 Temporary Redirect`, and `portal:fragment` is only rendered when referend from another page.
 +
-For other content types, implementations are considered in the following order:
+*Implementation resolution:*
 +
 . Implementation set directly on the content.
 . Implementation set on a page template for the content. If the page template is unavailable (e.g. deleted), the page resolver treats it as if no page template was set.
@@ -64,18 +69,16 @@ If no implementation is found, the response status is `404 Not Found`.
 +
 NOTE: In `inline` rendering mode the status is `418` instead of `404`, so Content Studio can switch to alternative rendering. In `edit` rendering mode the status is `200` instead of `404`, to allow Content Studio to render the in-place component selector.
 
-Page renderer:: Resolves the implementation and optional configuration (which may also come from a page template).
-+
-* If no implementation is found, returns `404 Not Found`.
-* Otherwise invokes the implementation and returns `200 OK` by default. The output may include component placeholders.
+*Component rendering:*
 
-Response processors:: For `text/html` responses, any response processors defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding page contributions.
+Once the page component is rendered, the rendering iteratively continues until all nested components placeholders are resolved and rendered.
 
-Contributions filter:: For `text/html` responses, any `pageContributions` in the response object are merged into the response body.
-
-Response filters:: Any filters registered through a mapping execute their final processing before the response is returned from the pipeline.
+Text/html processors:: For `text/html` responses, any <<sites/processors#, response processors>> defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding <<sites/contributions#, page contributions>>. Once all processors are done, available `pageContributions` in the response object are merged into the html response body.
 
 
-== Multiple apps per site
-Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. Similar to webapps, developers can use filters and mappings to take control over URL patterns when needed.
+Response filters:: Finally, any filters registered via through a mapping iteratively execute their response processing step before the response is returned from the pipeline.
+
+
+== One site, multiple apps
+Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. I.e. via filters APIs and response processors. This allows you to modularize functionality across multiple apps, and reuse apps across sites. Visit Enonic Market for existing apps and inspiration: https://market.enonic.com/apps
 

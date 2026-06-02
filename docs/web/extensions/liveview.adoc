@@ -68,7 +68,7 @@ config:
 Default is off; widgets without this flag only run when picked manually.
 <3> *order* — sort key in the dropdown and the *Automatic* probe sequence.
 Lower values appear first; the built-in *Automatic* widget itself sits at `0`.
-With `order: 60`, this widget is probed after the built-in *Media* widget (`50`) but before *Site engine* (`90`).
+With `order: 60`, this widget is probed after the built-in *Media* widget (`50`) but before *Site rendering* (`90`).
 <4> *allowContentType* — optional glob restricting the widget to specific content types.
 Matched client-side before the widget is even probed.
 Omit to accept any type.
@@ -172,7 +172,7 @@ The implementation must export `HEAD` and `GET`.
 * *Inline body* — the widget returns HTML (or JSON, or any payload an iframe can display) as the response body. Content Studio renders it directly inside the iframe.
 * *Redirect* — the widget returns an `enonic-widget-data.redirect` URL and no body. Content Studio re-points the iframe at the external URL.
 
-The two variants are equally first-class; the built-in *Site engine* widget uses redirect, the *JSON* widget uses inline body.
+The two variants are equally first-class; the built-in *Site rendering* widget uses redirect, the *JSON* widget uses inline body.
 
 === Inline body
 

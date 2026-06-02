@@ -6,9 +6,6 @@ The XP framework also supports execution of asynchronous (potentially long runni
 
 Tasks may be executed as inline functions, or as named tasks. Named tasks are defined by creating a folder, e.g. `src/main/resources/tasks/<taskname>`, in your project.
 
-image::task-engine.svg[Task execution process, 768px]
-
-
 == Descriptor
 Named tasks requires a descriptor file.
 The descriptor must be placed in task folder as follows: `src/main/resources/tasks/<taskname>/<taskname>.yaml`.
@@ -34,7 +31,7 @@ The `form` list is optional and may be omitted if the task does not accept any p
 [#implementation]
 == Implementation
 
-A named task's implementation lives at `src/main/resources/tasks/<taskname>/<taskname>.ts` and must export a `run` function. The task engine invokes `run` with the task parameters as the first argument and the assigned `taskId` as the second.
+A named task's implementation lives at `src/main/resources/tasks/<taskname>/<taskname>.ts` and must export a `run` function. XP invokes `run` with the task parameters as the first argument and the assigned `taskId` as the second.
 
 .Example task implementation
 [source,typescript]

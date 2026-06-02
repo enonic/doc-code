@@ -85,6 +85,10 @@
           "document": "fundamentals/runtime"
         },
         {
+          "title": "TypeScript",
+          "document": "fundamentals/typescript"
+        },
+        {
           "title": "Apps",
           "document": "fundamentals/apps"
         },
@@ -103,10 +107,6 @@
         {
           "title": "Events",
           "document": "fundamentals/events"
-        },
-        {
-          "title": "TypeScript",
-          "document": "fundamentals/typescript"
         },
         {
           "title": "Localization",

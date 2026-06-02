@@ -66,7 +66,7 @@ return {
 
 == Contribution merging
 
-Page contributions are merged into the response markup during a specific step in the <<../runtime/engines/site-engine#, site engine>>, called `Contributions filter`. It occurs after <<processors#, page processors>> and before <<mappings#, the site filters>>.
+Page contributions are merged into the response markup during a specific step in the <<../sites#, site service>>, called `Contributions filter`. It occurs after <<processors#, page processors>> and before <<mappings#, the site filters>>.
 
 
 NOTE: Duplicate page contributions are automatically removed, so if multiple components contribute the same script, it will only be included once in the final response.

@@ -1,10 +1,25 @@
 = Universal APIs
+:toc: right
+:imagesdir: images
 
 A core feature of Enonic XP is the ability to build custom APIs and reuse them across the platform — aka the Universal API.
 
 == Introduction
 
 The Universal API is a powerful feature of the Enonic XP platform that lets developers create custom APIs. It enables applications to dynamically extend the platform's API surface as they are installed.
+
+== Request pipeline
+
+A Universal API is not tied to a single URL — the same implementation is reachable as the <<#web-endpoint, Web endpoint>> (`+/api/<app>:<api>+`) and as a <<#service-point, service point>> inside the site, webapp, and admin services (`+/_/<app>:<api>+`). However it arrives, every request is gated the same way:
+
+// Diagram source: web/images/.api-pipeline.mmd (dot-prefixed, not imported to the CMS).
+// Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.api-pipeline.mmd -o docs/web/images/api-pipeline.svg -b transparent
+image::api-pipeline.svg[Universal API request pipeline, 500px]
+
+Access control:: The API must be mounted on the location the request arrived through, and the caller must satisfy its `allow` list. Not mounted there returns *404*; a caller without access gets *401* or *403* (see the <<#descriptor, descriptor>>). The `allow` list is enforced on every request, regardless of endpoint.
+`+<api-name>.ts+`:: The matched API's exported function for the request method (`GET`, `POST`, …) handles the request; subpaths arrive as `req.path`.
+
+See <<#where-apis-are-reachable, Where APIs are reachable>> for the rules governing each mount point.
 
 == Features
 
@@ -15,7 +30,7 @@ The main features of the Universal API are:
  ** Nobody can access an API without explicitly specifying access rights in the descriptor.
  ** APIs mount at a single, fixed location, never at arbitrary points along the URL.
 * Headless friendly. APIs can be mounted under the `/api` endpoint, so they can be used by any client.
-* Granular. Mounting must be explicitly specified in engine descriptor files.
+* Granular. Mounting must be explicitly specified in service descriptor files.
 * Modular. APIs can be borrowed from other applications, so you can reuse existing APIs in your application.
 
 == Usage
@@ -71,40 +86,41 @@ allow: # <5>
 
 <3> *documentationUrl* is a link to the API documentation that will be shown in the UI.
 
-<4> By default, APIs are not mounted on the <<#portal-endpoint,Portal endpoint>>.
+<4> By default, APIs are not mounted on the <<#web-endpoint,Web endpoint>>.
 To enable it, add `"web"` to the `mount` list.
 
 <5> APIs must list principals that have access to it. It is required to specify at least one principal. Use `role:system.everyone` to make the API public.
 
 NOTE: A request to an API that is not mounted on the matched URL returns *404 Not Found* — the absence is indistinguishable from a missing API. A request by a principal not in the `allow` list returns *401 Unauthorized* if the configured ID provider asks for credentials, otherwise *403 Forbidden*. Calls to APIs mounted under `/admin/...` additionally require the caller to hold `role:system.admin.login`, regardless of what the API's `allow` list grants.
 
+[#where-apis-are-reachable]
 == Where APIs are reachable
 
 A Universal API can be exposed through three *independent* axes — they don't substitute for each other and any combination is valid:
 
-. *Service point* — the API is mounted into a `site`, `webapp`, or `admin tool` engine via that engine's descriptor.
-. *Portal endpoint* — the API opts in with `mount: "web"` and becomes reachable on the *Portal* endpoint (the public XP port, aka Web) under `/api/`.
+. *Service point* — the API is mounted into a `site`, `webapp`, or `admin tool` service via that service's descriptor.
+. *Web endpoint* — the API opts in with `mount: "web"` and becomes reachable on the *Web* endpoint (the public XP port) under `/api/`.
 . *Management endpoint* — the API opts in with `mount: "management"` and becomes reachable on the *Management* endpoint, which listens on its own port.
 
-The `/api/` URL prefix is the same on both endpoints, but the two are served on *different ports*. The Management endpoint is not reachable through the Portal endpoint and vice versa.
+The `/api/` URL prefix is the same on both endpoints, but the two are served on *different ports*. The Management endpoint is not reachable through the Web endpoint and vice versa.
 
 [#service-point]
 == Service point
 
-In the `site`, `webapp`, and `admin` engines, APIs are reachable as service points under the engine's URL space. The `_` segment separates the engine's content path from service paths (services, components, idprovider, and APIs):
+In the `site`, `webapp`, and `admin` services, APIs are reachable as service points under the service's URL space. The `_` segment separates the service's content path from service paths (services, components, idprovider, and APIs):
 
-* For the `site` engine: `+/site/<site-path>/_/<app-name>:<api-name>/+`
-* For the `webapp` engine: `+/webapp/<webapp-app>/_/<app-name>:<api-name>/+`
-* For the `admin` engine: `+/admin/<admin-app>/<tool>/_/<app-name>:<api-name>/+`
+* For the `site` service: `+/site/<site-path>/_/<app-name>:<api-name>+`
+* For the `webapp` service: `+/webapp/<webapp-app>/_/<app-name>:<api-name>+`
+* For the `admin` service: `+/admin/<admin-app>/<tool>/_/<app-name>:<api-name>+`
 
-Each engine descriptor declares the APIs it exposes via its `apis` list. For `webapp` and `admin` this is sufficient — the descriptor of the hosting application controls the mount. For `site`, two conditions must both hold:
+Each service descriptor declares the APIs it exposes via its `apis` list. For `webapp` and `admin` this is sufficient — the descriptor of the hosting application controls the mount. For `site`, two conditions must both hold:
 
 . The application providing the site descriptor must be *configured on the site instance*  Without this, the site descriptor's `apis` list is not consulted at all for that site.
 . That application's site descriptor must list the API in its `apis` field.
 
-The site mount is also limited to the *site root*: the path between `<branch>` and `+/_/+` must be the site's root content path. Deeper content paths like `+/site/<project>/<branch>/some/page/_/<app>:<api>/+` do not resolve as APIs.
+The site mount is also limited to the *site root*: the path between `<branch>` and `+/_/+` must be the site's root content path. Deeper content paths like `+/site/<project>/<branch>/some/page/_/<app>:<api>+` do not resolve as APIs.
 
-All three engine descriptors use the same `apis:` list shape:
+All three service descriptors use the same `apis:` list shape:
 
 .src/main/resources/cms/site.yaml
 [source,yaml]
@@ -117,7 +133,7 @@ apis:
 
 <1> A bare name resolves to an API in the current application — here, `ws` defined in `src/main/resources/apis/ws/`.
 
-<2> The `<app-key>:<api-name>` form mounts an API from a different application, letting the engine borrow APIs deployed by other apps.
+<2> The `<app-key>:<api-name>` form mounts an API from a different application, letting the service borrow APIs deployed by other apps.
 
 The webapp and admin tool descriptors take the same `apis:` list:
 
@@ -141,12 +157,12 @@ apis:
 
 NOTE: Wildcards and "expose all APIs from app X" rules are intentionally not supported here. Each API must be listed by its descriptor key. The reason is security: it prevents new or insecure APIs from being silently exposed on a service path when an app is upgraded or a new dependency is added. Publishing an additional API always requires an explicit change to the hosting descriptor.
 
-[#portal-endpoint]
-== Portal (aka Web) Endpoint
+[#web-endpoint]
+== Web endpoint
 
-The dedicated `/api` URL on the *Portal* endpoint (the public XP port) exposes APIs independently of any engine, so they can be consumed by any HTTP client:
+The dedicated `/api` URL on the *Web* endpoint (the public XP port) exposes APIs independently of any service, so they can be consumed by any HTTP client:
 
-* Generic API endpoint: `/api/<app-name>:<api-name>/`
+* Generic API endpoint: `/api/<app-name>:<api-name>`
 
 To opt in, an API must include `"web"` in its `mount` list (see <<#descriptor,API descriptor>>).
 
@@ -157,7 +173,7 @@ WARNING: The `mount: "management"` feature is experimental and subject to change
 
 NOTE: The Management endpoint is for *advanced use only*. It is intended for extending XP's management capabilities (cluster operations, internal tooling, infrastructure integrations) — not for regular application APIs.
 
-An API can also be exposed on the *Management* endpoint by adding `"management"` to its `mount` list. The Management endpoint is a separate listener on its own port, distinct from the Portal endpoint — use it for internal or operational APIs that should not be reachable from the public network.
+An API can also be exposed on the *Management* endpoint by adding `"management"` to its `mount` list. The Management endpoint is a separate listener on its own port, distinct from the Web endpoint — use it for internal or operational APIs that should not be reachable from the public network.
 
 .src/main/resources/apis/<api-name>/<api-name>.yaml
 [source,yaml]
@@ -173,7 +189,7 @@ Both mounts can be combined: `mount: ["web", "management"]` makes the API reacha
 
 == API discovery
 
-`GET /api` (or `GET /api/`) returns a JSON index of every API mounted on the *endpoint that received the request*. Calling it on the Portal endpoint lists APIs with `"web"` in `mount`; calling it on the Management endpoint lists APIs with `"management"` in `mount`. The response is a `resources` array, one entry per API:
+`GET /api` (or `GET /api/`) returns a JSON index of every API mounted on the *endpoint that received the request*. Calling it on the Web endpoint lists APIs with `"web"` in `mount`; calling it on the Management endpoint lists APIs with `"management"` in `mount`. The response is a `resources` array, one entry per API:
 
 [source,json]
 ----
@@ -203,7 +219,7 @@ NOTE: Discovery is intended for development. By default it is enabled only when 
 
 == apiUrl()
 
-To safely generate an API URL, use the `apiUrl()` function from the <<../libraries/lib-portal#,Portal library>>. It picks the right URL form based on the calling context — a service-point under the active engine when called from a site, webapp, or admin tool, and `/api/` otherwise.
+To safely generate an API URL, use the `apiUrl()` function from the <<../libraries/lib-portal#,Portal library>>. It picks the right URL form based on the calling context — a service-point under the active service when called from a site, webapp, or admin tool, and `/api/` otherwise.
 
 [source,typescript]
 ----

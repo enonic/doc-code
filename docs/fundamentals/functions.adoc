@@ -67,4 +67,4 @@ The <<globals#, framework globals>> (`app`, `log`, `require`, etc.) are availabl
 <<web/websocket#, Websocket handlers>>:: React to websocket lifecycle events (open, message, close, error).
 <<main#, Main lifecycle>>:: `main.js` hooks that run when your app starts and stops.
 
-Page, part, and layout implementations export HTTP functions invoked by the site engine when rendering content — see <<web/sites/components#, components>>.
+Page, part, and layout implementations export HTTP functions invoked by the site service when rendering content — see <<web/sites/components#, components>>.

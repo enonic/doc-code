@@ -85,7 +85,7 @@ enonic.svg:: Application icon in SVG format. Should be in a square format.
 
 enonic.yaml:: Application descriptor (`kind: "Application"`).
 
-assets/:: Standard folder for serving static assets such as CSS and JavaScript. Assets are served by the <<../runtime/engines/asset-service#, asset service>>.
+assets/:: Standard folder for static assets such as CSS and JavaScript. Serve them with the https://developer.enonic.com/docs/lib-asset[lib-asset] library, available on https://market.enonic.com[Enonic Market].
 
 error/error.ts:: The <<web/error#, HTTP error handler>>.
 

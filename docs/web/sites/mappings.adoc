@@ -44,7 +44,7 @@ mappings:
 
 <5> *filter* — path to an <<web/filters#, HTTP filter>> implementation.
 
-<6> *service* — system service handled by this mapping (e.g. the `+.../_/image/...+` endpoint). See <<Service mappings>>.
+<6> *service* — system service handled by this mapping (e.g. the `+.../_/image/...+` endpoint). See <<service_mappings, Service mappings>>.
 
 NOTE: Each mapping must specify either `filter:` or `controller:` — never both — and at least one of `pattern:` or `match:`.
 
@@ -124,10 +124,11 @@ Service-based mappings bind service requests directly to HTTP functions or filte
 
 Supported services:
 
-`image` (deprecated):: Maps requests to the legacy image service at `+/_/image/<id>[:<fingerprint>]/<scale>/<name>+` (e.g. `+/_/image/123456/scale-100-100/photo.jpg+`). Replaced by the `media:image` Universal API.
+`component`:: Override the direct component rendering at `+/_/component/<component-path>+`.
 
-`attachment` (deprecated):: Maps requests to the legacy attachment service at `+/_/attachment/<mode>/<id>[:<fingerprint>]/<name>+` (e.g. `+/_/attachment/inline/123456/logo.png+`). Replaced by the `media:attachment` Universal API.
+`image` (deprecated):: Override the legacy image service at `+/_/image/<id>[:<fingerprint>]/<scale>/<name>+` (e.g. `+/_/image/123456/scale-100-100/photo.jpg+`). Replaced by the `media:image` Universal API.
 
-`component`:: Maps requests to contextual page components at `+/_/component/<component-path>+`.
+`attachment` (deprecated):: Override the legacy attachment service at `+/_/attachment/<mode>/<id>[:<fingerprint>]/<name>+` (e.g. `+/_/attachment/inline/123456/logo.png+`). Replaced by the `media:attachment` Universal API.
 
-NOTE: <<web/apis#, Universal APIs>> mounted as service points (`+/_/<app>:<api>/+`) cannot be remapped through site mappings — they are routed before the site engine processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+
+NOTE: <<web/apis#, Universal APIs>> mounted as points (`+/_/<app>:<api>+`) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.

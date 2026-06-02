@@ -17,9 +17,9 @@ The exception is *platform libraries* — modules whose path begins with `/lib/x
 
 Composition between apps therefore happens at the *platform level*, not in JavaScript:
 
-* A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site engine merges at request time.
+* A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site service merges at request time.
 * Admin tools and admin extensions from any installed app are listed in the admin Launcher and may mount each other through declared interface points.
-* Universal APIs from any app are reachable under `/api/<app>:<api>/`, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.
+* Universal APIs from any app are reachable under `/api/<app>:<api>`, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.
 
 What apps cannot do is reach into another app's private modules. Cross-app integration goes through the platform's contracts (descriptors, mappings, events, APIs) — never through `require()`.
 

@@ -8,14 +8,13 @@ NOTE: Upgrading from XP 7? See <<../upgrade#, the Upgrading guide>>.
 
 == Main builder
 
-As explained in the <<code#, code section>>, Enonic development projects use https://gradle.org/[Gradle] as the main build tool.
+Enonic apps and libraries use https://gradle.org/[Gradle] as the main build tool.
 
-Gradle is built around the popular Maven ecosystem. Gradle is used because Enonic apps are packaged and deployed as .jar (Java) files in the end.
+Gradle is used because Enonic apps are packaged and deployed as .jar (Java) files in the end.
 
 Builds run on Gradle 9.x — bundle a Gradle Wrapper of version 9.5.0 or later in your project.
 
 TIP: Enonic supports popular TypeScript/JavaScript tooling such as TSUP, NPM and webpack to run on top of Gradle. https://market.enonic.com/starters[Try one or our Starters] to see it in action.
-
 
 The Gradle build files are described below
 

@@ -10,7 +10,7 @@ The most common usage is rendering an embedded UI fragment, but an extension is 
 
 * Contributed by an app and discovered by the host admin tool through a string identifier called an *interface*.
 * Mounts only into tools that publish a matching interface name. The reserved name `generic` matches any tool.
-* Is served by the admin engine through the `admin:extension` dispatcher API at `/admin/<app>/<tool>/_/admin:extension/<app>:<extension-name>/`.
+* Is served by the admin service through the `admin:extension` dispatcher API at `/admin/<app>/<tool>/_/admin:extension/<app>:<extension-name>/`.
 * Returns whatever HTTP payload the host tool expects — HTML fragments for UI widgets, JSON for data feeds, binary assets, etc.
 
 == Usage

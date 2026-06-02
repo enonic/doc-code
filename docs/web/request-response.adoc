@@ -6,7 +6,7 @@ HTTP functions, the request and response objects they receive and return, and th
 
 == HTTP functions
 
-An HTTP function is a <<../fundamentals/functions#, function>> that responds to an HTTP request. The file where it lives is invoked by one of XP's engines (webapp, site, API) based on URL routing defined in descriptors or path conventions.
+An HTTP function is a <<../fundamentals/functions#, function>> that responds to an HTTP request. The file where it lives is invoked by one of XP's services (webapp, site, API) based on URL routing defined in descriptors or path conventions.
 
 Declare one export per HTTP method the function handles: `GET`, `POST`, `DELETE`, `PATCH`, `PUT`, `HEAD`, `OPTIONS`. A special `all` export catches any method that doesn't have a specific handler.
 
@@ -27,7 +27,7 @@ include::code/function-2.ts[]
 [#request]
 == Request
 
-The ``request`` object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus two XP-specific properties, ``mode`` and ``branch``, which the site engine sets to indicate the current rendering mode and repository branch.
+The ``request`` object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus two XP-specific properties, ``mode`` and ``branch``, which the site service sets to indicate the current rendering mode and repository branch.
 
 [source,json]
 ----
@@ -67,8 +67,8 @@ The ``request`` object is passed to every HTTP function. It carries the request 
 <5> Path of the request.
 <6> Full URL of the request.
 <7> Client IP address. If the `X-Forwarded-For` footnote:[https://en.wikipedia.org/wiki/X-Forwarded-For] header is set, its value overrides the client IP.
-<8> Site-engine rendering mode: `inline`, `edit`, `preview`, or `live`.
-<9> Site-engine repository branch: `draft` or `master`.
+<8> Site service rendering mode: `inline`, `edit`, `preview`, or `live`.
+<9> Site service repository branch: `draft` or `master`.
 <10> Request body, as a string, or `null` when absent.
 <11> Query and form parameters.
 <12> HTTP request headers.
@@ -107,9 +107,9 @@ The HTTP function returns a ``response`` object that XP converts to the outgoing
 <4> Response headers. A value of `null` or `undefined` removes a header set by an upstream function or filter.
 <5> Cookies to set on the response. See <<#cookies, Cookies>>.
 <6> URI to redirect to. If set, XP places it in the `Location` header and sets the status to `303`.
-<7> Site engine only. If `true`, the rendered page is post-processed for component tags (default `true`).
-<8> Site engine only. HTML fragments contributed to the rendered markup — see <<web/sites/contributions#, page contributions>>.
-<9> Site engine only. If `false`, no further <<web/sites/processors#, response processors>> or filters run (default `true`).
+<7> Site service only. If `true`, the rendered page is post-processed for component tags (default `true`).
+<8> Site service only. HTML fragments contributed to the rendered markup — see <<web/sites/contributions#, page contributions>>.
+<9> Site service only. If `false`, no further <<web/sites/processors#, response processors>> or filters run (default `true`).
 
 [#cookies]
 == Cookies

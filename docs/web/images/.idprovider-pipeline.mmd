@@ -1,0 +1,32 @@
+---
+config:
+  layout: elk
+  elk:
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
+flowchart TB
+  in(["Common pipeline"])
+
+  subgraph idp["ID provider"]
+    direction TB
+    route{"route by<br/>path"}
+    route -->|"/login"| login["idprovider.ts<br/>login()"]
+    route -->|"/logout"| logout["idprovider.ts<br/>logout()"]
+    route -->|"all other paths"| http["idprovider.ts<br/>GET / POST / …"]
+  end
+
+  out(["Common pipeline"])
+
+  in -->|"/_/idprovider/&lt;name&gt;"| route
+  login --> out
+  logout --> out
+  http --> out
+
+  classDef platform fill:#ECECEC,stroke:#999,color:#000;
+  classDef programmable fill:#C6DDFF,stroke:#979797,color:#000;
+  classDef endpoint fill:#FFE0B2,stroke:#D79B00,color:#000;
+  class route platform;
+  class login,logout,http programmable;
+  class in,out endpoint;
+
+  style idp fill:transparent,stroke:#9370DB;

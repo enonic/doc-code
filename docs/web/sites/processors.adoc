@@ -8,7 +8,7 @@ NOTE: Response processors are only available in <<components#, component renderi
 
 == Introduction
 
-Processors get executed between the `component rendering` step, and the `contributions filter` in the <<../runtime/engines/site-engine#, site engine>> pipeline. Response processors are commonly used by apps that need to inject <<contributions#, page contributions>> without placing a component on the page.
+Processors get executed between the `component rendering` step, and the `contributions filter` in the <<../sites#, site service>> pipeline. Response processors are commonly used by apps that need to inject <<contributions#, page contributions>> without placing a component on the page.
 
 Use cases are:
 

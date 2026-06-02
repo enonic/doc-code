@@ -9,6 +9,8 @@ This section documents the parts of an app that are not tied to a specific HTTP 
 
 <<fundamentals/runtime#, Runtime>>:: How XP executes server-side JavaScript — the JVM-hosted engine, threading model, clustering, and the platform features your code inherits for free.
 
+<<fundamentals/typescript#, TypeScript>>:: TypeScript is the authoring language for Enonic apps — set it up first. How to install and use the official `@enonic-types` packages so your editor and build understand the platform APIs.
+
 <<fundamentals/apps#, Apps>>:: What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.
 
 <<fundamentals/functions#, Functions>>:: How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).
@@ -17,13 +19,11 @@ This section documents the parts of an app that are not tied to a specific HTTP 
 
 <<fundamentals/globals#, Globals>>:: Global objects and functions available in every module — `app`, `log`, `require`, `resolve`, and friends.
 
-<<fundamentals/typescript#, TypeScript>>:: How to install and use the official `@enonic-types` packages so your editor and build understand the platform APIs.
-
-<<fundamentals/java-bridge#, Java bridge>>:: Calling JVM code from JavaScript via the `+__+` global. Required reading for library authors and anyone integrating with existing Java codebases.
+<<fundamentals/events#, Events>>:: The cluster-wide pub/sub bus. Publish from anywhere — request handlers, tasks, `main.ts` — and subscribe to platform events (content writes, repo updates) or your own custom domain events.
 
 <<fundamentals/i18n#, Localization>>:: Localizing text in your app and the schemas it deploys, using `phrases` files and the localization API.
 
-<<fundamentals/events#, Events>>:: The cluster-wide pub/sub bus. Publish from anywhere — request handlers, tasks, `main.ts` — and subscribe to platform events (content writes, repo updates) or your own custom domain events.
+<<fundamentals/java-bridge#, Java bridge>>:: Calling JVM code from JavaScript via the `+__+` global. Required reading for library authors and anyone integrating with existing Java codebases.
 
 
 == How the parts relate

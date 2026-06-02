@@ -61,7 +61,7 @@ config:                          # <6>
 <1> *title* — string, or `{ text, i18n }` for localization. Shown in the Launcher.
 <2> *description* — string, or `{ text, i18n }`.
 <3> *allow* — principal keys (roles, groups, users) granted access. The implicit `role:system.admin` always has access regardless. Required to expose the tool to non-admins.
-<4> *apis* — list of <<web/apis#,Universal API>> descriptor keys mounted under this tool's URL. Bare names refer to APIs in the same app; `<app>:<api>` form borrows from another app. APIs become reachable as service points at `+/admin/<app-key>/<tool-name>/_/<app>:<api>/+`.
+<4> *apis* — list of <<web/apis#,Universal API>> descriptor keys mounted under this tool's URL. Bare names refer to APIs in the same app; `<app>:<api>` form borrows from another app. APIs become reachable as service points at `+/admin/<app-key>/<tool-name>/_/<app>:<api>+`.
 <5> *interfaces* — named interface points this tool exposes. Admin extensions whose `interfaces:` list intersects with this list are eligible to be mounted into the tool. Names are free-form strings — pick stable identifiers and document them.
 <6> *config* — free-form key/value map readable from the implementation.
 
@@ -94,14 +94,14 @@ The implementation is the entry point for `+/admin/<app-key>/<tool-name>+` and a
 == URL
 
 * Tool entry point: `/admin/<app-key>/<tool-name>`
-* API service point under the tool: `/admin/<app-key>/<tool-name>/_/<app>:<api-name>/`
+* API service point under the tool: `/admin/<app-key>/<tool-name>/_/<app>:<api-name>`
 * Admin extension dispatcher under the tool: `/admin/<app-key>/<tool-name>/_/admin:extension/<app>:<extension-name>/`
 
 Generate URLs from the implementation with the <<libraries/lib-portal#,Portal library>>: `adminUrl()` for the tool itself, `apiUrl()` for mounted APIs.
 
 == Access control
 
-The admin engine enforces two checks:
+The admin service enforces two checks:
 
 . The caller must hold `role:system.admin.login`. Without this, the request never reaches the descriptor.
 . The tool's descriptor must permit the caller. `role:system.admin` is always permitted; otherwise the caller must match at least one principal in `allow:`.
@@ -110,7 +110,7 @@ A failed check returns *401 Unauthorized* if the configured ID provider asks for
 
 == Mounting Universal APIs
 
-Any API listed in `apis:` is mounted as a service point under the tool's URL. The same API can simultaneously be mounted on the Portal endpoint (`mount: ["web"]` in the API descriptor) — the two mounts are independent. See <<web/apis#service-point,Universal API: Service point>>.
+Any API listed in `apis:` is mounted as a service point under the tool's URL. The same API can simultaneously be mounted on the Web endpoint (`mount: ["web"]` in the API descriptor) — the two mounts are independent. See <<web/apis#service-point,Universal API: Service point>>.
 
 == Hosting admin extensions
 

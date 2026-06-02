@@ -450,7 +450,7 @@ Returns nodes that contain a value for a field.
 |fields
 |string[]
 |true
-|List of <<storage/noql#propertyPath, propertyPaths>> to match.
+|List of propertyPaths to match.
 
 |query
 |string
