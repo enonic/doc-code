@@ -72,3 +72,24 @@ in groups. Adding to groups allows for multicast message sending.
 ----
 include::code/websockets-3.js[]
 ----
+
+[#origin-check]
+== Origin check
+
+WebSockets do not follow the same-origin policy that browsers enforce on regular HTTP requests, which means a page on any origin can open a WebSocket to your application. The platform mitigates this by checking the request's `Origin` header against the host the request arrived on before completing the handshake.
+
+The default rules, applied when a controller does not supply its own `checkOrigin` function:
+
+* No `Origin` header — accepted. Non-browser clients (`curl`, native apps, server-to-server) omit `Origin`, and they are not the cross-site-WebSocket-hijacking threat model.
+* `Origin` matches the request's own scheme/host/port (with RFC 6454 default-port normalisation) — accepted.
+* Anything else, including the literal opaque origin `null` — rejected with HTTP `403`.
+
+To allow other origins, or to apply application-specific logic, return a `checkOrigin` function on the `webSocket` config. It receives the raw `Origin` header value (or `null` when absent) and must return a boolean.
+
+[source,javascript]
+----
+include::code/websockets-4.js[]
+----
+
+The function runs synchronously during the handshake, before any `webSocketEvent` callback. It should be a pure function of the `origin` string; capture any per-request data with a closure inside the `GET` handler. A function that throws or returns a non-boolean rejects the upgrade.
+
