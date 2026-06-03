@@ -31,7 +31,7 @@ version = 1.0.0-SNAPSHOT <2>
 
 # XP App values
 appName = com.acme.example.vanilla <3>
-xpVersion = 8.0.0-SNAPSHOT <4>
+xpVersion = 8.0.0 <4>
 
 # Settings for publishing to a Maven repo
 group = com.acme.example <5>
@@ -40,7 +40,7 @@ group = com.acme.example <5>
 <1> Project name — used for the output file (this produces an app file called `vanilla-<version>.jar`).
 <2> Version — important metadata, used to identify different releases of an app.
 <3> `appName` must be unique across all apps. It is also stored as a namespace in CMS content created by the app.
-<4> Minimum version of XP required for the app. Typically also used to resolve which XP core libraries to depend on from `build.gradle`. While XP 8.0 is in development, use `8.0.0-SNAPSHOT`.
+<4> Minimum version of XP required for the app. Typically also used to resolve which XP core libraries to depend on from `build.gradle`.
 <5> Maven group used when publishing the artifact.
 
 === build.gradle
@@ -56,7 +56,7 @@ plugins { // <1>
 
 repositories { // <2>
     mavenCentral()
-    xp.enonicRepo('dev') // TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }
 
 dependencies { // <3>
@@ -81,7 +81,7 @@ Apply the settings plugin in `settings.gradle`. It wires up the `xplibs` version
 [source,groovy]
 ----
 plugins {
-    id("com.enonic.xp.settings") version "4.0.0-B1" // TODO '4.0.0-B1' is only while XP 8.0 is in development
+    id("com.enonic.xp.settings") version "4.0.0"
 }
 ----
 
@@ -112,7 +112,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    xp.enonicRepo('dev') // TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }
 ----
 
@@ -124,7 +124,7 @@ NOTE: `com.enonic.xp.base` is only needed if your library uses XP dependencies a
 group = com.mycompany.lib
 projectName = mylib
 version = 1.0.0-SNAPSHOT
-xpVersion = 8.0.0-SNAPSHOT # TODO 'SNAPSHOT' is only while XP 8.0 is in development
+xpVersion = 8.0.0
 ----
 
 `appName` and the `enonic.yaml` file are application-only — libraries don't need either.

@@ -100,7 +100,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    xp.enonicRepo('dev') //TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }
 
 dependencies {
@@ -132,7 +132,7 @@ version = 1.0.0-SNAPSHOT
 
 # XP App values
 appName = com.acme.something.myproject
-xpVersion = 8.0.0-SNAPSHOT #TODO 'SNAPSHOT' is only while XP 8.0 is in development
+xpVersion = 8.0.0
 ----
 
 NOTE: `appName` is only used for application projects, as well as `app` config in `build.gradle`
@@ -145,7 +145,7 @@ For the plugin to work, you must add the following to your _settings.gradle_:
 [source,groovy]
 ----
 plugins {
-    id("com.enonic.xp.settings") version "4.0.0-B1"
+    id("com.enonic.xp.settings") version "4.0.0"
 }
 ----
 
@@ -166,7 +166,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    xp.enonicRepo('dev') //TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }
 
 
@@ -181,7 +181,7 @@ via _xp.enonicRepo()_ shortcut
 ----
 group=com.mycompany.lib
 projectName=mylib
-xpVersion=8.0.0-SNAPSHOT #TODO '-SNAPSHOT' is only while XP 8.0 is in development
+xpVersion=8.0.0
 version=1.0.0-SNAPSHOT
 ----
 
