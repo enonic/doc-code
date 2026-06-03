@@ -518,7 +518,7 @@ version = 1.0.0-SNAPSHOT <i class="conum" data-value="2"></i><b>(2)</b>
 
 # XP App values
 appName = com.acme.example.vanilla <i class="conum" data-value="3"></i><b>(3)</b>
-xpVersion = 8.0.0-SNAPSHOT <i class="conum" data-value="4"></i><b>(4)</b>
+xpVersion = 8.0.0 <i class="conum" data-value="4"></i><b>(4)</b>
 
 # Settings for publishing to a Maven repo
 group = com.acme.example <i class="conum" data-value="5"></i><b>(5)</b></code></pre>
@@ -540,7 +540,7 @@ group = com.acme.example <i class="conum" data-value="5"></i><b>(5)</b></code></
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Minimum version of XP required for the app. Typically also used to resolve which XP core libraries to depend on from <code>build.gradle</code>. While XP 8.0 is in development, use <code>8.0.0-SNAPSHOT</code>.</td>
+<td>Minimum version of XP required for the app. Typically also used to resolve which XP core libraries to depend on from <code>build.gradle</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -563,7 +563,7 @@ group = com.acme.example <i class="conum" data-value="5"></i><b>(5)</b></code></
 
 repositories { <i class="conum" data-value="2"></i><b>(2)</b>
     mavenCentral()
-    xp.enonicRepo('dev') // TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }
 
 dependencies { <i class="conum" data-value="3"></i><b>(3)</b>
@@ -612,7 +612,7 @@ Don&#8217;t set <code>java.toolchain.languageVersion</code>, <code>sourceCompati
 <div class="title">Sample settings.gradle</div>
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">plugins {
-    id("com.enonic.xp.settings") version "4.0.0-B1" // TODO '4.0.0-B1' is only while XP 8.0 is in development
+    id("com.enonic.xp.settings") version "4.0.0"
 }</code></pre>
 </div>
 </div>
@@ -663,7 +663,7 @@ Don&#8217;t set <code>java.toolchain.languageVersion</code>, <code>sourceCompati
 
 repositories {
     mavenCentral()
-    xp.enonicRepo('dev') // TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }</code></pre>
 </div>
 </div>
@@ -685,7 +685,7 @@ repositories {
 <pre class="highlight"><code class="language-properties" data-lang="properties">group = com.mycompany.lib
 projectName = mylib
 version = 1.0.0-SNAPSHOT
-xpVersion = 8.0.0-SNAPSHOT # TODO 'SNAPSHOT' is only while XP 8.0 is in development</code></pre>
+xpVersion = 8.0.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -898,7 +898,7 @@ Development mode also disables some of XP&#8217;s caching mechanisms. To make th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 22:10:52 UTC
+Last updated 2026-06-03 11:08:39 UTC
 </div>
 </div>
 </body>

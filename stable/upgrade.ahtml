@@ -685,7 +685,7 @@ Syntax for adding plugins to Gradle may have changed for your project, we recomm
 
 repositories {
     mavenCentral()
-    xp.enonicRepo('dev') //TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }
 
 dependencies {
@@ -749,7 +749,7 @@ version = 1.0.0-SNAPSHOT
 
 # XP App values
 appName = com.acme.something.myproject
-xpVersion = 8.0.0-SNAPSHOT #TODO 'SNAPSHOT' is only while XP 8.0 is in development</code></pre>
+xpVersion = 8.0.0</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -774,7 +774,7 @@ xpVersion = 8.0.0-SNAPSHOT #TODO 'SNAPSHOT' is only while XP 8.0 is in developme
 <div class="title">settings.gradle sample</div>
 <div class="content">
 <pre class="highlight"><code class="language-groovy" data-lang="groovy">plugins {
-    id("com.enonic.xp.settings") version "4.0.0-B1"
+    id("com.enonic.xp.settings") version "4.0.0"
 }</code></pre>
 </div>
 </div>
@@ -796,7 +796,7 @@ Below is a sample content of <em>build.gradle</em> and <em>gradle.properties</em
 
 repositories {
     mavenCentral()
-    xp.enonicRepo('dev') //TODO 'dev' is only while XP 8.0 is in development
+    xp.enonicRepo()
 }</code></pre>
 </div>
 </div>
@@ -818,7 +818,7 @@ via <em>xp.enonicRepo()</em> shortcut
 <div class="content">
 <pre class="highlight"><code class="language-properties" data-lang="properties">group=com.mycompany.lib
 projectName=mylib
-xpVersion=8.0.0-SNAPSHOT #TODO '-SNAPSHOT' is only while XP 8.0 is in development
+xpVersion=8.0.0
 version=1.0.0-SNAPSHOT</code></pre>
 </div>
 </div>
@@ -2386,7 +2386,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-02 22:10:52 UTC
+Last updated 2026-06-03 11:08:39 UTC
 </div>
 </div>
 </body>
