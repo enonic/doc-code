@@ -567,7 +567,7 @@ To run this upgrade automatically with an AI coding agent, use the <a href="http
 </dd>
 <dt class="hdlist1"><code>delete</code> → <code>deleteContent</code> / <code>deleteProject</code> / …</dt>
 <dd>
-<p>JavaScript API methods named <code>delete</code> were renamed to avoid the reserved word (the old <code>delete</code> exports remain for backward compatibility).</p>
+<p>Library methods named <code>delete</code> were renamed to avoid the reserved word (the old <code>delete</code> exports remain for backward compatibility).</p>
 </dd>
 </dl>
 </div>
@@ -2340,7 +2340,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 <h3 id="java_apis"><a class="link" href="#java_apis">Java APIs</a></h3>
 <div class="literalblock">
 <div class="content">
-<pre>There are many changes in Java APIs, multiple classes were moved or renamed, as well as their methods. The intention was to keep JavaScript API as compatible as possible, while improving Java API design and removing unnecessary or confusing methods and classes.</pre>
+<pre>There are many changes in Java APIs, multiple classes were moved or renamed, as well as their methods. The intention was to keep the libraries as compatible as possible, while improving Java API design and removing unnecessary or confusing methods and classes.</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2355,7 +2355,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 <p>Many classes and methods that were only used for internal implementation details and not intended for public use were removed.</p>
 </li>
 <li>
-<p>Methods that had names that could cause confusion with JavaScript API we renamed, for instance <code>ContentService.deleteWithoutFetch</code> renamed <code>ContentService.delete</code>.</p>
+<p>Methods that had names that could cause confusion with the libraries were renamed, for instance <code>ContentService.deleteWithoutFetch</code> renamed <code>ContentService.delete</code>.</p>
 </li>
 <li>
 <p>Classes that have direct replacement in Java 25 standard library were removed.</p>
@@ -2386,7 +2386,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-03 11:08:39 UTC
+Last updated 2026-06-03 14:20:40 UTC
 </div>
 </div>
 </body>

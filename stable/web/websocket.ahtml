@@ -582,7 +582,7 @@ exports.webSocketEvent = function (event) {
 </table>
 </div>
 <div class="paragraph">
-<p>Below is an example of a simple chat using the <a href="../libraries/lib-websocket.ahtml">Websocket JS api</a> for sending messages back and adding/removing clients
+<p>Below is an example of a simple chat using the <a href="../libraries/lib-websocket.ahtml">Websocket library</a> for sending messages back and adding/removing clients
 in groups. Adding to groups allows for multicast message sending.</p>
 </div>
 <div class="listingblock">
@@ -671,7 +671,7 @@ exports.GET = function (req) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-03 11:08:39 UTC
+Last updated 2026-06-03 14:20:40 UTC
 </div>
 </div>
 </body>

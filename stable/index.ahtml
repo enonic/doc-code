@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Enonic XP8 Development Kit (EDK) - WIP</title>
+<title>XP8 - Enonic Development Kit</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Enonic XP8 Development Kit (EDK) - WIP</h1>
+<h1>XP8 - Enonic Development Kit</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -452,7 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Enonic Development Kit (EDK) is the combined server-side TypeScript framework and tools that for Enonic app development.</p>
+<p>The Enonic Development Kit (EDK) is the combined server-side TypeScript framework and tools for Enonic app development.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -465,10 +465,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="audience"><a class="link" href="#audience">Audience</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Looking to customize Enonic XP, you&#8217;ve come to the right place.</p>
-</div>
-<div class="paragraph">
-<p>Code in TypeScript, build and deploy your <a href="fundamentals/apps.ahtml">Enonic app</a> with full access to XP&#8217;s persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <a href="fundamentals/runtime.ahtml">XP runtime</a>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.</p>
+<p>Developers looking to extend or customize Enonic XP or Content Studio, you&#8217;ve come to the right place.</p>
 </div>
 <div class="paragraph">
 <p>This documentation covers the app-development surface only, other relevant documentation includes:</p>
@@ -493,6 +490,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="paragraph">
 <p>XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <a href="schemas.ahtml">content schemas</a>, custom <a href="web/apis.ahtml">APIs</a>, <a href="web/tools.ahtml">admin tools</a> and <a href="web/extensions.ahtml">extensions</a>, <a href="web/id-providers.ahtml">ID providers</a>, <a href="web/webapps.ahtml">webapps</a>, or full <a href="web/sites.ahtml">websites</a> — all powered by the same JS/TS runtime and the same standard <a href="libraries.ahtml">libraries</a>.</p>
+</div>
+<div class="paragraph">
+<p>Code in TypeScript, build and deploy your <a href="fundamentals/apps.ahtml">Enonic app</a> with full access to XP&#8217;s persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <a href="fundamentals/runtime.ahtml">XP runtime</a>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.</p>
 </div>
 </div>
 </div>
@@ -549,7 +549,7 @@ For a hands-on introduction to development with Enonic XP, visit the <a href="ht
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-03 11:08:39 UTC
+Last updated 2026-06-03 14:20:40 UTC
 </div>
 </div>
 </body>

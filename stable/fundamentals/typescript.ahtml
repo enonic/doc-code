@@ -442,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#intro">Intro</a></li>
+<li><a href="#typescript_starter">TypeScript starter</a></li>
 <li><a href="#install_types">Install types</a></li>
 <li><a href="#enonic_libraries">Enonic Libraries</a>
 <ul class="sectlevel2">
@@ -477,7 +478,32 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="intro"><a class="link" href="#intro">Intro</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our standard <a href="../libraries.ahtml">JS APIs</a>.</p>
+<p>We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <a href="../libraries.ahtml">standard libraries</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <a href="runtime.ahtml">Runtime</a> for the execution model.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="typescript_starter"><a class="link" href="#typescript_starter">TypeScript starter</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TypeScript Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli">Enonic CLI</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sh" data-lang="sh">enonic create -r starter-typescript com.example.myapp</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -721,7 +747,7 @@ const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-03 11:08:39 UTC
+Last updated 2026-06-03 14:20:40 UTC
 </div>
 </div>
 </body>
