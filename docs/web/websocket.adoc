@@ -65,7 +65,7 @@ Event object example:
 <8> WebSocket Close reason code, if available.
 <9> WebSocket message, if available.
 
-Below is an example of a simple chat using the <<../libraries/lib-websocket#, Websocket JS api>> for sending messages back and adding/removing clients
+Below is an example of a simple chat using the <<../libraries/lib-websocket#, Websocket library>> for sending messages back and adding/removing clients
 in groups. Adding to groups allows for multicast message sending.
 
 [source,javascript]

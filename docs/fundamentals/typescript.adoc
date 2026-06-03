@@ -2,7 +2,19 @@
 
 == Intro
 
-We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our standard <<../libraries#, JS APIs>>.
+We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <<../libraries#, standard libraries>>.
+
+NOTE: XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <<runtime#, Runtime>> for the execution model.
+
+
+== TypeScript starter
+
+The quickest way to start a TypeScript project — with types, `tsconfig`, and build already wired up — is the https://market.enonic.com/starters/typescript-starter[TypeScript Starter]. Scaffold a new project from it with the https://developer.enonic.com/docs/enonic-cli[Enonic CLI]:
+
+[source,sh]
+----
+enonic create -r starter-typescript com.example.myapp
+----
 
 == Install types
 

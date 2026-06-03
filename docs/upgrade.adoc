@@ -29,7 +29,7 @@ X-data → Mixin:: XP 7 *x-data* is renamed to *mixin*; the `x-data` directory b
 
 `displayName` → `title`:: In descriptors (`enonic.yaml` and others), the `displayName` property is now `title`. This solves the confusion for content type definitions, where every content item has a special displayName field, which also has related configuration. displayName now remains exclusively a data field, and title is used for the human friendly name of the content type, visible in Content Studio and elsewhere in the UI.
 
-`delete` → `deleteContent` / `deleteProject` / …:: JavaScript API methods named `delete` were renamed to avoid the reserved word (the old `delete` exports remain for backward compatibility).
+`delete` → `deleteContent` / `deleteProject` / …:: Library methods named `delete` were renamed to avoid the reserved word (the old `delete` exports remain for backward compatibility).
 
 == Preparations
 
@@ -1326,7 +1326,7 @@ Java Dropwizard Metrics is no longer available in XP Core API. Migrate to `com.e
 
 === Java APIs
 
- There are many changes in Java APIs, multiple classes were moved or renamed, as well as their methods. The intention was to keep JavaScript API as compatible as possible, while improving Java API design and removing unnecessary or confusing methods and classes.
+ There are many changes in Java APIs, multiple classes were moved or renamed, as well as their methods. The intention was to keep the libraries as compatible as possible, while improving Java API design and removing unnecessary or confusing methods and classes.
 
 The most noticeable changes are:
 
@@ -1334,7 +1334,7 @@ The most noticeable changes are:
 
 - Many classes and methods that were only used for internal implementation details and not intended for public use were removed.
 
-- Methods that had names that could cause confusion with JavaScript API we renamed, for instance `ContentService.deleteWithoutFetch` renamed `ContentService.delete`.
+- Methods that had names that could cause confusion with the libraries were renamed, for instance `ContentService.deleteWithoutFetch` renamed `ContentService.delete`.
 
 - Classes that have direct replacement in Java 25 standard library were removed.
 

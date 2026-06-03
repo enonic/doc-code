@@ -1,17 +1,15 @@
-= Enonic XP8 Development Kit (EDK) - WIP
+= XP8 - Enonic Development Kit
 :imagesdir: images
 :toc: right
 
-The Enonic Development Kit (EDK) is the combined server-side TypeScript framework and tools that for Enonic app development.
+The Enonic Development Kit (EDK) is the combined server-side TypeScript framework and tools for Enonic app development.
 
 image::coder.svg["Ready, set, code!", 720w]
 
 
 == Audience
 
-Looking to customize Enonic XP, you've come to the right place. 
-
-Code in TypeScript, build and deploy your <<fundamentals/apps#, Enonic app>> with full access to XP's persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <<fundamentals/runtime#, XP runtime>>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.
+Developers looking to extend or customize Enonic XP or Content Studio, you've come to the right place.
 
 This documentation covers the app-development surface only, other relevant documentation includes:
 
@@ -22,6 +20,9 @@ This documentation covers the app-development surface only, other relevant docum
 == Introduction
 
 XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <<schemas#, content schemas>>, custom <<web/apis#, APIs>>, <<web/tools#, admin tools>> and <<web/extensions#, extensions>>, <<web/id-providers#, ID providers>>, <<web/webapps#, webapps>>, or full <<web/sites#, websites>> — all powered by the same JS/TS runtime and the same standard <<libraries#, libraries>>.
+
+Code in TypeScript, build and deploy your <<fundamentals/apps#, Enonic app>> with full access to XP's persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <<fundamentals/runtime#, XP runtime>>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.
+
 
 == Tutorials
 
