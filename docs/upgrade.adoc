@@ -4,7 +4,7 @@
 
 This section describes the steps required to upgrade an XP application from 7.x to 8.0
 
-NOTE: To run this upgrade automatically with an AI coding agent, use the https://github.com/enonic/ai-agents-skills[Enonic AI Agents Skills] repository — it includes a skill that drives Claude Code (or a compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
+NOTE: To run this upgrade automatically with an AI coding agent, use the https://github.com/enonic/ai-enonic-marketplace[Enonic AI Agents Skills] repository — it includes a skill that drives Claude Code (or a compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
 
 [#terminology]
 == Terminology and concept changes
