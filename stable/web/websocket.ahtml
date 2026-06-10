@@ -443,6 +443,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#http-websockets">Websockets</a></li>
 <li><a href="#origin-check">Origin check</a></li>
+<li><a href="#session-binding">HTTP session binding</a>
+<ul class="sectlevel2">
+<li><a href="#closing_on_session_end">Closing on session end</a></li>
+<li><a href="#keeping_the_session_alive">Keeping the session alive</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -668,10 +674,104 @@ exports.GET = function (req) {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="session-binding"><a class="link" href="#session-binding">HTTP session binding</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A WebSocket starts as a regular HTTP request, and that request may run within an HTTP session — typically when the user is logged in. Once the socket is established, its traffic no longer passes through the HTTP layer, so out of the box the session and the socket would know nothing about each other. Three optional <code>webSocket</code> response parameters control how the two are bound:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>terminateOnSessionExit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Close the WebSocket when the HTTP session it was opened in ends</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sessionAccess</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Let inbound WebSocket messages refresh the HTTP session, keeping it alive</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sessionAccessThrottleMs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum interval, in milliseconds, between session refreshes when <code>sessionAccess</code> is enabled</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Keep the session alive while the client is active, close the socket on logout
+exports.GET = (req) =&gt; {
+
+  if (!req.webSocket) {
+    return { status: 404 };
+  }
+
+  return {
+    webSocket: {
+      subProtocols: ['text'],
+      terminateOnSessionExit: true,   // close the socket when the session ends (default)
+      sessionAccess: true,            // inbound messages keep the session alive
+      sessionAccessThrottleMs: 30000  // refresh the session at most every 30 seconds
+    }
+  };
+};</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="closing_on_session_end"><a class="link" href="#closing_on_session_end">Closing on session end</a></h3>
+<div class="paragraph">
+<p>By default, a WebSocket opened within an HTTP session is closed when that session ends — whether through explicit logout (invalidation) or idle-timeout expiry. The socket is closed with code <code>1008</code> (policy violation) and reason <code>HTTP session ended</code>; the implementation receives the usual <code>close</code> event with <code>closeReason</code> <code>1008</code>. Set <code>terminateOnSessionExit: false</code> to let the socket outlive its session.</p>
+</div>
+<div class="paragraph">
+<p>If the upgrade request carries no HTTP session, there is nothing to bind, and the socket stays open regardless of this parameter.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Idle-expired sessions are invalidated by a periodic sweep, not at the exact moment the timeout elapses, so the close can lag the configured session timeout slightly. The sweep runs at one tenth of the session timeout, clamped between 10 seconds and 10 minutes.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="keeping_the_session_alive"><a class="link" href="#keeping_the_session_alive">Keeping the session alive</a></h3>
+<div class="paragraph">
+<p>A user who only interacts through an open WebSocket generates no HTTP requests, so their session can idle out — and, with the default <code>terminateOnSessionExit</code>, take the socket down with it. Set <code>sessionAccess: true</code> to count inbound messages (client to server) as session activity: each message refreshes the session the socket was opened in. Messages pushed from the server to the client never count as activity.</p>
+</div>
+<div class="paragraph">
+<p>Refreshes are throttled to at most one per <code>sessionAccessThrottleMs</code> milliseconds (default <code>60000</code>); messages arriving within the throttle window are delivered normally but do not touch the session. <code>sessionAccess</code> works independently of <code>terminateOnSessionExit</code> — it refreshes the session even for a socket configured to outlive it.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-09 15:55:00 UTC
+Last updated 2026-06-10 07:55:32 UTC
 </div>
 </div>
 </body>
