@@ -3,7 +3,6 @@ name: Generate Documentation
 on:
   push:
     branches:
-      - "master"
       - "xp8"
     paths:
       - 'docs/**'
