@@ -460,7 +460,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Properties contain the actual data inside a <a href="https://developer.enonic.com/docs/xp/stable/storage/nodes">node</a>.
+<p>Properties contain the actual data inside a <a href="https://developer.enonic.com/docs/platform/stable/storage/nodes">node</a>.
 Properties use a key-value format</p>
 </div>
 <div class="paragraph">
@@ -830,7 +830,7 @@ The value type enables the data storage to handle both validation and <a href="#
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 16:22:58 UTC
+Last updated 2026-06-11 21:15:20 UTC
 </div>
 </div>
 </body>

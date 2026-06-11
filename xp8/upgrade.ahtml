@@ -525,7 +525,7 @@ To run this upgrade automatically with an AI coding agent, use the <a href="http
 <h2 id="terminology"><a class="link" href="#terminology">Terminology and concept changes</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP 8 renames or reframes several XP 7 concepts — "engine" is retired in favour of <strong>service</strong>, controllers become plain <strong>functions</strong>, services become <strong>Universal APIs</strong>, and more. When migrating, or when reconciling older XP 7-era examples or AI-generated code with current conventions, consult the full map in the release notes: <a href="https://developer.enonic.com/docs/xp/stable/release#naming">A paradigm shift in naming</a>.</p>
+<p>XP 8 renames or reframes several XP 7 concepts — "engine" is retired in favour of <strong>service</strong>, controllers become plain <strong>functions</strong>, services become <strong>Universal APIs</strong>, and more. When migrating, or when reconciling older XP 7-era examples or AI-generated code with current conventions, consult the full map in the release notes: <a href="https://developer.enonic.com/docs/platform/stable/release#naming">A paradigm shift in naming</a>.</p>
 </div>
 <div class="paragraph">
 <p>The actionable directory, descriptor, and method renames are detailed in the steps below.</p>
@@ -2345,7 +2345,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 16:22:58 UTC
+Last updated 2026-06-11 21:15:20 UTC
 </div>
 </div>
 </body>

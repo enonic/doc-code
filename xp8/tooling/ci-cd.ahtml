@@ -508,7 +508,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="github_actions"><a class="link" href="#github_actions">GitHub Actions</a></h3>
 <div class="paragraph">
-<p>GitHub Actions integrates via the <code>enonic/action-app-build</code> and <code>enonic/action-app-deploy</code> actions. Deployment uses a <a href="https://developer.enonic.com/docs/xp/stable/iam/system-idp#service_account_key">Service Account Key</a> rather than basic auth. Store the key file contents and the management URL as repository secrets; add client certificate and key secrets if mTLS is enabled.</p>
+<p>GitHub Actions integrates via the <code>enonic/action-app-build</code> and <code>enonic/action-app-deploy</code> actions. Deployment uses a <a href="https://developer.enonic.com/docs/platform/stable/iam/system-idp#service_account_key">Service Account Key</a> rather than basic auth. Store the key file contents and the management URL as repository secrets; add client certificate and key secrets if mTLS is enabled.</p>
 </div>
 <div class="paragraph">
 <p>Example workflow (<code>.github/workflows/enonic.yml</code>):</p>
@@ -698,7 +698,7 @@ workflows:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 16:22:58 UTC
+Last updated 2026-06-11 21:15:20 UTC
 </div>
 </div>
 </body>

@@ -479,7 +479,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><a href="https://developer.enonic.com/docs/content-studio">Content Studio docs</a> for the content authoring interface</p>
 </li>
 <li>
-<p><a href="https://developer.enonic.com/docs/xp">XP platform docs</a> for platform features and architecture</p>
+<p><a href="https://developer.enonic.com/docs/platform">XP platform docs</a> for platform features and architecture</p>
 </li>
 </ul>
 </div>
@@ -549,7 +549,7 @@ For a hands-on introduction to development with Enonic XP, visit the <a href="ht
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 16:22:58 UTC
+Last updated 2026-06-11 21:15:20 UTC
 </div>
 </div>
 </body>

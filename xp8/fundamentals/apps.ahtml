@@ -568,7 +568,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dl>
 </div>
 <div class="paragraph">
-<p>For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the <a href="https://developer.enonic.com/docs/xp">XP platform documentation</a>.</p>
+<p>For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the <a href="https://developer.enonic.com/docs/platform">XP platform documentation</a>.</p>
 </div>
 </div>
 </div>
@@ -586,7 +586,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 16:22:58 UTC
+Last updated 2026-06-11 21:15:20 UTC
 </div>
 </div>
 </body>

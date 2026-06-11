@@ -463,7 +463,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-This section assumes you understand the platform-level concepts — repositories, nodes, branches, and properties. If not, start <a href="https://developer.enonic.com/docs/xp/stable/storage/">Storage overview documentation</a>.
+This section assumes you understand the platform-level concepts — repositories, nodes, branches, and properties. If not, start <a href="https://developer.enonic.com/docs/platform/stable/storage/">Storage overview documentation</a>.
 </td>
 </tr>
 </table>
@@ -575,7 +575,7 @@ This section assumes you understand the platform-level concepts — repositories
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 16:22:58 UTC
+Last updated 2026-06-11 21:15:20 UTC
 </div>
 </div>
 </body>

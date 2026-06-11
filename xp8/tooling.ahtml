@@ -462,7 +462,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><a href="https://github.com/enonic/cli-enonic">Enonic CLI</a></p>
 </li>
 <li>
-<p>SDK versions of the <a href="https://developer.enonic.com/docs/xp">Enonic XP distro</a></p>
+<p>SDK versions of the <a href="https://developer.enonic.com/docs/platform">Enonic XP distro</a></p>
 </li>
 <li>
 <p><a href="tooling/sandboxes.ahtml">Sandboxes</a></p>
@@ -489,7 +489,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 16:22:58 UTC
+Last updated 2026-06-11 21:15:20 UTC
 </div>
 </div>
 </body>
