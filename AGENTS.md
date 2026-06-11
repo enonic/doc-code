@@ -83,6 +83,14 @@ This project relies on GitHub Actions for building and publishing. There are no 
     ```
     First run downloads `mermaid-cli` and a headless Chromium (~1.4 GB) into `~/.npm/_npx` and `~/.cache/puppeteer` — a one-time cost, nothing is added to the repo. Re-render and commit both the `.mmd` and the `.svg` after any edit.
   - The exact source file and re-render command are also kept in an AsciiDoc comment directly above each diagram's `image::` line, so the recipe travels with the page.
+- **Documenting library functions and types:** Most library functions take a *single object argument*. Document them with flat, linked tables — never nested tables.
+  - **Single-object parameter:** lead in with *"``<fn>()`` takes a single `params` object with these properties:"* followed by **one flat table** with columns `Name | Type | Description`. Do *not* add an outer `params | object | …` row, do *not* use nested AsciiDoc tables (`!===`), and do *not* flatten sub-objects with dot-notation (`schedule.value`).
+  - **Optionality — required by default.** There is no "Attributes"/"required" column. A field is *required* unless its Description begins with `*Optional.*`. Conditional requirements are stated in prose (e.g. "*Optional.* … Required when `type` is `CRON`."). Put any default value in the Description too — e.g. "*Optional.* Root path to serve from. Defaults to `+/static+`."
+  - **Nested objects are broken out and linked, not nested.** In the Type column, reference a named type (e.g. `<<schedule-type, Schedule>>`); define that type once in the `== Type Definitions` section as its own flat table with an explicit anchor (`[#schedule-type]`). Reuse a single definition across request and response when the shape is shared (DRY).
+  - **Return objects** use the same flat-table style under `== Type Definitions`; the function's `Returns` line links to the type — e.g. `+*object* : (<<scheduled_job,`ScheduledJob`>>) …+`.
+  - **Table style:** borderless three-column tables — `[%header,cols="1%,1%,98%a"]` with `[frame="none"]` and `[grid="none"]`. Parameter, return, and type tables all share this one shape.
+  - Keep the existing `Example` / `Return value` code blocks — they double as the concrete sample payloads.
+  - **Reference example:** `docs/libraries/lib-scheduler.adoc` (all functions + the `ScheduledJob`/`Schedule` types follow this pattern).
 - **Menu Updates:** When adding new documentation pages, you MUST update `docs/menu.json` to ensure they appear in the docs navigation.
 - **Links:**
   - Use relative links between `.adoc` files (e.g., `<<path/to/doc#,Label>>`).

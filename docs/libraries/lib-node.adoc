@@ -165,19 +165,19 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| start | number | optional | Start index used for paging - default: 0
-| count | number | optional | Number of content to fetch, used for paging - default: 10
-| query | string/object | | Query string or <<../storage/querying#, DSL>> expression.
-| filters | object | optional | Query filters
-| sort | string | optional | Sorting expression - default: '_score DESC'
-| aggregations | object | optional | <<../storage/aggregations#,Aggregations>> config
-| highlight | object | optional | <<../storage/highlighting#,Highlighting>> config
-| explain | boolean | optional | If set to `true`, score calculation explanation will be included in result.
+| Name | Type | Description
+| start | number | *Optional.* Start index used for paging - default: 0
+| count | number | *Optional.* Number of content to fetch, used for paging - default: 10
+| query | string/object | Query string or <<../storage/querying#, DSL>> expression.
+| filters | object | *Optional.* Query filters
+| sort | string | *Optional.* Sorting expression - default: '_score DESC'
+| aggregations | object | *Optional.* <<../storage/aggregations#,Aggregations>> config
+| highlight | object | *Optional.* <<../storage/highlighting#,Highlighting>> config
+| explain | boolean | *Optional.* If set to `true`, score calculation explanation will be included in result.
 |===
 
 [.lead]
@@ -337,19 +337,19 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| _name | string | <optional> | Name of content.
-| _parentPath | string | <optional> | Path to place content under.
-| _indexConfig | object | <optional> | How the document should be <<../storage/indexing#,indexed>>. A default template value
+| Name | Type | Description
+| _name | string | *Optional.* Name of content.
+| _parentPath | string | *Optional.* Path to place content under.
+| _indexConfig | object | *Optional.* How the document should be <<../storage/indexing#,indexed>>. A default template value
 "<<../storage/indexing#byType,byType>>" will be set if no value specified.
-| _permissions | object | <optional> | The access control list for the node. By default the creator will have full access
-| _inheritsPermissions | boolean | <optional> |  Set to `true` if the permissions should be inherited from the node parent. This is a meta-property and is not persisted. Default is `false`.
-| _manualOrderValue | number | <optional> | Value used to order document when ordering by parent and child-order is set to manual
-| _childOrder | string | <optional> | Default ordering of children when doing getChildren if no order is given in query
+| _permissions | object | *Optional.* The access control list for the node. By default the creator will have full access
+| _inheritsPermissions | boolean | *Optional.*   Set to `true` if the permissions should be inherited from the node parent. This is a meta-property and is not persisted. Default is `false`.
+| _manualOrderValue | number | *Optional.*  Value used to order document when ordering by parent and child-order is set to manual
+| _childOrder | string | *Optional.* Default ordering of children when doing getChildren if no order is given in query
 |===
 
 [.lead]
@@ -527,14 +527,14 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| key | string | | Path or id to resolve diff for
-| target | string | | Branch to differentiate with
-| includeChildren | boolean | optional | If set to `true`, differences are resolved for all children.
+| Name | Type | Description
+| key | string | Path or id to resolve diff for
+| target | string | Branch to differentiate with
+| includeChildren | boolean | *Optional.* If set to `true`, differences are resolved for all children.
 |===
 
 [.lead]
@@ -578,17 +578,17 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,1%,96%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Attributes| Default | Details
-| nodeId | string | | | Id to the node.
-| name | string | <optional> | | New node name.
-| includeChildren | boolean | <optional> | true | Indicates that children nodes must be duplicated, too.
-| parent | string | <optional> | | Destination parent path. By default, a duplicated node will be added as a sibling of the source node.
-| refresh | string | <optional> | | Refresh the index for the current repoConnection.
-| dataProcessor | function | <optional> | | Node data processor.
+| Name | Type | Description
+| nodeId | string | Id to the node.
+| name | string | *Optional.* New node name.
+| includeChildren | boolean | *Optional.* Indicates that children nodes must be duplicated, too. Default is `true`.
+| parent | string | *Optional.* Destination parent path. By default, a duplicated node will be added as a sibling of the source node.
+| refresh | string | *Optional.* Refresh the index for the current repoConnection.
+| dataProcessor | function | *Optional.* Node data processor.
 |===
 
 [.lead]
@@ -673,17 +673,17 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| parentKey | string | | Path or ID of parent to get children of
-| start | number | optional | start index used for paging - default: 0
-| count | number | optional | number of content to fetch, used for paging - default: 10
-| childOrder | string | optional | How to order the children - default is value stored on parent
-| countOnly | boolean | optional | Optimize for count children only - default is `false`
-| recursive | boolean | optional | Do recursive fetching of all children of children - default is `false`
+| Name | Type | Description
+| parentKey | string | Path or ID of parent to get children of
+| start | number | *Optional.* start index used for paging - default: 0
+| count | number | *Optional.* number of content to fetch, used for paging - default: 10
+| childOrder | string | *Optional.* How to order the children - default is value stored on parent
+| countOnly | boolean | *Optional.* Optimize for count children only - default is `false`
+| recursive | boolean | *Optional.* Do recursive fetching of all children of children - default is `false`
 |===
 
 [.lead]
@@ -728,14 +728,14 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| key | string | | Path or ID of a node to get versions of
-| cursor | string | optional | Opaque cursor returned in a previous result, used to fetch the next page
-| count | number | optional | Number of versions to fetch - default: 10
+| Name | Type | Description
+| key | string | Path or ID of a node to get versions of
+| cursor | string | *Optional.* Opaque cursor returned in a previous result, used to fetch the next page
+| count | number | *Optional.* Number of versions to fetch - default: 10
 |===
 
 [.lead]
@@ -794,24 +794,17 @@ Fetches a specific node or nodes by path or ID.
 [.lead]
 Parameters
 
+`get()` accepts one or multiple strings (node ids or paths), one or multiple arrays of such strings, or one or multiple objects.
+
+When passing objects, each has these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| params | string \| string[]\|object | One or multiple strings, or one or multiple arrays of strings, or an object with the following properties:
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! key        ! string !            !         ! Node id or path
-! versionId ! string ! <optional> !         ! Specific version to get the node from (default is active version)
-!===
-
+| Name | Type | Description
+| key | string | Node id or path.
+| versionId | string | *Optional.* Specific version to get the node from. Defaults to the active version.
 |===
 
 [.lead]
@@ -1037,14 +1030,14 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Default | Details
-| key | string | | | Path or id to the node
-| editor | function | | | Patcher callback function
-| branches | string[] | <optional> | `[]` | A list of branches to patch. +
+| Name | Type | Description
+| key | string | Path or id to the node
+| editor | function | Patcher callback function
+| branches | string[] | *Optional.* A list of branches to patch. Defaults to `[]`. +
 * If not provided or empty, the node in the current context branch will be patched. +
 * If one branch is listed, the patch occurs in that specific branch. +
 * If multiple branches are listed: +
@@ -1290,19 +1283,19 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| start | number | optional | Start index used for paging - default: 0
-| count | number | optional | Number of content to fetch, used for paging - default: 10
-| query | string/object | | Query string or <<../storage/querying#, DSL>> expression.
-| filters | object | optional | Query filters
-| sort | string/object | optional | Sorting string or <<../storage/querying#sort, DSL>> expression. Default: '_score DESC'
-| aggregations | object | optional | <<../storage/aggregations#,Aggregations>> config
-| highlight | object | optional | <<../storage/highlighting#,Highlighting>> config
-| explain | boolean | optional | If set to `true`, score calculation explanation will be included in result.
+| Name | Type | Description
+| start | number | *Optional.* Start index used for paging - default: 0
+| count | number | *Optional.* Number of content to fetch, used for paging - default: 10
+| query | string/object | Query string or <<../storage/querying#, DSL>> expression.
+| filters | object | *Optional.* Query filters
+| sort | string/object | *Optional.* Sorting string or <<../storage/querying#sort, DSL>> expression. Default: '_score DESC'
+| aggregations | object | *Optional.* <<../storage/aggregations#,Aggregations>> config
+| highlight | object | *Optional.* <<../storage/highlighting#,Highlighting>> config
+| explain | boolean | *Optional.* If set to `true`, score calculation explanation will be included in result.
 |===
 
 
@@ -1595,29 +1588,29 @@ Parameters
 
 An object with the following keys and their values:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| key | string | | Path or id of the node.
-| permissions | object[] | <optional> | Array of permissions to overwrite current permissions. Cannot be combined with `addPermissions` or `removePermissions`.
-| addPermissions | object[] | <optional> | Array of permissions to add. Cannot be combined with `permissions`.
-| removePermissions | object[] | <optional> | Array of permissions to remove. Cannot be combined with `permissions`.
-| scope | string | <optional>  | Scope of applying permissions. `'SINGLE'` applies permissions only to the node itself. `'TREE'` applies permissions to the node and its descendants. `'SUBTREE'` applies permissions only to the node's descendants. Default is `'SINGLE'`.
-| branches | string[] | <optional> | Array of additional branches to apply permissions to. Current context branch should not be included.
+| Name | Type | Description
+| key | string | Path or id of the node.
+| permissions | object[] | *Optional.* Array of permissions to overwrite current permissions. Cannot be combined with `addPermissions` or `removePermissions`.
+| addPermissions | object[] | *Optional.* Array of permissions to add. Cannot be combined with `permissions`.
+| removePermissions | object[] | *Optional.* Array of permissions to remove. Cannot be combined with `permissions`.
+| scope | string | *Optional.* Scope of applying permissions. `'SINGLE'` applies permissions only to the node itself. `'TREE'` applies permissions to the node and its descendants. `'SUBTREE'` applies permissions only to the node's descendants. Default is `'SINGLE'`.
+| branches | string[] | *Optional.* Array of additional branches to apply permissions to. Current context branch should not be included.
 |===
 
 Each permission entry has the following shape:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Details
-| principal | string | | Principal key (for example `role:system.everyone` or `user:system:my-user`).
-| allow | string[] | <optional> | Permissions to allow. Possible values are `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
-| deny | string[] | <optional> | Permissions to deny.
+| Name | Type | Description
+| principal | string | Principal key (for example `role:system.everyone` or `user:system:my-user`).
+| allow | string[] | *Optional.* Permissions to allow. Possible values are `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
+| deny | string[] | *Optional.* Permissions to deny.
 |===
 
 [.lead]

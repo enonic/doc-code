@@ -9,27 +9,9 @@ NOTE: To run this upgrade automatically with an AI coding agent, use the https:/
 [#terminology]
 == Terminology and concept changes
 
-XP 8 renames or reframes several XP 7 concepts. Use this map when migrating — and when reconciling older XP 7-era examples or AI-generated code with current XP 8 conventions. Each change is detailed further down this page.
+XP 8 renames or reframes several XP 7 concepts — "engine" is retired in favour of *service*, controllers become plain *functions*, services become *Universal APIs*, and more. When migrating, or when reconciling older XP 7-era examples or AI-generated code with current conventions, consult the full map in the release notes: https://developer.enonic.com/docs/xp/stable/release#naming[A paradigm shift in naming].
 
-Engine → Service:: The site, webapp, and admin "engines" are now *services* — Additionally XP8 introduces the /api service for a total of four (`/site`, `/webapp`, `/admin`, `/api`) dispatched by the Web endpoint.
-
-Controller → HTTP function:: There are no "controllers". A module (implementation file) exports *functions* (`GET`, `POST`, …) — the implementation is often paired with a descriptor. Controllers may be mentioned in descriptors to indicate that a function has a specific role in the request processing, but the function is still just a function. Function also aligns with contemporary JavaScript/TypeScript terminology, and avoids confusion with the "controller" role in MVC frameworks.
-
-Service → Universal API:: The XP7 HTTP servies / services located at `+/_/service/<app>/<name>+` are replaced by *Universal APIs* in XP8, reachable contextually at `+/_/<app>:<api>+`.
-
-Assets service → lib-asset:: The built-in assets service is deprecated; serve static assets with the `lib-asset` library (available on Enonic Market) instead.
-
-Widgets → Admin extensions:: Admin widgets are now part of the Admin Extensions API; the `admin/widgets` directory becomes `admin/extensions`.
-
-`site/` → `cms/`:: The `src/main/resources/site` directory is renamed to `cms`.
-
-Mixin → Form fragment:: XP 7 *mixins* are renamed to *form fragments*; the `mixins` directory becomes `form-fragments`.
-
-X-data → Mixin:: XP 7 *x-data* is renamed to *mixin*; the `x-data` directory becomes `mixins` (note this collides with the old name — see above). Renaming is made as mixins a more intuitive name, used by editors and developers alike. The data is still stored under the `x` property in content, aligning with miXin.
-
-`displayName` → `title`:: In descriptors (`enonic.yaml` and others), the `displayName` property is now `title`. This solves the confusion for content type definitions, where every content item has a special displayName field, which also has related configuration. displayName now remains exclusively a data field, and title is used for the human friendly name of the content type, visible in Content Studio and elsewhere in the UI.
-
-`delete` → `deleteContent` / `deleteProject` / …:: Library methods named `delete` were renamed to avoid the reserved word (the old `delete` exports remain for backward compatibility).
+The actionable directory, descriptor, and method renames are detailed in the steps below.
 
 == Preparations
 

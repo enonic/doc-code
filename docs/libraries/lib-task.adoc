@@ -157,24 +157,15 @@ On clustered environments aggregated list is returned.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,97%a"]
+`list()` takes a single, optional `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Attributes | Description
-| params | object | <optional> | JSON with optional parameters
-
-[%header,cols="1%,1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name  ! Type   ! Attributes ! Description
-! name  ! string ! <optional> ! Filter by name
-! state ! string ! <optional> ! Filter by task state (`WAITING` \| `RUNNING` \| `FINISHED` \| `FAILED`).
-!===
-
+| Name | Type | Description
+| name | string | *Optional.* Filter by name.
+| state | string | *Optional.* Filter by task state (`WAITING` \| `RUNNING` \| `FINISHED` \| `FAILED`).
 |===
 
 [.lead]
@@ -281,25 +272,16 @@ Reports progress information from an executing task. This function can only be c
 [.lead]
 Parameters
 
+`progress()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with progress details
-
-[%header,cols="1%,1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name    ! Type   ! Attributes ! Description
-! current ! number ! <optional> ! Integer value representing the number of items that have been processed in the task
-! total   ! number ! <optional> ! Integer value representing the total number of items to process in the task
-! info    ! string ! <optional> ! Text describing the current progress for the task
-!===
-
+| Name | Type | Description
+| current | number | *Optional.* Integer value representing the number of items that have been processed in the task.
+| total | number | *Optional.* Integer value representing the total number of items to process in the task.
+| info | string | *Optional.* Text describing the current progress for the task.
 |===
 
 [.lead]
@@ -384,24 +366,15 @@ This function returns immediately. The callback function will be executed asynch
 [.lead]
 Parameters
 
+`executeFunction()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with the parameters
-
-[%header,cols="1%,1%,98%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type     ! Description
-! description ! string   ! Text describing the task to be executed
-! func        ! function ! Callback function to be executed asynchronously
-!===
-
+| Name | Type | Description
+| description | string | Text describing the task to be executed.
+| func | function | Callback function to be executed asynchronously.
 |===
 
 [.lead]
@@ -437,25 +410,16 @@ Recompile your application with the newer library version in order for tasks to 
 [.lead]
 Parameters
 
+`submitTask()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with the parameters
-
-[%header,cols="1%,1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name   ! Type   ! Attributes ! Description
-! descriptor   ! string !            ! Descriptor of the task to execute. Descriptor can be relative to the current application, or a fully qualified task descriptor name (<appname>:<taskname>)
-! name ! string ! <optional> ! Optional name of the task which appears in task info. If not specified, the descriptor key will be used instead.
-! config ! object ! <optional> ! Configuration parameters to pass to the task to be executed. The object must be valid according to the schema defined in the form of the task descriptor XML.
-!===
-
+| Name | Type | Description
+| descriptor | string | Descriptor of the task to execute. Descriptor can be relative to the current application, or a fully qualified task descriptor name (`+<appname>:<taskname>+`).
+| name | string | *Optional.* Optional name of the task which appears in task info. If not specified, the descriptor key will be used instead.
+| config | object | *Optional.* Configuration parameters to pass to the task to be executed. The object must be valid according to the schema defined in the form of the task descriptor XML.
 |===
 
 [.lead]
@@ -492,6 +456,7 @@ const taskId = submitTask({
 
 == Type Definitions
 
+[#taskinfo]
 === TaskInfo
 
 [.lead]
@@ -514,18 +479,27 @@ Properties
 | application | string | Application containing the callback function to run
 | user        | string | Key of the user that submitted the task
 | startTime   | string | Time when the task was submitted (in ISO-8601 format)
-| progress    | object | Progress information provided by the running task
+| progress    | <<progress-type, Progress>> | Progress information provided by the running task
 | node        | string | Identifier of the cluster node where the task is running. Absent when no cluster is configured.
+|===
 
-[%header,cols="1%,1%,98%a", options="header"]
+[#progress-type]
+=== Progress
+
+[.lead]
+Type
+
+*object*
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
 [grid="none"]
-[caption=""]
-.Properties
-!===
-! Name    ! Type   ! Description
-! current ! number ! Integer value representing the number of items that have been processed in the task
-! total   ! number ! Integer value representing the total number of items to process in the task
-! info    ! string ! Text describing the current progress for the task
-!===
-
+|===
+| Name | Type | Description
+| current | number | Integer value representing the number of items that have been processed in the task.
+| total | number | Integer value representing the total number of items to process in the task.
+| info | string | Text describing the current progress for the task.
 |===

@@ -33,26 +33,16 @@ Returns a scheduled job with the specified name.
 [.lead]
 Parameters
 
+`get()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with the parameters
-
-[%header,cols="1%,1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name ! Type ! Attributes ! Description
-
-! name ! string ! required ! name of the job.
-
-
-!===
+| Name | Type | Description
+| name | string | Name of the job.
 |===
+
 [.lead]
 Returns
 
@@ -182,33 +172,20 @@ NOTE: This function returns immediately.
 [.lead]
 Parameters
 
+`create()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with the parameters
-
-[%header,cols="1%,1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name ! Type ! Attributes ! Description
-
-! name ! string ! required ! unique job name.
-! description ! string ! optional ! job description.
-! descriptor ! string ! required ! descriptor of the task to be scheduled.
-! config ! object ! optional ! config of the task to be scheduled.
-! schedule ! object ! required ! task time run config.
-! schedule.value ! string ! required ! schedule value according to its type.
-! schedule.type ! string ! required ! schedule type (CRON or ONE_TIME).
-! schedule.timeZone ! string ! required for schedule.type = CRON ! time zone of cron scheduling. It isn't applicable to a one-time job.
-! user ! string ! optional ! principal key of the user that submitted the task.
-! enabled ! boolean ! required ! job is active or not.
-
-!===
+| Name | Type | Description
+| name | string | Unique job name.
+| description | string | *Optional.* Job description.
+| descriptor | string | Descriptor of the task to be scheduled.
+| config | object | *Optional.* Config passed to the scheduled task.
+| schedule | <<schedule-type, Schedule>> | When the task runs.
+| user | string | *Optional.* Principal key of the user that submitted the task.
+| enabled | boolean | Whether the job is active.
 |===
 
 [.lead]
@@ -306,26 +283,15 @@ NOTE: The previous task will be rescheduled, `lastRun` and `lastTaskId` properti
 [.lead]
 Parameters
 
+`modify()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with the parameters
-
-[%header,cols="1%,1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name ! Type ! Attributes ! Description
-
-! name ! string ! required ! unique job name.
-! editor ! function ! required ! editor callback function has an editable existing job as a param.
-
-
-!===
+| Name | Type | Description
+| name | string | Unique job name.
+| editor | function | Editor callback. Receives the existing job as an editable object and returns it. See the example.
 |===
 
 [.lead]
@@ -389,25 +355,16 @@ NOTE: Renamed from `delete` to avoid the JavaScript reserved word. The old `dele
 [.lead]
 Parameters
 
+`deleteJob()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with the parameters
-
-[%header,cols="1%,1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name ! Type ! Attributes ! Description
-
-! name ! string ! required ! name of the job to be deleted.
-
-!===
+| Name | Type | Description
+| name | string | Name of the job to delete.
 |===
+
 [.lead]
 Returns
 
@@ -448,33 +405,34 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name        | Type   | Description
-| name        | string | Job name
-| description | string | Job description
-| descriptor | string | descriptor of the task to be scheduled
-| config | object | config of the task to be scheduled
-| schedule | object | task time run config
+| Name | Type | Description
+| name | string | Job name.
+| description | string | Job description.
+| descriptor | string | Descriptor of the scheduled task.
+| config | object | Config passed to the scheduled task.
+| schedule | <<schedule-type, Schedule>> | When the task runs.
+| user | string | Principal key of the user that submitted the task.
+| enabled | boolean | Whether the job is active.
+| creator | string | Principal key of the user that created the task.
+| modifier | string | Principal key of the last user that modified the task.
+| createdTime | string | Time of the task creation.
+| modifiedTime | string | Time of the last task modification.
+| lastRun | string | Time of the last job run.
+| lastTaskId | string | Task id of the last job run.
+|===
 
-[%header,cols="1%,1%,98%a", options="header"]
-[frame="topbot"]
+[#schedule-type]
+=== Schedule
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
 [grid="none"]
-[caption=""]
-.Properties
-!===
-! Name ! Type ! Description
-
-! schedule.value ! string ! schedule value
-! schedule.type ! string ! schedule type.
-! schedule.timeZone ! string ! time zone of cron scheduling. It isn't applicable to a onetime job
-!===
-
-| user | string |  principal key of the user that submitted the task
-| enabled | boolean |  job is active or not
-| creator | string | principal key of user that created the task
-| modifier | string | principal key of the last user that modified the task
-| createdTime | string | time of the task creation
-| modifiedTime | string | time of the last task modification
-| lastRun | string | time of the last job run
-| lastTaskId | string | task id of the last job run
-
+|===
+| Name | Type | Description
+| value | string | Schedule value, in the format required by `type`.
+| type | string | Schedule type: `CRON` or `ONE_TIME`.
+| timeZone | string | Time zone of the cron schedule. Required when `type` is `CRON`; not applicable to one-time jobs.
 |===

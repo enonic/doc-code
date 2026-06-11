@@ -33,27 +33,18 @@ Generates a URL pointing to a <<web/apis#, Universal API>>. Picks the right URL 
 [.lead]
 Parameters
 
+`apiUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name    ! Type     ! Attributes ! Default ! Description
-! api     ! string   !            !         ! Descriptor key in `+<app>:<api>+` form.
-! type    ! string   ! <optional> ! server  ! URL type. Either `server` (server-relative), `absolute`, or `websocket`.
-! path    ! string \| string[] ! <optional> !  ! Path appended after the API segment. Accepts a string or a string array.
-! params  ! object   ! <optional> !         ! Custom query parameters to append to the URL.
-! baseUrl ! string   ! <optional> !         ! Override the resolved base URL.
-!===
-
+| Name | Type | Description
+| api | string | Descriptor key in `+<app>:<api>+` form.
+| type | string | *Optional.* URL type. Either `server` (server-relative), `absolute`, or `websocket`. Default is `server`.
+| path | string \| string[] | *Optional.* Path appended after the API segment. Accepts a string or a string array.
+| params | object | *Optional.* Custom query parameters to append to the URL.
+| baseUrl | string | *Optional.* Override the resolved base URL.
 |===
 
 [.lead]
@@ -88,26 +79,17 @@ Generates URL to a static file.
 [.lead]
 Parameters
 
+`assetUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! path        ! string !            !         ! Path to the asset
-! application ! string ! <optional> !         ! Other application to reference to. Defaults to current application
-! type        ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`
-! params      ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| path | string | Path to the asset.
+| application | string | *Optional.* Other application to reference to. Defaults to current application.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -137,32 +119,23 @@ If `name` is provided, XP will try to find an attachment by the unique name and 
 [.lead]
 Parameters
 
+`attachmentUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name     ! Type    ! Attributes ! Default ! Description
-! id       ! string  ! <optional> !         ! Id of the content with the attachment.
-! path     ! string  ! <optional> !         ! Path to the content with the attachment.
-! name     ! string  ! <optional> !         ! Unique name of the attachment.
-! label    ! string  ! <optional> ! source  ! Label of the attachment.
-! download ! boolean ! <optional> ! false   ! Set to `true` if the disposition header should be set to attachment.
-! type     ! string  ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! project  ! string  ! <optional> !         ! Name of the project.
-! branch   ! string  ! <optional> !         ! Name of the branch.
-! baseUrl  ! string  ! <optional> !         ! Custom baseUrl.
-! params   ! object  ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| id | string | *Optional.* Id of the content with the attachment.
+| path | string | *Optional.* Path to the content with the attachment.
+| name | string | *Optional.* Unique name of the attachment.
+| label | string | *Optional.* Label of the attachment. Default is `source`.
+| download | boolean | *Optional.* Set to `true` if the disposition header should be set to attachment. Default is `false`.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| project | string | *Optional.* Name of the project.
+| branch | string | *Optional.* Name of the branch.
+| baseUrl | string | *Optional.* Custom baseUrl.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -190,27 +163,18 @@ Generates a base URL.
 [.lead]
 Parameters
 
+`baseUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name    ! Type   ! Attributes ! Default ! Description
-! type    ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute` or `websocket`.
-! id      ! string ! <optional> !         ! ID of the content.
-! path    ! string ! <optional> !         ! Path to the content.
-! project ! string ! <optional> !         ! Name of the project to use for resolving the URL.
-! branch  ! string ! <optional> !         ! Name of the branch to use for resolving the URL.
-!===
-
+| Name | Type | Description
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`.
+| id | string | *Optional.* ID of the content.
+| path | string | *Optional.* Path to the content.
+| project | string | *Optional.* Name of the project to use for resolving the URL.
+| branch | string | *Optional.* Name of the branch to use for resolving the URL.
 |===
 
 [.lead]
@@ -242,27 +206,18 @@ Generates URL to a page component.
 [.lead]
 Parameters
 
+`componentUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   ! Attributes ! Default ! Description
-! id        ! string ! <optional> !         ! Id to the page.
-! path      ! string ! <optional> !         ! Path to the page.
-! component ! string ! <optional> !         ! Path to the component. If not set, the current path is set.
-! type      ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! params    ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| id | string | *Optional.* Id to the page.
+| path | string | *Optional.* Path to the page.
+| component | string | *Optional.* Path to the component. If not set, the current path is set.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -463,13 +418,13 @@ Returns a JSON containing a named multipart item. If the item does not exist, it
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name  | Type   | Attributes | Description
-| name  | string |            | Name of the multipart item
-| index | number | <optional> | Optional zero-based index. It should be specified if there are multiple items with the same name
+| Name | Type | Description
+| name | string | Name of the multipart item
+| index | number | *Optional.* Optional zero-based index. It should be specified if there are multiple items with the same name
 
 |===
 
@@ -508,13 +463,13 @@ Returns a data stream for a named multipart item. If the item does not exist, it
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name  | Type   | Attributes | Description
-| name  | string |            | Name of the multipart item
-| index | number | <optional> | Optional zero-based index. It should be specified if there are multiple items with the same name
+| Name | Type | Description
+| name | string | Name of the multipart item
+| index | number | *Optional.* Optional zero-based index. It should be specified if there are multiple items with the same name
 
 |===
 
@@ -541,13 +496,13 @@ Returns the multipart item data as text. If the item does not exist, it returns 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name  | Type   | Attributes | Description
-| name  | string |            | Name of the multipart item
-| index | number | <optional> | Optional zero-based index. It should be specified if there are multiple items with the same name
+| Name | Type | Description
+| name | string | Name of the multipart item
+| index | number | *Optional.* Optional zero-based index. It should be specified if there are multiple items with the same name
 
 |===
 
@@ -648,25 +603,16 @@ Generates URL to an ID provider.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,97%a"]
+`idProviderUrl()` takes a single, optional `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Attributes | Description
-| params | object | <optional> | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! idProvider  ! string ! <optional> !         ! Key of an ID provider. If idProvider is not set, then the id provider corresponding to the current execution context will be used.
-! type        ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! params      ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| idProvider | string | *Optional.* Key of an ID provider. If idProvider is not set, then the id provider corresponding to the current execution context will be used.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -681,24 +627,15 @@ Generates URL of an image placeholder with a specified size.
 [.lead]
 Parameters
 
+`imagePlaceholder()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,98%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name ! Type ! Description
-! width ! number ! Width of the image in pixels.
-! height ! number ! Height of the image in pixels.
-!===
-
+| Name | Type | Description
+| width | number | Width of the image in pixels.
+| height | number | Height of the image in pixels.
 |===
 
 [.lead]
@@ -734,34 +671,25 @@ Generates URL to an image.
 [.lead]
 Parameters
 
+`imageUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name       ! Type   ! Attributes ! Default ! Description
-! id         ! string ! <optional> !         ! ID of the image content. Either `id` or `path` is required.
-! path       ! string ! <optional> !         ! Path to the image. If `id` is specified, this parameter is not used.
-! scale      ! string !            !         ! Required. Options are `width(px)`, `height(px)`, `block(width,height)`, `square(px)`, `max(px)`, `wide(width,height)` and `full`.
-! quality    ! number ! <optional> ! 85      ! Quality for JPEG images, ranges from 0 (max compression) to 100 (min compression).
-! background ! string ! <optional> !         ! Background color.
-! format     ! string ! <optional> !         ! Format of the image.
-! filter     ! string ! <optional> !         ! A number of filters are available to alter the image appearance, for example, blur(3), grayscale(), rounded(5), etc.
-! type       ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! project    ! string ! <optional> !         ! Name of the project.
-! branch     ! string ! <optional> !         ! Name of the branch.
-! baseUrl    ! string ! <optional> !         ! Custom baseUrl.
-! params     ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| id | string | *Optional.* ID of the image content. Either `id` or `path` is required.
+| path | string | *Optional.* Path to the image. If `id` is specified, this parameter is not used.
+ | scale | string | Options are `width(px)`, `height(px)`, `block(width,height)`, `square(px)`, `max(px)`, `wide(width,height)` and `full`.
+| quality | number | *Optional.* Quality for JPEG images, ranges from 0 (max compression) to 100 (min compression). Default is `85`.
+| background | string | *Optional.* Background color.
+| format | string | *Optional.* Format of the image.
+| filter | string | *Optional.* A number of filters are available to alter the image appearance, for example, blur(3), grayscale(), rounded(5), etc.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| project | string | *Optional.* Name of the project.
+| branch | string | *Optional.* Name of the branch.
+| baseUrl | string | *Optional.* Custom baseUrl.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -791,26 +719,17 @@ Generates URL to the login endpoint of an ID provider.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,97%a"]
+`loginUrl()` takes a single, optional `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Attributes | Description
-| params | object | <optional> | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! idProvider  ! string ! <optional> !         ! Id provider key. If idProvider is not set, then the id provider corresponding to the current execution context will be used.
-! redirect    ! string ! <optional> !         ! The URL to redirect to after the login.
-! type        ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! params      ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| idProvider | string | *Optional.* Id provider key. If idProvider is not set, then the id provider corresponding to the current execution context will be used.
+| redirect | string | *Optional.* The URL to redirect to after the login.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -825,25 +744,16 @@ Generates URL to the logout endpoint of ID provider in the current context.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,97%a"]
+`logoutUrl()` takes a single, optional `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Attributes | Description
-| params | object | <optional> | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! redirect    ! string ! <optional> !         ! The URL to redirect to after the logout.
-! type        ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! params      ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| redirect | string | *Optional.* The URL to redirect to after the logout.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -858,28 +768,19 @@ Generates URL to a content page.
 [.lead]
 Parameters
 
+`pageUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name    ! Type   ! Attributes ! Default ! Description
-! id      ! string ! <optional> !         ! Id of a content. If id is set, then path is not used.
-! path    ! string ! <optional> !         ! Path of a content. Relative paths are resolved based on the current context.
-! type    ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute` or `websocket`.
-! project ! string ! <optional> !         ! Project of the context.
-! branch  ! string ! <optional> !         ! Branch of the project for context.
-! params  ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| id | string | *Optional.* Id of a content. If id is set, then path is not used.
+| path | string | *Optional.* Path of a content. Relative paths are resolved based on the current context.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`.
+| project | string | *Optional.* Project of the context.
+| branch | string | *Optional.* Branch of the project for context.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -915,26 +816,17 @@ TIP: When outputting processed HTML in Thymeleaf, use attribute `data-th-utext="
 [.lead]
 Parameters
 
+`processHtml()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name  ! Type   ! Attributes ! Default ! Description
-! value ! string !            !         ! Html value string to process.
-! type  ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! imageWidths  ! number[] ! <optional> ! ! A comma-separated list of image widths. If this parameter is provided, all `<img>` tags will have an additional `srcset` attribute with image URLs generated for specified widths.
-! imageSizes  ! string ! <optional> !! Specifies the width for an image depending on browser dimensions. The value has the following format: `(media-condition) width`. Multiple sizes are comma-separated.
-!===
-
+| Name | Type | Description
+| value | string | Html value string to process.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| imageWidths | number[] | *Optional.* A comma-separated list of image widths. If this parameter is provided, all `+<img>+` tags will have an additional `srcset` attribute with image URLs generated for specified widths.
+| imageSizes | string | *Optional.* Specifies the width for an image depending on browser dimensions. The value has the following format: `(media-condition) width`. Multiple sizes are comma-separated.
 |===
 
 [.lead]
@@ -1009,26 +901,17 @@ Generates URL to a service.
 [.lead]
 Parameters
 
+`serviceUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! service     ! string !            !         ! Name of the service.
-! application ! string ! <optional> !         ! Other application to reference to. Default is current application.
-! type        ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute` or `websocket.
-! params      ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| service | string | Name of the service.
+| application | string | *Optional.* Other application to reference to. Default is current application.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -1059,25 +942,16 @@ Generates URL to a resource.
 [.lead]
 Parameters
 
+`url()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | Input parameters as JSON
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name   ! Type   ! Attributes ! Default ! Description
-! path   ! string \| string[] !  !  ! Path to the resource. If a string is provided, it is treated as a full path. If an array of strings is provided, each element is treated as a path segment and will be joined using `/`.
-! type   ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute` or `websocket`.
-! params ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| Name | Type | Description
+| path | string \| string[] | Path to the resource. If a string is provided, it is treated as a full path. If an array of strings is provided, each element is treated as a path segment and will be joined using `/`.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]

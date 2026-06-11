@@ -8,10 +8,24 @@ This section documents the standard JavaScript libraries shipped with the Enonic
 
 When building Enonic apps you may access a broad set of platform capabilities by requiring these libraries. Each library is pulled into your app as a `build.gradle` dependency and loaded at runtime via `require('/lib/xp/<library>')`.
 
-TIP: In addition to the list available in this documentation, you may also browse the https://developer.enonic.com/jsdoc[JSDocs version].
+A library can be loaded two ways — both fully typed once the `@enonic-types` packages are installed (see <<fundamentals/typescript#, TypeScript>>):
+
+.require — CommonJS, the standard form
+[source,typescript]
+----
+const authLib = require('/lib/xp/auth');
+const user = authLib.getUser();
+----
+
+.ES6 import — also needs a `paths` mapping in `tsconfig.json`
+[source,typescript]
+----
+import { getUser } from '/lib/xp/auth';
+const user = getUser();
+----
 
 
-== Headless API
+== Headless APIs
 
 Visit the https://developer.enonic.com/doc/cms[CMS documentation] for details regarding the content schemas and our headless GraphQL API
 

@@ -37,24 +37,15 @@ Fetches a schema from an application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`getSchema()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! name      ! string !  Schema name
-! type      ! string !  Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`)
-!===
-
+| Name | Type | Description
+| name | string | Schema name.
+| type | string | Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`).
 |===
 
 [.lead]
@@ -119,24 +110,15 @@ Fetches schemas of a particular type from an application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`listSchemas()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name             ! Type   !  Description
-! application      ! string !  Application key
-! type             ! string !  Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`)
-!===
-
+| Name | Type | Description
+| application | string | Application key.
+| type | string | Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`).
 |===
 
 [.lead]
@@ -221,25 +203,16 @@ Creates a dynamic schema in a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`createSchema()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! name      ! string !  Dynamic schema name
-! type      ! string !  Dynamic schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`)
-! resource  ! string !  Dynamic schema resource value
-!===
-
+| Name | Type | Description
+| name | string | Dynamic schema name.
+| type | string | Dynamic schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`).
+| resource | string | Dynamic schema resource value.
 |===
 
 [.lead]
@@ -316,25 +289,16 @@ Updates a dynamic schema in a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`updateSchema()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! name      ! string !  Dynamic schema name
-! type      ! string !  Dynamic schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`)
-! resource  ! string !  Dynamic schema resource value
-!===
-
+| Name | Type | Description
+| name | string | Dynamic schema name.
+| type | string | Dynamic schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`).
+| resource | string | Dynamic schema resource value.
 |===
 
 [.lead]
@@ -407,24 +371,15 @@ Removes a schema from a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`deleteSchema()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! name      ! string !  Dynamic schema name
-! type      ! string !  Dynamic schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`)
-!===
-
+| Name | Type | Description
+| name | string | Dynamic schema name.
+| type | string | Dynamic schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, or `MIXIN`).
 |===
 
 [.lead]
@@ -459,24 +414,15 @@ Fetches a component from an application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`getComponent()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! key       ! string !  Component key
-! type      ! string !  Component type(`PAGE`, `PART` or `LAYOUT`)
-!===
-
+| Name | Type | Description
+| key | string | Component key.
+| type | string | Component type (`PAGE`, `PART` or `LAYOUT`).
 |===
 
 [.lead]
@@ -539,24 +485,15 @@ Fetches components of a particular type from an application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`listComponents()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name              ! Type   !  Description
-! application       ! string !  Application key
-! type              ! string !  Component type(`PAGE`, `PART` or `LAYOUT`)
-!===
-
+| Name | Type | Description
+| application | string | Application key.
+| type | string | Component type (`PAGE`, `PART` or `LAYOUT`).
 |===
 
 [.lead]
@@ -628,25 +565,16 @@ Creates a dynamic component in a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`createComponent()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! key       ! string !  Dynamic component key
-! type      ! string !  Dynamic schema type(`PAGE`, `PART` or `LAYOUT`)
-! resource  ! string !  Dynamic component resource value
-!===
-
+| Name | Type | Description
+| key | string | Dynamic component key.
+| type | string | Dynamic schema type (`PAGE`, `PART` or `LAYOUT`).
+| resource | string | Dynamic component resource value.
 |===
 
 [.lead]
@@ -730,25 +658,16 @@ Updates a dynamic component in a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`updateComponent()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! key       ! string !  Dynamic component key
-! type      ! string !  Dynamic component type(`PAGE`, `PART` or `LAYOUT`)
-! resource  ! string !  Dynamic component resource value
-!===
-
+| Name | Type | Description
+| key | string | Dynamic component key.
+| type | string | Dynamic component type (`PAGE`, `PART` or `LAYOUT`).
+| resource | string | Dynamic component resource value.
 |===
 
 [.lead]
@@ -885,24 +804,15 @@ Deletes a dynamic component from a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`deleteComponent()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name      ! Type   !  Description
-! key       ! string !  Dynamic component key
-! type      ! string !  Dynamic component type(`PAGE`, `PART` or `LAYOUT`)
-!===
-
+| Name | Type | Description
+| key | string | Dynamic component key.
+| type | string | Dynamic component type (`PAGE`, `PART` or `LAYOUT`).
 |===
 
 [.lead]
@@ -937,23 +847,14 @@ Fetches styles (f.ex. image styles) from an application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`getStyles()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name              ! Type   !  Description
-! application       ! string !  Application key
-!===
-
+| Name | Type | Description
+| application | string | Application key.
 |===
 
 [.lead]
@@ -997,24 +898,15 @@ Creates styles in a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`createStyles()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name              ! Type   !  Description
-! application       ! string !  Virtual application key
-! resource          ! string !  Dynamic styles resource value
-!===
-
+| Name | Type | Description
+| application | string | Virtual application key.
+| resource | string | Dynamic styles resource value.
 |===
 
 [.lead]
@@ -1091,24 +983,15 @@ Updates styles in a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`updateStyles()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name              ! Type   !  Description
-! application       ! string !  Dynamic application key
-! resource          ! string !  Dynamic styles resource value
-!===
-
+| Name | Type | Description
+| application | string | Dynamic application key.
+| resource | string | Dynamic styles resource value.
 |===
 
 [.lead]
@@ -1185,23 +1068,14 @@ Deletes styles from a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`deleteStyles()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name              ! Type   !  Description
-! application       ! string !  Dynamic application key
-!===
-
+| Name | Type | Description
+| application | string | Dynamic application key.
 |===
 
 [.lead]
@@ -1235,23 +1109,14 @@ Fetches a site descriptor from an application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`getSite()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name              ! Type   !  Description
-! application       ! string !  Application key
-!===
-
+| Name | Type | Description
+| application | string | Application key.
 |===
 
 [.lead]
@@ -1309,24 +1174,15 @@ Updates dynamic site descriptor in a virtual application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`updateSite()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name              ! Type   !  Description
-! application       ! string !  Dynamic application key
-! resource          ! string !  Dynamic site descriptor resource value
-!===
-
+| Name | Type | Description
+| application | string | Dynamic application key.
+| resource | string | Dynamic site descriptor resource value.
 |===
 
 [.lead]
@@ -1404,6 +1260,7 @@ const expected = {
 
 == Type Definitions
 
+[#schema]
 === Schema
 (abstract for <<content_type,ContentType>>, <<form_fragment,FormFragment>> and <<mixin,Mixin>>)
 
@@ -1467,6 +1324,7 @@ Type
 
 *object*
 
+[#mixin]
 === Mixin
 (extends <<schema,`Schema`>>)
 
@@ -1489,6 +1347,7 @@ Properties
 
 |===
 
+[#component]
 === Component
 (abstract for <<page,Page>>, <<part,Part>> and <<layout,Layout>>)
 
@@ -1519,6 +1378,7 @@ Properties
 
 |===
 
+[#page]
 === Page
 (extends <<component,`Component`>>)
 
@@ -1539,6 +1399,7 @@ Properties
 
 |===
 
+[#layout]
 === Layout
 (extends <<component,`Component`>>)
 
@@ -1559,6 +1420,7 @@ Properties
 
 |===
 
+[#part]
 === Part
 (extends <<component,`Component`>>)
 
@@ -1579,6 +1441,7 @@ Properties
 
 |===
 
+[#site]
 === Site
 
 [.lead]
@@ -1602,6 +1465,7 @@ Properties
 
 |===
 
+[#styles]
 === Styles
 
 [.lead]
@@ -1667,6 +1531,7 @@ Properties
 
 |===
 
+[#icon]
 === Icon
 
 [.lead]

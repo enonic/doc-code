@@ -113,23 +113,14 @@ Returns the URL for the Home admin tool.
 [.lead]
 Parameters
 
+`getHomeToolUrl()` takes a single, optional `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| params | object | Parameter object. Optional.
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name ! Type   ! Attributes ! Default ! Description
-! type ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-!===
-
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
 |===
 
 [.lead]
@@ -154,26 +145,17 @@ Returns the URL for an admin extension.
 [.lead]
 Parameters
 
+`extensionUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| params | object | Parameter object.
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! application ! string !            !         ! Application key that provides the extension.
-! extension   ! string !            !         ! Name of the extension.
-! type        ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! params      ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| application | string | Application key that provides the extension.
+| extension | string | Name of the extension.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
@@ -207,26 +189,17 @@ Returns the URL for a widget. Equivalent to calling `extensionUrl` with `extensi
 [.lead]
 Parameters
 
+`widgetUrl()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| params | object | Parameter object.
-
-[%header,cols="1%,1%,1%,1%,96%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name        ! Type   ! Attributes ! Default ! Description
-! application ! string !            !         ! Application key that provides the widget.
-! widget      ! string !            !         ! Name of the widget.
-! type        ! string ! <optional> ! server  ! URL type. Either `server` (server-relative URL) or `absolute`.
-! params      ! object ! <optional> !         ! Custom query parameters to append to the URL.
-!===
-
+| application | string | Application key that provides the widget.
+| widget | string | Name of the widget.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]

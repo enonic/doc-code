@@ -34,23 +34,14 @@ Returns an installed application. If a local and a virtual app are both installe
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`get()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name  ! Type   !  Description
-! key  ! string !  Application key
-!===
-
+| Name | Type | Description
+| key | string | Application key.
 |===
 
 [.lead]
@@ -143,22 +134,14 @@ Returns descriptor of an installed application.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,97%a"]
+`getDescriptor()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with parameters
-
-[%header,cols="1%,1%,97%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name  ! Type   !  Description
-! key   ! string  !  Application key
-!===
+| Name | Type | Description
+| key | string | Application key.
 |===
 
 [.lead]
@@ -204,23 +187,14 @@ TIP: This function requires the Schema Admin role. It means that user role in th
 [.lead]
 Parameters
 
+`createVirtualApplication()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with params
-
-[%header,cols="1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name   ! Type   ! Description
-! key    ! string ! Application key
-!===
-
+| Name | Type | Description
+| key | string | Application key.
 |===
 
 [.lead]
@@ -250,23 +224,14 @@ TIP: This function requires the Schema Admin role. It means that user role in th
 [.lead]
 Parameters
 
+`deleteVirtualApplication()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with params
-
-[%header,cols="1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name   ! Type   ! Description
-! key    ! string ! Application key
-!===
-
+| Name | Type | Description
+| key | string | Application key.
 |===
 
 [.lead]
@@ -296,23 +261,14 @@ TIP: This function requires the Schema Admin role. It means that user role in th
 [.lead]
 Parameters
 
+`getApplicationMode()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name   | Type   | Description
-| params | object | JSON with params
-
-[%header,cols="1%,1%,97%a", options="header"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-.Properties
-!===
-! Name   ! Type   ! Description
-! key    ! string ! Application key
-!===
-
+| Name | Type | Description
+| key | string | Application key.
 |===
 
 [.lead]
@@ -340,6 +296,7 @@ const result = getApplicationMode({
 
 == Type Definitions
 
+[#application]
 === Application
 
 [.lead]
@@ -394,6 +351,7 @@ Properties
 
 |===
 
+[#icon]
 === Icon
 
 [.lead]

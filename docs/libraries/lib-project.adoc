@@ -44,7 +44,7 @@ Parameters
 |===
 | Name | Kind | Details
 | id | string | Unique project id to identify the project.
-| permissions | Object.<string, string[]> | Project permissions to add. 1 to 5 properties where key is role id and value is an array of principals.
+| permissions | <<project-permissions, ProjectPermissions>> | Project permissions to add. 1 to 5 properties where key is role id and value is an array of principals.
 |===
 
 [.lead]
@@ -95,31 +95,21 @@ NOTE: Only `system.admin` and `cms.admin` roles have permissions to create new p
 [.lead]
 Parameters
 
-[cols="1,45,1,53a"]
+`create()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| id | string | | Unique project id (alphanumeric characters and hyphens allowed).
-| displayName | string | | Project display name.
-| parents | string[] | <optional> | Parent project ids. If provided, the new project will be a Content Layer that automatically inherits changes from its parent projects.
-| description | string | <optional> | Project description.
-| language | string | <optional> | Default project language.
-| siteConfig | Object.<string, Object>[] | <optional> | Applications (with optional configurations) to be assigned to the project
-[stripes=none,cols="1,49,50"]
-!===
-! Name ! Type ! Description
-! applicationKey ! string ! Application key
-! config ! Object ! Application config json
-!===
-| permissions | Object.<string, string[]> | <optional> | Project permissions. 1 to 5 properties where key is role id and value is an array of principals.
-[stripes=none,cols="1,49,50"]
-!===
-! Name ! Type ! Description
-! role ! string ! Role id (one of `owner`, `editor`, `author`, `contributor`, `viewer`).
-! principals ! string[] ! Array of principals.
-!===
-| publicRead | boolean | | `true` to grant READ permissions to `system.everyone`, `false` otherwise.
+| Name | Type | Description
+| id | string | Unique project id (alphanumeric characters and hyphens allowed).
+| displayName | string | Project display name.
+| parents | string[] | *Optional.* Parent project ids. If provided, the new project will be a Content Layer that automatically inherits changes from its parent projects.
+| description | string | *Optional.* Project description.
+| language | string | *Optional.* Default project language.
+| siteConfig | <<site-config, SiteConfig>>[] | *Optional.* Applications (with optional configurations) to be assigned to the project.
+| permissions | <<project-permissions, ProjectPermissions>> | *Optional.* Project permissions. 1 to 5 properties where key is role id and value is an array of principals.
+| publicRead | boolean | `true` to grant READ permissions to `system.everyone`, `false` otherwise.
 |===
 
 [.lead]
@@ -512,20 +502,15 @@ NOTE: To remove permissions, user must have `Owner` permissions for the project,
 [.lead]
 Parameters
 
-[%header,cols="1,40,59a"]
+`removePermissions()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
 | id | string | Unique project id (alpha-numeric characters and hyphens allowed).
-| permissions | Object.<string, string[]> | Project permissions to delete. 1 to 5 properties where key is role id and value is an array of principals.
-[stripes=none,cols="1,49,50"]
-!===
-! Name ! Type ! Description
-! role ! string ! Role id (one of `owner`, `editor`, `author`, `contributor`, `viewer`).
-! principals ! string[] ! Array of principals to delete from this project role.
-!===
-
+| permissions | <<project-permissions, ProjectPermissions>> | Project permissions to delete. 1 to 5 properties where key is role id and value is an array of principals.
 |===
 
 [.lead]
@@ -609,3 +594,49 @@ const project = getAvailableApplications({
 ----
 const expected = ['app1', 'app2']
 ----
+
+== Type Definitions
+
+[#site-config]
+=== SiteConfig
+
+An application assignment, with optional configuration.
+
+[.lead]
+Type
+
+*object*
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| applicationKey | string | Application key.
+| config | object | Application config json.
+|===
+
+[#project-permissions]
+=== ProjectPermissions
+
+Project permissions, expressed as 1 to 5 properties where each key is a role id and the value is an array of principals.
+
+[.lead]
+Type
+
+*object*
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| role | string | Role id (one of `owner`, `editor`, `author`, `contributor`, `viewer`).
+| principals | string[] | Array of principals.
+|===
