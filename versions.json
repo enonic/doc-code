@@ -1,8 +1,8 @@
 {
   "versions": [
     {
-      "label": "stable",
-      "checkout": "master",
+      "label": "xp8",
+      "checkout": "xp8",
       "latest": true
     }
   ]
