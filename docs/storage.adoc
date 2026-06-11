@@ -4,7 +4,7 @@
 
 Reference material for writing applications that read, query, and persist data in Enonic XP's NoSQL data store.
 
-TIP: This section assumes you understand the platform-level concepts — repositories, nodes, branches, and properties. If not, start https://developer.enonic.com/docs/xp/stable/storage/[Storage overview documentation].
+TIP: This section assumes you understand the platform-level concepts — repositories, nodes, branches, and properties. If not, start https://developer.enonic.com/docs/platform/stable/storage/[Storage overview documentation].
 
 == Libraries
 

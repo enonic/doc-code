@@ -55,7 +55,7 @@ Via Admin Console:: Install manually through the *Applications* admin tool. Usef
 
 Via the file system:: Drop the JAR into the XP `deploy/` folder. Used during development and for specialized deployment scenarios. File-system deploys are local to a single node and override apps installed via the other channels.
 
-For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the https://developer.enonic.com/docs/xp[XP platform documentation].
+For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the https://developer.enonic.com/docs/platform[XP platform documentation].
 
 == Configuration
 

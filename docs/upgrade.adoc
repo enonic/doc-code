@@ -9,7 +9,7 @@ NOTE: To run this upgrade automatically with an AI coding agent, use the https:/
 [#terminology]
 == Terminology and concept changes
 
-XP 8 renames or reframes several XP 7 concepts — "engine" is retired in favour of *service*, controllers become plain *functions*, services become *Universal APIs*, and more. When migrating, or when reconciling older XP 7-era examples or AI-generated code with current conventions, consult the full map in the release notes: https://developer.enonic.com/docs/xp/stable/release#naming[A paradigm shift in naming].
+XP 8 renames or reframes several XP 7 concepts — "engine" is retired in favour of *service*, controllers become plain *functions*, services become *Universal APIs*, and more. When migrating, or when reconciling older XP 7-era examples or AI-generated code with current conventions, consult the full map in the release notes: https://developer.enonic.com/docs/platform/stable/release#naming[A paradigm shift in naming].
 
 The actionable directory, descriptor, and method renames are detailed in the steps below.
 

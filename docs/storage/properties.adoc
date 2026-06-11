@@ -4,7 +4,7 @@
 
 == Introduction
 
-Properties contain the actual data inside a https://developer.enonic.com/docs/xp/stable/storage/nodes[node].
+Properties contain the actual data inside a https://developer.enonic.com/docs/platform/stable/storage/nodes[node].
 Properties use a key-value format
 
 The key must be unique within the node, and the value must have a specific <<#value_types, valueType>>, such as ``String``, or ``GeoPoint``.

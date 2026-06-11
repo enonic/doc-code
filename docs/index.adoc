@@ -15,7 +15,7 @@ This documentation covers the app-development surface only, other relevant docum
 
 * https://developer.enonic.com/docs/cms[CMS docs] for content modelling and content APIs
 * https://developer.enonic.com/docs/content-studio[Content Studio docs] for the content authoring interface
-* https://developer.enonic.com/docs/xp[XP platform docs] for platform features and architecture
+* https://developer.enonic.com/docs/platform[XP platform docs] for platform features and architecture
 
 == Introduction
 
