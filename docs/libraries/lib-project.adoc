@@ -35,22 +35,21 @@ NOTE: To modify permissions, user must have `Owner` permissions for the project,
 
 TIP: You can read about project permissions in the dedicated https://developer.enonic.com/docs/content-studio/stable/projects#roles[Content Projects] section
 
-[.lead]
-Parameters
+`addPermissions()` takes a single `AddProjectPermissionsParams` object with these properties:
 
-[%header,cols="1%,44%,55%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
+| Name | Type | Description
 | id | string | Unique project id to identify the project.
-| permissions | <<project-permissions, ProjectPermissions>> | Project permissions to add. 1 to 5 properties where key is role id and value is an array of principals.
+| permissions | <<project-permission, ProjectPermission>> | *Optional.* Project permissions to add. Keys are role ids (`owner`, `editor`, `author`, `contributor`, `viewer`); values are arrays of principal keys.
 |===
 
 [.lead]
 Returns
 
-*Object* : All current project permissions.
+*object* : (<<project-permissions, `ProjectPermissions`>>) All current project permissions, or `null`.
 
 [.lead]
 Example
@@ -92,10 +91,7 @@ Creates a new Content Project.
 
 NOTE: Only `system.admin` and `cms.admin` roles have permissions to create new projects.
 
-[.lead]
-Parameters
-
-`create()` takes a single `params` object with these properties:
+`create()` takes a single `CreateProjectParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -104,18 +100,18 @@ Parameters
 | Name | Type | Description
 | id | string | Unique project id (alphanumeric characters and hyphens allowed).
 | displayName | string | Project display name.
+| publicRead | boolean | `true` to grant READ permissions to `system.everyone`, `false` otherwise.
 | parents | string[] | *Optional.* Parent project ids. If provided, the new project will be a Content Layer that automatically inherits changes from its parent projects.
 | description | string | *Optional.* Project description.
 | language | string | *Optional.* Default project language.
 | siteConfig | <<site-config, SiteConfig>>[] | *Optional.* Applications (with optional configurations) to be assigned to the project.
-| permissions | <<project-permissions, ProjectPermissions>> | *Optional.* Project permissions. 1 to 5 properties where key is role id and value is an array of principals.
-| publicRead | boolean | `true` to grant READ permissions to `system.everyone`, `false` otherwise.
+| permissions | <<project-permission, ProjectPermission>> | *Optional.* Project permissions. Keys are role ids; values are arrays of principal keys.
 |===
 
 [.lead]
 Returns
 
-*Object* : Project object.
+*object* : (<<project, `Project`>>) The created project.
 
 
 [.lead]
@@ -231,14 +227,13 @@ Deletes an existing Content Project and the project repository along with all th
 
 NOTE: To delete a project, user must have either `system.admin` or `cms.admin` role.
 
-[.lead]
-Parameters
+`deleteProject()` takes a single `DeleteProjectParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
+| Name | Type | Description
 | id | string | Unique project id to identify the project.
 |===
 
@@ -273,21 +268,20 @@ Returns an existing Content Project.
 
 NOTE: To access a project, user must have sufficient permissions for this project, or either `system.admin` or `cms.admin` role.
 
-[.lead]
-Parameters
+`get()` takes a single `GetProjectParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
+| Name | Type | Description
 | id | string | Unique project id to identify the project.
 |===
 
 [.lead]
 Returns
 
-*Object* : Content Project object or `null` if not found.
+*object* : (<<project, `Project`>>) The project, or `null` if not found.
 
 [.lead]
 Example
@@ -328,10 +322,12 @@ Returns all Content Projects that user in the current context has permissions fo
 
 NOTE: Users with `system.admin` or `cms.admin` roles will get the list of all projects.
 
+Takes no arguments.
+
 [.lead]
 Returns
 
-*Object[]* : Array of Content Project objects.
+*object[]* : (<<project, `Project[]`>>) Array of Content Project objects.
 
 
 [.lead]
@@ -375,24 +371,21 @@ Pass an `editor` function that receives the current project, mutates fields on i
 
 NOTE: To modify a project, user must have `Owner` permissions for this project, or either `system.admin` or `cms.admin` role.
 
-[.lead]
-Parameters
+`modify()` takes a single `ModifyProjectParams` object with these properties:
 
-[%header,cols="1,1,98a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| id | string | Unique project id (alpha-numeric characters and hyphens allowed).
-| editor | Function | Function that receives the editable project, mutates fields, and returns it.
+| id | string | Unique project id (alphanumeric characters and hyphens allowed).
+| editor | function | Editor callback that receives the current project (a `Project` merged with `EditableProject`), mutates fields, and returns it.
 |===
-
-The editor's input has the same shape as a `Project` plus the editable fields `displayName`, `description`, `language`, and `siteConfig`.
 
 [.lead]
 Returns
 
-*Object* : Modified project object.
+*object* : (<<project, `Project`>>) The modified project.
 
 
 [.lead]
@@ -455,15 +448,14 @@ Toggles public/private READ access for an existing Content Project. This will mo
 
 NOTE: To modify READ access, user must have `Owner` permissions for the project, or either `system.admin` or `cms.admin` role.
 
-[.lead]
-Parameters
+`setPublicRead()` takes a single `SetProjectPublicReadParams` object with these properties:
 
-[%header,cols="1,1,98a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| id | string | Unique project id (alpha-numeric characters and hyphens allowed).
+| id | string | Unique project id (alphanumeric characters and hyphens allowed).
 | publicRead | boolean | `true` to grant READ permissions to `system.everyone`, `false` otherwise.
 |===
 
@@ -499,26 +491,23 @@ Removes permissions from an existing Content Project.
 
 NOTE: To remove permissions, user must have `Owner` permissions for the project, or either `system.admin` or `cms.admin` role.
 
-[.lead]
-Parameters
-
-`removePermissions()` takes a single `params` object with these properties:
+`removePermissions()` takes a single `RemoveProjectPermissionsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| id | string | Unique project id (alpha-numeric characters and hyphens allowed).
-| permissions | <<project-permissions, ProjectPermissions>> | Project permissions to delete. 1 to 5 properties where key is role id and value is an array of principals.
+| id | string | Unique project id (alphanumeric characters and hyphens allowed).
+| permissions | <<project-permission, ProjectPermission>> | *Optional.* Project permissions to remove. Keys are role ids; values are arrays of principal keys to remove from that role.
 |===
 
 [.lead]
 Returns
 
-*Object* : All current project permissions.
+*object* : (<<project-permissions, `ProjectPermissions`>>) All current project permissions after removal, or `null`.
 
-.Adds and then removes permissions from an existing content project
+.Add and then remove permissions from an existing content project
 [source,typescript]
 ----
 import {addPermissions,removePermissions} from '/lib/xp/project';
@@ -560,14 +549,13 @@ Returns available applications of a specified project. The result contains activ
 
 NOTE: User must be a member of one of the project roles, or either `system.admin` or `cms.admin` role.
 
-[.lead]
-Parameters
+`getAvailableApplications()` takes a single `GetAvailableApplicationsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
+| Name | Type | Description
 | id | string | Unique project id to identify the project.
 |===
 
@@ -597,15 +585,33 @@ const expected = ['app1', 'app2']
 
 == Type Definitions
 
+[#project]
+=== Project
+
+A Content Project object, as returned by `create()`, `get()`, `list()`, and `modify()`.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | Unique project id.
+| displayName | string | Project display name.
+| publicRead | boolean | Whether all content in the project is publicly readable.
+| parents | string[] | Parent project ids. Empty array when the project is not a Content Layer.
+| description | string | *Optional.* Project description.
+| language | string | *Optional.* Default project language.
+| siteConfig | <<site-config, SiteConfig>>[] | *Optional.* Applications assigned to the project, with optional configurations.
+| permissions | <<project-permission, ProjectPermission>> | *Optional.* Project role-to-principals mapping.
+|===
+
 [#site-config]
 === SiteConfig
 
 An application assignment, with optional configuration.
-
-[.lead]
-Type
-
-*object*
 
 [.lead]
 Properties
@@ -616,18 +622,18 @@ Properties
 |===
 | Name | Type | Description
 | applicationKey | string | Application key.
-| config | object | Application config json.
+| config | object | *Optional.* Application configuration object.
 |===
+
+[#project-permission]
+=== ProjectPermission
+
+A partial mapping of project role ids to arrays of principal keys. Keys are one of `owner`, `editor`, `author`, `contributor`, or `viewer`; values are arrays of principal key strings (e.g. `user:mystore:alice`).
 
 [#project-permissions]
 === ProjectPermissions
 
-Project permissions, expressed as 1 to 5 properties where each key is a role id and the value is an array of principals.
-
-[.lead]
-Type
-
-*object*
+The object returned by `addPermissions()` and `removePermissions()`.
 
 [.lead]
 Properties
@@ -637,6 +643,5 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| role | string | Role id (one of `owner`, `editor`, `author`, `contributor`, `viewer`).
-| principals | string[] | Array of principals.
+| permissions | <<project-permission, ProjectPermission>> | Current role-to-principals mapping for the project.
 |===

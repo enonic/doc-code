@@ -11,6 +11,8 @@ This section documents the parts of an app that are not tied to a specific HTTP 
 
 <<fundamentals/typescript#, TypeScript>>:: TypeScript is the authoring language for Enonic apps — set it up first. How to install and use the official `@enonic-types` packages so your editor and build understand the platform APIs.
 
+<<fundamentals/types#, Types>>:: The shared types that flow across the libraries — principals, binary streams, the content object, page components — defined once in `@enonic-types/core` and referenced from every library page.
+
 <<fundamentals/apps#, Apps>>:: What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.
 
 <<fundamentals/functions#, Functions>>:: How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).

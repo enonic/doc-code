@@ -45,14 +45,7 @@ The following changes will be applied to the input text:
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| text | string | Text to sanitize
-|===
-
+`sanitize()` takes a single positional argument: `text` (string) — the text to sanitize.
 
 [.lead]
 Returns

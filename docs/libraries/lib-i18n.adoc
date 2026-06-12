@@ -27,7 +27,7 @@ import i18nLib from '/lib/xp/i18n';
 
 Then you need to create files with original phrases and their translations.  These files should normally be placed in the `src/main/resources/i18n` folder of your application.
 There must be a file named `phrases.properties` that contains all the default phrases.  
-Additional files with translations named `phrases_<locale>.properties` should contain the same phrases with texts localised to `<locale>` language.  
+Additional files with translations named `+phrases_<locale>.properties+` should contain the same phrases with texts localised to `<locale>` language.
 If a phrase is missing from the locale-specific file, the default file will be used. This is what a couple of such files could look like:
 
 .phrases.properties
@@ -37,7 +37,7 @@ action.preview=Preview
 notify.process.failed=Processing failed: {0}.
 ----
 
-.phrases_es.properties
+.+phrases_es.properties+
 [source,properties]
 ----
 action.preview=Vista Previa
@@ -56,14 +56,7 @@ Returns an object of key/value-pairs for all phrases with the given locales in t
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| locale | string \| string[] | A string-representation of a locale, or an array of locales in preferred order. Pass in an empty array to use the site language.
-| bundles | string[] | Optional list of bundle names. Bundle names are specified as paths, relative to the `src/main/resources/` folder.
-|===
+`getPhrases()` takes two positional arguments: `locale` (`string | string[]`) — a locale string or array of locales in preferred order (pass an empty array to use the site language); and an optional `bundles` (`string[]`) — bundle names as paths relative to `src/main/resources/`.
 
 [.lead]
 Returns
@@ -95,13 +88,7 @@ Returns the list of supported locale codes for the specified bundles.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| bundles | string[] | Optional list of bundle names. Bundle names are specified as paths, relative to the `src/main/resources` folder.
-|===
+`getSupportedLocales()` takes one optional positional argument: `bundles` (`string[]`) — bundle names as paths relative to `src/main/resources/`.
 
 [.lead]
 Returns
@@ -129,7 +116,7 @@ Localizes a phrase by searching through the list of passed-in locales in the giv
 If no translation is found, the default phrase will be used. Some phrases will have placeholders (`{0}`, `{1}` etc.) for values that may be inserted
 into the phrase. These must be provided in the function call for those phrases.
 
-The function takes a single `params` object with the following properties:
+`localize()` takes a single `LocalizeParams` object with these properties:
 
 [.lead]
 Parameters
@@ -138,12 +125,12 @@ Parameters
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| key | string | The phrase key. Required.
-| locale | string \| string[] | Optional. A string-representation of a locale, or an array of locales in preferred order. If not set, the site language is used.
-| values | string[] | Optional placeholder values.
-| bundles | string[] | Optional list of bundle names.
-| fallbackMessage | string | Optional fallback message returned when the phrase is not found. Defaults to `"NOT_TRANSLATED"`.
+| Name | Type | Description
+| key | string | The phrase key.
+| locale | string \| string[] | *Optional.* A locale string or array of locales in preferred order. If not set, the site language is used.
+| values | string[] | *Optional.* Placeholder values inserted into the phrase in order (`{0}`, `{1}`, etc.).
+| bundles | string[] | *Optional.* Bundle names as paths relative to `src/main/resources/`.
+| `+fallbackMessage+` | string | *Optional.* Returned when the phrase is not found. Defaults to `"NOT_TRANSLATED"`.
 |===
 
 [.lead]

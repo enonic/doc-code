@@ -62,18 +62,18 @@ Adds an attachment to an existing content.
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`addAttachment()` takes a single `AddAttachmentParam` object with these properties:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Description
-| key | string | | Path or id to the content
-| name | string | | Attachment name (unique within the content)
-| mimeType | string | | Attachment content type
-| label | string | <optional> | Attachment label
-| data | object | <optional> | Stream with the binary data for the attachment
+| Name | Type | Description
+| key | string | Path or id to the content.
+| name | string | Attachment name (unique within the content).
+| mimeType | string | Attachment content type.
+| label | string | *Optional.* Attachment label.
+| data | object | *Optional.* Stream with the binary data for the attachment.
 |===
 
 [.lead]
@@ -100,7 +100,7 @@ Archives a content
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`archive()` takes a single `ArchiveContentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -147,25 +147,25 @@ To create a content where `name` is not important and there could be multiple in
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`create()` takes a single `CreateContentParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| name | string | <optional> | | Name of content
-| parentPath | string | | | Path to place content under
-| displayName | string | <optional> | | Display name. Default is same as name
-| requireValid | boolean | <optional> | true | The content has to be valid, according to the content type, to be created. If requireValid=true and the content is not strictly valid, an error will be thrown
-| refresh | boolean | <optional> | true | If refresh is true, the created content will to be searchable through queries immediately, else within 1 second. Since there is a performance penalty doing this refresh, refresh should be set to false for bulk operations
-| contentType | string | | | Content type to use
-| language | string | <optional> | | The language tag representing the content’s locale
-| childOrder | string | <optional> | | Default ordering of children when doing getChildren if no order is given in query
-| data | object | | | Actual content data
-| page | object | <optional> | | content <<PageType, page>>
-| x | object | <optional> | | eXtra data to use
-| workflow | object | <optional> | | Workflow information to use. Default has state READY and empty check list.
+| Name | Type | Description
+| name | string | *Optional.* Name of content.
+| parentPath | string | Path to place content under.
+| displayName | string | *Optional.* Display name. Defaults to the same as `name`.
+| requireValid | boolean | *Optional.* The content has to be valid, according to the content type, to be created. If `true` and the content is not strictly valid, an error will be thrown. Defaults to `true`.
+| refresh | boolean | *Optional.* If `true`, the created content will be searchable through queries immediately, otherwise within 1 second. Since there is a performance penalty doing this refresh, set to `false` for bulk operations. Defaults to `true`.
+| contentType | string | Content type to use.
+| language | string | *Optional.* The language tag representing the content's locale.
+| childOrder | string | *Optional.* Default ordering of children when doing `getChildren` if no order is given in query.
+| data | object | Actual content data.
+| page | object | *Optional.* Content <<fundamentals/types#page-component, page>>.
+| x | object | *Optional.* eXtra data to use.
+| workflow | object | *Optional.* Workflow information to use. Default has state `READY` and an empty check list.
 |===
 
 [.lead]
@@ -289,24 +289,24 @@ Creates a media content
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`createMedia()` takes a single `CreateMediaParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| name | string | | | Name of content
-| parentPath | string | <optional> | / | Path to place content under
-| focalX | number | <optional> | | Focal point for X axis (if it's an image)
-| focalY | number | <optional> | | Focal point for Y axis (if it's an image)
-| artist | string \| string[] | <optional> | | Artist of the media
-| tags | string \| string[] | <optional> | | Tags of the media
-| caption | string | <optional> | | Caption of the media
-| altText | string | <optional> | | Alt text of the media
-| copyright | string | <optional> | | Copyright of the media
-| data | object | | | Data (as stream) to use
-| idGenerator | function | <optional> | | Function used to generate the id-suffix appended to the content name
+| Name | Type | Description
+| name | string | Name of content.
+| parentPath | string | *Optional.* Path to place content under. Defaults to `/`.
+| focalX | number | *Optional.* Focal point for X axis (if it's an image).
+| focalY | number | *Optional.* Focal point for Y axis (if it's an image).
+| artist | string \| string[] | *Optional.* Artist of the media.
+| tags | string \| string[] | *Optional.* Tags of the media.
+| caption | string | *Optional.* Caption of the media.
+| altText | string | *Optional.* Alt text of the media.
+| copyright | string | *Optional.* Copyright of the media.
+| data | object | Data (as stream) to use.
+| idGenerator | function | *Optional.* Function used to generate the id-suffix appended to the content name.
 |===
 
 [.lead]
@@ -356,22 +356,22 @@ Updates a media content
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`updateMedia()` takes a single `UpdateMediaParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| key | string | | | Path or id of the media content
-| name | string | | | Name of the media content
-| data | object | | | Media data (as a stream)
-| focalX | number | <optional> | | Focal point for X axis (if content is an image)
-| focalY | number | <optional> | | Focal point for Y axis (if content is an image)
-| caption | string | <optional> | | Caption
-| artist | string \| string[]  | <optional> | | Artist
-| copyright | string | <optional> | | Copyright
-| tags | string \| string[] | <optional> | | Tags
+| Name | Type | Description
+| key | string | Path or id of the media content.
+| name | string | Name of the media content.
+| data | object | Media data (as a stream).
+| focalX | number | *Optional.* Focal point for X axis (if content is an image).
+| focalY | number | *Optional.* Focal point for Y axis (if content is an image).
+| caption | string | *Optional.* Caption.
+| artist | string \| string[] | *Optional.* Artist.
+| copyright | string | *Optional.* Copyright.
+| tags | string \| string[] | *Optional.* Tags.
 |===
 
 [.lead]
@@ -438,7 +438,7 @@ NOTE: Renamed from `delete` to avoid the JavaScript reserved word. The old `dele
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`deleteContent()` takes a single `DeleteContentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -479,22 +479,19 @@ Duplicates a content.
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`duplicate()` takes a single `DuplicateContentParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,96%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default | Description
-| contentId | string | | | Id of the content.
-| workflow | Object | <optional> | ```{
-state: "READY",
-checks: {}
-}``` | Workflow state.
-| includeChildren |  boolean | <optional> | true | Indicates that children contents must be duplicated, too. Ignored if `variant=true`.
-| variant | boolean | <optional> | false | Indicates that duplicated content is a variant.
-| parent | string | <optional> | | Destination parent path. By default, a duplicated content will be added as a sibling of the source content.
-| name | string | <optional> | | New content name.
+| Name | Type | Description
+| contentId | string | Id of the content.
+| workflow | object | *Optional.* Workflow state. Defaults to `{ state: "READY", checks: {} }`.
+| includeChildren | boolean | *Optional.* Indicates that children contents must be duplicated, too. Ignored if `variant=true`. Defaults to `true`.
+| variant | boolean | *Optional.* Indicates that duplicated content is a variant. Defaults to `false`.
+| parent | string | *Optional.* Destination parent path. By default, a duplicated content will be added as a sibling of the source content.
+| name | string | *Optional.* New content name.
 |===
 
 [.lead]
@@ -554,7 +551,7 @@ Checks if a content exists in the current context.
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`exists()` takes a single `ContentExistsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -596,15 +593,15 @@ Returns a content
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`get()` takes a single `GetContentParams` object with these properties:
 
-[%header,cols="35%,1%,1%,63%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Description
-| key | string | | Path or id to the parent content
-| versionId | string | <optional> | Content version id
+| Name | Type | Description
+| key | string | Path or id to the parent content.
+| versionId | string | *Optional.* Content version id.
 |===
 
 [.lead]
@@ -677,7 +674,7 @@ Returns the active content version for each specified branch.
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`getActiveVersions()` takes a single `GetActiveVersionsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -717,13 +714,7 @@ This function returns a content attachments
 [.lead]
 *Parameters:*
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name  | Type   | Description
-| key | string | Path or id to the content
-|===
+`getAttachments()` takes the content's path or id as a single string argument.
 
 [.lead]
 Returns
@@ -758,7 +749,7 @@ This function returns a data-stream for the specified content attachment
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`getAttachmentStream()` takes a single `GetAttachmentStreamParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -795,17 +786,17 @@ Fetches children of a content
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`getChildren()` takes a single `GetChildContentParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| key | string | | | Path or id to the parent content
-| start | number | <optional> | 0 | Start index (used for paging)
-| count | number | <optional> | 10 | Number of contents to fetch
-| sort | string | <optional> | | Sorting expression
+| Name | Type | Description
+| key | string | Path or id to the parent content.
+| start | number | *Optional.* Start index (used for paging). Defaults to `0`.
+| count | number | *Optional.* Number of contents to fetch. Defaults to `10`.
+| sort | string | *Optional.* Sorting expression.
 |===
 
 [.lead]
@@ -891,7 +882,7 @@ Returns the list of content items that are outbound dependencies of specified co
 [.lead]
 *Parameters:*
 
-An object with the following properties:
+`getOutboundDependencies()` takes a single `GetOutboundDependenciesParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -933,7 +924,7 @@ Returns content permissions
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`getPermissions()` takes a single `GetPermissionsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -990,7 +981,7 @@ Returns the parent site of a content
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`getSite()` takes a single `GetSiteParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1051,7 +1042,7 @@ Returns configuration of a specified application assigned to the site of a conte
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`getSiteConfig()` takes a single `GetSiteConfigParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1097,13 +1088,7 @@ Returns properties and icon of the specified content type
 [.lead]
 *Parameters:*
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name  | Type   | Description
-| name | string | Name of the content type, as 'app:name' (e.g. 'com.enonic.myapp:article')
-|===
+`getType()` takes the content type name as a single string argument, formatted as `+<app>:<name>+` (for example, `com.enonic.myapp:article`).
 
 [.lead]
 Returns
@@ -1275,16 +1260,16 @@ Returns content versions, with cursor-based pagination.
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`getVersions()` takes a single `GetVersionsParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default | Description
-| key | string | | | Path or id of the content
-| count | number | <optional> | 10 | Number of content versions to fetch
-| cursor | string | <optional> | | Cursor for pagination
+| Name | Type | Description
+| key | string | Path or id of the content.
+| count | number | *Optional.* Number of content versions to fetch. Defaults to `10`.
+| cursor | string | *Optional.* Cursor for pagination.
 |===
 
 [.lead]
@@ -1326,16 +1311,16 @@ NOTE: Properties starting with `_` may not be modified using this function. To r
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`update()` takes a single `UpdateContentParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| key | string | | | Path or id to the content
-| editor | function | | | Editor callback function
-| requireValid | boolean | <optional> | true | The content has to be valid (according to the content type) to be updated. If `requireValid=true` and the content is not strictly valid, an error will be thrown
+| Name | Type | Description
+| key | string | Path or id to the content.
+| editor | function | Editor callback function.
+| requireValid | boolean | *Optional.* The content has to be valid (according to the content type) to be updated. If `true` and the content is not strictly valid, an error will be thrown. Defaults to `true`.
 |===
 
 [.lead]
@@ -1428,7 +1413,7 @@ Updates metadata (`owner` and `variantOf`) for a content. The update is applied 
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`updateMetadata()` takes a single `UpdateMetadataParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1476,7 +1461,7 @@ Updates workflow information (state and checks) for a content. The update is app
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`updateWorkflow()` takes a single `UpdateWorkflowParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1522,14 +1507,16 @@ This is a low-level and potentially dangerous operation.
 It should be used with caution. Access is restricted to users with `admin` or `cms.admin` roles.
 ====
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+`patch()` takes a single `PatchContentParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| key | string | | | Path or id to the content
-| patcher | function | | | Patcher callback function
-| branches | string[] | <optional> | `[]` | A list of branches to patch. +
+| Name | Type | Description
+| key | string | Path or id to the content.
+| patcher | function | Patcher callback function.
+| branches | string[] | *Optional.* A list of branches to patch. Defaults to `[]`. +
 * If not provided or empty, the content in the current branch will be patched. +
 * If one branch is listed, the patch occurs in that specific branch. +
 * If multiple branches are listed: +
@@ -1537,8 +1524,8 @@ It should be used with caution. Access is restricted to users with `admin` or `c
 2.  For each subsequent branch in the list: +
 * If its content version is identical to the *original* (pre-patch) version from any processed branch, it is simply switched to point to the new, patched version. +
 * If its content version is *different*, the patch is applied to it separately.
-| skipSync | boolean | <optional> | false | If true, skip synchronization of the content in children projects after patching
-| attachments | object | <optional> | | Object for managing content attachments. Contains optional arrays: <<createAttachments_details, \`createAttachments` (add new)>>, <<modifyAttachments_details, \`modifyAttachments` (update existing)>> and \`removeAttachments` (a string array with attachment names to remove) .
+| skipSync | boolean | *Optional.* If `true`, skip synchronization of the content in children projects after patching. Defaults to `false`.
+| attachments | object | *Optional.* Object for managing content attachments. Contains optional arrays: <<createAttachments_details, \`createAttachments` (add new)>>, <<modifyAttachments_details, \`modifyAttachments` (update existing)>> and \`removeAttachments` (a string array with attachment names to remove).
 |===
 
 `patcher` is a function that receives the current content as parameter and must return the modified content. A list of supported fields that can be patched is provided below.
@@ -1559,7 +1546,7 @@ It should be used with caution. Access is restricted to users with `admin` or `c
 | valid | boolean | Sets the content's validity status.
 
 | data | object | A JSON object containing the main data (properties) of the content, according to its content type.
-| page | object | A JSON object describing the <<PageType, page>> configuration including regions and components.
+| page | object | A JSON object describing the <<fundamentals/types#page-component, page>> configuration including regions and components.
 | x | object | A JSON object containing extra data (x-data) associated with the content.
 
 | owner | string | The owner of the content. Must be a PrincipalKey string.
@@ -1571,12 +1558,12 @@ It should be used with caution. Access is restricted to users with `admin` or `c
 | archivedTime | string | The archival timestamp. Must be an ISO 8601 formatted string.
 
 | publish | object | A JSON object containing publishing information.
-| workflow | object | A JSON object containing <<WorkflowInfoType, workflow>> state information.
+| workflow | object | A JSON object containing <<fundamentals/types#workflow, workflow>> state information.
 
 | inherit | string[] | An array of strings specifying which properties to inherit from the parent (e.g., ["owner", "language"]).
 | variantOf | string | The ContentId (as a string) of the content this item is a variant of (used for localization).
 | processedReferences | string[] | An array of ContentId strings that this content references.
-| validationErrors | <<ValidationErrorType, ValidationError>>[] | An array of objects describing validation errors.
+| validationErrors | <<fundamentals/types#validation-error, ValidationError>>[] | An array of objects describing validation errors.
 | originProject | string | The name of the project this content was inherited from.
 | originalParentPath | string | The original parent path in the parent project.
 | originalName | string | The original name in the parent project.
@@ -1586,36 +1573,36 @@ It should be used with caution. Access is restricted to users with `admin` or `c
 [[createAttachments_details]]
 [.lead]
 *createAttachments:*
-An object with the following keys and their values:
+Each entry is an object with these properties:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes|  Description
-| name | string | | Name of the attachment to create
-| mimeType | string | <optional> | Mime-type of the data
-| label | string | <optional> | Label of the attachment
-| textContent | string | <optional> | Text content to set
-| data | object \| string | <optional> | Data (as stream) to use
+| Name | Type | Description
+| name | string | Name of the attachment to create.
+| mimeType | string | *Optional.* Mime-type of the data.
+| label | string | *Optional.* Label of the attachment.
+| textContent | string | *Optional.* Text content to set.
+| data | object \| string | *Optional.* Data (as stream) to use.
 |===
 
 [[modifyAttachments_details]]
 [.lead]
 *modifyAttachments:*
-An object with the following keys and their values:
+Each entry is an object with these properties:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes |  Description
-| name | string | | Name of the attachment to modify
-| mimeType | string | <optional> | Mime-type of the data
-| label | string | <optional> | Label of the attachment
-| textContent | string | <optional> | Text content to set
-| sha512 | string | <optional> | SHA-512 hash of the data
-| size | number | <optional> | Size of the data in bytes
+| Name | Type | Description
+| name | string | Name of the attachment to modify.
+| mimeType | string | *Optional.* Mime-type of the data.
+| label | string | *Optional.* Label of the attachment.
+| textContent | string | *Optional.* Text content to set.
+| sha512 | string | *Optional.* SHA-512 hash of the data.
+| size | number | *Optional.* Size of the data in bytes.
 |===
 
 [.lead]
@@ -1684,7 +1671,7 @@ Renames a content or moves it to a new path
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`move()` takes a single `MoveContentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1782,32 +1769,20 @@ Publishes content to the master branch
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`publish()` takes a single `PublishContentParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| keys | string[] | | | List of all content keys (path or id) that should be published
-| schedule | <<ScheduleParams>> | <optional> | | Schedule publishing
-| excludeDescendantsOf | string[] | <optional> | | List of content keys whose descendants should be excluded from publishing
-| excludeChildrenIds | string[] | <optional> | | _Deprecated, use_ `excludeDescendantsOf` _instead._
-| includeDependencies | boolean | <optional> | true | Whether all related content should be included when publishing content
-| message | string | <optional> | | Publish message
+| Name | Type | Description
+| keys | string[] | List of all content keys (path or id) that should be published.
+| schedule | <<Schedule>> | *Optional.* Schedule publishing.
+| excludeDescendantsOf | string[] | *Optional.* List of content keys whose descendants should be excluded from publishing.
+| excludeChildrenIds | string[] | *Optional.* _Deprecated, use_ `excludeDescendantsOf` _instead._
+| includeDependencies | boolean | *Optional.* Whether all related content should be included when publishing content. Defaults to `true`.
+| message | string | *Optional.* Publish message.
 |===
-
-==== ScheduleParams
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| from | string | <optional> | Time from which the content is considered published. Defaults to the time of publishing
-| to | string | <optional> | Time until which the content is considered published
-|===
-
 
 [.lead]
 Returns
@@ -1861,21 +1836,21 @@ Retrieves content using a query
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`query()` takes a single `QueryContentParams` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Default| Description
-| start | number | <optional> | 0 | Start index (used for paging)
-| count | number | <optional> | 10 | Number of contents to fetch
-| query | string \| object | <optional> | | Query string or <<../storage/querying#, DSL>> expression
-| filters | object \| object[] | <optional> | | Filters to apply to query result
-| sort | string \| object \| object[] | <optional> | | Sorting string or <<../storage/querying#sort, DSL>> expression
-| aggregations | object | <optional> | | Aggregations expression
-| contentTypes | string[] | <optional> | | Content types to filter on
-| highlight | object | <optional> | | Highlight expression
+| Name | Type | Description
+| start | number | *Optional.* Start index (used for paging). Defaults to `0`.
+| count | number | *Optional.* Number of contents to fetch. Defaults to `10`.
+| query | string \| object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
+| filters | object \| object[] | *Optional.* Filters to apply to query result.
+| sort | string \| object \| object[] | *Optional.* Sorting string or <<../storage/querying#sort, DSL>> expression.
+| aggregations | object | *Optional.* Aggregations expression.
+| contentTypes | string[] | *Optional.* Content types to filter on.
+| highlight | object | *Optional.* Highlight expression.
 |===
 
 [.lead]
@@ -2130,7 +2105,7 @@ Removes an attachment from an existing content
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`removeAttachment()` takes a single `RemoveAttachmentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -2168,7 +2143,7 @@ will reset specified changes made inside a specified layer.
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`resetInheritance()` takes a single `ResetInheritanceParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -2209,7 +2184,7 @@ Restores a content from the archive
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`restore()` takes a single `RestoreContentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -2217,7 +2192,7 @@ An object with the following keys and their values:
 |===
 | Name | Type | Description
 | content | string | Path or id of the content to be restored
-| path | string | Path of parent for restored content
+| path | string | *Optional.* Path of parent for restored content
 |===
 
 [.lead]
@@ -2262,18 +2237,18 @@ NOTE: If the content is published, the permissions will be applied to the publis
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`applyPermissions()` takes a single `ApplyPermissionsParams` object with these properties:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| key | string | | Path or id of the content
-| permissions | <<PermissionsParams>>[] | <optional> | Array of permissions to overwrite current permissions. Cannot be used with 'addPermissions' or 'removePermissions'
-| addPermissions | <<PermissionsParams>>[] | <optional> | Array of permissions to add. Cannot be used simultaneously with 'permissions'
-| removePermissions | <<PermissionsParams>>[] | <optional> | Array of permissions to remove. Cannot be used simultaneously with 'permissions'
-| scope | string ('SINGLE' \| 'TREE' \| 'SUBTREE') | <optional>  | scope of applying permissions. Scope 'SINGLE' applies permissions only to the content itself. 'TREE' applies permissions to the content and its descendants. 'SUBTREE' applies permissions only to the content's descendants. Default is 'SINGLE'.
+| Name | Type | Description
+| key | string | Path or id of the content.
+| permissions | <<AccessControlEntry>>[] | *Optional.* Array of permissions to overwrite current permissions. Cannot be used with `addPermissions` or `removePermissions`.
+| addPermissions | <<AccessControlEntry>>[] | *Optional.* Array of permissions to add. Cannot be used simultaneously with `permissions`.
+| removePermissions | <<AccessControlEntry>>[] | *Optional.* Array of permissions to remove. Cannot be used simultaneously with `permissions`.
+| scope | string (`SINGLE` \| `TREE` \| `SUBTREE`) | *Optional.* Scope of applying permissions. `SINGLE` applies permissions only to the content itself. `TREE` applies permissions to the content and its descendants. `SUBTREE` applies permissions only to the content's descendants. Defaults to `SINGLE`.
 |===
 
 [.lead]
@@ -2387,18 +2362,6 @@ applyPermissions({
 });
 ----
 
-==== PermissionsParams
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes | Description
-| principal | string | | Principal key
-| allow | string[] | <optional> | Allowed permissions
-| deny | string[] | <optional> | Denied permissions
-|===
-
 === unpublish
 
 Unpublishes content that had been published to the master branch
@@ -2406,7 +2369,7 @@ Unpublishes content that had been published to the master branch
 [.lead]
 *Parameters:*
 
-An object with the following keys and their values:
+`unpublish()` takes a single `UnpublishContentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -2446,174 +2409,75 @@ const expected = [
 ];
 ----
 
-== Objects
+== Type Definitions
 
 === ContentType
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Description
-| name | string | | Name of the content type
-| title | string | | Title of the content type
-| description | string | | Description of the content type
-| superType | string | | Name of the super type, or null if it has no super type
-| abstract | boolean | | Whether or not content of this type may be instantiated
-| final | boolean | | Whether or not it may be used as super type of other content types
-| allowChildContent | boolean | | Whether or not allow creating child items on content of this type
-| modifiedTime | string | | Modified time of the content type
-| icon | <<IconType>> | <optional> | Icon of the content type
-| form | object[] | | Form schema represented as an array of form items: Input, ItemSet, Layout, OptionSet
-| config | object | | Custom schema configuration for the descriptor
+| Name | Type | Description
+| name | string | Name of the content type.
+| title | string | Title of the content type.
+| description | string | Description of the content type.
+| superType | string | Name of the super type, or null if it has no super type.
+| abstract | boolean | Whether or not content of this type may be instantiated.
+| final | boolean | Whether or not it may be used as super type of other content types.
+| allowChildContent | boolean | Whether or not to allow creating child items on content of this type.
+| modifiedTime | string | Modified time of the content type.
+| icon | <<Icon>> | *Optional.* Icon of the content type.
+| form | <<fundamentals/types#form-item, FormItem>>[] | Form schema — an array of form items.
+| config | object | Custom schema configuration for the descriptor.
 |===
 
-=== IconType
+=== Icon
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Description
-| data | object | <optional> | Stream with the binary data for the icon
-| mimeType | string | <optional> | Mime type of the icon image
-| modifiedTime | string | <optional> | Modified time of the icon. May be used for caching
+| Name | Type | Description
+| data | <<fundamentals/types#byte-source, ByteSource>> | Stream with the binary data for the icon. Read it with `lib-io`.
+| mimeType | string | Mime type of the icon image.
+| modifiedTime | string | Modified time of the icon. May be used for caching.
 |===
 
-=== WorkflowInfoType
+=== Schedule
+
+A publish schedule. Same shape as <<fundamentals/types#publish-info, PublishInfo>> without the `first` field.
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Description
-| state | string |  | The name of the current workflow state (e.g., "IN_PROGRESS", "READY").
-| checks | object | <optional> | A JSON object mapping specific check names (string) to their status (string). The status must be one of: `PENDING`, `REJECTED`, or `APPROVED`.
+| Name | Type | Description
+| from | string | *Optional.* Time from which the content is considered published, as an ISO-8601 instant. Defaults to the time of publishing.
+| to | string | *Optional.* Time until which the content is considered published. ISO-8601 instant.
 |===
 
-=== ValidationErrorType
+=== AccessControlEntry
+
+A permission entry for a single principal.
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Description
-| errorCode | string | | **Required.** The validation error code (e.g., `MISSING_REQUIRED`, `INVALID_FORMAT`).
-| message | string | <optional> | A static, human-readable error message.
-| i18n | string | <optional> | The i18n localization key for the error message.
-| args | array | <optional> | An array of values to be substituted into the `i18n` message.
-| attachment | string | <optional> | The name (or `BinaryReference` string) of the attachment this error relates to.
-| propertyPath | string | <optional> | The `PropertyPath` (as a string) to the data field this error relates to (e.g., `mySet.0.myInput`).
-|===
-
-
-=== PageType
-
-[.lead]
-Fields
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| descriptor | string |  | The `DescriptorKey` (e.g., `com.myapp:my-page`) of the page component.
-| template | string | <optional> | The `PageTemplateKey` of the page template to use.
-| config | object | <optional> | A JSON object (PropertyTree) for the page's configuration.
-| regions | object | <optional> | An object mapping region names (string) to <<RegionType, RegionType objects>>.
-| fragment | object | <optional> | A fragment component.
-|===
-
-=== RegionType
-
-[.lead]
-Fields
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| components | object[] | <optional> | An array of component objects (e.g., <<LayoutComponentType, Layout>>, <<PartComponentType, Part>>, etc.) placed within this region.
-|===
-
-=== LayoutComponentType
-
-[.lead]
-Fields
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| descriptor | string |  | The `DescriptorKey` (e.g., `com.myapp:2-column`) of the layout.
-| config | object | <optional> | A JSON object for the layout's configuration.
-| regions | object | <optional> | A <<RegionType, Regions object>> map containing the regions *within* this layout.
-|===
-
-=== PartComponentType
-
-[.lead]
-Fields
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| descriptor | string |  | The descriptor string (e.g., `com.myapp:my-part`) of the part.
-| config | object | <optional> | A JSON object for the part's configuration.
-|===
-
-=== TextComponentType
-
-[.lead]
-Fields
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| text | string | <optional> | Text content of the component.
-|===
-
-=== ImageComponentType
-
-[.lead]
-Fields
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| image | string | <optional> | The `ContentId` (as a string) of the image content item.
-| config | object | <optional> | A JSON object for the image's configuration.
-|===
-
-=== FragmentComponentType
-
-[.lead]
-Fields
-
-[%header,cols="1%,1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Attributes| Description
-| fragment | string | <optional> | The `ContentId` (as a string) of the fragment content item.
+| Name | Type | Description
+| principal | <<fundamentals/types#principal-key, PrincipalKey>> | Principal the entry applies to (for example, `role:system.admin`, `user:system:su`).
+| allow | string[] | *Optional.* Permissions to grant. Each value is one of `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
+| deny | string[] | *Optional.* Permissions to deny. Same set of values as `allow`.
 |===

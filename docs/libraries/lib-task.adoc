@@ -64,18 +64,12 @@ Returns the current state and progress details for the specified task.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name   | Type   | Description
-| taskId | string | Id of the task
-|===
+Takes a single positional argument: `taskId` (string) — the id of the task to look up.
 
 [.lead]
 Returns
 
-*object* : (<<taskinfo,`TaskInfo`>>) Detail information for the task. Or null if the task could not be found.
+*object* : (<<task-info,`TaskInfo`>>) Detail information for the task. Or null if the task could not be found.
 
 [.lead]
 Example
@@ -120,13 +114,7 @@ Checks if any task with the given name or id is currently running.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type   | Description
-| task | string | Name or id of the task.
-|===
+Takes a single positional argument: `task` (string) — the name or id of the task.
 
 [.lead]
 Returns
@@ -157,7 +145,7 @@ On clustered environments aggregated list is returned.
 [.lead]
 Parameters
 
-`list()` takes a single, optional `params` object with these properties:
+`list()` takes a single, optional `ListTasksParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -165,13 +153,13 @@ Parameters
 |===
 | Name | Type | Description
 | name | string | *Optional.* Filter by name.
-| state | string | *Optional.* Filter by task state (`WAITING` \| `RUNNING` \| `FINISHED` \| `FAILED`).
+| state | <<task-state-type,`TaskStateType`>> | *Optional.* Filter by task state.
 |===
 
 [.lead]
 Returns
 
-*Array* : (<<taskinfo,`TaskInfo[]`>>) List with task information for every task.
+*Array* : (<<task-info,`TaskInfo[]`>>) List with task information for every task.
 
 [.lead]
 Example
@@ -272,7 +260,7 @@ Reports progress information from an executing task. This function can only be c
 [.lead]
 Parameters
 
-`progress()` takes a single `params` object with these properties:
+`progress()` takes a single `TaskProgressParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -325,13 +313,7 @@ Causes the current execution thread to sleep (temporarily cease execution) for t
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name       | Type   | Description
-| timeMillis | number | The length of time to sleep in milliseconds
-|===
+Takes a single positional argument: `timeMillis` (number) — the length of time to sleep in milliseconds.
 
 [.lead]
 Returns
@@ -366,7 +348,7 @@ This function returns immediately. The callback function will be executed asynch
 [.lead]
 Parameters
 
-`executeFunction()` takes a single `params` object with these properties:
+`executeFunction()` takes a single `ExecuteFunctionParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -410,7 +392,7 @@ Recompile your application with the newer library version in order for tasks to 
 [.lead]
 Parameters
 
-`submitTask()` takes a single `params` object with these properties:
+`submitTask()` takes a single `SubmitTaskParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -418,7 +400,7 @@ Parameters
 |===
 | Name | Type | Description
 | descriptor | string | Descriptor of the task to execute. Descriptor can be relative to the current application, or a fully qualified task descriptor name (`+<appname>:<taskname>+`).
-| name | string | *Optional.* Optional name of the task which appears in task info. If not specified, the descriptor key will be used instead.
+| name | string | *Optional.* Name of the task which appears in task info. If not specified, the descriptor key will be used instead.
 | config | object | *Optional.* Configuration parameters to pass to the task to be executed. The object must be valid according to the schema defined in the form of the task descriptor XML.
 |===
 
@@ -456,13 +438,8 @@ const taskId = submitTask({
 
 == Type Definitions
 
-[#taskinfo]
+[#task-info]
 === TaskInfo
-
-[.lead]
-Type
-
-*object*
 
 [.lead]
 Properties
@@ -472,24 +449,19 @@ Properties
 [grid="none"]
 |===
 | Name        | Type   | Description
-| id          | string | Task Id
-| name        | string | Task name
-| description | string | Task description
-| state       | string | Task state (`WAITING` \| `RUNNING` \| `FINISHED` \| `FAILED`)
-| application | string | Application containing the callback function to run
-| user        | string | Key of the user that submitted the task
-| startTime   | string | Time when the task was submitted (in ISO-8601 format)
-| progress    | <<progress-type, Progress>> | Progress information provided by the running task
-| node        | string | Identifier of the cluster node where the task is running. Absent when no cluster is configured.
+| id          | string | Task id.
+| name        | string | Task name.
+| description | string | Task description.
+| state       | <<task-state-type,`TaskStateType`>> | Task state.
+| application | string | Application containing the callback function to run.
+| user        | <<fundamentals/types#user-key, UserKey>> | Key of the user that submitted the task.
+| startTime   | string | Time when the task was submitted (in ISO-8601 format).
+| progress    | <<task-progress,`TaskProgress`>> | Progress information provided by the running task.
+| node        | string | *Optional.* Identifier of the cluster node where the task is running. Absent when no cluster is configured.
 |===
 
-[#progress-type]
-=== Progress
-
-[.lead]
-Type
-
-*object*
+[#task-progress]
+=== TaskProgress
 
 [.lead]
 Properties
@@ -503,3 +475,8 @@ Properties
 | total | number | Integer value representing the total number of items to process in the task.
 | info | string | Text describing the current progress for the task.
 |===
+
+[#task-state-type]
+=== TaskStateType
+
+One of `'WAITING'`, `'RUNNING'`, `'FINISHED'`, or `'FAILED'`.

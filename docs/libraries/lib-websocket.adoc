@@ -30,17 +30,7 @@ You are now ready to use the API.
 
 Adds an id to a socket group.
 
-[.lead]
-Parameters
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name  | Type   | Description
-| group | string | Group name
-| id    | string | Socket id
-|===
+Takes two positional arguments: `group` (string — group name) and `id` (string — socket id).
 
 [.lead]
 Returns
@@ -61,17 +51,7 @@ addToGroup('people', session.id);
 
 Removes an id from a socket group.
 
-[.lead]
-Parameters
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name  | Type   | Description
-| group | string | Group name
-| id    | string | Socket id
-|===
+Takes two positional arguments: `group` (string — group name) and `id` (string — socket id).
 
 [.lead]
 Returns
@@ -92,17 +72,7 @@ removeFromGroup('people', session.id);
 
 Sends a message directly to a socket id.
 
-[.lead]
-Parameters
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| id      | string | Socket id
-| message | string | Text message
-|===
+Takes two positional arguments: `id` (string — socket id) and `message` (string — text message).
 
 [.lead]
 Returns
@@ -123,17 +93,7 @@ send(session.id, 'You said - ' + message);
 
 Sends a message to all sockets in group.
 
-[.lead]
-Parameters
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| group   | string | Group name
-| message | string | Text message
-|===
+Takes two positional arguments: `group` (string — group name) and `message` (string — text message).
 
 [.lead]
 Returns
@@ -157,16 +117,7 @@ Gets number of all sockets in a group.
 NOTE: Calculating size of a group has a linear cost from total number of sockets.
 Consider using this method only if building a message is a resource consuming operation, otherwise it is better to simply `sendToGroup`.
 
-[.lead]
-Parameters
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| group   | string | Group name
-|===
+Takes one positional argument: `group` (string — group name).
 
 [.lead]
 Returns

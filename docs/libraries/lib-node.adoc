@@ -81,12 +81,17 @@ Creates a connection to a repository with a given branch and authentication info
 [.lead]
 Parameters
 
+`connect()` takes a single `ConnectParams` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| params | <<Source>> | object with parameters
+| Name | Type | Description
+| repoId | string | Repository ID.
+| branch | string | Branch ID.
+| principals | <<fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principals to execute the connection with.
+| user | <<connect-user, ConnectUser>> | *Optional.* User to execute the connection as. Defaults to the current user.
 |===
 
 [.lead]
@@ -115,12 +120,14 @@ Creates a connection to several repositories with a given branch and authenticat
 [.lead]
 Parameters
 
+`multiRepoConnect()` takes a single `MultiRepoConnectParams` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| sources | <<Source>>[] | array of repository source objects
+| Name | Type | Description
+| sources | <<connect-params, ConnectParams>>[] | Repositories to connect to. The `user` property is not allowed on entries here.
 |===
 
 [.lead]
@@ -163,27 +170,28 @@ Queries nodes in a multi-repo connection.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`query()` takes a single `QueryNodeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| start | number | *Optional.* Start index used for paging - default: 0
-| count | number | *Optional.* Number of content to fetch, used for paging - default: 10
-| query | string/object | Query string or <<../storage/querying#, DSL>> expression.
-| filters | object | *Optional.* Query filters
-| sort | string | *Optional.* Sorting expression - default: '_score DESC'
-| aggregations | object | *Optional.* <<../storage/aggregations#,Aggregations>> config
-| highlight | object | *Optional.* <<../storage/highlighting#,Highlighting>> config
+| query | string/object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
+| start | number | *Optional.* Start index used for paging. Defaults to `0`.
+| count | number | *Optional.* Number of nodes to fetch, used for paging. Defaults to `10`.
+| filters | object | *Optional.* Query filters.
+| sort | string/object | *Optional.* Sorting string or <<../storage/querying#sort, DSL>> expression. Defaults to `+_score DESC+`.
+| aggregations | object | *Optional.* <<../storage/aggregations#,Aggregations>> config.
+| highlight | object | *Optional.* <<../storage/highlighting#,Highlighting>> config.
+| suggestions | object | *Optional.* Term suggestions config, keyed by suggestion name.
 | explain | boolean | *Optional.* If set to `true`, score calculation explanation will be included in result.
 |===
 
 [.lead]
 Returns
 
-*object* : Result of query
+*object* : (<<node-multi-repo-query-result, NodeMultiRepoQueryResult>>) Query result, where each hit also carries its `repoId` and `branch`.
 
 [.lead]
 Example
@@ -272,19 +280,21 @@ Commits the active version of nodes.
 [.lead]
 Parameters
 
+`commit()` takes a single `CommitParams` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| keys | string \| string[] | Node keys to commit. Each argument could be an id, a path or an array of the two. Prefer the usage of ID rather than paths.
-| message | string | Optional commit message
+| Name | Type | Description
+| keys | string/string[] | Node keys to commit. Each key can be an id or a path. Prefer ids over paths.
+| message | string | *Optional.* Commit message.
 |===
 
 [.lead]
 Returns
 
-*object* : Commit object. A single commit is created and applied to all the nodes referenced in `keys`.
+*object* : (<<node-commit, NodeCommit>>) A single commit, created and applied to all the nodes referenced in `keys`.
 
 [.lead]
 Example
@@ -329,33 +339,32 @@ const expected = {
 [#create]
 === create
 
-Creates a node. To create a content where the name is not important and there could be multiple instances under the same parent content,
-skip the `name` parameter and specify a `displayName`.
+Creates a node. To create a node where the name is not important and there can be multiple instances under the same parent,
+skip the `+_name+` property and specify a `displayName`.
 
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`create()` takes a single `CreateNodeParams` object. Alongside the node's own data, it accepts these reserved properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| _name | string | *Optional.* Name of content.
-| _parentPath | string | *Optional.* Path to place content under.
-| _indexConfig | object | *Optional.* How the document should be <<../storage/indexing#,indexed>>. A default template value
-"<<../storage/indexing#byType,byType>>" will be set if no value specified.
-| _permissions | object | *Optional.* The access control list for the node. By default the creator will have full access
-| _inheritsPermissions | boolean | *Optional.*   Set to `true` if the permissions should be inherited from the node parent. This is a meta-property and is not persisted. Default is `false`.
-| _manualOrderValue | number | *Optional.*  Value used to order document when ordering by parent and child-order is set to manual
-| _childOrder | string | *Optional.* Default ordering of children when doing getChildren if no order is given in query
+| `+_name+` | string | *Optional.* Name of the node.
+| `+_parentPath+` | string | *Optional.* Path to place the node under.
+| `+_indexConfig+` | object | *Optional.* How the document should be <<../storage/indexing#,indexed>>. A default template value "<<../storage/indexing#byType,byType>>" will be set if no value is specified.
+| `+_permissions+` | object[] | *Optional.* The access control list for the node. By default the creator will have full access.
+| `+_inheritsPermissions+` | boolean | *Optional.* Set to `true` if the permissions should be inherited from the node parent. This is a meta-property and is not persisted. Defaults to `false`.
+| `+_manualOrderValue+` | number | *Optional.* Value used to order the document when ordering by parent and child-order is set to manual.
+| `+_childOrder+` | string | *Optional.* Default ordering of children when calling `findChildren` if no order is given in the query.
 |===
 
 [.lead]
 Returns
 
-*object* : Created object
+*object* : (<<fundamentals/types#node, `Node`>>) The created node.
 
 [.lead]
 Example
@@ -477,8 +486,8 @@ repo.create({
 });
 ----
 
-Stemmed english indices will be generated for `displayName`, `description` and all strings inside `english_set`.
-Norwegian indices will be created for strings inside `norwegian_set` only.
+Stemmed english indices will be generated for `displayName`, `description` and all strings inside `+english_set+`.
+Norwegian indices will be created for strings inside `+norwegian_set+` only.
 
 === delete
 
@@ -487,13 +496,7 @@ Deletes a node or nodes.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| keys | string \| string[] | Node keys to delete. Each argument could be an id, a path or an array of the two. Prefer the usage of ID rather than paths.
-|===
+`delete()` is positional. It accepts one or more node keys (ids or paths), where each argument can be a single key or an array of keys. Prefer ids over paths.
 
 [.lead]
 Returns
@@ -525,22 +528,22 @@ Resolves the differences for a node between the branch in the current context an
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`diff()` takes a single `DiffBranchesParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Path or id to resolve diff for
-| target | string | Branch to differentiate with
-| includeChildren | boolean | *Optional.* If set to `true`, differences are resolved for all children.
+| key | string | Path or id to resolve the diff for.
+| target | string | Branch to differentiate with.
+| includeChildren | boolean | If set to `true`, differences are resolved for all children.
 |===
 
 [.lead]
 Returns
 
-*object* : An array with differences in the status for each node in the tree that has differences between the branches.
+*object* : (<<diff-branches-result, DiffBranchesResult>>) The status difference for each node in the tree that differs between the branches.
 
 [.lead]
 Example
@@ -576,25 +579,25 @@ Duplicates a node.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`duplicate()` takes a single `DuplicateParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| nodeId | string | Id to the node.
+| nodeId | string | Id of the node.
 | name | string | *Optional.* New node name.
-| includeChildren | boolean | *Optional.* Indicates that children nodes must be duplicated, too. Default is `true`.
-| parent | string | *Optional.* Destination parent path. By default, a duplicated node will be added as a sibling of the source node.
-| refresh | string | *Optional.* Refresh the index for the current repoConnection.
-| dataProcessor | function | *Optional.* Node data processor.
+| includeChildren | boolean | *Optional.* Indicates that children nodes must be duplicated, too. Defaults to `true`.
+| parent | string | *Optional.* Destination parent path. By default, a duplicated node is added as a sibling of the source node.
+| refresh | string | *Optional.* Refresh mode for the index of the current connection (`SEARCH`, `STORAGE` or `ALL`).
+| dataProcessor | function | *Optional.* Node data processor callback, receiving the node data and returning the processed data.
 |===
 
 [.lead]
-Returns duplicated node.
+Returns
 
-*object* : Duplicated node
+*object* : (<<fundamentals/types#node, `Node`>>) The duplicated node.
 
 [.lead]
 Example
@@ -622,18 +625,12 @@ Checks if a node exists in the current context.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| key | string | Path or id to the node
-|===
+`exists()` is positional. It takes a single `key` string — the path or id of the node.
 
 [.lead]
 Returns
 
-*boolean* : `true` if exists, `false` otherwise
+*boolean* : `true` if the node exists, `false` otherwise.
 
 [.lead]
 Examples
@@ -671,25 +668,25 @@ Fetches children of a node.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`findChildren()` takes a single `FindChildrenParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| parentKey | string | Path or ID of parent to get children of
-| start | number | *Optional.* start index used for paging - default: 0
-| count | number | *Optional.* number of content to fetch, used for paging - default: 10
-| childOrder | string | *Optional.* How to order the children - default is value stored on parent
-| countOnly | boolean | *Optional.* Optimize for count children only - default is `false`
-| recursive | boolean | *Optional.* Do recursive fetching of all children of children - default is `false`
+| parentKey | string | Path or id of the parent to get children of.
+| start | number | *Optional.* Start index used for paging. Defaults to `0`.
+| count | number | *Optional.* Number of nodes to fetch, used for paging. Defaults to `10`.
+| childOrder | string | *Optional.* How to order the children. Defaults to the value stored on the parent.
+| countOnly | boolean | *Optional.* Optimize for counting children only. Defaults to `false`.
+| recursive | boolean | *Optional.* Recursively fetch all children of children. Defaults to `false`.
 |===
 
 [.lead]
 Returns
 
-*object* : An object with stats about the result and an array with all IDs of the children.
+*object* : (<<find-nodes-by-parent-result, FindNodesByParentResult>>) Result stats and an array with the ids of the children.
 
 [.lead]
 Example
@@ -726,22 +723,22 @@ Returns versions of a node.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`getVersions()` takes a single `GetVersionsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Path or ID of a node to get versions of
-| cursor | string | *Optional.* Opaque cursor returned in a previous result, used to fetch the next page
-| count | number | *Optional.* Number of versions to fetch - default: 10
+| key | string | Path or id of the node to get versions of.
+| cursor | string | *Optional.* Opaque cursor returned in a previous result, used to fetch the next page.
+| count | number | *Optional.* Number of versions to fetch. Defaults to `10`.
 |===
 
 [.lead]
 Returns
 
-*object* : An object with stats about the result, the cursor for the next page (if any), and an array listing the versions.
+*object* : (<<get-node-versions-result, GetNodeVersionsResult>>) Result stats, the cursor for the next page (if any), and an array of <<node-version, NodeVersion>> entries.
 
 [.lead]
 Example
@@ -794,9 +791,7 @@ Fetches a specific node or nodes by path or ID.
 [.lead]
 Parameters
 
-`get()` accepts one or multiple strings (node ids or paths), one or multiple arrays of such strings, or one or multiple objects.
-
-When passing objects, each has these properties:
+`get()` is positional. It accepts one or more strings (node ids or paths), one or more arrays of such strings, or one or more `GetNodeParams` objects. Each `GetNodeParams` object has these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -810,7 +805,7 @@ When passing objects, each has these properties:
 [.lead]
 Returns
 
-*object* : The node or node array (as JSON) fetched from the repository.
+*object* : (<<fundamentals/types#node, `Node`>> or `Node[]`) The node, or array of nodes, fetched from the repository. Returns `null` when a single requested node is not found.
 
 
 [.lead]
@@ -852,20 +847,20 @@ Returns the active version of a node in the current context branch.
 [.lead]
 Parameters
 
-An object with the following key and value:
+`getActiveVersion()` takes a single `GetActiveVersionParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| key | string | Path or ID of the node
+| Name | Type | Description
+| key | string | Path or id of the node.
 |===
 
 [.lead]
 Returns
 
-*object* : The active node version, or `null` if the node was not found.
+*object* : (<<node-version, NodeVersion>>) The active node version, or `null` if the node was not found.
 
 [.lead]
 Example
@@ -896,21 +891,21 @@ Returns a binary stream.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`getBinary()` takes a single `GetBinaryParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| key | string | Path or ID of the node
-| binaryReference | string | to the binary
+| Name | Type | Description
+| key | string | Path or id of the node.
+| binaryReference | string | *Optional.* Reference to the binary.
 |===
 
 [.lead]
 Returns
 
-*\** : Stream of the binary
+*object* : (<<fundamentals/types#byte-source, ByteSource>>) Stream of the binary.
 
 [.lead]
 Example
@@ -931,30 +926,20 @@ Returns a node version commit.
 [.lead]
 Parameters
 
-An object with the following keys and their value:
+`getCommit()` takes a single `GetCommitParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| id | string | ID of the commit
+| Name | Type | Description
+| id | string | Id of the commit.
 |===
 
 [.lead]
 Returns
 
-*object* : Commit object
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| id | string | Commit ID
-| message | string | Optional commit message
-| committer | string | Principal key of commit creator
-| timestamp | string | Time of creation
-|===
+*object* : (<<node-commit, NodeCommit>>) The commit, or `null` if not found.
 
 [.lead]
 Example
@@ -985,21 +970,21 @@ Updates a node.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`update()` takes a single `UpdateNodeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| key | string | Path or ID of the node
-| editor | function | Editor callback function
+| Name | Type | Description
+| key | string | Path or id of the node.
+| editor | function | Editor callback that receives the node and returns the modified node.
 |===
 
 [.lead]
 Returns
 
-*object* : The modified node
+*object* : (<<fundamentals/types#node, `Node`>>) The modified node.
 
 [.lead]
 Example
@@ -1028,15 +1013,15 @@ This is a low-level function. It should be used with caution as it can corrupt d
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`patch()` takes a single `PatchNodeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Path or id to the node
-| editor | function | Patcher callback function
+| key | string | Path or id of the node.
+| editor | function | Patcher callback that receives the node and returns the patched node.
 | branches | string[] | *Optional.* A list of branches to patch. Defaults to `[]`. +
 * If not provided or empty, the node in the current context branch will be patched. +
 * If one branch is listed, the patch occurs in that specific branch. +
@@ -1050,7 +1035,7 @@ An object with the following keys and their values:
 [.lead]
 Returns
 
-*object* : Patch result, with one entry in `branchResults` per branch where the node was patched.
+*object* : (<<patch-node-result, PatchNodeResult>>) Patch result, with one entry in `branchResults` per branch where the node was patched.
 
 [.lead]
 *Patchable Fields:*
@@ -1061,13 +1046,13 @@ Returns
 |===
 | Name | Type | Description
 | displayName | string | The display name of the node.
-| _nodeType | string | The type definition of the node.
-| _indexConfig | object | An object defining the search <<../storage/indexing#,index>> configuration for this node.
-| _childOrder | string | Defines the default sort order for the node's direct children.
-| _manualOrderValue | number | Numeric value used for manual sorting among siblings (when parent's `_childOrder` is manual).
+| `+_nodeType+` | string | The type definition of the node.
+| `+_indexConfig+` | object | An object defining the search <<../storage/indexing#,index>> configuration for this node.
+| `+_childOrder+` | string | Defines the default sort order for the node's direct children.
+| `+_manualOrderValue+` | number | Numeric value used for manual sorting among siblings (when the parent's `+_childOrder+` is manual).
 |===
 
-Any data can also be patched if the name of the field does not start with an underscore (_).
+Any data can also be patched if the name of the field does not start with an underscore (`+_+`).
 
 [.lead]
 Examples
@@ -1124,21 +1109,21 @@ Renames a node or moves it to a new path.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`move()` takes a single `MoveNodeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| source | string | Path or id of the node to be moved or renamed
-| target | string | New path or name for the node. If the target ends in slash '/', it specifies the parent path where to be moved. Otherwise it means the new desired path or name for the node.
+| Name | Type | Description
+| source | string | Path or id of the node to be moved or renamed.
+| target | string | New path or name for the node. If the target ends in slash `/`, it specifies the parent path to move the node under. Otherwise it is the new desired path or name for the node.
 |===
 
 [.lead]
 Returns
 
-*object* : The moved or renamed node.
+*object* : (<<fundamentals/types#node, `Node`>>) The moved or renamed node.
 
 [.lead]
 Examples
@@ -1177,25 +1162,25 @@ Pushes a node to a given branch.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`push()` takes a single `PushNodeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| key | string | Id or path to the nodes
-| keys | string[] | Array of ids or paths to the nodes
-| target | string | Branch to push to
-| includeChildren | boolean | Also push children of given nodes.  Default is `false`.
-| resolve | boolean | Resolve dependencies before pushing, meaning that references will also be pushed.  Default is `true`.
-| exclude | string[] | Optional array of ids or paths to nodes not to be pushed.  If using this, be aware that nodes need to maintain data integrity (e.g parents must be present in target).  If data integrity is not maintained with excluded nodes, they will be pushed anyway.
+| Name | Type | Description
+| target | string | Branch to push to.
+| key | string | *Optional.* Id or path of the node. Provide either `key` or `keys`.
+| keys | string[] | *Optional.* Array of ids or paths of the nodes. Provide either `key` or `keys`.
+| includeChildren | boolean | *Optional.* Also push children of the given nodes. Defaults to `false`.
+| resolve | boolean | *Optional.* Resolve dependencies before pushing, meaning that references are also pushed. Defaults to `true`.
+| exclude | string[] | *Optional.* Array of ids or paths of nodes not to be pushed. If using this, be aware that nodes need to maintain data integrity (e.g. parents must be present in the target). If data integrity is not maintained with excluded nodes, they will be pushed anyway.
 |===
 
 [.lead]
 Returns
 
-*object* : PushNodeResult
+*object* : (<<push-nodes-result, PushNodesResult>>) Lists the keys that were pushed and any that failed.
 
 [.lead]
 Examples
@@ -1276,34 +1261,33 @@ const expected = {
 
 === query
 
-Queries nodes
+Queries nodes.
 
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`query()` takes a single `QueryNodeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| start | number | *Optional.* Start index used for paging - default: 0
-| count | number | *Optional.* Number of content to fetch, used for paging - default: 10
-| query | string/object | Query string or <<../storage/querying#, DSL>> expression.
-| filters | object | *Optional.* Query filters
-| sort | string/object | *Optional.* Sorting string or <<../storage/querying#sort, DSL>> expression. Default: '_score DESC'
-| aggregations | object | *Optional.* <<../storage/aggregations#,Aggregations>> config
-| highlight | object | *Optional.* <<../storage/highlighting#,Highlighting>> config
+| query | string/object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
+| start | number | *Optional.* Start index used for paging. Defaults to `0`.
+| count | number | *Optional.* Number of nodes to fetch, used for paging. Defaults to `10`.
+| filters | object | *Optional.* Query filters.
+| sort | string/object | *Optional.* Sorting string or <<../storage/querying#sort, DSL>> expression. Defaults to `+_score DESC+`.
+| aggregations | object | *Optional.* <<../storage/aggregations#,Aggregations>> config.
+| highlight | object | *Optional.* <<../storage/highlighting#,Highlighting>> config.
+| suggestions | object | *Optional.* Term suggestions config, keyed by suggestion name.
 | explain | boolean | *Optional.* If set to `true`, score calculation explanation will be included in result.
 |===
-
-
 
 [.lead]
 Returns
 
-*object* : stats, hits and if requested, aggregations
+*object* : (<<node-query-result, NodeQueryResult>>) Result stats, hits and, if requested, aggregations.
 
 [.lead]
 Examples
@@ -1511,23 +1495,17 @@ const expected = {
 
 === refresh
 
-Refreshes indices for the current repoConnection.  The index has two parts: search and storage.  It is possible to index both or just one of them.
+Refreshes indices for the current connection. The index has two parts: search and storage. It is possible to refresh both or just one of them.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| mode | string | ALL for both indices, SEARCH for search-index or STORAGE for storage-index.  Default is ALL.
-|===
+`refresh()` is positional. It takes an optional `mode` string: `ALL` for both indices, `SEARCH` for the search index or `STORAGE` for the storage index. Defaults to `ALL`.
 
 [.lead]
 Returns
 
-*NULL*
+Nothing.
 
 [.lead]
 Examples
@@ -1546,26 +1524,26 @@ repo.refresh('SEARCH');
 
 === sort
 
-Sorts the children of a node by changing the parent's `_childOrder`. When the parent is set to manual ordering, child nodes are reordered according to their `_manualOrderValue`.
+Sorts the children of a node by changing the parent's `+_childOrder+`. When the parent is set to manual ordering, child nodes are reordered according to their `+_manualOrderValue+`.
 
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`sort()` takes a single `SortNodeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| key | string | Path or ID of the parent node
-| childOrder | string | New child order expression for the parent (for example `displayName ASC` or `_manualOrderValue DESC`)
+| Name | Type | Description
+| key | string | Path or id of the parent node.
+| childOrder | string | New child order expression for the parent (for example `displayName ASC` or `+_manualOrderValue DESC+`).
 |===
 
 [.lead]
 Returns
 
-*object* : An object with the updated parent `node` and an array of `reorderedNodes` describing children whose ordering was affected.
+*object* : (<<sort-node-result, SortNodeResult>>) The updated parent `node` and an array of `reorderedNodes` describing children whose ordering was affected.
 
 [.lead]
 Example
@@ -1586,7 +1564,7 @@ Applies permissions on a node.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`applyPermissions()` takes a single `ApplyPermissionsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1594,29 +1572,17 @@ An object with the following keys and their values:
 |===
 | Name | Type | Description
 | key | string | Path or id of the node.
-| permissions | object[] | *Optional.* Array of permissions to overwrite current permissions. Cannot be combined with `addPermissions` or `removePermissions`.
-| addPermissions | object[] | *Optional.* Array of permissions to add. Cannot be combined with `permissions`.
-| removePermissions | object[] | *Optional.* Array of permissions to remove. Cannot be combined with `permissions`.
-| scope | string | *Optional.* Scope of applying permissions. `'SINGLE'` applies permissions only to the node itself. `'TREE'` applies permissions to the node and its descendants. `'SUBTREE'` applies permissions only to the node's descendants. Default is `'SINGLE'`.
-| branches | string[] | *Optional.* Array of additional branches to apply permissions to. Current context branch should not be included.
-|===
-
-Each permission entry has the following shape:
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| principal | string | Principal key (for example `role:system.everyone` or `user:system:my-user`).
-| allow | string[] | *Optional.* Permissions to allow. Possible values are `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
-| deny | string[] | *Optional.* Permissions to deny.
+| permissions | <<access-control-entry, AccessControlEntry>>[] | *Optional.* Array of permissions to overwrite current permissions. Cannot be combined with `addPermissions` or `removePermissions`.
+| addPermissions | <<access-control-entry, AccessControlEntry>>[] | *Optional.* Array of permissions to add. Cannot be combined with `permissions`.
+| removePermissions | <<access-control-entry, AccessControlEntry>>[] | *Optional.* Array of permissions to remove. Cannot be combined with `permissions`.
+| scope | string | *Optional.* Scope of applying permissions. `SINGLE` applies permissions only to the node itself. `TREE` applies permissions to the node and its descendants. `SUBTREE` applies permissions only to the node's descendants. Defaults to `SINGLE`.
+| branches | string[] | *Optional.* Array of additional branches to apply permissions to. The current context branch should not be included.
 |===
 
 [.lead]
 Returns
 
-*object* : An object keyed by node id, with one `branchResults` entry per branch the permissions were applied to.
+*object* : (<<apply-permissions-result, ApplyPermissionsResult>>) An object keyed by node id, with one `branchResults` entry per branch the permissions were applied to.
 
 [.lead]
 Examples
@@ -1730,36 +1696,224 @@ repo.applyPermissions({
 });
 ----
 
-== Source
+== Type Definitions
 
-A source definition of repositories:
+[#connect-params]
+=== ConnectParams
 
 [.lead]
-Fields
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| repoId | string | Repository ID
-| branch | string | Branch ID
-| user | <<User>> | Optional user to execute the callback with - default is the current user. Not allowed when this source is part of a `multiRepoConnect` call.
-| principals | string[] | Additional principals to execute the callback with
+| Name | Type | Description
+| repoId | string | Repository ID.
+| branch | string | Branch ID.
+| principals | <<fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principals to execute the connection with.
+| user | <<connect-user, ConnectUser>> | *Optional.* User to execute the connection as. Defaults to the current user. Not allowed when this source is part of a `multiRepoConnect` call.
 |===
 
-== User
-
-User object to use for connections:
+[#connect-user]
+=== ConnectUser
 
 [.lead]
-Fields
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| login | string | user ID of the user
-| idProvider | string | Optional ID provider containing the user. By default the `system` provider is used.
+| Name | Type | Description
+| login | string | User id of the user.
+| idProvider | string | *Optional.* Id provider containing the user. Defaults to the `system` provider.
 |===
+
+[#node-commit]
+=== NodeCommit
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | Commit id.
+| message | string | Commit message.
+| committer | string | Principal key of the commit creator.
+| timestamp | string | Time of creation.
+|===
+
+[#node-version]
+=== NodeVersion
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| versionId | string | Version id.
+| nodeId | string | Node id.
+| nodePath | string | Node path.
+| timestamp | string | Time of the version.
+| commitId | string | *Optional.* Id of the commit this version belongs to.
+|===
+
+[#access-control-entry]
+=== AccessControlEntry
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| principal | <<fundamentals/types#principal-key, PrincipalKey>> | Principal key (for example `role:system.everyone` or `user:system:my-user`).
+| allow | string[] | *Optional.* Permissions to allow. Possible values are `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `+READ_PERMISSIONS+` and `+WRITE_PERMISSIONS+`.
+| deny | string[] | *Optional.* Permissions to deny. Same possible values as `allow`.
+|===
+
+[#node-query-result]
+=== NodeQueryResult
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| total | number | Total number of nodes matching the query.
+| count | number | Number of hits returned in this result.
+| hits | object[] | Array of hits, each with an `id` and a `score` (and optionally `explanation` and `highlight`).
+| aggregations | object | Aggregations result, when aggregations were requested.
+| suggestions | object | *Optional.* Suggestions result, when suggestions were requested.
+|===
+
+[#node-multi-repo-query-result]
+=== NodeMultiRepoQueryResult
+
+[.lead]
+Properties
+
+Same shape as <<node-query-result, NodeQueryResult>>, except each hit also carries the `repoId` and `branch` it came from.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| total | number | Total number of nodes matching the query.
+| count | number | Number of hits returned in this result.
+| hits | object[] | Array of hits, each with `id`, `score`, `repoId` and `branch` (and optionally `explanation` and `highlight`).
+| aggregations | object | Aggregations result, when aggregations were requested.
+| suggestions | object | *Optional.* Suggestions result, when suggestions were requested.
+|===
+
+[#find-nodes-by-parent-result]
+=== FindNodesByParentResult
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| total | number | Total number of children.
+| count | number | Number of hits returned in this result.
+| hits | object[] | Array of hits, each with an `id`.
+|===
+
+[#get-node-versions-result]
+=== GetNodeVersionsResult
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| total | number | Total number of versions.
+| count | number | Number of hits returned in this result.
+| cursor | string | *Optional.* Cursor used to fetch the next page, when more results are available.
+| hits | <<node-version, NodeVersion>>[] | Array of node versions.
+|===
+
+[#diff-branches-result]
+=== DiffBranchesResult
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| diff | object[] | Array of entries, each with an `id` and a `status` describing how the node differs between the branches.
+|===
+
+[#push-nodes-result]
+=== PushNodesResult
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| success | string[] | Keys of the nodes that were successfully pushed.
+| failed | object[] | Array of entries, each with an `id` and a `reason`, for nodes that could not be pushed.
+|===
+
+[#sort-node-result]
+=== SortNodeResult
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| node | object | (<<fundamentals/types#node, `Node`>>) The parent node after the new child order was applied.
+| reorderedNodes | object[] | Array of entries, each with a `node`, describing the children whose ordering was affected.
+|===
+
+[#patch-node-result]
+=== PatchNodeResult
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| branchResults | object[] | Array of entries, each with a `branch` and the patched `node`, one per branch where the node was patched.
+|===
+
+[#apply-permissions-result]
+=== ApplyPermissionsResult
+
+[.lead]
+Properties
+
+An object keyed by node id. Each value has a single `branchResults` property — an array of entries, each with a `branch` and the resulting `permissions` (<<access-control-entry, AccessControlEntry>>[]) applied in that branch.

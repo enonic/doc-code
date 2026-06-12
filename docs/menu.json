@@ -89,6 +89,10 @@
           "document": "fundamentals/typescript"
         },
         {
+          "title": "Types",
+          "document": "fundamentals/types"
+        },
+        {
           "title": "Apps",
           "document": "fundamentals/apps"
         },

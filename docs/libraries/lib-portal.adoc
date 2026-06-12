@@ -33,7 +33,7 @@ Generates a URL pointing to a <<web/apis#, Universal API>>. Picks the right URL 
 [.lead]
 Parameters
 
-`apiUrl()` takes a single `params` object with these properties:
+`apiUrl()` takes a single `ApiUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -41,7 +41,7 @@ Parameters
 |===
 | Name | Type | Description
 | api | string | Descriptor key in `+<app>:<api>+` form.
-| type | string | *Optional.* URL type. Either `server` (server-relative), `absolute`, or `websocket`. Default is `server`.
+| type | string | *Optional.* URL type. Either `server` (server-relative), `absolute`, or `websocket`. Defaults to `server`.
 | path | string \| string[] | *Optional.* Path appended after the API segment. Accepts a string or a string array.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 | baseUrl | string | *Optional.* Override the resolved base URL.
@@ -79,7 +79,7 @@ Generates URL to a static file.
 [.lead]
 Parameters
 
-`assetUrl()` takes a single `params` object with these properties:
+`assetUrl()` takes a single `AssetUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -119,7 +119,7 @@ If `name` is provided, XP will try to find an attachment by the unique name and 
 [.lead]
 Parameters
 
-`attachmentUrl()` takes a single `params` object with these properties:
+`attachmentUrl()` takes a single `AttachmentUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -163,7 +163,7 @@ Generates a base URL.
 [.lead]
 Parameters
 
-`baseUrl()` takes a single `params` object with these properties:
+`baseUrl()` takes a single `BaseUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -206,7 +206,7 @@ Generates URL to a page component.
 [.lead]
 Parameters
 
-`componentUrl()` takes a single `params` object with these properties:
+`componentUrl()` takes a single `ComponentUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -239,12 +239,12 @@ const url = componentUrl({
 
 === getComponent
 
-Returns the component in the current execution context. Meant to be called from a layout or part.
+Returns the component in the current execution context. Meant to be called from a layout or part. Takes no arguments.
 
 [.lead]
 Returns
 
-*object* : The current component as JSON.
++*object* : (<<fundamentals/types#component, `Component`>>) The current component, or `null` if there is no component in the current context.+
 
 [.lead]
 Example
@@ -288,12 +288,12 @@ const expected = {
 
 === getContent
 
-Returns the content in the current execution context. Meant to be called from a page, layout, or part.
+Returns the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.
 
 [.lead]
 Returns
 
-*object* : The current content as JSON.
++*object* : (<<fundamentals/types#content, `Content`>>) The current content, or `null` if there is no content in the current context.+
 
 [.lead]
 Example
@@ -335,7 +335,7 @@ const expected = {
 
 === getIdProviderKey
 
-Returns the key of ID provider in the current execution context.
+Returns the key of ID provider in the current execution context. Takes no arguments.
 
 [.lead]
 Returns
@@ -365,12 +365,12 @@ const expected = "myidprovider";
 
 === getMultipartForm
 
-Returns a JSON containing multipart items. If the request is not multipart, an empty object is returned.
+Returns a JSON containing multipart items. If the request is not multipart, an empty object is returned. Takes no arguments.
 
 [.lead]
 Returns
 
-*object* : The multipart form items.
++*object* : (<<multipart-form, `MultipartForm`>>) The multipart form items.+
 
 [.lead]
 Example
@@ -418,20 +418,12 @@ Returns a JSON containing a named multipart item. If the item does not exist, it
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| name | string | Name of the multipart item
-| index | number | *Optional.* Optional zero-based index. It should be specified if there are multiple items with the same name
-
-|===
+`getMultipartItem()` takes the `name` of the multipart item (string) and an optional zero-based `index` (number) — specify the index when several items share the same name.
 
 [.lead]
 Returns
 
-*object* : The named multipart form item.
++*object* : (<<multipart-item, `MultipartItem`>>) The named multipart form item, or `null` if it does not exist.+
 
 [.lead]
 Example
@@ -463,20 +455,12 @@ Returns a data stream for a named multipart item. If the item does not exist, it
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| name | string | Name of the multipart item
-| index | number | *Optional.* Optional zero-based index. It should be specified if there are multiple items with the same name
-
-|===
+`getMultipartStream()` takes the `name` of the multipart item (string) and an optional zero-based `index` (number) — specify the index when several items share the same name.
 
 [.lead]
 Returns
 
-*object* : Stream of multipart item data.
++*object* : (<<fundamentals/types#byte-source, `ByteSource`>>) Stream of multipart item data, or `null` if the item does not exist.+
 
 [.lead]
 Example
@@ -496,20 +480,12 @@ Returns the multipart item data as text. If the item does not exist, it returns 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| name | string | Name of the multipart item
-| index | number | *Optional.* Optional zero-based index. It should be specified if there are multiple items with the same name
-
-|===
+`getMultipartText()` takes the `name` of the multipart item (string) and an optional zero-based `index` (number) — specify the index when several items share the same name.
 
 [.lead]
 Returns
 
-*string* : Text for multipart item data.
+*string|null* : Text for multipart item data, or `null` if the item does not exist.
 
 [.lead]
 Example
@@ -523,12 +499,12 @@ const text = getMultipartText('item1');
 
 === getSite
 
-Returns the parent site of the content in the current execution context. Meant to be called from a page, layout, or part.
+Returns the parent site of the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.
 
 [.lead]
 Returns
 
-*object* : The current site as JSON.
++*object* : (<<site, `Site`>>) The current site, or `null` if the content has no parent site.+
 
 [.lead]
 Example
@@ -569,12 +545,12 @@ const expected = {
 
 === getSiteConfig
 
-Returns the configuration of the parent site for the content in the current execution context. Meant to be called from a page, layout, or part.
+Returns the configuration of the parent site for the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.
 
 [.lead]
 Returns
 
-*object* : The site configuration for current application as JSON.
+*object|null* : The site configuration for the current application, or `null` if the content has no parent site.
 
 [.lead]
 Example
@@ -603,7 +579,7 @@ Generates URL to an ID provider.
 [.lead]
 Parameters
 
-`idProviderUrl()` takes a single, optional `params` object with these properties:
+`idProviderUrl()` takes a single, optional `IdProviderUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -627,15 +603,15 @@ Generates URL of an image placeholder with a specified size.
 [.lead]
 Parameters
 
-`imagePlaceholder()` takes a single `params` object with these properties:
+`imagePlaceholder()` takes a single `ImagePlaceholderParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| width | number | Width of the image in pixels.
-| height | number | Height of the image in pixels.
+| width | number | *Optional.* Width of the image in pixels.
+| height | number | *Optional.* Height of the image in pixels.
 |===
 
 [.lead]
@@ -671,7 +647,7 @@ Generates URL to an image.
 [.lead]
 Parameters
 
-`imageUrl()` takes a single `params` object with these properties:
+`imageUrl()` takes a single `ImageUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -680,7 +656,7 @@ Parameters
 | Name | Type | Description
 | id | string | *Optional.* ID of the image content. Either `id` or `path` is required.
 | path | string | *Optional.* Path to the image. If `id` is specified, this parameter is not used.
- | scale | string | Options are `width(px)`, `height(px)`, `block(width,height)`, `square(px)`, `max(px)`, `wide(width,height)` and `full`.
+| scale | string | Options are `width(px)`, `height(px)`, `block(width,height)`, `square(px)`, `max(px)`, `wide(width,height)` and `full`.
 | quality | number | *Optional.* Quality for JPEG images, ranges from 0 (max compression) to 100 (min compression). Default is `85`.
 | background | string | *Optional.* Background color.
 | format | string | *Optional.* Format of the image.
@@ -719,7 +695,7 @@ Generates URL to the login endpoint of an ID provider.
 [.lead]
 Parameters
 
-`loginUrl()` takes a single, optional `params` object with these properties:
+`loginUrl()` takes a single, optional `LoginUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -744,7 +720,7 @@ Generates URL to the logout endpoint of ID provider in the current context.
 [.lead]
 Parameters
 
-`logoutUrl()` takes a single, optional `params` object with these properties:
+`logoutUrl()` takes a single, optional `LogoutUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -768,7 +744,7 @@ Generates URL to a content page.
 [.lead]
 Parameters
 
-`pageUrl()` takes a single `params` object with these properties:
+`pageUrl()` takes a single `PageUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -816,7 +792,7 @@ TIP: When outputting processed HTML in Thymeleaf, use attribute `data-th-utext="
 [.lead]
 Parameters
 
-`processHtml()` takes a single `params` object with these properties:
+`processHtml()` takes a single `ProcessHtmlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -860,13 +836,7 @@ TIP: HTML sanitization can be used to protect against cross-site scripting (XSS)
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type   | Description
-| html | string | HTML string value to process
-|===
+`sanitizeHtml()` takes the `html` string value to process.
 
 [.lead]
 Returns
@@ -901,7 +871,7 @@ Generates URL to a service.
 [.lead]
 Parameters
 
-`serviceUrl()` takes a single `params` object with these properties:
+`serviceUrl()` takes a single `ServiceUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -942,7 +912,7 @@ Generates URL to a resource.
 [.lead]
 Parameters
 
-`url()` takes a single `params` object with these properties:
+`url()` takes a single `UrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -974,3 +944,52 @@ const url = buildUrl({
   }
 });
 ----
+
+== Type Definitions
+
+[#site]
+=== Site
+
+A site is a specialized <<fundamentals/types#content, `Content`>> of type `portal:site`. In addition to the standard content properties, its `data` carries the site's app configurations.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| description | string | *Optional.* Site description.
+| siteConfig | <<site-config, SiteConfig>> \| <<site-config, SiteConfig>>[] | Configuration for one or more applications enabled on the site. A single object when one application is configured, otherwise an array.
+|===
+
+[#site-config]
+=== SiteConfig
+
+Configuration entry for a single application enabled on a site.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| applicationKey | string | Key of the application this configuration applies to.
+| config | object | The application's site configuration, shaped by its site descriptor form.
+|===
+
+[#multipart-form]
+=== MultipartForm
+
+A JSON object keyed by item name, where each value is a <<multipart-item, MultipartItem>> or an array of them when several items share the same name.
+
+[#multipart-item]
+=== MultipartItem
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| name | string | Name of the multipart item.
+| fileName | string | Original file name of the uploaded item.
+| contentType | string | MIME content type of the item.
+| size | number | Size of the item in bytes.
+|===

@@ -1,5 +1,4 @@
 = Export library
-
 :toc: right
 :imagesdir: ../images
 
@@ -34,19 +33,18 @@ Creates a node export.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`exportNodes()` takes a single `params` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Default | Description
-
-| sourceNodePath | string | | | Source nodes path
-| exportName | string | | | Export name
-| nodeResolved | function | <optional>| | A function to be called before export starts with number of nodes to export
-| nodeExported | function | <optional>| | A function to be called during export with number of nodes exported since last call
-| batchSize | number | <optional>| 1000 | Controls how many nodes are loaded into memory simultaneously during export. Higher value may speed up export but also increase memory usage
+| Name | Type | Description
+| sourceNodePath | string | Source nodes path.
+| exportName | string | Export name.
+| nodeResolved | function | *Optional.* A function to be called before export starts with the number of nodes to export.
+| nodeExported | function | *Optional.* A function to be called during export with the number of nodes exported since the last call.
+| batchSize | number | *Optional.* Controls how many nodes are loaded into memory simultaneously during export. A higher value may speed up export but also increase memory usage. Defaults to `1000`.
 |===
 
 
@@ -111,24 +109,23 @@ NOTE: During node export, current permissions are included in the export file. B
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`importNodes()` takes a single `params` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Default | Description
-
-| source | string or object | | | Either name of nodes-export located in exports directory or application resource key
-| targetNodePath | string | | | Target path for imported nodes
-| xslt | string or object  | <optional>| | XSLT file name in exports directory or application resource key. Used for XSLT transformation
-| xsltParams | object  | <optional>| | Parameters used in XSLT transformation
-| includeNodeIds | boolean | <optional>| false | Set to `true` to use node IDs from the import, `false` to generate new node IDs
-| includePermissions | boolean | <optional>| false | Set to `true` to overwrite Node permissions with permissions from the import, `false` to merge permissions with new parent permissions
-| versionAttributes | object | <optional>| | Optional attributes attached to the node version of every imported node
-| nodeResolved | function | <optional>| | A function to be called before import starts with number of nodes to import
-| nodeImported | function | <optional>| | A function to be called during import with number of nodes imported since last call
-| nodeSkipped | function | <optional>| | A function to be called during import with number of nodes skipped since last call
+| Name | Type | Description
+| source | string or object | Either the name of a nodes-export located in the exports directory, or an application resource key.
+| targetNodePath | string | Target path for imported nodes.
+| xslt | string or object | *Optional.* XSLT file name in the exports directory or application resource key. Used for XSLT transformation.
+| xsltParams | object | *Optional.* Parameters used in XSLT transformation.
+| includeNodeIds | boolean | *Optional.* Set to `true` to use node IDs from the import, `false` to generate new node IDs. Defaults to `false`.
+| includePermissions | boolean | *Optional.* Set to `true` to overwrite node permissions with permissions from the import, `false` to merge permissions with new parent permissions. Defaults to `false`.
+| versionAttributes | object | *Optional.* Attributes attached to the node version of every imported node.
+| nodeResolved | function | *Optional.* A function to be called before import starts with the number of nodes to import.
+| nodeImported | function | *Optional.* A function to be called during import with the number of nodes imported since the last call.
+| nodeSkipped | function | *Optional.* A function to be called during import with the number of nodes skipped since the last call.
 |===
 
 

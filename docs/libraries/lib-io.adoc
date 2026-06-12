@@ -28,23 +28,17 @@ You are now ready to use the API.
 
 === getMimeType
 
-Returns the mime-type from a name or extension.
+Returns the mime-type from a file name or extension.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name  | Type   | Description
-| name | string | Name of file or extension
-|===
+Takes a single `name` string — the file name or extension to look up.
 
 [.lead]
 Returns
 
-*string* : mime-type from a name or extension.
+*string* : The mime-type for the given name or extension.
 
 [.lead]
 Example
@@ -60,23 +54,17 @@ log.info('Mime type is %s', type);
 
 === getResource
 
-Looks up a resource.
+Looks up a resource on the classpath.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name  | Type   | Description
-| key | string \| ResourceKey | Resource key to look up
-|===
+Takes a single `key` argument — a string path or a <<fundamentals/types#resource-key, ResourceKey>> identifying the resource.
 
 [.lead]
 Returns
 
-*Resource* : Resource reference exposing `exists()`, `getSize()`, `getTimestamp()`, and `getStream()`.
+*object* : (<<fundamentals/types#resource, `Resource`>>) A resource handle exposing `exists()`, `getSize()`, `getTimestamp()`, and `getStream()`.
 
 [.lead]
 Examples
@@ -106,18 +94,12 @@ if (res2.exists()) {
 
 === getSize
 
-Returns the size of a stream.
+Returns the size of a stream in bytes.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| stream  | ByteSource | Stream to get size of
-|===
+Takes a single `stream` argument — a <<fundamentals/types#byte-source, ByteSource>> to measure.
 
 [.lead]
 Returns
@@ -138,23 +120,17 @@ log.info('Stream size is %s bytes', size);
 
 === newStream
 
-Returns a new stream from a string.
+Creates a new stream from a string.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| text   | string | String to create a stream of
-|===
+Takes a single `text` string — the text to encode as a UTF-8 byte stream.
 
 [.lead]
 Returns
 
-*ByteSource* : A new stream containing the UTF-8 bytes of the input string.
+*object* : (<<fundamentals/types#byte-source, `ByteSource`>>) A new stream containing the UTF-8 bytes of the input string.
 
 [.lead]
 Example
@@ -169,19 +145,12 @@ const stream = newStream('Hello World');
 
 === processLines
 
-Process lines from a stream.
+Reads a stream line by line, invoking a callback for each line.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| stream | ByteSource | Stream to read lines from
-| func   | (line: string) => void | Callback function called for each line
-|===
+Takes two positional arguments: a `stream` (<<fundamentals/types#byte-source, ByteSource>>) to read from, and a `func` callback `(line: string) => void` called once per line.
 
 [.lead]
 Example
@@ -201,23 +170,17 @@ processLines(stream, (line) => {
 
 === readLines
 
-Reads lines from a stream.
+Reads all lines from a stream and returns them as an array.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| stream  | ByteSource | Stream to read lines from
-|===
+Takes a single `stream` argument — a <<fundamentals/types#byte-source, ByteSource>> to read from.
 
 [.lead]
 Returns
 
-*string[]* : Lines as an array.
+*string[]* : Lines read from the stream.
 
 [.lead]
 Example
@@ -233,18 +196,12 @@ log.info('Num lines: %s', lines.length);
 
 === readText
 
-Reads text from a stream.
+Reads the full text content of a stream.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name    | Type   | Description
-| stream  | ByteSource | Stream to read text from
-|===
+Takes a single `stream` argument — a <<fundamentals/types#byte-source, ByteSource>> to read from.
 
 [.lead]
 Returns

@@ -429,12 +429,12 @@ Refreshes indices in the current repository.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes| Description
-| params | <<RefreshParams>> | <optional> | JSON with the parameters
+| Name | Type | Description
+| params | <<RefreshParams>> | *Optional.* JSON with the parameters.
 |===
 
 [.lead]
@@ -463,24 +463,24 @@ refresh({
 });
 ----
 
-== Objects
+== Type Definitions
 
 === Repository
 
 Repository object returned by `create`, `get`, `list`, and `modify`.
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| id | string | | Repository ID.
-| branches | string[] | | Branches available in the repository.
-| data | object | <optional> | Repository data as a key/value map.
-| transient | boolean | | `true` if the repository is transient (excluded from dumps and snapshots).
+| Name | Type | Description
+| id | string | Repository ID.
+| branches | string[] | Branches available in the repository.
+| data | object | *Optional.* Repository data as a key/value map.
+| transient | boolean | `true` if the repository is transient (excluded from dumps and snapshots).
 |===
 
 === CreateRepositoryParams
@@ -488,17 +488,17 @@ Fields
 Object to pass to the `create` function.
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| id | string | | Repository ID.
-| rootPermissions | <<AccessControlEntry>>[] | <optional> | Array of root permissions. By default, all permissions to `role:system.admin` and `READ` permission to `role:system.authenticated`.
-| rootChildOrder | string | <optional> | Root child order (for example, `_ts DESC`).
-| transient | boolean | <optional> | Mark the repository as transient. Defaults to `false`.
+| Name | Type | Description
+| id | string | Repository ID.
+| rootPermissions | <<AccessControlEntry>>[] | *Optional.* Array of root permissions. By default, all permissions to `role:system.admin` and `READ` permission to `role:system.authenticated`.
+| rootChildOrder | string | *Optional.* Root child order (for example, `_ts DESC`).
+| transient | boolean | *Optional.* Mark the repository as transient. Defaults to `false`.
 |===
 
 === AccessControlEntry
@@ -506,16 +506,16 @@ Fields
 Permission entry used in `CreateRepositoryParams.rootPermissions`.
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| principal | string | | Principal key (for example, `role:system.admin`, `user:system:su`).
-| allow | string[] | <optional> | Permissions to grant. Each value is one of `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
-| deny | string[] | <optional> | Permissions to deny. Same set of values as `allow`.
+| Name | Type | Description
+| principal | string | Principal key (for example, `role:system.admin`, `user:system:su`).
+| allow | string[] | *Optional.* Permissions to grant. Each value is one of `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
+| deny | string[] | *Optional.* Permissions to deny. Same set of values as `allow`.
 |===
 
 === CreateBranchParams
@@ -523,7 +523,7 @@ Fields
 Object to pass to the `createBranch` function.
 
 [.lead]
-Fields
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -539,7 +539,7 @@ Fields
 Object to pass to the `deleteBranch` function.
 
 [.lead]
-Fields
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -555,7 +555,7 @@ Fields
 Object returned by `createBranch` and `deleteBranch`.
 
 [.lead]
-Fields
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -570,7 +570,7 @@ Fields
 Object to pass to the `modify` function.
 
 [.lead]
-Fields
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -586,7 +586,7 @@ Fields
 Object to pass to the `getBinary` function.
 
 [.lead]
-Fields
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -602,14 +602,14 @@ Fields
 Object to pass to the `refresh` function.
 
 [.lead]
-Fields
+Properties
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Default | Description
-| mode | string | <optional> | `all` | Index type to be refreshed. One of `all`, `search`, or `storage`.
-| repo | string | <optional> | | Repository ID. Defaults to the repository of the current context.
-| branch | string | <optional> | | Branch. Defaults to the branch of the current context.
+| Name | Type | Description
+| mode | string | *Optional.* Index type to be refreshed. One of `all`, `search`, or `storage`. Defaults to `all`.
+| repo | string | *Optional.* Repository ID. Defaults to the repository of the current context.
+| branch | string | *Optional.* Branch. Defaults to the branch of the current context.
 |===

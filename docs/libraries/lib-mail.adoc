@@ -49,29 +49,29 @@ The content-type of the email can be specified by using the `contentType` parame
 [.lead]
 Parameters
 
-An object with the following parameters:
+`send()` takes a single `SendMessageParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| from | string \| string[] | E-mail address(es) and optionally name(s) of the message sender
-| to | string \| string[] | E-mail address(es) and optionally name(s) of the message’s recipient(s)
-| cc | string \| string[] | Optional list of carbon copy e-mail address(es)
-| bcc | string \| string[] | Optional list of blind carbon copy e-mail address(es)
-| replyTo | string \| string[] | Optional alternative e-mail address(es) for replies
-| subject | string | Subject line of the message
-| body | string | Text content of the message
-| contentType | string | Optional content type of the message body
-| headers | object | Optional custom headers in the form of name-value pairs
-| attachments | Array | Optional <<attachments,attachments>> to include in the e-mail
+| Name | Type | Description
+| from | string \| string[] | E-mail address(es) and optionally name(s) of the message sender.
+| to | string \| string[] | E-mail address(es) and optionally name(s) of the message's recipient(s).
+| subject | string | Subject line of the message.
+| body | string | Text content of the message.
+| cc | string \| string[] | *Optional.* List of carbon copy e-mail address(es).
+| bcc | string \| string[] | *Optional.* List of blind carbon copy e-mail address(es).
+| replyTo | string \| string[] | *Optional.* Alternative e-mail address(es) for replies.
+| contentType | string | *Optional.* Content type of the message body.
+| headers | object | *Optional.* Custom headers in the form of name-value pairs.
+| attachments | <<attachment, Attachment>>[] | *Optional.* Attachments to include in the e-mail.
 |===
 
 [.lead]
 Returns
 
-*boolean* : `true` if message was successfully sent, `false` otherwise.
+*boolean* : `true` if the message was successfully sent, `false` otherwise.
 
 [.lead]
 Example
@@ -129,6 +129,11 @@ const flag2 = send({
 Returns the default _from_ email address configured in the <<../deployment/config#mail, XP mail configuration>>.
 
 [.lead]
+Returns
+
+*string* : The default _from_ email address, or `null` if none is configured.
+
+[.lead]
 Example
 
 .Get a defaultFromEmail
@@ -140,22 +145,23 @@ const defaultFromEmail = getDefaultFromEmail();
 ----
 
 
-== Objects
+== Type Definitions
 
-=== attachments
+[#attachment]
+=== Attachment
 
-Array of attachments to include in an e-mail
+A single attachment to include in an e-mail.
 
 [.lead]
-Properties of each element in the array
+Properties
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
-| fileName | string | Attachment file name
-| data | ByteSource | Attachment stream
-| mimeType | string | Optional specification of attachment content type.  If not specified, it will be inferred from the filename.
-| headers | object | Optional attachment headers in the form of name-value pairs.
+| Name | Type | Description
+| fileName | string | Attachment file name.
+| data | <<fundamentals/types#byte-source, ByteSource>> | Attachment stream.
+| mimeType | string | *Optional.* Attachment content type. If not specified, it is inferred from the filename.
+| headers | object | *Optional.* Attachment headers in the form of name-value pairs.
 |===

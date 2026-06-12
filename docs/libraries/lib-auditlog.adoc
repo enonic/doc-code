@@ -35,22 +35,22 @@ This function searches for entries in the audit log.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`find()` takes a single `params` object with these properties:
 
-[%header,cols="1%,1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Default | Description
-| start | number | <optional> | 0 | Start index (used for paging)
-| count | number | <optional> | 10 | Number of entries to fetch
-| ids | array | <optional> | | Filter by entry ids
-| from | string | <optional> | | Filter by entries on or after `from`
-| to | string | <optional> | | Filter by entries on or before `to`
-| type | string | <optional> | | Filter by type
-| source | string | <optional> | | Filter by source
-| users | array | <optional> | | Filter by user keys
-| objects | array | <optional> | | Filter by object URIs
+| Name | Type | Description
+| start | number | *Optional.* Start index (used for paging). Defaults to `0`.
+| count | number | *Optional.* Number of entries to fetch. Defaults to `10`.
+| ids | array | *Optional.* Filter by entry ids.
+| from | string | *Optional.* Filter by entries on or after `from`.
+| to | string | *Optional.* Filter by entries on or before `to`.
+| type | string | *Optional.* Filter by type.
+| source | string | *Optional.* Filter by source.
+| users | array | *Optional.* Filter by user keys.
+| objects | array | *Optional.* Filter by object URIs.
 |===
 
 NOTE: All parameters are optional, but you should specify at least one of them. If no parameters are supplied, you will get an empty result.
@@ -85,11 +85,13 @@ This function fetches an audit log entry.
 [.lead]
 Parameters
 
+`get()` takes a single `params` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Kind | Details
+| Name | Type | Description
 | id | string | Id of the audit log entry.
 |===
 
@@ -115,20 +117,19 @@ const log = getAuditEntry({
 
 This function creates a single audit log entry.
 
-[.lead]
-Parameters
+`log()` takes a single `params` object with these properties:
 
-[%header,cols="1%,1%,1%,98%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| type | string | | Type of log entry.
-| time | string | <optional> | Log entry timestamp. Defaults to now.
-| source | string | <optional> | Log entry source. Defaults to the application ID.
-| user | string | <optional> | Log entry user. Defaults to the user of current context.
-| objects | string[] | <optional> | URIs to objects that relate to this log entry. Defaults to empty array.
-| data | object | <optional> | Custom extra data for this log entry. Defaults to empty object.
+| Name | Type | Description
+| type | string | Type of log entry.
+| time | string | *Optional.* Log entry timestamp. Defaults to now.
+| source | string | *Optional.* Log entry source. Defaults to the application ID.
+| user | string | *Optional.* Log entry user. Defaults to the user of current context.
+| objects | string[] | *Optional.* URIs to objects that relate to this log entry. Defaults to empty array.
+| data | object | *Optional.* Custom extra data for this log entry. Defaults to empty object.
 |===
 
 [.lead]

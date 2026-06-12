@@ -36,18 +36,12 @@ This function returns an instance of `SharedMap` for the specified map identifie
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name  | Kind   | Description
-| mapId | string | Map identifier.
-|===
+`getMap()` takes a single positional argument: `mapId` (string) — the map identifier.
 
 [.lead]
 Returns
 
-*SharedMap* : An instance of `SharedMap` bound to the given identifier.
+*<<shared-map, SharedMap>>* : An instance of `SharedMap` bound to the given identifier.
 
 [source,typescript]
 ----
@@ -65,14 +59,16 @@ Puts an entry into a SharedMap with a given time to live (TTL). If `value` is `n
 [.lead]
 Parameters
 
+`set()` takes a single `SetParams` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name  | Kind   | Description
-| key   | string | Key of the entry.
-| value | string\|number\|boolean\|JSON\|null | Value of the entry. Passing `null` removes the existing entry.
-| ttlSeconds | number | Optional. Maximum time (in seconds) for this entry to remain in the map. `0` means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.
+| Name | Type | Description
+| key | string | Key of the entry.
+| value | <<shared-map-value-type, SharedMapValueType>> | Value of the entry. Passing `null` removes the existing entry.
+| ttlSeconds | number | *Optional.* Maximum time (in seconds) for this entry to remain in the map. `0` means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.
 |===
 
 [source,typescript]
@@ -96,18 +92,12 @@ Returns the value to which the specified key is mapped, or `null` if the map con
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind   | Description
-| key  | string | The key whose associated value is to be returned.
-|===
+`get()` takes a single positional argument: `key` (string) — the key whose associated value is to be returned.
 
 [.lead]
 Returns
 
-*string\|number\|boolean\|JSON\|null* : The value mapped to the given key, or `null` if no mapping exists.
+*<<shared-map-value-type, SharedMapValueType>>* : The value mapped to the given key, or `null` if no mapping exists.
 
 [source,typescript]
 ----
@@ -125,13 +115,7 @@ Removes the entry for the specified key if it is present in the map.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind   | Description
-| key  | string | The key whose associated value is to be removed.
-|===
+`delete()` takes a single positional argument: `key` (string) — the key whose associated entry is to be removed.
 
 [source,typescript]
 ----
@@ -149,20 +133,22 @@ Attempts to compute a mapping for the specified key and its current mapped value
 [.lead]
 Parameters
 
+`modify()` takes a single `ModifyParams` object with these properties:
+
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name       | Kind      | Description
-| key        | string    | Key of the entry.
-| func       | function  | Mapping function that accepts the existing mapped value (or `null`, if there is no associated mapping). The value it returns replaces the existing mapped value for the specified key. If the returned value is `null`, the entry is removed from the map.
-| ttlSeconds | number    | Optional. Maximum time (in seconds) for this entry to remain in the map. `0` means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.
+| Name | Type | Description
+| key | string | Key of the entry.
+| func | function | Mapping function that accepts the existing mapped value (or `null`, if there is no associated mapping). The value it returns replaces the existing mapped value for the specified key. If the returned value is `null`, the entry is removed from the map.
+| ttlSeconds | number | *Optional.* Maximum time (in seconds) for this entry to remain in the map. `0` means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.
 |===
 
 [.lead]
 Returns
 
-*string\|number\|boolean\|JSON\|null* : The new value mapped to the key, or `null` if the entry was removed (because `func` returned `null`).
+*<<shared-map-value-type, SharedMapValueType>>* : The new value mapped to the key, or `null` if the entry was removed (because `func` returned `null`).
 
 [source,typescript]
 ----
@@ -176,3 +162,30 @@ const newValue = sharedMap.modify({
   ttlSeconds: 2 * 60
 });
 ----
+
+== Type Definitions
+
+[#shared-map]
+=== SharedMap
+
+[.lead]
+Type
+
+*interface*
+
+[.lead]
+Description
+
+A typed key-value store shared across all applications and cluster nodes. Obtain an instance via `getMap()`. The generic type parameter `Map` constrains which keys and value types are valid for the instance.
+
+Methods: `get()`, `set()`, `delete()`, `modify()` — documented above.
+
+[#shared-map-value-type]
+=== SharedMapValueType
+
+[.lead]
+Type
+
+`string | number | boolean | object | null`
+
+The union of all value types that a `SharedMap` entry may hold.

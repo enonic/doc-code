@@ -39,31 +39,16 @@ Registers an event listener that fires for events whose type matches the given p
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`listener()` takes a single `ListenerParams` object with these properties:
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| type | string | | Event type pattern. Works like a Java pattern, with two key differences: `.` is treated as a literal dot (not a wildcard), and `*` acts as `.*`, matching any sequence of characters.
-| callback | function | | Function invoked for each matching event. Receives a single event argument with the shape described in <<#enonic-event,Event object>>.
-| localOnly | boolean | <optional> | When `true`, only events originating on the current node are delivered. Defaults to `false`.
-|===
-
-[#enonic-event]
-.Event object passed to the callback
-[%header,cols="1%,1%,98%a"]
-[frame="topbot"]
-[grid="none"]
-[caption=""]
-|===
 | Name | Type | Description
-| type | string | Event type, for example `node.pushed` or `custom.myEvent`.
-| timestamp | number | Time the event was published, in milliseconds since the epoch.
-| localOrigin | boolean | `true` if the event was published on the current node, `false` if it was received from another cluster node.
-| distributed | boolean | `true` if the event was distributed across the cluster.
-| data | object | Event payload. Shape depends on the event `type`; for built-in node events, see <<lib-node#events, Node library>>.
+| type | string | Event type pattern. Works like a Java pattern, with two key differences: `.` is treated as a literal dot (not a wildcard), and `*` acts as `.*`, matching any sequence of characters.
+| callback | function | Function invoked for each matching event. Receives a single argument, an <<#enonic-event, EnonicEvent>> object.
+| localOnly | boolean | *Optional.* When `true`, only events originating on the current node are delivered. Defaults to `false`.
 |===
 
 [.lead]
@@ -95,16 +80,16 @@ Sends a custom event. The supplied `type` is automatically prefixed with `custom
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`send()` takes a single `SendParams` object with these properties:
 
-[%header,cols="1%,1%,1%,97%a"]
+[%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
-| Name | Type | Attributes | Description
-| type | string | | Event type. Will be published as `custom.<type>`.
-| distributed | boolean | <optional> | When `true`, the event is broadcast to every node in the cluster. Defaults to `false`.
-| data | object | <optional> | Additional data to attach to the event payload.
+| Name | Type | Description
+| type | string | Event type. Will be published as `custom.<type>`.
+| distributed | boolean | *Optional.* When `true`, the event is broadcast to every node in the cluster. Defaults to `false`.
+| data | object | *Optional.* Additional data to attach to the event payload.
 |===
 
 [.lead]
@@ -129,3 +114,25 @@ send({
     }
 });
 ----
+
+== Type Definitions
+
+[#enonic-event]
+=== EnonicEvent
+
+The object passed to a <<#listener, `listener`>> callback for each matching event.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Event type, for example `node.pushed` or `custom.myEvent`.
+| timestamp | number | Time the event was published, in milliseconds since the epoch.
+| localOrigin | boolean | `true` if the event was published on the current node, `false` if it was received from another cluster node.
+| distributed | boolean | `true` if the event was distributed across the cluster.
+| data | object | Event payload. Shape depends on the event `type`; for built-in node events, see <<lib-node#events, Node library>>.
+|===

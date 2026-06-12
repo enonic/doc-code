@@ -34,12 +34,12 @@ Returns the current context.
 [.lead]
 Parameters
 
-None
+`get()` takes no arguments.
 
 [.lead]
 Returns
 
-*object* : (<<GetContext,`Context`>>) The current context. The `attributes` field is always present (possibly empty); `branch`, `repository`, and `authInfo` are present when set on the calling context.
+*object* : (<<Context,`Context`>>) The current context. The `attributes` field is always present (possibly empty); `branch`, `repository`, and `authInfo` are present when set on the calling context.
 
 [.lead]
 Example
@@ -91,14 +91,7 @@ Commonly used when accessing repositories, or to override the current user's per
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Kind | Details
-| context | object | <<RunContext,`ContextParams`>> to be used for the scope of the callback function. Any field omitted is inherited from the current context.
-| callback | function | Function to execute. Its return value is propagated as the return value of `run`.
-|===
+`run()` takes two positional arguments: a <<ContextParams,`ContextParams`>> object defining the context for the scope of the callback (any field omitted is inherited from the current context), and a callback function to execute. The callback's return value is propagated as the return value of `run()`.
 
 [.lead]
 Returns
@@ -136,63 +129,80 @@ const result = run({
 
 == Type Definitions
 
-=== GetContext
+[#Context]
+=== Context
 
 The shape of the object returned by `get()`.
 
-.Sample context object
-[source,typescript]
-----
-{
-  repository: "some.repo.name", <1>
-  branch: "master", <2>
-  authInfo: { <3>
-      user: { <4>
-          type: "user",
-          key: "user:system:mylogin",
-          displayName: "My User",
-          login: "mylogin",
-          idProvider: "system",
-          hasPassword: true
-      },
-      principals: ["role:system.admin"] <5>
-  },
-  attributes: { <6>
-     optionalAttributes: "of any kind"
-  }
-}
-----
+[.lead]
+Properties
 
-<1> *repository* (_string_, optional) Repository context.
-<2> *branch* (_string_, optional) Branch context.
-<3> *authInfo* (_object_, optional) Authentication information for the current context.
-<4> *user* (_object_, optional) The currently authenticated user. Omitted when no user is logged in.
-<5> *principals* (_string[]_, optional) Principal keys (users, groups, and roles) attached to the authentication info.
-<6> *attributes* (_object_) Custom attributes set on the context. Always present; may be empty. Only values of type `number`, `string`, `boolean`, or plain `object` are serialized.
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| attributes | <<ContextAttributes, ContextAttributes>> | Custom attributes set on the context. Always present; may be empty.
+| branch | string | *Optional.* Branch context.
+| repository | string | *Optional.* Repository context.
+| authInfo | <<AuthInfo, AuthInfo>> | *Optional.* Authentication information for the current context.
+|===
 
-=== RunContext
+[#ContextParams]
+=== ContextParams
 
-The parameter object passed to `run()`. Any field omitted is inherited from the calling context.
+The context object passed as the first argument to `run()`. Any field omitted is inherited from the calling context.
 
-.Sample context object
-[source,typescript]
-----
-{
-  repository: "some.repo.name", <1>
-  branch: "master", <2>
-  user: { <3>
-      login: "mylogin",
-      idProvider: "system"
-  },
-  principals: ["role:system.admin"], <4>
-  attributes: { <5>
-     optionalAttributes: "of any kind"
-  }
-}
-----
+[.lead]
+Properties
 
-<1> *repository* (_string_, optional) Repository to run the callback in. Defaults to the current repository.
-<2> *branch* (_string_, optional) Branch to run the callback in. Defaults to the current branch.
-<3> *user* (_object_, optional) User to run the callback as. `login` is required; `idProvider` defaults to the system id provider when omitted.
-<4> *principals* (_string[]_, optional) Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.
-<5> *attributes* (_object_, optional) Additional context attributes. Only values of type `number`, `string`, `boolean`, or plain `object` are supported.
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| repository | string | *Optional.* Repository to run the callback in. Defaults to the current repository.
+| branch | string | *Optional.* Branch to run the callback in. Defaults to the current branch.
+| user | <<ContextUserParams, ContextUserParams>> | *Optional.* User to run the callback as.
+| principals | <<fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.
+| attributes | <<ContextAttributes, ContextAttributes>> | *Optional.* Additional context attributes.
+|===
+
+[#AuthInfo]
+=== AuthInfo
+
+Authentication information attached to a context.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| user | <<fundamentals/types#user, User>> | *Optional.* The currently authenticated user. Omitted when no user is logged in.
+| principals | <<fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Principal keys (users, groups, and roles) attached to the authentication info.
+|===
+
+[#ContextUserParams]
+=== ContextUserParams
+
+Identifies the user to run a callback as, passed in `<<ContextParams, ContextParams>>.user`.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| login | string | Login name of the user.
+| idProvider | string | *Optional.* Key of the ID provider the user belongs to. Defaults to the system ID provider when omitted.
+|===
+
+[#ContextAttributes]
+=== ContextAttributes
+
+A record of custom context attributes. Keys are strings; only values of type `number`, `string`, `boolean`, or plain `object` are supported.

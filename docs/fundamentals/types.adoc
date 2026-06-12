@@ -1,0 +1,457 @@
+= Types
+:toc: right
+
+The shared types that flow across the Enonic libraries
+
+== Introduction
+
+This page is the canonical reference for the cross-library types. 
+
+principals, binary streams, the content object, page components, and more. They are defined once in the `@enonic-types/core` package and re-exported by the individual `@enonic-types/lib-*` packages, so the same `User`, `Content`, or `ByteSource` you receive from one library is the exact type another library accepts.
+
+Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <<fundamentals/typescript#, TypeScript>>.
+
+NOTE: These are the TypeScript shapes of the runtime objects. The conceptual models behind them — the content model, the query language, form schemas — are documented in the https://developer.enonic.com/docs/cms[CMS] and https://developer.enonic.com/docs/platform[XP platform] docs, linked from the relevant types below.
+
+== Principals and keys
+
+Principal keys are branded string templates — a `User` key always reads `+user:<idprovider>:<id>+`, a group key `+group:<idprovider>:<id>+`, and a role key `+role:<id>+`.
+
+[#principal-key]
+=== PrincipalKey
+
+A union of the three key kinds: `UserKey | GroupKey | RoleKey`.
+
+[#user-key]
+=== UserKey
+
+Template string `+user:${string}:${string}+` — e.g. `user:system:alice`.
+
+[#group-key]
+=== GroupKey
+
+Template string `+group:${string}:${string}+` — e.g. `group:system:editors`.
+
+[#role-key]
+=== RoleKey
+
+Template string `+role:${string}+` — e.g. `role:system.admin`.
+
+[#principal-type]
+=== PrincipalType
+
+One of `'user'`, `'group'`, or `'role'`.
+
+[#principal]
+=== Principal
+
+A union of the three principal objects: `<<user, User>> | <<group, Group>> | <<role, Role>>`. Use the `type` discriminant to tell them apart.
+
+[#user]
+=== User
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'user'`.
+| key | <<user-key, UserKey>> | The principal key.
+| displayName | string | Human-friendly name.
+| login | string | Login name.
+| idProvider | string | Key of the ID provider the user belongs to.
+| hasPassword | boolean | Whether the user has a password set.
+| email | string | *Optional.* Email address.
+| disabled | boolean | *Optional.* Whether the user is disabled.
+| modifiedTime | string | *Optional.* ISO timestamp of the last modification.
+|===
+
+[#group]
+=== Group
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'group'`.
+| key | <<group-key, GroupKey>> | The principal key.
+| displayName | string | Human-friendly name.
+| modifiedTime | string | ISO timestamp of the last modification.
+| description | string | *Optional.* Group description.
+|===
+
+[#role]
+=== Role
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'role'`.
+| key | <<role-key, RoleKey>> | The principal key.
+| displayName | string | Human-friendly name.
+| modifiedTime | string | ISO timestamp of the last modification.
+| description | string | *Optional.* Role description.
+|===
+
+== Binary and resources
+
+[#byte-source]
+=== ByteSource
+
+An opaque handle to a binary stream. You don't read its fields directly — you pass it to library functions (for example `+io.readText+`, `+io.getSize+`, attachment and media APIs) that consume or produce binary data. Obtain one from `<<libraries/lib-io#, lib-io>>` (`newStream`, a resource stream) or from content attachments.
+
+[#resource]
+=== Resource
+
+A handle to an application resource on the classpath, returned by `+io.getResource+`.
+
+[.lead]
+Methods
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| exists() | boolean | Whether the resource exists.
+| getSize() | number | Size in bytes.
+| getTimestamp() | number | Last-modified time, in milliseconds since the epoch.
+| getStream() | <<byte-source, ByteSource>> | The resource's binary stream.
+|===
+
+[#resource-key]
+=== ResourceKey
+
+Identifies an application resource by application key and path.
+
+[.lead]
+Methods
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| getApplicationKey() | string | The owning application key.
+| getPath() | string | Resource path within the application.
+| getUri() | string | Full resource URI.
+| getName() | string | Resource name.
+| getExtension() | string | File extension.
+| isRoot() | boolean | Whether the key points at the application root.
+|===
+
+== Content model
+
+[#content]
+=== Content
+
+The object returned by the content APIs. The conceptual content model is documented in the https://developer.enonic.com/docs/cms[CMS docs]; this is its runtime shape.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| +_id+ | string | Unique content id.
+| +_name+ | string | Content name (unique among siblings).
+| +_path+ | string | Full content path.
+| type | string | Content type name (e.g. `portal:site`, `com.myapp:article`).
+| displayName | string | Human-friendly name.
+| data | object | The content's data, shaped by its content type.
+| x | object | Extra data (mixins / x-data), keyed by application.
+| attachments | object | Map of attachment name to <<attachment, Attachment>>.
+| valid | boolean | Whether the content currently validates against its type.
+| hasChildren | boolean | Whether the content has child items.
+| creator | <<user-key, UserKey>> | Principal that created the content.
+| createdTime | string | ISO creation timestamp.
+| owner | string | Principal key of the owner.
+| modifier | <<user-key, UserKey>> | *Optional.* Principal that last modified the content.
+| modifiedTime | string | *Optional.* ISO timestamp of the last modification.
+| language | string | *Optional.* Language tag of the content's locale.
+| childOrder | string | *Optional.* Sort order of children.
+| page | <<component, Component>> | *Optional.* The page component tree (absent on fragments).
+| fragment | <<component, Component>> | *Optional.* The fragment component (only on `portal:fragment` content).
+| publish | <<publish-info, PublishInfo>> | *Optional.* Publishing schedule and history.
+| workflow | <<workflow, Workflow>> | *Optional.* Workflow state.
+| validationErrors | <<validation-error, ValidationError>>[] | *Optional.* Validation errors, when the content is invalid.
+| inherit | string[] | *Optional.* Which aspects are inherited in a layered project (`CONTENT`, `PARENT`, `NAME`, `SORT`).
+| originProject | string | *Optional.* Project the content was inherited from.
+| variantOf | string | *Optional.* Id of the content this is a variant of.
+| +_score+ | number | *Optional.* Relevance score, present on query hits.
+| +_sort+ | object[] | *Optional.* Sort values, present on sorted query hits.
+|===
+
+[#attachment]
+=== Attachment
+
+A binary attached to a content item.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| name | string | Attachment name (unique within the content).
+| size | number | Size in bytes.
+| mimeType | string | Media type.
+| label | string | *Optional.* Attachment label.
+| sha512 | string | *Optional.* SHA-512 hash of the binary.
+|===
+
+[#publish-info]
+=== PublishInfo
+
+The publishing schedule and history of a content item. All fields are ISO-8601 timestamps.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| from | string | *Optional.* Time from which the content is published.
+| to | string | *Optional.* Time after which the content is no longer published.
+| first | string | *Optional.* Time the content was first published.
+|===
+
+[#workflow]
+=== Workflow
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| state | <<workflow-state, WorkflowState>> | The current workflow state.
+|===
+
+[#workflow-state]
+=== WorkflowState
+
+One of `'IN_PROGRESS'`, `'PENDING_APPROVAL'`, `'REJECTED'`, or `'READY'`.
+
+[#validation-error]
+=== ValidationError
+
+Describes a single validation failure on a content item.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| errorCode | object | The error code: `+{ applicationKey: string, code: string }+`.
+| message | string \| null | A static, human-readable error message.
+| i18n | string \| null | The i18n localization key for the message.
+| args | array | *Optional.* Values substituted into the localized message.
+|===
+
+== Page and components
+
+A content's `page` (and a fragment's `fragment`) is a tree of components. Every component carries a `type` discriminant — one of `'page'`, `'layout'`, `'part'`, `'text'`, or `'fragment'`. There is no separate `Page` type: the page-level node is a <<page-component, PageComponent>>.
+
+[#component]
+=== Component
+
+A union of the five component kinds, discriminated by `type`:
+`<<page-component, PageComponent>> | <<layout-component, LayoutComponent>> | <<part-component, PartComponent>> | <<text-component, TextComponent>> | <<fragment-component, FragmentComponent>>`.
+
+[#page-component]
+=== PageComponent
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'page'`.
+| descriptor | string | Descriptor key of the page component (e.g. `com.myapp:main`).
+| config | object | The component's configuration, shaped by the descriptor.
+| regions | object | Map of region name to <<region, Region>>.
+| path | string | Component path; always `/` for the page root.
+| template | string | *Optional.* Page template key, when the page uses a template.
+|===
+
+[#layout-component]
+=== LayoutComponent
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'layout'`.
+| descriptor | string | Descriptor key of the layout.
+| config | object | The component's configuration, shaped by the descriptor.
+| regions | object | Map of region name to <<region, Region>> nested within the layout.
+| path | string | *Optional.* Component path within the page.
+|===
+
+[#part-component]
+=== PartComponent
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'part'`.
+| descriptor | string | Descriptor key of the part.
+| config | object | The component's configuration, shaped by the descriptor.
+| path | string | *Optional.* Component path within the page.
+|===
+
+[#text-component]
+=== TextComponent
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'text'`.
+| text | string | The text (HTML) content.
+| path | string | Component path within the page.
+|===
+
+[#fragment-component]
+=== FragmentComponent
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | Always `'fragment'`.
+| fragment | string | Content id of the fragment being referenced.
+| path | string | Component path within the page.
+|===
+
+[#region]
+=== Region
+
+A named slot holding an ordered list of components.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| name | string | Region name.
+| components | <<component, Component>>[] | The components placed in the region, in order.
+|===
+
+== Repository nodes
+
+[#node]
+=== Node
+
+A stored repository node, as returned by the `lib-node` connection methods (`create`, `get`, `modify`, `move`, …). A node is its system properties merged with the caller's own data: every non-underscore property is application data, and the underscore-prefixed system properties are:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| `+_id+` | string | Generated, unique node id.
+| `+_name+` | string | Node name, unique among its siblings.
+| `+_path+` | string | Full path to the node.
+| `+_childOrder+` | string | Child order expression (for example, `+_ts DESC+`).
+| `+_manualOrderValue+` | number | *Optional.* Numeric value used when siblings are ordered manually.
+| `+_nodeType+` | string | Node type; `data` for ordinary nodes.
+| `+_permissions+` | object[] | Access-control entries (`principal`, `allow`, `deny`) for the node.
+| `+_indexConfig+` | object | Index configuration controlling how the node's data is indexed.
+| `+_ts+` | string | Timestamp of the node's current version, as an ISO-8601 instant.
+| `+_versionKey+` | string | Key of the node's current version.
+|===
+
+All other properties are the node's own data. See the https://developer.enonic.com/docs/platform[XP platform node API] for the full model.
+
+== HTTP
+
+[#request]
+=== Request
+
+The object passed to an HTTP function (`GET`, `POST`, filters, error handlers). Its fields — `method`, `path`, `params`, `headers`, `cookies`, `body`, and the rest — are documented in depth in <<web#, Web>>, the canonical home for the request/response model.
+
+[#response]
+=== Response
+
+The object an HTTP function returns — `status`, `body`, `contentType`, `headers`, `cookies`, `pageContributions`, `redirect`, and more. All fields are optional. See <<web#, Web>> for the full model and examples.
+
+== Other
+
+[#script-value]
+=== ScriptValue
+
+A lazy wrapper around a value crossing the Java/JavaScript boundary — used by APIs that accept arbitrary caller data (for example audit-log data, task config). Rather than fields, it exposes inspection methods: `isArray()`, `isObject()`, `isValue()`, `isFunction()`, `getValue()`, `getKeys()`, `hasMember(key)`, `getMember(key)`, `getArray()`, `getMap()`, `getList()`.
+
+== Query and form types
+
+[#form-item]
+=== FormItem
+
+A single item in a content type, mixin, or form-fragment schema. `FormItem` is a union discriminated by `formItemType`, with five kinds:
+
+[%header,cols="1%,99%a"]
+[frame="none"]
+[grid="none"]
+|===
+| formItemType | Description
+| `Input` | A data-entry field. Properties: `name`, `label`, `inputType` (names the editor — `TextLine`, `HtmlArea`, `ContentSelector`, …), `occurrences` (`+{ minimum, maximum }+`), `helpText`, `validationRegexp`, `default`, `config`.
+| `ItemSet` | A repeatable group of nested `items` (`FormItem[]`). Properties: `name`, `label`, `occurrences`, `items`, plus `helpText`.
+| `Layout` | A visual grouping that carries no data of its own. Properties: `name`, `label`, `items` (`FormItem[]`).
+| `OptionSet` | A set of selectable `options`, each with its own nested `items`. Properties: `name`, `label`, `occurrences`, `selection` (`+{ minimum, maximum }+`), `options`, `helpText`, `expanded`.
+| `FormFragment` | A reference to a reusable form fragment. Property: `name`.
+|===
+
+Every kind has a `name` and a `label`. For the full per-`inputType` configuration, see the https://developer.enonic.com/docs/cms[CMS schema docs].
+
+[#query-dsl]
+=== Query DSL types
+
+`QueryDsl`, `SortDsl`, `Filter`, `Aggregations`, and `Highlight` model the query DSL. They are documented with the storage layer rather than duplicated here — see the https://developer.enonic.com/docs/platform/stable/storage[XP storage and querying docs] and <<storage/querying#, Querying>>.

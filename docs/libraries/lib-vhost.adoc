@@ -28,7 +28,9 @@ You are now ready to use the API.
 
 === isEnabled
 
-Returns the value of the `enabled` property in the `com.enonic.xp.web.vhost.cfg` file.
+Returns the value of the `enabled` property in the `+com.enonic.xp.web.vhost.cfg+` file.
+
+`isEnabled()` takes no arguments.
 
 [.lead]
 Returns
@@ -47,12 +49,14 @@ const enabled = isEnabled();
 
 === list
 
-Returns the virtual host mappings configured in `com.enonic.xp.web.vhost.cfg`.
+Returns the virtual host mappings configured in `+com.enonic.xp.web.vhost.cfg+`.
+
+`list()` takes no arguments.
 
 [.lead]
 Returns
 
-*object* : (<<virtualHosts,`VirtualHosts`>>) Object with a `vhosts` array. The array is empty when no mappings are configured.
+*object* : (<<virtual-hosts,`VirtualHosts`>>) Object with a `vhosts` array. The array is empty when no mappings are configured.
 
 [.lead]
 Example
@@ -64,7 +68,7 @@ import {list} from '/lib/xp/vhost';
 const {vhosts} = list();
 ----
 
-For instance, given the following `com.enonic.xp.web.vhost.cfg`:
+For instance, given the following `+com.enonic.xp.web.vhost.cfg+`:
 
 [source,properties]
 ----
@@ -110,13 +114,8 @@ const expected = {
 
 == Type Definitions
 
+[#virtual-hosts]
 === VirtualHosts
-[[virtualHosts]]
-
-[.lead]
-Type
-
-*object*
 
 [.lead]
 Properties
@@ -126,17 +125,12 @@ Properties
 [grid="none"]
 |===
 | Name   | Type                              | Description
-| vhosts | <<virtualHost,`VirtualHost[]`>>   | All configured virtual host mappings. Empty when none are configured.
+| vhosts | <<virtual-host,`VirtualHost[]`>>   | All configured virtual host mappings. Empty when none are configured.
 
 |===
 
+[#virtual-host]
 === VirtualHost
-[[virtualHost]]
-
-[.lead]
-Type
-
-*object*
 
 [.lead]
 Properties
@@ -145,23 +139,18 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                 | Type                                  | Description
-| name                 | string                                | Mapping name (the suffix used in `mapping.<name>.*` config keys).
-| source               | string                                | Source path that the mapping matches.
-| target               | string                                | Target path that the mapping rewrites to.
-| host                 | string                                | Host name that the mapping matches.
-| defaultIdProviderKey | string                                | Optional. Key of the default ID provider, when configured.
-| idProviderKeys       | <<idProviderKey,`IdProviderKey[]`>>   | Optional. ID providers attached to the mapping.
+| Name                           | Type                                        | Description
+| name                           | string                                      | Mapping name (the suffix used in `+mapping.<name>.*+` config keys).
+| source                         | string                                      | Source path that the mapping matches.
+| target                         | string                                      | Target path that the mapping rewrites to.
+| host                           | string                                      | Host name that the mapping matches.
+| `+defaultIdProviderKey+`       | string                                      | *Optional.* Key of the default ID provider, when configured.
+| `+idProviderKeys+`             | <<id-provider-key,`IdProviderKey[]`>>         | *Optional.* ID providers attached to the mapping.
 
 |===
 
+[#id-provider-key]
 === IdProviderKey
-[[idProviderKey]]
-
-[.lead]
-Type
-
-*object*
 
 [.lead]
 Properties
@@ -170,7 +159,7 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name          | Type   | Description
-| idProviderKey | string | ID provider key.
+| Name              | Type   | Description
+| `+idProviderKey+` | string | ID provider key.
 
 |===

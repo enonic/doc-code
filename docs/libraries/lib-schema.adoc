@@ -37,7 +37,7 @@ Fetches a schema from an application.
 [.lead]
 Parameters
 
-`getSchema()` takes a single `params` object with these properties:
+`getSchema()` takes a single `GetDynamicContentSchemaParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -51,7 +51,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<schema,`Schema`>>) Property object of the fetched schema, or `null` if the schema does not exist.
+*object* : (<<schema,`Schema`>>) Property object of the fetched schema — a <<content-type,`ContentTypeSchema`>>, <<form-fragment,`FormFragmentSchema`>>, or <<mixin,`MixinSchema`>> depending on `type` — or `null` if the schema does not exist.
 
 [.lead]
 Example
@@ -110,7 +110,7 @@ Fetches schemas of a particular type from an application.
 [.lead]
 Parameters
 
-`listSchemas()` takes a single `params` object with these properties:
+`listSchemas()` takes a single `ListDynamicSchemasParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -124,7 +124,7 @@ Parameters
 [.lead]
 Returns
 
-*object[]* : (<<schema,`Schema[]`>>) Property object of the fetched schemas.
+*object[]* : (<<schema,`Schema[]`>>) Array of the fetched schemas — <<content-type,`ContentTypeSchema`>>, <<form-fragment,`FormFragmentSchema`>>, or <<mixin,`MixinSchema`>> objects depending on `type`.
 
 [.lead]
 Example
@@ -203,7 +203,7 @@ Creates a dynamic schema in a virtual application.
 [.lead]
 Parameters
 
-`createSchema()` takes a single `params` object with these properties:
+`createSchema()` takes a single `CreateDynamicContentSchemaParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -218,7 +218,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<schema,`Schema`>>) Property object of the created dynamic schema.
+*object* : (<<schema,`Schema`>>) The created schema — a <<content-type,`ContentTypeSchema`>>, <<form-fragment,`FormFragmentSchema`>>, or <<mixin,`MixinSchema`>> depending on `type`.
 
 [.lead]
 Example
@@ -289,7 +289,7 @@ Updates a dynamic schema in a virtual application.
 [.lead]
 Parameters
 
-`updateSchema()` takes a single `params` object with these properties:
+`updateSchema()` takes a single `UpdateDynamicContentSchemaParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -304,7 +304,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<schema,`Schema`>>) Property object for the modified dynamic schema.
+*object* : (<<schema,`Schema`>>) The modified schema — a <<content-type,`ContentTypeSchema`>>, <<form-fragment,`FormFragmentSchema`>>, or <<mixin,`MixinSchema`>> depending on `type`.
 
 [.lead]
 Example
@@ -371,7 +371,7 @@ Removes a schema from a virtual application.
 [.lead]
 Parameters
 
-`deleteSchema()` takes a single `params` object with these properties:
+`deleteSchema()` takes a single `DeleteDynamicContentSchemaParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -414,7 +414,7 @@ Fetches a component from an application.
 [.lead]
 Parameters
 
-`getComponent()` takes a single `params` object with these properties:
+`getComponent()` takes a single `GetDynamicComponentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -428,7 +428,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<component,`Component`>>) Property object of the fetched component.
+*object* : (<<component,`ComponentDescriptor`>>) The fetched component — a <<page,`PageDescriptor`>>, <<part,`PartDescriptor`>>, or <<layout,`LayoutDescriptor`>> depending on `type`.
 
 [.lead]
 Example
@@ -485,7 +485,7 @@ Fetches components of a particular type from an application.
 [.lead]
 Parameters
 
-`listComponents()` takes a single `params` object with these properties:
+`listComponents()` takes a single `ListDynamicComponentsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -499,7 +499,7 @@ Parameters
 [.lead]
 Returns
 
-*object[]* : (<<component,`Component[]`>>) Array of Property objects of the fetched components.
+*object[]* : (<<component,`ComponentDescriptor[]`>>) Array of the fetched components — <<page,`PageDescriptor`>>, <<part,`PartDescriptor`>>, or <<layout,`LayoutDescriptor`>> objects depending on `type`.
 
 [.lead]
 Example
@@ -565,7 +565,7 @@ Creates a dynamic component in a virtual application.
 [.lead]
 Parameters
 
-`createComponent()` takes a single `params` object with these properties:
+`createComponent()` takes a single `CreateDynamicComponentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -573,14 +573,14 @@ Parameters
 |===
 | Name | Type | Description
 | key | string | Dynamic component key.
-| type | string | Dynamic schema type (`PAGE`, `PART` or `LAYOUT`).
+| type | string | Dynamic component type (`PAGE`, `PART` or `LAYOUT`).
 | resource | string | Dynamic component resource value.
 |===
 
 [.lead]
 Returns
 
-*object* : (<<component,`Component`>>) Property object of the created dynamic component.
+*object* : (<<component,`ComponentDescriptor`>>) The created component — a <<page,`PageDescriptor`>>, <<part,`PartDescriptor`>>, or <<layout,`LayoutDescriptor`>> depending on `type`.
 
 [.lead]
 Example
@@ -658,7 +658,7 @@ Updates a dynamic component in a virtual application.
 [.lead]
 Parameters
 
-`updateComponent()` takes a single `params` object with these properties:
+`updateComponent()` takes a single `UpdateDynamicComponentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -673,7 +673,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<component,`Component`>>) Property object of the modified dynamic component.
+*object* : (<<component,`ComponentDescriptor`>>) The modified component — a <<page,`PageDescriptor`>>, <<part,`PartDescriptor`>>, or <<layout,`LayoutDescriptor`>> depending on `type`.
 
 [.lead]
 Example
@@ -804,7 +804,7 @@ Deletes a dynamic component from a virtual application.
 [.lead]
 Parameters
 
-`deleteComponent()` takes a single `params` object with these properties:
+`deleteComponent()` takes a single `DeleteDynamicComponentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -847,7 +847,7 @@ Fetches styles (f.ex. image styles) from an application.
 [.lead]
 Parameters
 
-`getStyles()` takes a single `params` object with these properties:
+`getStyles()` takes a single `GetDynamicStylesParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -860,7 +860,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<styles,`Styles`>>) Property object of the fetched styles, or `null` if the application has no styles descriptor.
+*object* : (<<styles,`StyleDescriptor`>>) Property object of the fetched styles, or `null` if the application has no styles descriptor.
 
 [.lead]
 Example
@@ -898,7 +898,7 @@ Creates styles in a virtual application.
 [.lead]
 Parameters
 
-`createStyles()` takes a single `params` object with these properties:
+`createStyles()` takes a single `CreateDynamicStylesParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -912,7 +912,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<styles,`Styles`>>) Property object of the created dynamic styles.
+*object* : (<<styles,`StyleDescriptor`>>) Property object of the created dynamic styles.
 
 [.lead]
 Example
@@ -983,7 +983,7 @@ Updates styles in a virtual application.
 [.lead]
 Parameters
 
-`updateStyles()` takes a single `params` object with these properties:
+`updateStyles()` takes a single `UpdateDynamicStylesParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -997,7 +997,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<styles,`Styles`>>) Property object with the modified styles.
+*object* : (<<styles,`StyleDescriptor`>>) Property object with the modified styles.
 
 [.lead]
 Example
@@ -1068,7 +1068,7 @@ Deletes styles from a virtual application.
 [.lead]
 Parameters
 
-`deleteStyles()` takes a single `params` object with these properties:
+`deleteStyles()` takes a single `DeleteDynamicStylesParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1109,7 +1109,7 @@ Fetches a site descriptor from an application.
 [.lead]
 Parameters
 
-`getSite()` takes a single `params` object with these properties:
+`getSite()` takes a single `GetDynamicSiteParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1122,7 +1122,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<site,`Site`>>) Property object of the fetched site descriptor, or `null` if the application has no CMS descriptor.
+*object* : (<<site,`SiteDescriptor`>>) Property object of the fetched site descriptor, or `null` if the application has no CMS descriptor.
 
 [.lead]
 Example
@@ -1174,7 +1174,7 @@ Updates dynamic site descriptor in a virtual application.
 [.lead]
 Parameters
 
-`updateSite()` takes a single `params` object with these properties:
+`updateSite()` takes a single `UpdateDynamicSiteParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1188,7 +1188,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<site,`Site`>>) Property object of the modified site descriptor.
+*object* : (<<site,`SiteDescriptor`>>) Property object of the modified site descriptor.
 
 [.lead]
 Example
@@ -1262,7 +1262,7 @@ const expected = {
 
 [#schema]
 === Schema
-(abstract for <<content_type,ContentType>>, <<form_fragment,FormFragment>> and <<mixin,Mixin>>)
+Base shape shared by <<content-type,`ContentTypeSchema`>>, <<form-fragment,`FormFragmentSchema`>> and <<mixin,`MixinSchema`>>. `getSchema`, `createSchema`, `updateSchema` and `listSchemas` always return one of those concrete types depending on the `type` argument.
 
 [.lead]
 Type
@@ -1276,28 +1276,25 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type               | Description
-| name                      | string             | Component name
-| title               | string             | Title
-| titleI18nKey        | string             | Title i18n key
-| description               | string             | Schema description
-| descriptionI18nKey        | string             | Schema description i18n key
-| createdTime               | string             | Created zulu time
-| creator                   | string             | Creator principal key
-| modifiedTime              | string             | Modified zulu time
-| modifier                  | string             | Modifier principal key
-| resource                  | string             | Schema resource value
-| type                      | string             | Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, `MIXIN`)
-| form                      | object[]           | Schema form
-| icon                      | <<icon,Icon>>   | Schema icon
-
-
-
+| Name | Type | Description
+| name | string | Schema name.
+| title | string | Title.
+| titleI18nKey | string | Title i18n key.
+| description | string | Schema description.
+| descriptionI18nKey | string | Schema description i18n key.
+| createdTime | string | Created zulu time.
+| creator | <<fundamentals/types#user-key, UserKey>> | Principal that created the schema.
+| modifiedTime | string | Modified zulu time.
+| modifier | <<fundamentals/types#user-key, UserKey>> | Principal that last modified the schema.
+| resource | string | Schema resource value (YAML).
+| type | string | Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, `MIXIN`).
+| icon | <<icon,Icon>> | *Optional.* Schema icon.
 |===
 
-=== ContentType
-[[content_type]]
-(extends <<schema,`Schema`>>)
+[#content-type]
+=== ContentTypeSchema
+Extends <<schema,`Schema`>>. Returned by the schema functions when `type` is `CONTENT_TYPE`. This is the dynamic content-type schema descriptor — distinct from `lib-content`'s `ContentType` (the `getType` return value).
+
 [.lead]
 Type
 
@@ -1310,25 +1307,44 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type                      | Description
-| config                    | object                    | Content type config
-
+| Name | Type | Description
+| form | <<fundamentals/types#form-item, FormItem>>[] | Content type form.
+| config | object | Content type config. Map of config values keyed by name.
+| superType | string | *Optional.* Key of the content type this one inherits from.
+| abstract | boolean | *Optional.* `true` if the content type cannot be instantiated directly.
+| final | boolean | *Optional.* `true` if the content type cannot be extended.
+| allowChildContent | boolean | *Optional.* `true` if content of this type may have children.
+| allowChildContentType | string[] | *Optional.* Patterns of content types allowed as children.
+| displayNamePlaceholder | string | *Optional.* Placeholder shown in the display name field.
+| displayNamePlaceholderI18nKey | string | *Optional.* i18n key for the display name placeholder.
+| displayNameExpression | string | *Optional.* Expression used to derive the display name.
+| displayNameListExpression | string | *Optional.* Expression used to derive the display name in list views.
+| mixinNames | string[] | *Optional.* Names of mixins applied to this content type.
 |===
 
-=== FormFragment
-[[form_fragment]]
-(extends <<schema,`Schema`>>)
+[#form-fragment]
+=== FormFragmentSchema
+Extends <<schema,`Schema`>>. Returned by the schema functions when `type` is `FORM_FRAGMENT`.
 
 [.lead]
 Type
 
 *object*
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| form | <<fundamentals/types#form-item, FormItem>>[] | Form fragment form.
+|===
 
 [#mixin]
-=== Mixin
-(extends <<schema,`Schema`>>)
-
-Each mixin attaches optional metadata to a content item.
+=== MixinSchema
+Extends <<schema,`Schema`>>. Returned by the schema functions when `type` is `MIXIN`. Each mixin attaches optional metadata to a content item.
 
 [.lead]
 Type
@@ -1342,14 +1358,14 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type                      | Description
-| config                    | object                    | Mixin config
-
+| Name | Type | Description
+| form | <<fundamentals/types#form-item, FormItem>>[] | Mixin form.
+| config | object | Mixin config. Map of config values keyed by name.
 |===
 
 [#component]
-=== Component
-(abstract for <<page,Page>>, <<part,Part>> and <<layout,Layout>>)
+=== ComponentDescriptor
+Base shape shared by <<page,`PageDescriptor`>>, <<part,`PartDescriptor`>> and <<layout,`LayoutDescriptor`>>. `getComponent`, `createComponent`, `updateComponent` and `listComponents` always return one of those concrete types depending on the `type` argument.
 
 [.lead]
 Type
@@ -1363,24 +1379,23 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type    | Description
-| key                       | string  | Component key
-| title               | string  | Title
-| titleI18nKey        | string  | Title i18n key
-| description               | string  | Component description
-| descriptionI18nKey        | string  | Component description i18n key
-| componentPath             | string  | Component path
-| modifiedTime              | string  | Modified zulu time
-| resource                  | string  | Component resource value
-| type                      | string  | Component type(`PAGE`, `PART`, `LAYOUT`)
-| form                      | object[]| Component form
-| config                    | object  | Component config
-
+| Name | Type | Description
+| key | string | Component key.
+| title | string | Title.
+| titleI18nKey | string | Title i18n key.
+| description | string | Component description.
+| descriptionI18nKey | string | Component description i18n key.
+| componentPath | string | Component path.
+| modifiedTime | string | Modified zulu time.
+| resource | string | Component resource value (YAML).
+| type | string | Component type (`PAGE`, `PART`, `LAYOUT`).
+| form | <<fundamentals/types#form-item, FormItem>>[] | Component form.
+| config | object | Component config. Map of config values keyed by name.
 |===
 
 [#page]
-=== Page
-(extends <<component,`Component`>>)
+=== PageDescriptor
+Extends <<component,`ComponentDescriptor`>>. Returned when `type` is `PAGE`.
 
 [.lead]
 Type
@@ -1394,14 +1409,13 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type                      | Description
-| regions                   | string[]                  | Page regions
-
+| Name | Type | Description
+| regions | string[] | *Optional.* Page regions.
 |===
 
 [#layout]
-=== Layout
-(extends <<component,`Component`>>)
+=== LayoutDescriptor
+Extends <<component,`ComponentDescriptor`>>. Returned when `type` is `LAYOUT`.
 
 [.lead]
 Type
@@ -1415,14 +1429,13 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type                      | Description
-| regions                   | string[]                  | Layout regions
-
+| Name | Type | Description
+| regions | string[] | *Optional.* Layout regions.
 |===
 
 [#part]
-=== Part
-(extends <<component,`Component`>>)
+=== PartDescriptor
+Extends <<component,`ComponentDescriptor`>>. Returned when `type` is `PART`.
 
 [.lead]
 Type
@@ -1436,13 +1449,12 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type                      | Description
-| icon                      | <<icon,Icon>>          | Part icon
-
+| Name | Type | Description
+| icon | <<icon,Icon>> | *Optional.* Part icon.
 |===
 
 [#site]
-=== Site
+=== SiteDescriptor
 
 [.lead]
 Type
@@ -1456,17 +1468,16 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type                              | Description
-| application               | string                            | Application key
-| modifiedTime              | string                            | Site zulu modified time
-| resource                  | string                            | Site CMS descriptor YAML resource value
-| form                      | object[]                          | Site descriptor form
-| mixinMappings             | <<mixinMapping,MixinMapping[]>>| Mixin mappings
-
+| Name | Type | Description
+| application | string | Application key.
+| resource | string | Site CMS descriptor YAML resource value.
+| modifiedTime | string | Site zulu modified time.
+| form | <<fundamentals/types#form-item, FormItem>>[] | Site descriptor form.
+| mixinMappings | <<mixin-mapping,MixinMapping[]>> | *Optional.* Mixin mappings.
 |===
 
 [#styles]
-=== Styles
+=== StyleDescriptor
 
 [.lead]
 Type
@@ -1480,16 +1491,15 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type                              | Description
-| application               | string                            | Application key
-| modifiedTime              | string                            | Styles zulu modified time
-| resource                  | string                            | Styles YAML resource value
-| elements                  | <<element,StyleElement[]>>     | style elements
-
+| Name | Type | Description
+| application | string | Application key.
+| modifiedTime | string | Styles zulu modified time.
+| resource | string | Styles YAML resource value.
+| elements | <<element,StyleElement[]>> | Style elements.
 |===
 
+[#mixin-mapping]
 === MixinMapping
-[[mixinMapping]]
 
 [.lead]
 Type
@@ -1503,15 +1513,14 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                   | Type    | Description
-| name                   | string  | Mixin name
-| optional               | boolean | `true` if optional
-| allowContentTypes      | string  | Allowed content type pattern
-
+| Name | Type | Description
+| name | string | Mixin name.
+| optional | boolean | `true` if optional.
+| allowContentTypes | string | Allowed content type pattern.
 |===
 
+[#element]
 === StyleElement
-[[element]]
 
 [.lead]
 Type
@@ -1525,10 +1534,32 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type    | Description
-| name                      | string  | Style element name
-| label                     | string  | Style element label
+| Name | Type | Description
+| name | string | Style element name.
+| label | string | Style element label. May be `null`.
+| type | string | Style element type (e.g. `Style`, `Image`).
+| aspectRatio | string | *Optional.* Aspect ratio applied by an image style (e.g. `21:9`).
+| filter | string | *Optional.* Image filter expression applied by the style.
+| editor | <<editor-config,EditorConfig>> | *Optional.* Editor configuration, including the CSS applied in the editor.
+|===
 
+[#editor-config]
+=== EditorConfig
+
+[.lead]
+Type
+
+*object*
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| css | string | *Optional.* CSS applied by the style in the editor.
 |===
 
 [#icon]
@@ -1546,11 +1577,10 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name                      | Type    | Description
-| data                      | object  | icon stream data
-| mimeType                  | string  | icon mime type
-| modifiedTime              | string  | icon modified time
-
+| Name | Type | Description
+| data | <<fundamentals/types#byte-source, ByteSource>> | Icon stream data.
+| mimeType | string | Icon mime type.
+| modifiedTime | string | Icon modified time.
 |===
 
 

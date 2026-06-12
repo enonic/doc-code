@@ -38,14 +38,7 @@ Adds members to a principal (group or role).
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| principalKey | string | Key of the group or role to add members to
-| members | string[] | Keys of users and groups to add
-|===
+Takes the `principalKey` (a <<fundamentals/types#group-key, GroupKey>> or <<fundamentals/types#role-key, RoleKey>>) of the group or role to add members to, and an array of `members` — the <<fundamentals/types#user-key, UserKey>> or <<fundamentals/types#group-key, GroupKey>> values to add.
 
 [.lead]
 Returns
@@ -71,15 +64,15 @@ Changes or clears the password for the specified user.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`changePassword()` takes a single `ChangePasswordParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| userKey | string | Key of the user to change password for
-| password | string | *Optional.* The new password to set. If `null`, the password will be cleared.
+| userKey | string | Key of the user to change password for.
+| password | string | *Optional.* The new password to set. If `null`, the password is cleared.
 |===
 
 [.lead]
@@ -112,23 +105,23 @@ Creates a group.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`createGroup()` takes a single `CreateGroupParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| idProvider | string | Key for id provider where the group will be created
-| name | string | Group name
-| displayName | string | *Optional.* Group display name
-| description | string | *Optional.* Group description
+| idProvider | string | Key of the id provider where the group will be created.
+| name | string | Group name.
+| displayName | string | *Optional.* Group display name.
+| description | string | *Optional.* Group description.
 |===
 
 [.lead]
 Returns
 
-*object*: The created group.
+*object* : (<<fundamentals/types#group, `Group`>>) The created group.
 
 [.lead]
 Example
@@ -164,24 +157,24 @@ Creates an ID provider.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`createIdProvider()` takes a single `CreateIdProviderParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | ID provider key
-| displayName | string | ID provider display name
-| description | string | *Optional.* ID provider description
+| key | string | ID provider key.
+| displayName | string | ID provider display name.
+| description | string | *Optional.* ID provider description.
 | idProviderConfig | <<id-provider-config, IdProviderConfig>> | *Optional.* Binds this provider to one application. Without it the provider is incomplete and login plumbing won't resolve back to an app.
-| permissions | <<id-provider-permission, IdProviderPermission>>[] | *Optional.* ID provider permissions
+| permissions | <<id-provider-access-control-entry, IdProviderAccessControlEntry>>[] | *Optional.* ID provider permissions.
 |===
 
 [.lead]
 Returns
 
-*object*: The created ID provider.
+*object* : (<<id-provider, `IdProvider`>>) The created ID provider.
 
 [.lead]
 Example
@@ -233,22 +226,22 @@ Creates a role.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`createRole()` takes a single `CreateRoleParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| name | string | The name of the role. The key of the role will be `role:<name>`.
-| displayName | string | *Optional.* Role display name
-| description | string | *Optional.* Role description
+| name | string | The name of the role. The key of the role will be `+role:<name>+`.
+| displayName | string | *Optional.* Role display name.
+| description | string | *Optional.* Role description.
 |===
 
 [.lead]
 Returns
 
-*object*: The created role.
+*object* : (<<fundamentals/types#role, `Role`>>) The created role.
 
 [.lead]
 Example
@@ -283,23 +276,23 @@ Creates a user.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`createUser()` takes a single `CreateUserParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| idProvider | string | Key for id provider where the user will be created
-| name | string | User login name
-| displayName | string | *Optional.* User display name
-| email | string | *Optional.* User e-mail
+| idProvider | string | Key of the id provider where the user will be created.
+| name | string | User login name.
+| displayName | string | *Optional.* User display name.
+| email | string | *Optional.* User e-mail.
 |===
 
 [.lead]
 Returns
 
-*object*: The created <<user,`User`>>.
+*object* : (<<fundamentals/types#user, `User`>>) The created user.
 
 [.lead]
 Example
@@ -339,13 +332,7 @@ Deletes the principal with the specified key.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| principalKey | string | Principal key to delete
-|===
+Takes the `principalKey` (a <<fundamentals/types#principal-key, PrincipalKey>>) of the principal to delete.
 
 [.lead]
 Returns
@@ -370,25 +357,25 @@ Search for principals matching the specified criteria.
 [.lead]
 Parameters
 
-An object with the following keys and their values. All parameters are optional:
+`findPrincipals()` takes a single `FindPrincipalsParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| type | string | *Optional.* Principal type to look for, one of: 'user', 'group' or 'role'. If not specified all principal types will be included.
-| idProvider | string | *Optional.* Key of the id provider to look for. If not specified, all id providers will be included.
-| start | number | *Optional.* First principal to return from the search results. It can be used for pagination. Default is `0`.
-| count | number | *Optional.* A limit on the number of principals to be returned. Default is `10`.
-| name | string | *Optional.* Name of the principal to look for
+| type | <<fundamentals/types#principal-type, PrincipalType>> | *Optional.* Principal type to look for, one of `'user'`, `'group'` or `'role'`. If not specified all principal types are included.
+| idProvider | string | *Optional.* Key of the id provider to look for. If not specified, all id providers are included.
+| start | number | *Optional.* First principal to return from the search results. Used for pagination. Defaults to `0`.
+| count | number | *Optional.* A limit on the number of principals to return. Defaults to `10`.
+| name | string | *Optional.* Name of the principal to look for.
 | searchText | string | *Optional.* Text to look for in any principal field.
 |===
 
 [.lead]
 Returns
 
-*object*: The "total" number of principals matching the search, the "count" of principals included, and an array of "hits" containing the principals.
+*object* : (<<find-principals-result, `FindPrincipalsResult`>>) The total number of principals matching the search, the count of principals included, and an array of hits containing the principals.
 
 [.lead]
 Example
@@ -435,24 +422,24 @@ Search for users matching the specified query.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`findUsers()` takes a single `FindUsersParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| query | string | Query expression
-| start | number | *Optional.* Start index for paging. Default is `0`.
-| count | number | *Optional.* Number of users to fetch. Default is `10`.
-| sort | string | *Optional.* Sorting expression
-| includeProfile | boolean | *Optional.* If set to `true`, a full profile of each user will be included in the result. Default is `false`.
+| query | string | Query expression.
+| start | number | *Optional.* Start index for paging. Defaults to `0`.
+| count | number | *Optional.* Number of users to fetch. Defaults to `10`.
+| sort | string | *Optional.* Sorting expression.
+| includeProfile | boolean | *Optional.* If set to `true`, the full profile of each user is included in the result. Defaults to `false`.
 |===
 
 [.lead]
 Returns
 
-*object*: An object containing the total number of hits, the number returned and an array of the hits.
+*object* : (<<find-principals-result, `FindPrincipalsResult`>>) The total number of hits, the number returned, and an array of the matching <<fundamentals/types#user, `User`>> objects.
 
 [.lead]
 Example
@@ -489,7 +476,7 @@ const findUsersResult = findUsers({
 })
 ----
 
-NOTE: If you want to find a user by key, you have to use `_id` field in the `query` parameter.
+NOTE: If you want to find a user by key, you have to use the `+_id+` field in the `query` parameter.
 
 .Find a user by key.
 [source,typescript]
@@ -510,7 +497,7 @@ Generates a random secure password that may be suggested to a user.
 [.lead]
 Parameters
 
-None
+Takes no arguments.
 
 [.lead]
 Returns
@@ -535,7 +522,7 @@ Returns the ID provider configuration. Meant to be called from an ID provider im
 [.lead]
 Parameters
 
-None
+Takes no arguments. The expected config shape can be supplied as a TypeScript type parameter, e.g. `+getIdProviderConfig<{ field?: string }>()+`.
 
 [.lead]
 Returns
@@ -564,12 +551,12 @@ Returns all id providers configured on the system. Each entry's `idProviderConfi
 [.lead]
 Parameters
 
-None
+Takes no arguments.
 
 [.lead]
 Returns
 
-*object[]*: A list of ID providers.
+*object[]* : (<<id-provider, `IdProvider`>>[]) A list of ID providers.
 
 [.lead]
 Example
@@ -609,18 +596,12 @@ Returns a list of principals that are members of the specified principal.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| principalKey | string | Principal key (group or role) to retrieve members for
-|===
+Takes the `principalKey` (a <<fundamentals/types#group-key, GroupKey>> or <<fundamentals/types#role-key, RoleKey>>) of the group or role to retrieve members for.
 
 [.lead]
 Returns
 
-*object[]*: A list of users and groups that are members of the principal, or an empty array if none.
+*object[]* : (<<fundamentals/types#user, `User`>> | <<fundamentals/types#group, `Group`>>)[] A list of users and groups that are members of the principal, or an empty array if none.
 
 [.lead]
 Example
@@ -665,19 +646,12 @@ Returns the list of principals which the specified principal is a member of.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| principalKey | string | Principal key (user or group) to retrieve memberships for
-| transitive | boolean | *Optional.* Retrieve transitive memberships. Considered `false` if not specified.
-|===
+Takes the `principalKey` (a <<fundamentals/types#user-key, UserKey>> or <<fundamentals/types#group-key, GroupKey>>) of the user or group to retrieve memberships for, and an optional `transitive` boolean — retrieve transitive memberships. Considered `false` if not specified.
 
 [.lead]
 Returns
 
-*object[]*: A list of groups and roles that the specified principal is a member of.
+*object[]* : (<<fundamentals/types#group, `Group`>> | <<fundamentals/types#role, `Role`>>)[] A list of groups and roles that the specified principal is a member of.
 
 [.lead]
 Example
@@ -737,23 +711,17 @@ const result = getMemberships('user:system:user1', true);
 
 === getPrincipal
 
-Returns the principal with the specified key.
+Returns the principal with the specified key. The result is narrowed to <<fundamentals/types#user, `User`>>, <<fundamentals/types#group, `Group`>> or <<fundamentals/types#role, `Role`>> when the key type makes the principal type unambiguous.
 
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| principalKey | string | Principal key to look for
-|===
+Takes the `principalKey` (a <<fundamentals/types#principal-key, PrincipalKey>>) of the principal to look for.
 
 [.lead]
 Returns
 
-*object*: The principal as an object, or `null` if it does not exist.
+*object* : (<<fundamentals/types#principal, `Principal`>>) The principal as an object, or `null` if it does not exist.
 
 [.lead]
 Example
@@ -788,15 +756,15 @@ Returns the profile of a user.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`getProfile()` takes a single `GetProfileParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Principal key of the user
-| scope | string | *Optional.* Scope of the data to retrieve
+| key | <<fundamentals/types#user-key, UserKey>> | Principal key of the user.
+| scope | string | *Optional.* Scope of the data to retrieve.
 |===
 
 [.lead]
@@ -833,20 +801,20 @@ Returns the logged-in user. If not logged-in, this will return `null`.
 [.lead]
 Parameters
 
-An optional object with the following keys and their values:
+`getUser()` takes an optional `GetUserParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| includeProfile | boolean | *Optional.* If set to `true`, the user's profile is included in the result. Default is `false`.
+| includeProfile | boolean | *Optional.* If set to `true`, the user's profile is included in the result as a `profile` property. Defaults to `false`.
 |===
 
 [.lead]
 Returns
 
-*object*: <<user,`User`>> data, or `null` if not logged in.
+*object* : (<<fundamentals/types#user, `User`>>) The logged-in user, or `null` if not logged in. When `includeProfile` is `true`, the user also carries a `profile` property.
 
 [.lead]
 Example
@@ -881,13 +849,7 @@ Checks if the logged-in user has the specified role.
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| role | string | Role name to check for
-|===
+Takes the `role` name (a string) to check for.
 
 [.lead]
 Returns
@@ -912,25 +874,25 @@ Logs in a user through the specified idProvider, with username and password.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`login()` takes a single `LoginParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| user | string | Mandatory name of the user to log in
-| password | string | *Optional.* Password for the user. Ignored if skipAuth is set to true, mandatory otherwise.
-| idProvider | string | *Optional.* Name of id provider where the user is stored. If not specified system id provider will be used.
-| skipAuth | boolean | *Optional.* Skip authentication.  Default is `false` if not specified.
-| sessionTimeout | number | *Optional.* Session timeout (in seconds). By default, the value of session.timeout from `com.enonic.xp.web.jetty.cfg`
-| scope | string | *Optional.* Defines the scope of the login. Valid values are `SESSION`, `REQUEST` and `NONE`. When scope is set to `SESSION` the login is persistent. If scope is set to `REQUEST` the login is only valid for the current request. Scope `NONE` allows to check correctness of username and password without logging into the system. Default is `SESSION` if not specified.
+| user | string | Name of the user to log in.
+| password | string | *Optional.* Password for the user. Ignored if `skipAuth` is `true`, required otherwise.
+| idProvider | string | *Optional.* Name of the id provider where the user is stored. If not specified the system id provider is used.
+| skipAuth | boolean | *Optional.* Skip authentication. Defaults to `false`.
+| sessionTimeout | number | *Optional.* Session timeout, in seconds. Defaults to the value of `session.timeout` from `com.enonic.xp.web.jetty.cfg`.
+| scope | <<login-scope-type, LoginScopeType>> | *Optional.* Scope of the login. When set to `SESSION` the login is persistent; `REQUEST` makes it valid only for the current request; `NONE` checks the username and password without logging into the system. Defaults to `SESSION`.
 |===
 
 [.lead]
 Returns
 
-*object*: The login result.
+*object* : (<<login-result, `LoginResult`>>) The login result.
 
 [.lead]
 Example
@@ -972,7 +934,7 @@ Logs out the currently logged-in user.
 [.lead]
 Parameters
 
-None
+Takes no arguments.
 
 [.lead]
 Returns
@@ -986,21 +948,21 @@ Updates an existing group.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`modifyGroup()` takes a single `ModifyGroupParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Principal key of the group to modify
-| editor | function | Group editor function to apply to the group
+| key | <<fundamentals/types#group-key, GroupKey>> | Principal key of the group to modify.
+| editor | function | Editor callback `+(group: Group) => Group+` that receives the current <<fundamentals/types#group, `Group`>> and returns the modified group.
 |===
 
 [.lead]
 Returns
 
-*object*: The updated group, or `null` if the group was not found.
+*object* : (<<fundamentals/types#group, `Group`>>) The updated group, or `null` if the group was not found.
 
 [.lead]
 Example
@@ -1042,16 +1004,16 @@ Updates an existing user profile. Will create a new profile, if an existing one 
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`modifyProfile()` takes a single `ModifyProfileParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Principal key of the user
-| scope | string | *Optional.* Scope of the data to retrieve and update
-| editor | function | Profile editor function to apply
+| key | <<fundamentals/types#user-key, UserKey>> | Principal key of the user.
+| scope | string | *Optional.* Scope of the data to retrieve and update.
+| editor | function | Editor callback `+(profile: Profile) => Profile+` that receives the current profile and returns the modified profile.
 |===
 
 [.lead]
@@ -1098,21 +1060,21 @@ Updates an existing role.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`modifyRole()` takes a single `ModifyRoleParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Principal key of the role to modify
-| editor | function | Role editor function to apply to the role
+| key | <<fundamentals/types#role-key, RoleKey>> | Principal key of the role to modify.
+| editor | function | Editor callback `+(role: Role) => Role+` that receives the current <<fundamentals/types#role, `Role`>> and returns the modified role.
 |===
 
 [.lead]
 Returns
 
-*object*: The updated role, or `null` if the role was not found.
+*object* : (<<fundamentals/types#role, `Role`>>) The updated role, or `null` if the role was not found.
 
 [.lead]
 Example
@@ -1154,21 +1116,21 @@ Updates an existing user.
 [.lead]
 Parameters
 
-An object with the following keys and their values:
+`modifyUser()` takes a single `ModifyUserParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | Principal key of the user to modify
-| editor | function | User editor function to apply to the user
+| key | <<fundamentals/types#user-key, UserKey>> | Principal key of the user to modify.
+| editor | function | Editor callback `+(user: User) => User+` that receives the current <<fundamentals/types#user, `User`>> and returns the modified user.
 |===
 
 [.lead]
 Returns
 
-*object*: The updated <<user,`User`>>, or `null` if the user was not found.
+*object* : (<<fundamentals/types#user, `User`>>) The updated user, or `null` if the user was not found.
 
 [.lead]
 Example
@@ -1214,14 +1176,7 @@ Removes members from a principal (group or role).
 [.lead]
 Parameters
 
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| principalKey | string | Key of the group or role to remove members from
-| members | string[] | Keys of the principals to remove
-|===
+Takes the `principalKey` (a <<fundamentals/types#group-key, GroupKey>> or <<fundamentals/types#role-key, RoleKey>>) of the group or role to remove members from, and an array of `members` — the <<fundamentals/types#user-key, UserKey>> or <<fundamentals/types#group-key, GroupKey>> values to remove.
 
 [.lead]
 Returns
@@ -1241,13 +1196,15 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);
 
 == Type Definitions
 
-[#user]
-=== User
+The core principal types — <<fundamentals/types#user, `User`>>, <<fundamentals/types#group, `Group`>>, <<fundamentals/types#role, `Role`>>, <<fundamentals/types#principal, `Principal`>>, and the key types <<fundamentals/types#principal-key, `PrincipalKey`>>, <<fundamentals/types#user-key, `UserKey`>>, <<fundamentals/types#group-key, `GroupKey`>>, <<fundamentals/types#role-key, `RoleKey`>> and <<fundamentals/types#principal-type, `PrincipalType`>> — are shared across the libraries and defined on the <<fundamentals/types#, Types>> page.
 
-[.lead]
-Type
+[#login-scope-type]
+=== LoginScopeType
 
-*object*
+A string union: `'SESSION' | 'REQUEST' | 'NONE'`. Controls how long a successful login stays valid — see the `scope` property of `login()`.
+
+[#login-result]
+=== LoginResult
 
 [.lead]
 Properties
@@ -1255,44 +1212,61 @@ Properties
 [frame="none"]
 [grid="none"]
 |===
-| Name         | Type    | Description
-| type         | string  | The type of principal, always "user" for users
-| key          | string  | The unique key of the user
-| displayName  | string  | The display name of the user
-| modifiedTime | string  | The last modified time of the user in ISO 8601 format
-| disabled     | boolean | Whether the user is disabled or not
-| email        | string  | The email of the user
-| login        | string  | The login name of the user
-| idProvider   | string  | The id provider where the user is stored
-| hasPassword  | boolean | Whether the user has a password set
+| Name | Type | Description
+| authenticated | boolean | Whether the user was successfully authenticated.
+| user | <<fundamentals/types#user, User>> | *Optional.* The authenticated user. Present when `authenticated` is `true`.
+| message | string | *Optional.* A message describing the result, typically present on failure.
+|===
+
+[#find-principals-result]
+=== FindPrincipalsResult
+
+The result of `findPrincipals()` and `findUsers()`.
+
+[.lead]
+Properties
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| total | number | Total number of principals matching the search.
+| count | number | Number of principals included in `hits`.
+| hits | <<fundamentals/types#principal, Principal>>[] | The matching principals. For `findUsers()` the hits are <<fundamentals/types#user, `User`>> objects.
+|===
+
+[#id-provider]
+=== IdProvider
+
+[.lead]
+Properties
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| key | string | ID provider key.
+| displayName | string | ID provider display name.
+| description | string | *Optional.* ID provider description.
+| idProviderConfig | <<id-provider-config, IdProviderConfig>> | *Optional.* Present only when the provider is bound to an application.
 |===
 
 [#id-provider-config]
 === IdProviderConfig
 
 [.lead]
-Type
-
-*object*
-
-[.lead]
 Properties
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| applicationKey | string | Key of the application whose handlers serve requests for this provider.
+| applicationKey | string | Key of the application whose functions serve requests for this provider.
 | config | object | *Optional.* Per-instance configuration tree passed to the bound application.
 |===
 
-[#id-provider-permission]
-=== IdProviderPermission
-
-[.lead]
-Type
-
-*object*
+[#id-provider-access-control-entry]
+=== IdProviderAccessControlEntry
 
 [.lead]
 Properties
@@ -1301,6 +1275,11 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| principal | string | Principal key.
-| access | string | Permission level: +READ+, +CREATE_USERS+, +WRITE_USERS+, +ID_PROVIDER_MANAGER+, +ADMINISTRATOR+.
+| principal | <<fundamentals/types#principal-key, PrincipalKey>> | Principal the entry grants access to.
+| access | <<id-provider-access, IdProviderAccess>> | Permission level.
 |===
+
+[#id-provider-access]
+=== IdProviderAccess
+
+A string union of permission levels: `'READ' | 'CREATE_USERS' | 'WRITE_USERS' | 'ID_PROVIDER_MANAGER' | 'ADMINISTRATOR'`.

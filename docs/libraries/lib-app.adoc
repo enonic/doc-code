@@ -34,7 +34,7 @@ Returns an installed application. If a local and a virtual app are both installe
 [.lead]
 Parameters
 
-`get()` takes a single `params` object with these properties:
+`get()` takes a single `GetApplicationParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -134,7 +134,7 @@ Returns descriptor of an installed application.
 [.lead]
 Parameters
 
-`getDescriptor()` takes a single `params` object with these properties:
+`getDescriptor()` takes a single `GetApplicationDescriptorParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -165,6 +165,7 @@ const descriptor = getDescriptor({key: 'my-app-key'});
 const expected = {
     key: 'my-app',
     description: 'my app description',
+    descriptionI18nKey: 'myapp.description',
     title: 'My app',
     titleI18nKey: 'myapp.title',
     vendorName: 'vendor name',
@@ -187,7 +188,7 @@ TIP: This function requires the Schema Admin role. It means that user role in th
 [.lead]
 Parameters
 
-`createVirtualApplication()` takes a single `params` object with these properties:
+`createVirtualApplication()` takes a single `CreateVirtualApplicationParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -224,7 +225,7 @@ TIP: This function requires the Schema Admin role. It means that user role in th
 [.lead]
 Parameters
 
-`deleteVirtualApplication()` takes a single `params` object with these properties:
+`deleteVirtualApplication()` takes a single `DeleteVirtualApplicationParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -261,7 +262,7 @@ TIP: This function requires the Schema Admin role. It means that user role in th
 [.lead]
 Parameters
 
-`getApplicationMode()` takes a single `params` object with these properties:
+`getApplicationMode()` takes a single `GetApplicationModeParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -342,6 +343,7 @@ Properties
 | Name               | Type             | Description
 | key                | string           | Application key
 | description        | string           | Application description
+| descriptionI18nKey | string           | i18n key for the application description. May be `null`
 | title              | string           | Application title. May be `null`
 | titleI18nKey       | string           | i18n key for the application title. May be `null`
 | vendorName         | string           | Vendor name. May be `null`
@@ -367,7 +369,7 @@ Properties
 [grid="none"]
 |===
 | Name                      | Type       | Description
-| data                      | ByteSource | Icon binary data, as a stream that can be read with `lib-io`
+| data                      | <<fundamentals/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
 | mimeType                  | string     | Icon MIME type
 | modifiedTime              | string     | Icon modified time, ISO-8601 instant
 
