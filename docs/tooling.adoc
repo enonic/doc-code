@@ -8,7 +8,7 @@ TODO
 Enonic's Development Kit consists of several independent tools:
 
 * https://github.com/enonic/cli-enonic[Enonic CLI]
-* SDK versions of the https://developer.enonic.com/docs/xp[Enonic XP distro]
+* SDK versions of the https://developer.enonic.com/docs/platform[Enonic XP distro]
 * <<tooling/sandboxes#, Sandboxes>>
 * <<tooling/build#, Build system>>
 * https://market.enonic.com/starters[Starters]

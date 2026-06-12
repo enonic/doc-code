@@ -4,7 +4,7 @@
 
 API patterns for managing and querying node permissions from application code.
 
-NOTE: This chapter assumes the conceptual model — permission types, principal resolution, and how permissions behave across branches — is already familiar. If not, see the https://developer.enonic.com/docs/xp/stable/storage[XP storage documentation] for the platform-level concepts.
+NOTE: This chapter assumes the conceptual model — permission types, principal resolution, and how permissions behave across branches — is already familiar. If not, see the https://developer.enonic.com/docs/platform/stable/storage[XP storage documentation] for the platform-level concepts.
 
 == Reading the ACL
 
