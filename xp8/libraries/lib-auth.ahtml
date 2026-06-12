@@ -473,9 +473,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
-<li><a href="#user">User</a></li>
+<li><a href="#login-scope-type">LoginScopeType</a></li>
+<li><a href="#login-result">LoginResult</a></li>
+<li><a href="#find-principals-result">FindPrincipalsResult</a></li>
+<li><a href="#id-provider">IdProvider</a></li>
 <li><a href="#id-provider-config">IdProviderConfig</a></li>
-<li><a href="#id-provider-permission">IdProviderPermission</a></li>
+<li><a href="#id-provider-access-control-entry">IdProviderAccessControlEntry</a></li>
+<li><a href="#id-provider-access">IdProviderAccess</a></li>
 </ul>
 </li>
 </ul>
@@ -540,36 +544,9 @@ In this case you must explicitly execute the function in the <a href="lib-contex
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principalKey</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key of the group or role to add members to</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">members</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Keys of users and groups to add</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to add members to, and an array of <code>members</code> — the <a href="fundamentals/types.ahtml#user-key">UserKey</a> or <a href="fundamentals/types.ahtml#group-key">GroupKey</a> values to add.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -597,7 +574,7 @@ addMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</code>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>changePassword()</code> takes a single <code>ChangePasswordParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -617,14 +594,14 @@ addMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">userKey</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key of the user to change password for</p>
+<p>Key of the user to change password for.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">password</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> The new password to set. If <code>null</code>, the password will be cleared.</p>
+<p><strong>Optional.</strong> The new password to set. If <code>null</code>, the password is cleared.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -663,7 +640,7 @@ if (user) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>createGroup()</code> takes a single <code>CreateGroupParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -683,28 +660,28 @@ if (user) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key for id provider where the group will be created</p>
+<p>Key of the id provider where the group will be created.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Group name</p>
+<p>Group name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Group display name</p>
+<p><strong>Optional.</strong> Group display name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Group description</p>
+<p><strong>Optional.</strong> Group description.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -713,7 +690,7 @@ if (user) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The created group.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#group"><code>Group</code></a>) The created group.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -752,7 +729,7 @@ const group = createGroup({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>createIdProvider()</code> takes a single <code>CreateIdProviderParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -772,21 +749,21 @@ const group = createGroup({
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ID provider key</p>
+<p>ID provider key.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ID provider display name</p>
+<p>ID provider display name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> ID provider description</p>
+<p><strong>Optional.</strong> ID provider description.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -798,9 +775,9 @@ const group = createGroup({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id-provider-permission">IdProviderPermission</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id-provider-access-control-entry">IdProviderAccessControlEntry</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> ID provider permissions</p>
+<p><strong>Optional.</strong> ID provider permissions.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -809,7 +786,7 @@ const group = createGroup({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The created ID provider.</p>
+<p><strong>object</strong> : (<a href="#id-provider"><code>IdProvider</code></a>) The created ID provider.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -864,7 +841,7 @@ const idProvider = createIdProvider({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>createRole()</code> takes a single <code>CreateRoleParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -891,14 +868,14 @@ const idProvider = createIdProvider({
 <td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Role display name</p>
+<p><strong>Optional.</strong> Role display name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Role description</p>
+<p><strong>Optional.</strong> Role description.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -907,7 +884,7 @@ const idProvider = createIdProvider({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The created role.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#role"><code>Role</code></a>) The created role.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -945,7 +922,7 @@ const role = createRole({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>createUser()</code> takes a single <code>CreateUserParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -965,28 +942,28 @@ const role = createRole({
 <td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key for id provider where the user will be created</p>
+<p>Key of the id provider where the user will be created.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>User login name</p>
+<p>User login name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> User display name</p>
+<p><strong>Optional.</strong> User display name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">email</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> User e-mail</p>
+<p><strong>Optional.</strong> User e-mail.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -995,7 +972,7 @@ const role = createRole({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The created <a href="#user"><code>User</code></a>.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a>) The created user.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1037,29 +1014,9 @@ const user = createUser({
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principalKey</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key to delete</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>) of the principal to delete.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -1087,7 +1044,7 @@ const deleted = deletePrincipal('user:myIdProvider:userId');</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values. All parameters are optional:</p>
+<p><code>findPrincipals()</code> takes a single <code>FindPrincipalsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1105,37 +1062,37 @@ const deleted = deletePrincipal('user:myIdProvider:userId');</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-type">PrincipalType</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Principal type to look for, one of: 'user', 'group' or 'role'. If not specified all principal types will be included.</p>
+<p><strong>Optional.</strong> Principal type to look for, one of <code>'user'</code>, <code>'group'</code> or <code>'role'</code>. If not specified all principal types are included.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Key of the id provider to look for. If not specified, all id providers will be included.</p>
+<p><strong>Optional.</strong> Key of the id provider to look for. If not specified, all id providers are included.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> First principal to return from the search results. It can be used for pagination. Default is <code>0</code>.</p>
+<p><strong>Optional.</strong> First principal to return from the search results. Used for pagination. Defaults to <code>0</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> A limit on the number of principals to be returned. Default is <code>10</code>.</p>
+<p><strong>Optional.</strong> A limit on the number of principals to return. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of the principal to look for</p>
+<p><strong>Optional.</strong> Name of the principal to look for.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1151,7 +1108,7 @@ const deleted = deletePrincipal('user:myIdProvider:userId');</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The "total" number of principals matching the search, the "count" of principals included, and an array of "hits" containing the principals.</p>
+<p><strong>object</strong> : (<a href="#find-principals-result"><code>FindPrincipalsResult</code></a>) The total number of principals matching the search, the count of principals included, and an array of hits containing the principals.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1200,7 +1157,7 @@ const result = findPrincipals({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>findUsers()</code> takes a single <code>FindUsersParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1220,35 +1177,35 @@ const result = findPrincipals({
 <td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Query expression</p>
+<p>Query expression.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Start index for paging. Default is <code>0</code>.</p>
+<p><strong>Optional.</strong> Start index for paging. Defaults to <code>0</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Number of users to fetch. Default is <code>10</code>.</p>
+<p><strong>Optional.</strong> Number of users to fetch. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sort</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Sorting expression</p>
+<p><strong>Optional.</strong> Sorting expression.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeProfile</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> If set to <code>true</code>, a full profile of each user will be included in the result. Default is <code>false</code>.</p>
+<p><strong>Optional.</strong> If set to <code>true</code>, the full profile of each user is included in the result. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1257,7 +1214,7 @@ const result = findPrincipals({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: An object containing the total number of hits, the number returned and an array of the hits.</p>
+<p><strong>object</strong> : (<a href="#find-principals-result"><code>FindPrincipalsResult</code></a>) The total number of hits, the number returned, and an array of the matching <a href="fundamentals/types.ahtml#user"><code>User</code></a> objects.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1301,7 +1258,7 @@ const findUsersResult = findUsers({
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you want to find a user by key, you have to use <code>_id</code> field in the <code>query</code> parameter.
+If you want to find a user by key, you have to use the <code>_id</code> field in the <code>query</code> parameter.
 </td>
 </tr>
 </table>
@@ -1327,7 +1284,7 @@ const findUsersResult = findUsers({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>None</p>
+<p>Takes no arguments.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -1356,7 +1313,7 @@ const pwd = generatePassword();</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>None</p>
+<p>Takes no arguments. The expected config shape can be supplied as a TypeScript type parameter, e.g. <code>getIdProviderConfig&lt;{ field?: string }&gt;()</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -1389,13 +1346,13 @@ if (config) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>None</p>
+<p>Takes no arguments.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object[]</strong>: A list of ID providers.</p>
+<p><strong>object[]</strong> : (<a href="#id-provider"><code>IdProvider</code></a>[]) A list of ID providers.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1437,34 +1394,14 @@ const idProviders = getIdProviders();</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principalKey</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key (group or role) to retrieve members for</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to retrieve members for.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object[]</strong>: A list of users and groups that are members of the principal, or an empty array if none.</p>
+<p><strong>object[]</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a> | <a href="fundamentals/types.ahtml#group"><code>Group</code></a>)[] A list of users and groups that are members of the principal, or an empty array if none.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1511,41 +1448,14 @@ const result = getMembers('group:system:content-managers');</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principalKey</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key (user or group) to retrieve memberships for</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">transitive</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Retrieve transitive memberships. Considered <code>false</code> if not specified.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#user-key">UserKey</a> or <a href="fundamentals/types.ahtml#group-key">GroupKey</a>) of the user or group to retrieve memberships for, and an optional <code>transitive</code> boolean — retrieve transitive memberships. Considered <code>false</code> if not specified.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object[]</strong>: A list of groups and roles that the specified principal is a member of.</p>
+<p><strong>object[]</strong> : (<a href="fundamentals/types.ahtml#group"><code>Group</code></a> | <a href="fundamentals/types.ahtml#role"><code>Role</code></a>)[] A list of groups and roles that the specified principal is a member of.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1607,39 +1517,19 @@ const result = getMemberships('user:system:user1', true);</code></pre>
 <div class="sect2">
 <h3 id="getprincipal"><a class="link" href="#getprincipal">getPrincipal</a></h3>
 <div class="paragraph">
-<p>Returns the principal with the specified key.</p>
+<p>Returns the principal with the specified key. The result is narrowed to <a href="fundamentals/types.ahtml#user"><code>User</code></a>, <a href="fundamentals/types.ahtml#group"><code>Group</code></a> or <a href="fundamentals/types.ahtml#role"><code>Role</code></a> when the key type makes the principal type unambiguous.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principalKey</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key to look for</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>) of the principal to look for.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The principal as an object, or <code>null</code> if it does not exist.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#principal"><code>Principal</code></a>) The principal as an object, or <code>null</code> if it does not exist.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1677,7 +1567,7 @@ const result = getPrincipal('user:system:user1');</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getProfile()</code> takes a single <code>GetProfileParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1695,16 +1585,16 @@ const result = getPrincipal('user:system:user1');</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key of the user</p>
+<p>Principal key of the user.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Scope of the data to retrieve</p>
+<p><strong>Optional.</strong> Scope of the data to retrieve.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1746,7 +1636,7 @@ const result = getProfile({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An optional object with the following keys and their values:</p>
+<p><code>getUser()</code> takes an optional <code>GetUserParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1766,7 +1656,7 @@ const result = getProfile({
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeProfile</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> If set to <code>true</code>, the user&#8217;s profile is included in the result. Default is <code>false</code>.</p>
+<p><strong>Optional.</strong> If set to <code>true</code>, the user&#8217;s profile is included in the result as a <code>profile</code> property. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1775,7 +1665,7 @@ const result = getProfile({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: <a href="#user"><code>User</code></a> data, or <code>null</code> if not logged in.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a>) The logged-in user, or <code>null</code> if not logged in. When <code>includeProfile</code> is <code>true</code>, the user also carries a <code>profile</code> property.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1812,29 +1702,9 @@ const result = getUser();</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">role</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Role name to check for</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes the <code>role</code> name (a string) to check for.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -1862,7 +1732,7 @@ const isAdmin = hasRole('system.admin');</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>login()</code> takes a single <code>LoginParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1882,42 +1752,42 @@ const isAdmin = hasRole('system.admin');</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mandatory name of the user to log in</p>
+<p>Name of the user to log in.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">password</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Password for the user. Ignored if skipAuth is set to true, mandatory otherwise.</p>
+<p><strong>Optional.</strong> Password for the user. Ignored if <code>skipAuth</code> is <code>true</code>, required otherwise.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of id provider where the user is stored. If not specified system id provider will be used.</p>
+<p><strong>Optional.</strong> Name of the id provider where the user is stored. If not specified the system id provider is used.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">skipAuth</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Skip authentication.  Default is <code>false</code> if not specified.</p>
+<p><strong>Optional.</strong> Skip authentication. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sessionTimeout</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Session timeout (in seconds). By default, the value of session.timeout from <code>com.enonic.xp.web.jetty.cfg</code></p>
+<p><strong>Optional.</strong> Session timeout, in seconds. Defaults to the value of <code>session.timeout</code> from <code>com.enonic.xp.web.jetty.cfg</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#login-scope-type">LoginScopeType</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Defines the scope of the login. Valid values are <code>SESSION</code>, <code>REQUEST</code> and <code>NONE</code>. When scope is set to <code>SESSION</code> the login is persistent. If scope is set to <code>REQUEST</code> the login is only valid for the current request. Scope <code>NONE</code> allows to check correctness of username and password without logging into the system. Default is <code>SESSION</code> if not specified.</p>
+<p><strong>Optional.</strong> Scope of the login. When set to <code>SESSION</code> the login is persistent; <code>REQUEST</code> makes it valid only for the current request; <code>NONE</code> checks the username and password without logging into the system. Defaults to <code>SESSION</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1926,7 +1796,7 @@ const isAdmin = hasRole('system.admin');</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The login result.</p>
+<p><strong>object</strong> : (<a href="#login-result"><code>LoginResult</code></a>) The login result.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1971,7 +1841,7 @@ const loginResult = login({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>None</p>
+<p>Takes no arguments.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -1989,7 +1859,7 @@ const loginResult = login({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>modifyGroup()</code> takes a single <code>ModifyGroupParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2007,16 +1877,16 @@ const loginResult = login({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#group-key">GroupKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key of the group to modify</p>
+<p>Principal key of the group to modify.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Group editor function to apply to the group</p>
+<p>Editor callback <code>(group: Group) =&gt; Group</code> that receives the current <a href="fundamentals/types.ahtml#group"><code>Group</code></a> and returns the modified group.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2025,7 +1895,7 @@ const loginResult = login({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The updated group, or <code>null</code> if the group was not found.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#group"><code>Group</code></a>) The updated group, or <code>null</code> if the group was not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2070,7 +1940,7 @@ const group = modifyGroup({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>modifyProfile()</code> takes a single <code>ModifyProfileParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2088,23 +1958,23 @@ const group = modifyGroup({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key of the user</p>
+<p>Principal key of the user.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Scope of the data to retrieve and update</p>
+<p><strong>Optional.</strong> Scope of the data to retrieve and update.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Profile editor function to apply</p>
+<p>Editor callback <code>(profile: Profile) =&gt; Profile</code> that receives the current profile and returns the modified profile.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2157,7 +2027,7 @@ const profileModified = modifyProfile({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>modifyRole()</code> takes a single <code>ModifyRoleParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2175,16 +2045,16 @@ const profileModified = modifyProfile({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#role-key">RoleKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key of the role to modify</p>
+<p>Principal key of the role to modify.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Role editor function to apply to the role</p>
+<p>Editor callback <code>(role: Role) =&gt; Role</code> that receives the current <a href="fundamentals/types.ahtml#role"><code>Role</code></a> and returns the modified role.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2193,7 +2063,7 @@ const profileModified = modifyProfile({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The updated role, or <code>null</code> if the role was not found.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#role"><code>Role</code></a>) The updated role, or <code>null</code> if the role was not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2238,7 +2108,7 @@ const theRole = modifyRole({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>modifyUser()</code> takes a single <code>ModifyUserParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2256,16 +2126,16 @@ const theRole = modifyRole({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key of the user to modify</p>
+<p>Principal key of the user to modify.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>User editor function to apply to the user</p>
+<p>Editor callback <code>(user: User) =&gt; User</code> that receives the current <a href="fundamentals/types.ahtml#user"><code>User</code></a> and returns the modified user.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2274,7 +2144,7 @@ const theRole = modifyRole({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong>: The updated <a href="#user"><code>User</code></a>, or <code>null</code> if the user was not found.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a>) The updated user, or <code>null</code> if the user was not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2322,36 +2192,9 @@ const theUser = modifyUser({
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principalKey</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key of the group or role to remove members from</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">members</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Keys of the principals to remove</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to remove members from, and an array of <code>members</code> — the <a href="fundamentals/types.ahtml#user-key">UserKey</a> or <a href="fundamentals/types.ahtml#group-key">GroupKey</a> values to remove.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -2375,13 +2218,62 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 <div class="sect1">
 <h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="user"><a class="link" href="#user">User</a></h3>
-<div class="paragraph lead">
-<p>Type</p>
-</div>
 <div class="paragraph">
-<p><strong>object</strong></p>
+<p>The core principal types — <a href="fundamentals/types.ahtml#user"><code>User</code></a>, <a href="fundamentals/types.ahtml#group"><code>Group</code></a>, <a href="fundamentals/types.ahtml#role"><code>Role</code></a>, <a href="fundamentals/types.ahtml#principal"><code>Principal</code></a>, and the key types <a href="fundamentals/types.ahtml#principal-key"><code>PrincipalKey</code></a>, <a href="fundamentals/types.ahtml#user-key"><code>UserKey</code></a>, <a href="fundamentals/types.ahtml#group-key"><code>GroupKey</code></a>, <a href="fundamentals/types.ahtml#role-key"><code>RoleKey</code></a> and <a href="fundamentals/types.ahtml#principal-type"><code>PrincipalType</code></a> — are shared across the libraries and defined on the <a href="fundamentals/types.ahtml">Types</a> page.</p>
+</div>
+<div class="sect2">
+<h3 id="login-scope-type"><a class="link" href="#login-scope-type">LoginScopeType</a></h3>
+<div class="paragraph">
+<p>A string union: <code>'SESSION' | 'REQUEST' | 'NONE'</code>. Controls how long a successful login stays valid — see the <code>scope</code> property of <code>login()</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="login-result"><a class="link" href="#login-result">LoginResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">authenticated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether the user was successfully authenticated.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user">User</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The authenticated user. Present when <code>authenticated</code> is <code>true</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> A message describing the result, typically present on failure.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="find-principals-result"><a class="link" href="#find-principals-result">FindPrincipalsResult</a></h3>
+<div class="paragraph">
+<p>The result of <code>findPrincipals()</code> and <code>findUsers()</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Properties</p>
@@ -2401,66 +2293,74 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The type of principal, always "user" for users</p>
+<p>Total number of principals matching the search.</p>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of principals included in <code>hits</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal">Principal</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The matching principals. For <code>findUsers()</code> the hits are <a href="fundamentals/types.ahtml#user"><code>User</code></a> objects.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="id-provider"><a class="link" href="#id-provider">IdProvider</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The unique key of the user</p>
+<p>ID provider key.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The display name of the user</p>
+<p>ID provider display name.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The last modified time of the user in ISO 8601 format</p>
+<p><strong>Optional.</strong> ID provider description.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">disabled</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idProviderConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id-provider-config">IdProviderConfig</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Whether the user is disabled or not</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">email</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The email of the user</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">login</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The login name of the user</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The id provider where the user is stored</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">hasPassword</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Whether the user has a password set</p>
+<p><strong>Optional.</strong> Present only when the provider is bound to an application.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2468,12 +2368,6 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </div>
 <div class="sect2">
 <h3 id="id-provider-config"><a class="link" href="#id-provider-config">IdProviderConfig</a></h3>
-<div class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
-</div>
 <div class="paragraph lead">
 <p>Properties</p>
 </div>
@@ -2495,7 +2389,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 <td class="tableblock halign-left valign-top"><p class="tableblock">applicationKey</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key of the application whose handlers serve requests for this provider.</p>
+<p>Key of the application whose functions serve requests for this provider.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2509,13 +2403,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </table>
 </div>
 <div class="sect2">
-<h3 id="id-provider-permission"><a class="link" href="#id-provider-permission">IdProviderPermission</a></h3>
-<div class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
-</div>
+<h3 id="id-provider-access-control-entry"><a class="link" href="#id-provider-access-control-entry">IdProviderAccessControlEntry</a></h3>
 <div class="paragraph lead">
 <p>Properties</p>
 </div>
@@ -2535,27 +2423,33 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key.</p>
+<p>Principal the entry grants access to.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">access</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id-provider-access">IdProviderAccess</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Permission level: READ, CREATE_USERS, WRITE_USERS, ID_PROVIDER_MANAGER, ADMINISTRATOR.</p>
+<p>Permission level.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="id-provider-access"><a class="link" href="#id-provider-access">IdProviderAccess</a></h3>
+<div class="paragraph">
+<p>A string union of permission levels: <code>'READ' | 'CREATE_USERS' | 'WRITE_USERS' | 'ID_PROVIDER_MANAGER' | 'ADMINISTRATOR'</code>.</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

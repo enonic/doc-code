@@ -498,22 +498,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>exportNodes()</code> takes a single <code>params</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -521,46 +517,36 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sourceNodePath</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Source nodes path</p>
+<p>Source nodes path.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">exportName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Export name</p>
+<p>Export name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeResolved</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A function to be called before export starts with number of nodes to export</p>
+<p><strong>Optional.</strong> A function to be called before export starts with the number of nodes to export.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeExported</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A function to be called during export with number of nodes exported since last call</p>
+<p><strong>Optional.</strong> A function to be called during export with the number of nodes exported since the last call.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">batchSize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1000</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Controls how many nodes are loaded into memory simultaneously during export. Higher value may speed up export but also increase memory usage</p>
+<p><strong>Optional.</strong> Controls how many nodes are loaded into memory simultaneously during export. A higher value may speed up export but also increase memory usage. Defaults to <code>1000</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -640,22 +626,18 @@ During node export, current permissions are included in the export file. But whe
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>importNodes()</code> takes a single <code>params</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -663,91 +645,71 @@ During node export, current permissions are included in the export file. But whe
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">source</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string or object</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Either name of nodes-export located in exports directory or application resource key</p>
+<p>Either the name of a nodes-export located in the exports directory, or an application resource key.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">targetNodePath</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Target path for imported nodes</p>
+<p>Target path for imported nodes.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">xslt</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string or object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>XSLT file name in exports directory or application resource key. Used for XSLT transformation</p>
+<p><strong>Optional.</strong> XSLT file name in the exports directory or application resource key. Used for XSLT transformation.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">xsltParams</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Parameters used in XSLT transformation</p>
+<p><strong>Optional.</strong> Parameters used in XSLT transformation.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeNodeIds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Set to <code>true</code> to use node IDs from the import, <code>false</code> to generate new node IDs</p>
+<p><strong>Optional.</strong> Set to <code>true</code> to use node IDs from the import, <code>false</code> to generate new node IDs. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">includePermissions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Set to <code>true</code> to overwrite Node permissions with permissions from the import, <code>false</code> to merge permissions with new parent permissions</p>
+<p><strong>Optional.</strong> Set to <code>true</code> to overwrite node permissions with permissions from the import, <code>false</code> to merge permissions with new parent permissions. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">versionAttributes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional attributes attached to the node version of every imported node</p>
+<p><strong>Optional.</strong> Attributes attached to the node version of every imported node.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeResolved</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A function to be called before import starts with number of nodes to import</p>
+<p><strong>Optional.</strong> A function to be called before import starts with the number of nodes to import.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeImported</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A function to be called during import with number of nodes imported since last call</p>
+<p><strong>Optional.</strong> A function to be called during import with the number of nodes imported since the last call.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeSkipped</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A function to be called during import with number of nodes skipped since last call</p>
+<p><strong>Optional.</strong> A function to be called during import with the number of nodes skipped since the last call.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -852,7 +814,7 @@ const result = list();
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

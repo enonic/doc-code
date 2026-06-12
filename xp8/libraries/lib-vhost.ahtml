@@ -450,9 +450,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
-<li><a href="#virtualhosts">VirtualHosts</a></li>
-<li><a href="#virtualhost">VirtualHost</a></li>
-<li><a href="#idproviderkey">IdProviderKey</a></li>
+<li><a href="#virtual-hosts">VirtualHosts</a></li>
+<li><a href="#virtual-host">VirtualHost</a></li>
+<li><a href="#id-provider-key">IdProviderKey</a></li>
 </ul>
 </li>
 </ul>
@@ -500,6 +500,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>Returns the value of the <code>enabled</code> property in the <code>com.enonic.xp.web.vhost.cfg</code> file.</p>
 </div>
+<div class="paragraph">
+<p><code>isEnabled()</code> takes no arguments.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -522,11 +525,14 @@ const enabled = isEnabled();</code></pre>
 <div class="paragraph">
 <p>Returns the virtual host mappings configured in <code>com.enonic.xp.web.vhost.cfg</code>.</p>
 </div>
+<div class="paragraph">
+<p><code>list()</code> takes no arguments.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="#virtualHosts"><code>VirtualHosts</code></a>) Object with a <code>vhosts</code> array. The array is empty when no mappings are configured.</p>
+<p><strong>object</strong> : (<a href="#virtual-hosts"><code>VirtualHosts</code></a>) Object with a <code>vhosts</code> array. The array is empty when no mappings are configured.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -590,13 +596,7 @@ mapping.api.idProvider.system = default</code></pre>
 <h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="virtualhosts"><a class="link" href="#virtualhosts">VirtualHosts</a></h3>
-<div id="virtualHosts" class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
-</div>
+<h3 id="virtual-hosts"><a class="link" href="#virtual-hosts">VirtualHosts</a></h3>
 <div class="paragraph lead">
 <p>Properties</p>
 </div>
@@ -616,7 +616,7 @@ mapping.api.idProvider.system = default</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">vhosts</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#virtualHost"><code>VirtualHost[]</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#virtual-host"><code>VirtualHost[]</code></a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>All configured virtual host mappings. Empty when none are configured.</p>
 </div></div></td>
@@ -625,13 +625,7 @@ mapping.api.idProvider.system = default</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="virtualhost"><a class="link" href="#virtualhost">VirtualHost</a></h3>
-<div id="virtualHost" class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
-</div>
+<h3 id="virtual-host"><a class="link" href="#virtual-host">VirtualHost</a></h3>
 <div class="paragraph lead">
 <p>Properties</p>
 </div>
@@ -678,30 +672,24 @@ mapping.api.idProvider.system = default</code></pre>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">defaultIdProviderKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>defaultIdProviderKey</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional. Key of the default ID provider, when configured.</p>
+<p><strong>Optional.</strong> Key of the default ID provider, when configured.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idProviderKeys</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#idProviderKey"><code>IdProviderKey[]</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>idProviderKeys</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#id-provider-key"><code>IdProviderKey[]</code></a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional. ID providers attached to the mapping.</p>
+<p><strong>Optional.</strong> ID providers attached to the mapping.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="idproviderkey"><a class="link" href="#idproviderkey">IdProviderKey</a></h3>
-<div id="idProviderKey" class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
-</div>
+<h3 id="id-provider-key"><a class="link" href="#id-provider-key">IdProviderKey</a></h3>
 <div class="paragraph lead">
 <p>Properties</p>
 </div>
@@ -720,7 +708,7 @@ mapping.api.idProvider.system = default</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idProviderKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>idProviderKey</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>ID provider key.</p>
@@ -734,7 +722,7 @@ mapping.api.idProvider.system = default</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

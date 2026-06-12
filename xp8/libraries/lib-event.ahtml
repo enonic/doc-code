@@ -448,6 +448,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#send">send</a></li>
 </ul>
 </li>
+<li><a href="#type_definitions">Type Definitions</a>
+<ul class="sectlevel2">
+<li><a href="#enonic-event">EnonicEvent</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -512,20 +517,18 @@ For more details, check out the <a href="lib-node.ahtml#events">Node library</a>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>listener()</code> takes a single <code>ListenerParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
 <col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 97%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -533,7 +536,6 @@ For more details, check out the <a href="lib-node.ahtml#events">Node library</a>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Event type pattern. Works like a Java pattern, with two key differences: <code>.</code> is treated as a literal dot (not a wildcard), and <code><strong></code> acts as <code>.</strong></code>, matching any sequence of characters.</p>
 </div></div></td>
@@ -541,23 +543,130 @@ For more details, check out the <a href="lib-node.ahtml#events">Node library</a>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">callback</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Function invoked for each matching event. Receives a single event argument with the shape described in <a href="#enonic-event">Event object</a>.</p>
+<p>Function invoked for each matching event. Receives a single argument, an <a href="#enonic-event">EnonicEvent</a> object.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">localOnly</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>When <code>true</code>, only events originating on the current node are delivered. Defaults to <code>false</code>.</p>
+<p><strong>Optional.</strong> When <code>true</code>, only events originating on the current node are delivered. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-<table id="enonic-event" class="tableblock frame-ends grid-none stretch">
-<caption class="title">Event object passed to the callback</caption>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Adding a listener that logs every node event</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {listener} from '/lib/xp/event';
+
+listener({
+    type: 'node.*',
+    localOnly: false,
+    callback: (event) =&gt; {
+        log.info('event: %s', JSON.stringify(event));
+    }
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="send"><a class="link" href="#send">send</a></h3>
+<div class="paragraph">
+<p>Sends a custom event. The supplied <code>type</code> is automatically prefixed with <code>custom.</code> before the event is published.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>send()</code> takes a single <code>SendParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Event type. Will be published as <code>custom.&lt;type&gt;</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">distributed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> When <code>true</code>, the event is broadcast to every node in the cluster. Defaults to <code>false</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Additional data to attach to the event payload.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Send a custom event into the system</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {send} from '/lib/xp/event';
+
+send({
+    type: 'myEvent',
+    distributed: false,
+    data: {
+        a: 1,
+        b: 2
+    }
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="enonic-event"><a class="link" href="#enonic-event">EnonicEvent</a></h3>
+<div class="paragraph">
+<p>The object passed to a <a href="#listener"><code>listener</code></a> callback for each matching event.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
 <col style="width: 1%;">
@@ -608,114 +717,13 @@ For more details, check out the <a href="lib-node.ahtml#events">Node library</a>
 </tr>
 </tbody>
 </table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Adding a listener that logs every node event</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {listener} from '/lib/xp/event';
-
-listener({
-    type: 'node.*',
-    localOnly: false,
-    callback: (event) =&gt; {
-        log.info('event: %s', JSON.stringify(event));
-    }
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="send"><a class="link" href="#send">send</a></h3>
-<div class="paragraph">
-<p>Sends a custom event. The supplied <code>type</code> is automatically prefixed with <code>custom.</code> before the event is published.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p>An object with the following keys and their values:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 97%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Event type. Will be published as <code>custom.&lt;type&gt;</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">distributed</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>When <code>true</code>, the event is broadcast to every node in the cluster. Defaults to <code>false</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Additional data to attach to the event payload.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Send a custom event into the system</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {send} from '/lib/xp/event';
-
-send({
-    type: 'myEvent',
-    distributed: false,
-    data: {
-        a: 1,
-        b: 2
-    }
-});</code></pre>
-</div>
-</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

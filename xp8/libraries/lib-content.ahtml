@@ -484,19 +484,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#unpublish">unpublish</a></li>
 </ul>
 </li>
-<li><a href="#objects">Objects</a>
+<li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
 <li><a href="#contenttype">ContentType</a></li>
-<li><a href="#icontype">IconType</a></li>
-<li><a href="#workflowinfotype">WorkflowInfoType</a></li>
-<li><a href="#validationerrortype">ValidationErrorType</a></li>
-<li><a href="#pagetype">PageType</a></li>
-<li><a href="#regiontype">RegionType</a></li>
-<li><a href="#layoutcomponenttype">LayoutComponentType</a></li>
-<li><a href="#partcomponenttype">PartComponentType</a></li>
-<li><a href="#textcomponenttype">TextComponentType</a></li>
-<li><a href="#imagecomponenttype">ImageComponentType</a></li>
-<li><a href="#fragmentcomponenttype">FragmentComponentType</a></li>
+<li><a href="#icon">Icon</a></li>
+<li><a href="#schedule">Schedule</a></li>
+<li><a href="#accesscontrolentry">AccessControlEntry</a></li>
 </ul>
 </li>
 </ul>
@@ -585,20 +578,18 @@ const myRoot = ARCHIVE_ROOT_PATH; // "/archive"</code></pre>
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>addAttachment()</code> takes a single <code>AddAttachmentParam</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -606,41 +597,36 @@ const myRoot = ARCHIVE_ROOT_PATH; // "/archive"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the content</p>
+<p>Path or id to the content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Attachment name (unique within the content)</p>
+<p>Attachment name (unique within the content).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mimeType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Attachment content type</p>
+<p>Attachment content type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Attachment label</p>
+<p><strong>Optional.</strong> Attachment label.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Stream with the binary data for the attachment</p>
+<p><strong>Optional.</strong> Stream with the binary data for the attachment.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -672,7 +658,7 @@ addAttachment({
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>archive()</code> takes a single <code>ArchiveContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -741,22 +727,18 @@ log.info('Archived content ids: %s', result2.join(','));</code></pre>
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>create()</code> takes a single <code>CreateContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -764,109 +746,85 @@ log.info('Archived content ids: %s', result2.join(','));</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of content</p>
+<p><strong>Optional.</strong> Name of content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">parentPath</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path to place content under</p>
+<p>Path to place content under.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Display name. Default is same as name</p>
+<p><strong>Optional.</strong> Display name. Defaults to the same as <code>name</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">requireValid</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The content has to be valid, according to the content type, to be created. If requireValid=true and the content is not strictly valid, an error will be thrown</p>
+<p><strong>Optional.</strong> The content has to be valid, according to the content type, to be created. If <code>true</code> and the content is not strictly valid, an error will be thrown. Defaults to <code>true</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">refresh</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>If refresh is true, the created content will to be searchable through queries immediately, else within 1 second. Since there is a performance penalty doing this refresh, refresh should be set to false for bulk operations</p>
+<p><strong>Optional.</strong> If <code>true</code>, the created content will be searchable through queries immediately, otherwise within 1 second. Since there is a performance penalty doing this refresh, set to <code>false</code> for bulk operations. Defaults to <code>true</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">contentType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Content type to use</p>
+<p>Content type to use.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">language</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The language tag representing the content’s locale</p>
+<p><strong>Optional.</strong> The language tag representing the content&#8217;s locale.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">childOrder</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Default ordering of children when doing getChildren if no order is given in query</p>
+<p><strong>Optional.</strong> Default ordering of children when doing <code>getChildren</code> if no order is given in query.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Actual content data</p>
+<p>Actual content data.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>content <a href="#pagetype">page</a></p>
+<p><strong>Optional.</strong> Content <a href="fundamentals/types.ahtml#page-component">page</a>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>eXtra data to use</p>
+<p><strong>Optional.</strong> eXtra data to use.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Workflow information to use. Default has state READY and empty check list.</p>
+<p><strong>Optional.</strong> Workflow information to use. Default has state <code>READY</code> and an empty check list.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -996,22 +954,18 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>createMedia()</code> takes a single <code>CreateMediaParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1019,100 +973,78 @@ const expected = {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of content</p>
+<p>Name of content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">parentPath</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">/</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path to place content under</p>
+<p><strong>Optional.</strong> Path to place content under. Defaults to <code>/</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">focalX</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Focal point for X axis (if it&#8217;s an image)</p>
+<p><strong>Optional.</strong> Focal point for X axis (if it&#8217;s an image).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">focalY</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Focal point for Y axis (if it&#8217;s an image)</p>
+<p><strong>Optional.</strong> Focal point for Y axis (if it&#8217;s an image).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artist</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Artist of the media</p>
+<p><strong>Optional.</strong> Artist of the media.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">tags</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Tags of the media</p>
+<p><strong>Optional.</strong> Tags of the media.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">caption</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Caption of the media</p>
+<p><strong>Optional.</strong> Caption of the media.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">altText</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Alt text of the media</p>
+<p><strong>Optional.</strong> Alt text of the media.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">copyright</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Copyright of the media</p>
+<p><strong>Optional.</strong> Copyright of the media.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Data (as stream) to use</p>
+<p>Data (as stream) to use.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idGenerator</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Function used to generate the id-suffix appended to the content name</p>
+<p><strong>Optional.</strong> Function used to generate the id-suffix appended to the content name.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1168,22 +1100,18 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>updateMedia()</code> takes a single <code>UpdateMediaParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1191,82 +1119,64 @@ const expected = {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id of the media content</p>
+<p>Path or id of the media content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the media content</p>
+<p>Name of the media content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Media data (as a stream)</p>
+<p>Media data (as a stream).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">focalX</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Focal point for X axis (if content is an image)</p>
+<p><strong>Optional.</strong> Focal point for X axis (if content is an image).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">focalY</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Focal point for Y axis (if content is an image)</p>
+<p><strong>Optional.</strong> Focal point for Y axis (if content is an image).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">caption</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Caption</p>
+<p><strong>Optional.</strong> Caption.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">artist</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Artist</p>
+<p><strong>Optional.</strong> Artist.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">copyright</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Copyright</p>
+<p><strong>Optional.</strong> Copyright.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">tags</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Tags</p>
+<p><strong>Optional.</strong> Tags.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1349,7 +1259,7 @@ Renamed from <code>delete</code> to avoid the JavaScript reserved word. The old 
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>deleteContent()</code> takes a single <code>DeleteContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1409,22 +1319,18 @@ if (result) {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>duplicate()</code> takes a single <code>DuplicateContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
 <col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 96%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1432,58 +1338,43 @@ if (result) {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">contentId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Id of the content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>{
-state: "READY",
-checks: {}
-}</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Workflow state.</p>
+<p><strong>Optional.</strong> Workflow state. Defaults to <code>{ state: "READY", checks: {} }</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeChildren</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Indicates that children contents must be duplicated, too. Ignored if <code>variant=true</code>.</p>
+<p><strong>Optional.</strong> Indicates that children contents must be duplicated, too. Ignored if <code>variant=true</code>. Defaults to <code>true</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">variant</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Indicates that duplicated content is a variant.</p>
+<p><strong>Optional.</strong> Indicates that duplicated content is a variant. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">parent</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Destination parent path. By default, a duplicated content will be added as a sibling of the source content.</p>
+<p><strong>Optional.</strong> Destination parent path. By default, a duplicated content will be added as a sibling of the source content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>New content name.</p>
+<p><strong>Optional.</strong> New content name.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1553,7 +1444,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>exists()</code> takes a single <code>ContentExistsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1613,20 +1504,18 @@ if (result) {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>get()</code> takes a single <code>GetContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 35%;">
 <col style="width: 1%;">
 <col style="width: 1%;">
-<col style="width: 63%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1634,17 +1523,15 @@ if (result) {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the parent content</p>
+<p>Path or id to the parent content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">versionId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Content version id</p>
+<p><strong>Optional.</strong> Content version id.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1723,7 +1610,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getActiveVersions()</code> takes a single <code>GetActiveVersionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1787,29 +1674,9 @@ log.info('Master version: %s', result.master.versionId);</code></pre>
 <div class="paragraph lead">
 <p><strong>Parameters:</strong></p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the content</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>getAttachments()</code> takes the content&#8217;s path or id as a single string argument.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -1847,7 +1714,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getAttachmentStream()</code> takes a single <code>GetAttachmentStreamParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1909,22 +1776,18 @@ const stream = getAttachmentStream({
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getChildren()</code> takes a single <code>GetChildContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1932,37 +1795,29 @@ const stream = getAttachmentStream({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the parent content</p>
+<p>Path or id to the parent content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Start index (used for paging)</p>
+<p><strong>Optional.</strong> Start index (used for paging). Defaults to <code>0</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Number of contents to fetch</p>
+<p><strong>Optional.</strong> Number of contents to fetch. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sort</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Sorting expression</p>
+<p><strong>Optional.</strong> Sorting expression.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2052,7 +1907,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following properties:</p>
+<p><code>getOutboundDependencies()</code> takes a single <code>GetOutboundDependenciesParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2112,7 +1967,7 @@ if (result) {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getPermissions()</code> takes a single <code>GetPermissionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2188,7 +2043,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getSite()</code> takes a single <code>GetSiteParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2268,7 +2123,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getSiteConfig()</code> takes a single <code>GetSiteConfigParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2338,29 +2193,9 @@ const expected = {
 <div class="paragraph lead">
 <p><strong>Parameters:</strong></p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the content type, as 'app:name' (e.g. 'com.enonic.myapp:article')</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>getType()</code> takes the content type name as a single string argument, formatted as <code>&lt;app&gt;:&lt;name&gt;</code> (for example, <code>com.enonic.myapp:article</code>).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -2538,22 +2373,18 @@ contentTypes.forEach(({title, name, superType}) =&gt; {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getVersions()</code> takes a single <code>GetVersionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -2561,28 +2392,22 @@ contentTypes.forEach(({title, name, superType}) =&gt; {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id of the content</p>
+<p>Path or id of the content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Number of content versions to fetch</p>
+<p><strong>Optional.</strong> Number of content versions to fetch. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cursor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Cursor for pagination</p>
+<p><strong>Optional.</strong> Cursor for pagination.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2640,22 +2465,18 @@ Properties starting with <code>_</code> may not be modified using this function.
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>update()</code> takes a single <code>UpdateContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -2663,28 +2484,22 @@ Properties starting with <code>_</code> may not be modified using this function.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the content</p>
+<p>Path or id to the content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Editor callback function</p>
+<p>Editor callback function.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">requireValid</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The content has to be valid (according to the content type) to be updated. If <code>requireValid=true</code> and the content is not strictly valid, an error will be thrown</p>
+<p><strong>Optional.</strong> The content has to be valid (according to the content type) to be updated. If <code>true</code> and the content is not strictly valid, an error will be thrown. Defaults to <code>true</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2783,7 +2598,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>updateMetadata()</code> takes a single <code>UpdateMetadataParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2857,7 +2672,7 @@ if (result) {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>updateWorkflow()</code> takes a single <code>UpdateWorkflowParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2938,20 +2753,19 @@ const result = updateWorkflow({
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p><code>patch()</code> takes a single <code>PatchContentParams</code> object with these properties:</p>
+</div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -2959,28 +2773,22 @@ const result = updateWorkflow({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the content</p>
+<p>Path or id to the content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">patcher</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Patcher callback function</p>
+<p>Patcher callback function.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">branches</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[]</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A list of branches to patch.<br>
+<p><strong>Optional.</strong> A list of branches to patch. Defaults to <code>[]</code>.<br>
 * If not provided or empty, the content in the current branch will be patched.<br>
 * If one branch is listed, the patch occurs in that specific branch.<br>
 * If multiple branches are listed:<br>
@@ -2993,19 +2801,15 @@ const result = updateWorkflow({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">skipSync</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>If true, skip synchronization of the content in children projects after patching</p>
+<p><strong>Optional.</strong> If <code>true</code>, skip synchronization of the content in children projects after patching. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">attachments</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Object for managing content attachments. Contains optional arrays: <a href="#createAttachments_details">`createAttachments` (add new)</a>, <a href="#modifyAttachments_details">`modifyAttachments` (update existing)</a> and `removeAttachments` (a string array with attachment names to remove) .</p>
+<p><strong>Optional.</strong> Object for managing content attachments. Contains optional arrays: <a href="#createAttachments_details">`createAttachments` (add new)</a>, <a href="#modifyAttachments_details">`modifyAttachments` (update existing)</a> and `removeAttachments` (a string array with attachment names to remove).</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -3076,7 +2880,7 @@ const result = updateWorkflow({
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object describing the <a href="#pagetype">page</a> configuration including regions and components.</p>
+<p>A JSON object describing the <a href="fundamentals/types.ahtml#page-component">page</a> configuration including regions and components.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3146,7 +2950,7 @@ const result = updateWorkflow({
 <td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object containing <a href="#workflowinfotype">workflow</a> state information.</p>
+<p>A JSON object containing <a href="fundamentals/types.ahtml#workflow">workflow</a> state information.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3172,7 +2976,7 @@ const result = updateWorkflow({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">validationErrors</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#validationerrortype">ValidationError</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#validation-error">ValidationError</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>An array of objects describing validation errors.</p>
 </div></div></td>
@@ -3209,20 +3013,18 @@ const result = updateWorkflow({
 </table>
 <div id="createAttachments_details" class="paragraph lead">
 <p><strong>createAttachments:</strong>
-An object with the following keys and their values:</p>
+Each entry is an object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -3230,61 +3032,54 @@ An object with the following keys and their values:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the attachment to create</p>
+<p>Name of the attachment to create.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mimeType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mime-type of the data</p>
+<p><strong>Optional.</strong> Mime-type of the data.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Label of the attachment</p>
+<p><strong>Optional.</strong> Label of the attachment.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">textContent</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Text content to set</p>
+<p><strong>Optional.</strong> Text content to set.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object | string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Data (as stream) to use</p>
+<p><strong>Optional.</strong> Data (as stream) to use.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 <div id="modifyAttachments_details" class="paragraph lead">
 <p><strong>modifyAttachments:</strong>
-An object with the following keys and their values:</p>
+Each entry is an object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -3292,49 +3087,43 @@ An object with the following keys and their values:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the attachment to modify</p>
+<p>Name of the attachment to modify.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mimeType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mime-type of the data</p>
+<p><strong>Optional.</strong> Mime-type of the data.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Label of the attachment</p>
+<p><strong>Optional.</strong> Label of the attachment.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">textContent</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Text content to set</p>
+<p><strong>Optional.</strong> Text content to set.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sha512</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>SHA-512 hash of the data</p>
+<p><strong>Optional.</strong> SHA-512 hash of the data.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">size</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Size of the data in bytes</p>
+<p><strong>Optional.</strong> Size of the data in bytes.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -3407,7 +3196,7 @@ const result = patch({
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>move()</code> takes a single <code>MoveContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -3530,22 +3319,18 @@ try {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>publish()</code> takes a single <code>PublishContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -3553,91 +3338,43 @@ try {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">keys</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>List of all content keys (path or id) that should be published</p>
+<p>List of all content keys (path or id) that should be published.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">schedule</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#scheduleparams">ScheduleParams</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#schedule">Schedule</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Schedule publishing</p>
+<p><strong>Optional.</strong> Schedule publishing.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">excludeDescendantsOf</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>List of content keys whose descendants should be excluded from publishing</p>
+<p><strong>Optional.</strong> List of content keys whose descendants should be excluded from publishing.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">excludeChildrenIds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em>Deprecated, use</em> <code>excludeDescendantsOf</code> <em>instead.</em></p>
+<p><strong>Optional.</strong> <em>Deprecated, use</em> <code>excludeDescendantsOf</code> <em>instead.</em></p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeDependencies</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Whether all related content should be included when publishing content</p>
+<p><strong>Optional.</strong> Whether all related content should be included when publishing content. Defaults to <code>true</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Publish message</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="sect3">
-<h4 id="scheduleparams"><a class="link" href="#scheduleparams">ScheduleParams</a></h4>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">from</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Time from which the content is considered published. Defaults to the time of publishing</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">to</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Time until which the content is considered published</p>
+<p><strong>Optional.</strong> Publish message.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -3689,7 +3426,6 @@ const expected = {
 </div>
 </div>
 </div>
-</div>
 <div class="sect2">
 <h3 id="query"><a class="link" href="#query">query</a></h3>
 <div class="paragraph">
@@ -3699,22 +3435,18 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>query()</code> takes a single <code>QueryContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -3722,73 +3454,57 @@ const expected = {
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Start index (used for paging)</p>
+<p><strong>Optional.</strong> Start index (used for paging). Defaults to <code>0</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Number of contents to fetch</p>
+<p><strong>Optional.</strong> Number of contents to fetch. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Query string or <a href="../storage/querying.ahtml">DSL</a> expression</p>
+<p><strong>Optional.</strong> Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">filters</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object | object[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Filters to apply to query result</p>
+<p><strong>Optional.</strong> Filters to apply to query result.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sort</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | object | object[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Sorting string or <a href="../storage/querying.ahtml#sort">DSL</a> expression</p>
+<p><strong>Optional.</strong> Sorting string or <a href="../storage/querying.ahtml#sort">DSL</a> expression.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">aggregations</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Aggregations expression</p>
+<p><strong>Optional.</strong> Aggregations expression.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">contentTypes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Content types to filter on</p>
+<p><strong>Optional.</strong> Content types to filter on.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">highlight</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Highlight expression</p>
+<p><strong>Optional.</strong> Highlight expression.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -4050,7 +3766,7 @@ const expected = {
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>removeAttachment()</code> takes a single <code>RemoveAttachmentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -4112,7 +3828,7 @@ will reset specified changes made inside a specified layer.</p>
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>resetInheritance()</code> takes a single <code>ResetInheritanceParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -4182,7 +3898,7 @@ resetInheritance({key: '/mySite/mycontent', projectName: 'layer-no', inherit: ['
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>restore()</code> takes a single <code>RestoreContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -4209,7 +3925,7 @@ resetInheritance({key: '/mySite/mycontent', projectName: 'layer-no', inherit: ['
 <td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path of parent for restored content</p>
+<p><strong>Optional.</strong> Path of parent for restored content</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -4272,20 +3988,18 @@ If the content is published, the permissions will be applied to the published co
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>applyPermissions()</code> takes a single <code>ApplyPermissionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -4293,41 +4007,36 @@ If the content is published, the permissions will be applied to the published co
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id of the content</p>
+<p>Path or id of the content.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#permissionsparams">PermissionsParams</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#accesscontrolentry">AccessControlEntry</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Array of permissions to overwrite current permissions. Cannot be used with 'addPermissions' or 'removePermissions'</p>
+<p><strong>Optional.</strong> Array of permissions to overwrite current permissions. Cannot be used with <code>addPermissions</code> or <code>removePermissions</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">addPermissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#permissionsparams">PermissionsParams</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#accesscontrolentry">AccessControlEntry</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Array of permissions to add. Cannot be used simultaneously with 'permissions'</p>
+<p><strong>Optional.</strong> Array of permissions to add. Cannot be used simultaneously with <code>permissions</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">removePermissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#permissionsparams">PermissionsParams</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#accesscontrolentry">AccessControlEntry</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Array of permissions to remove. Cannot be used simultaneously with 'permissions'</p>
+<p><strong>Optional.</strong> Array of permissions to remove. Cannot be used simultaneously with <code>permissions</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string ('SINGLE' | 'TREE' | 'SUBTREE')</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string (<code>SINGLE</code> | <code>TREE</code> | <code>SUBTREE</code>)</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>scope of applying permissions. Scope 'SINGLE' applies permissions only to the content itself. 'TREE' applies permissions to the content and its descendants. 'SUBTREE' applies permissions only to the content&#8217;s descendants. Default is 'SINGLE'.</p>
+<p><strong>Optional.</strong> Scope of applying permissions. <code>SINGLE</code> applies permissions only to the content itself. <code>TREE</code> applies permissions to the content and its descendants. <code>SUBTREE</code> applies permissions only to the content&#8217;s descendants. Defaults to <code>SINGLE</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -4438,51 +4147,6 @@ applyPermissions({
 });</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="permissionsparams"><a class="link" href="#permissionsparams">PermissionsParams</a></h4>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">allow</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Allowed permissions</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">deny</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Denied permissions</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 <div class="sect2">
 <h3 id="unpublish"><a class="link" href="#unpublish">unpublish</a></h3>
@@ -4493,7 +4157,7 @@ applyPermissions({
 <p><strong>Parameters:</strong></p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>unpublish()</code> takes a single <code>UnpublishContentParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -4553,25 +4217,23 @@ const expected = [
 </div>
 </div>
 <div class="sect1">
-<h2 id="objects"><a class="link" href="#objects">Objects</a></h2>
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="contenttype"><a class="link" href="#contenttype">ContentType</a></h3>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -4579,537 +4241,206 @@ const expected = [
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the content type</p>
+<p>Name of the content type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">title</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Title of the content type</p>
+<p>Title of the content type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Description of the content type</p>
+<p>Description of the content type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">superType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the super type, or null if it has no super type</p>
+<p>Name of the super type, or null if it has no super type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">abstract</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Whether or not content of this type may be instantiated</p>
+<p>Whether or not content of this type may be instantiated.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">final</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Whether or not it may be used as super type of other content types</p>
+<p>Whether or not it may be used as super type of other content types.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">allowChildContent</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Whether or not allow creating child items on content of this type</p>
+<p>Whether or not to allow creating child items on content of this type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Modified time of the content type</p>
+<p>Modified time of the content type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">icon</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#icontype">IconType</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#icon">Icon</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Icon of the content type</p>
+<p><strong>Optional.</strong> Icon of the content type.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Form schema represented as an array of form items: Input, ItemSet, Layout, OptionSet</p>
+<p>Form schema — an array of form items.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Custom schema configuration for the descriptor</p>
+<p>Custom schema configuration for the descriptor.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="icontype"><a class="link" href="#icontype">IconType</a></h3>
+<h3 id="icon"><a class="link" href="#icon">Icon</a></h3>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Stream with the binary data for the icon</p>
+<p>Stream with the binary data for the icon. Read it with <code>lib-io</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mimeType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mime type of the icon image</p>
+<p>Mime type of the icon image.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Modified time of the icon. May be used for caching</p>
+<p>Modified time of the icon. May be used for caching.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="workflowinfotype"><a class="link" href="#workflowinfotype">WorkflowInfoType</a></h3>
+<h3 id="schedule"><a class="link" href="#schedule">Schedule</a></h3>
+<div class="paragraph">
+<p>A publish schedule. Same shape as <a href="fundamentals/types.ahtml#publish-info">PublishInfo</a> without the <code>first</code> field.</p>
+</div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">from</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The name of the current workflow state (e.g., "IN_PROGRESS", "READY").</p>
+<p><strong>Optional.</strong> Time from which the content is considered published, as an ISO-8601 instant. Defaults to the time of publishing.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">checks</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">to</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object mapping specific check names (string) to their status (string). The status must be one of: <code>PENDING</code>, <code>REJECTED</code>, or <code>APPROVED</code>.</p>
+<p><strong>Optional.</strong> Time until which the content is considered published. ISO-8601 instant.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="validationerrortype"><a class="link" href="#validationerrortype">ValidationErrorType</a></h3>
+<h3 id="accesscontrolentry"><a class="link" href="#accesscontrolentry">AccessControlEntry</a></h3>
+<div class="paragraph">
+<p>A permission entry for a single principal.</p>
+</div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">errorCode</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Required.</strong> The validation error code (e.g., <code>MISSING_REQUIRED</code>, <code>INVALID_FORMAT</code>).</p>
+<p>Principal the entry applies to (for example, <code>role:system.admin</code>, <code>user:system:su</code>).</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A static, human-readable error message.</p>
+<p><strong>Optional.</strong> Permissions to grant. Each value is one of <code>READ</code>, <code>CREATE</code>, <code>MODIFY</code>, <code>DELETE</code>, <code>PUBLISH</code>, <code>READ_PERMISSIONS</code>, <code>WRITE_PERMISSIONS</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">i18n</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deny</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The i18n localization key for the error message.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">args</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">array</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>An array of values to be substituted into the <code>i18n</code> message.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">attachment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The name (or <code>BinaryReference</code> string) of the attachment this error relates to.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">propertyPath</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <code>PropertyPath</code> (as a string) to the data field this error relates to (e.g., <code>mySet.0.myInput</code>).</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="pagetype"><a class="link" href="#pagetype">PageType</a></h3>
-<div class="paragraph lead">
-<p>Fields</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <code>DescriptorKey</code> (e.g., <code>com.myapp:my-page</code>) of the page component.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">template</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <code>PageTemplateKey</code> of the page template to use.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object (PropertyTree) for the page&#8217;s configuration.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">regions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>An object mapping region names (string) to <a href="#regiontype">RegionType objects</a>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fragment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A fragment component.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="regiontype"><a class="link" href="#regiontype">RegionType</a></h3>
-<div class="paragraph lead">
-<p>Fields</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">components</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>An array of component objects (e.g., <a href="#layoutcomponenttype">Layout</a>, <a href="#partcomponenttype">Part</a>, etc.) placed within this region.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="layoutcomponenttype"><a class="link" href="#layoutcomponenttype">LayoutComponentType</a></h3>
-<div class="paragraph lead">
-<p>Fields</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <code>DescriptorKey</code> (e.g., <code>com.myapp:2-column</code>) of the layout.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object for the layout&#8217;s configuration.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">regions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A <a href="#regiontype">Regions object</a> map containing the regions <strong>within</strong> this layout.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="partcomponenttype"><a class="link" href="#partcomponenttype">PartComponentType</a></h3>
-<div class="paragraph lead">
-<p>Fields</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The descriptor string (e.g., <code>com.myapp:my-part</code>) of the part.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object for the part&#8217;s configuration.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="textcomponenttype"><a class="link" href="#textcomponenttype">TextComponentType</a></h3>
-<div class="paragraph lead">
-<p>Fields</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">text</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Text content of the component.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="imagecomponenttype"><a class="link" href="#imagecomponenttype">ImageComponentType</a></h3>
-<div class="paragraph lead">
-<p>Fields</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">image</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <code>ContentId</code> (as a string) of the image content item.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object for the image&#8217;s configuration.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="fragmentcomponenttype"><a class="link" href="#fragmentcomponenttype">FragmentComponentType</a></h3>
-<div class="paragraph lead">
-<p>Fields</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fragment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <code>ContentId</code> (as a string) of the fragment content item.</p>
+<p><strong>Optional.</strong> Permissions to deny. Same set of values as <code>allow</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -5120,7 +4451,7 @@ const expected = [
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

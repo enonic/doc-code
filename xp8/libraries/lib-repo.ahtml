@@ -456,7 +456,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#refresh">refresh</a></li>
 </ul>
 </li>
-<li><a href="#objects">Objects</a>
+<li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
 <li><a href="#repository">Repository</a></li>
 <li><a href="#createrepositoryparams">CreateRepositoryParams</a></li>
@@ -1072,16 +1072,14 @@ const result = modify({
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1089,9 +1087,8 @@ const result = modify({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#refreshparams">RefreshParams</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>JSON with the parameters</p>
+<p><strong>Optional.</strong> JSON with the parameters.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1126,7 +1123,7 @@ refresh({
 </div>
 </div>
 <div class="sect1">
-<h2 id="objects"><a class="link" href="#objects">Objects</a></h2>
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="repository"><a class="link" href="#repository">Repository</a></h3>
@@ -1134,20 +1131,18 @@ refresh({
 <p>Repository object returned by <code>create</code>, <code>get</code>, <code>list</code>, and <code>modify</code>.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1155,7 +1150,6 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Repository ID.</p>
 </div></div></td>
@@ -1163,7 +1157,6 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">branches</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Branches available in the repository.</p>
 </div></div></td>
@@ -1171,15 +1164,13 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Repository data as a key/value map.</p>
+<p><strong>Optional.</strong> Repository data as a key/value map.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">transient</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>true</code> if the repository is transient (excluded from dumps and snapshots).</p>
 </div></div></td>
@@ -1193,20 +1184,18 @@ refresh({
 <p>Object to pass to the <code>create</code> function.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1214,7 +1203,6 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Repository ID.</p>
 </div></div></td>
@@ -1222,25 +1210,22 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">rootPermissions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#accesscontrolentry">AccessControlEntry</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Array of root permissions. By default, all permissions to <code>role:system.admin</code> and <code>READ</code> permission to <code>role:system.authenticated</code>.</p>
+<p><strong>Optional.</strong> Array of root permissions. By default, all permissions to <code>role:system.admin</code> and <code>READ</code> permission to <code>role:system.authenticated</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">rootChildOrder</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Root child order (for example, <code>_ts DESC</code>).</p>
+<p><strong>Optional.</strong> Root child order (for example, <code>_ts DESC</code>).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">transient</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Mark the repository as transient. Defaults to <code>false</code>.</p>
+<p><strong>Optional.</strong> Mark the repository as transient. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1252,20 +1237,18 @@ refresh({
 <p>Permission entry used in <code>CreateRepositoryParams.rootPermissions</code>.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 0.99%;">
-<col style="width: 97.03%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1273,7 +1256,6 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key (for example, <code>role:system.admin</code>, <code>user:system:su</code>).</p>
 </div></div></td>
@@ -1281,17 +1263,15 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">allow</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Permissions to grant. Each value is one of <code>READ</code>, <code>CREATE</code>, <code>MODIFY</code>, <code>DELETE</code>, <code>PUBLISH</code>, <code>READ_PERMISSIONS</code>, <code>WRITE_PERMISSIONS</code>.</p>
+<p><strong>Optional.</strong> Permissions to grant. Each value is one of <code>READ</code>, <code>CREATE</code>, <code>MODIFY</code>, <code>DELETE</code>, <code>PUBLISH</code>, <code>READ_PERMISSIONS</code>, <code>WRITE_PERMISSIONS</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">deny</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Permissions to deny. Same set of values as <code>allow</code>.</p>
+<p><strong>Optional.</strong> Permissions to deny. Same set of values as <code>allow</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1303,7 +1283,7 @@ refresh({
 <p>Object to pass to the <code>createBranch</code> function.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1342,7 +1322,7 @@ refresh({
 <p>Object to pass to the <code>deleteBranch</code> function.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1381,7 +1361,7 @@ refresh({
 <p>Object returned by <code>createBranch</code> and <code>deleteBranch</code>.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1413,7 +1393,7 @@ refresh({
 <p>Object to pass to the <code>modify</code> function.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1452,7 +1432,7 @@ refresh({
 <p>Object to pass to the <code>getBinary</code> function.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1491,22 +1471,18 @@ refresh({
 <p>Object to pass to the <code>refresh</code> function.</p>
 </div>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 0.9803%;">
-<col style="width: 96.0788%;">
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Attributes</th>
-<th class="tableblock halign-left valign-top">Default</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -1514,28 +1490,22 @@ refresh({
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">mode</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>all</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Index type to be refreshed. One of <code>all</code>, <code>search</code>, or <code>storage</code>.</p>
+<p><strong>Optional.</strong> Index type to be refreshed. One of <code>all</code>, <code>search</code>, or <code>storage</code>. Defaults to <code>all</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">repo</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Repository ID. Defaults to the repository of the current context.</p>
+<p><strong>Optional.</strong> Repository ID. Defaults to the repository of the current context.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;optional&gt;</p></td>
-<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Branch. Defaults to the branch of the current context.</p>
+<p><strong>Optional.</strong> Branch. Defaults to the branch of the current context.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1546,7 +1516,7 @@ refresh({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

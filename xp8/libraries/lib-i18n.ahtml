@@ -529,36 +529,9 @@ notify.process.failed=Error al procesar: {0}.</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">locale</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A string-representation of a locale, or an array of locales in preferred order. Pass in an empty array to use the site language.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">bundles</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional list of bundle names. Bundle names are specified as paths, relative to the <code>src/main/resources/</code> folder.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>getPhrases()</code> takes two positional arguments: <code>locale</code> (<code>string | string[]</code>) — a locale string or array of locales in preferred order (pass an empty array to use the site language); and an optional <code>bundles</code> (<code>string[]</code>) — bundle names as paths relative to <code>src/main/resources/</code>.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -592,29 +565,9 @@ notify.process.failed=Error al procesar: {0}.</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">bundles</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional list of bundle names. Bundle names are specified as paths, relative to the <code>src/main/resources</code> folder.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>getSupportedLocales()</code> takes one optional positional argument: <code>bundles</code> (<code>string[]</code>) — bundle names as paths relative to <code>src/main/resources/</code>.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -645,7 +598,7 @@ If no translation is found, the default phrase will be used. Some phrases will h
 into the phrase. These must be provided in the function call for those phrases.</p>
 </div>
 <div class="paragraph">
-<p>The function takes a single <code>params</code> object with the following properties:</p>
+<p><code>localize()</code> takes a single <code>LocalizeParams</code> object with these properties:</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
@@ -659,8 +612,8 @@ into the phrase. These must be provided in the function call for those phrases.<
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -668,35 +621,35 @@ into the phrase. These must be provided in the function call for those phrases.<
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The phrase key. Required.</p>
+<p>The phrase key.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">locale</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional. A string-representation of a locale, or an array of locales in preferred order. If not set, the site language is used.</p>
+<p><strong>Optional.</strong> A locale string or array of locales in preferred order. If not set, the site language is used.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">values</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional placeholder values.</p>
+<p><strong>Optional.</strong> Placeholder values inserted into the phrase in order (<code>{0}</code>, <code>{1}</code>, etc.).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">bundles</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional list of bundle names.</p>
+<p><strong>Optional.</strong> Bundle names as paths relative to <code>src/main/resources/</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fallbackMessage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fallbackMessage</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional fallback message returned when the phrase is not found. Defaults to <code>"NOT_TRANSLATED"</code>.</p>
+<p><strong>Optional.</strong> Returned when the phrase is not found. Defaults to <code>"NOT_TRANSLATED"</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -746,7 +699,7 @@ const message = localize({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

@@ -454,6 +454,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#reference">reference</a></li>
 </ul>
 </li>
+<li><a href="#type_definitions">Type Definitions</a>
+<ul class="sectlevel2">
+<li><a href="#geo-point">GeoPoint</a></li>
+<li><a href="#instant-type">Instant</a></li>
+<li><a href="#reference-type">Reference</a></li>
+<li><a href="#local-date-time">LocalDateTime</a></li>
+<li><a href="#local-date">LocalDate</a></li>
+<li><a href="#local-time">LocalTime</a></li>
+<li><a href="#binary-attachment">BinaryAttachment</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -461,7 +472,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Helper functions for various value types.</p>
+<p>Helper functions for creating typed Java values from JavaScript — used when storing geo-points, instants, references, and similar typed fields in nodes and content.</p>
 </div>
 </div>
 </div>
@@ -497,290 +508,159 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="binary"><a class="link" href="#binary">binary</a></h3>
 <div class="paragraph">
-<p>Creates a BinaryAttachment value.</p>
+<p>Creates a <code>BinaryAttachment</code> value from a name and a binary stream.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The binary name</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ByteSource</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The binary stream</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>binary()</code> takes two positional arguments: <code>name</code> (string — the binary name) and <code>stream</code> (<a href="fundamentals/types.ahtml#byte-source">ByteSource</a> — the binary stream).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : BinaryAttachment</p>
+<p><strong>object</strong> : (<a href="#binary-attachment"><code>BinaryAttachment</code></a>)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="geopoint"><a class="link" href="#geopoint">geoPoint</a></h3>
 <div class="paragraph">
-<p>Creates a GeoPoint value.</p>
+<p>Creates a <code>GeoPoint</code> value from numeric coordinates.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">lat</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Latitude</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">lon</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Longitude</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>geoPoint()</code> takes two positional arguments: <code>lat</code> (number — latitude) and <code>lon</code> (number — longitude).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : GeoPoint</p>
+<p><strong>object</strong> : (<a href="#geo-point"><code>GeoPoint</code></a>)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="geopointstring"><a class="link" href="#geopointstring">geoPointString</a></h3>
 <div class="paragraph">
-<p>Creates a GeoPoint value from a comma-separated latitude and longitude string.</p>
+<p>Creates a <code>GeoPoint</code> value from a comma-separated latitude and longitude string.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Comma-separated latitude and longitude</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>geoPointString()</code> takes one positional argument: <code>value</code> (string — comma-separated latitude and longitude, e.g. <code>'59.9139,10.7522'</code>).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : GeoPoint</p>
+<p><strong>object</strong> : (<a href="#geo-point"><code>GeoPoint</code></a>)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="instant"><a class="link" href="#instant">instant</a></h3>
 <div class="paragraph">
-<p>Creates an Instant value.</p>
+<p>Creates an <code>Instant</code> value from an ISO-8601 string or a <code>Date</code> object.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | Date</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>An ISO-8601-formatted instant (f.ex. <code>2011-12-03T10:15:30Z</code>) or a Date object</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>instant()</code> takes one positional argument: <code>value</code> (<code>string | Date</code> — an ISO-8601-formatted instant such as <code>'2011-12-03T10:15:30Z'</code>, or a JavaScript <code>Date</code>).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : Instant</p>
+<p><strong>object</strong> : (<a href="#instant-type"><code>Instant</code></a>)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="localdate"><a class="link" href="#localdate">localDate</a></h3>
 <div class="paragraph">
-<p>Creates a LocalDate value.</p>
+<p>Creates a <code>LocalDate</code> value from an ISO local date string or a <code>Date</code> object.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | Date</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>An ISO local date string (e.g '2011-12-03') or a Date object</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>localDate()</code> takes one positional argument: <code>value</code> (<code>string | Date</code> — an ISO local date such as <code>'2011-12-03'</code>, or a JavaScript <code>Date</code>).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : LocalDate</p>
+<p><strong>object</strong> : (<a href="#local-date"><code>LocalDate</code></a>)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="localdatetime"><a class="link" href="#localdatetime">localDateTime</a></h3>
 <div class="paragraph">
-<p>Creates a LocalDateTime value.</p>
+<p>Creates a <code>LocalDateTime</code> value from a local date-time string or a <code>Date</code> object.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | Date</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A local date-time string (e.g '2007-12-03T10:15:30') or a Date object</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>localDateTime()</code> takes one positional argument: <code>value</code> (<code>string | Date</code> — a local date-time string such as <code>'2007-12-03T10:15:30'</code>, or a JavaScript <code>Date</code>).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : LocalDateTime</p>
+<p><strong>object</strong> : (<a href="#local-date-time"><code>LocalDateTime</code></a>)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="localtime"><a class="link" href="#localtime">localTime</a></h3>
 <div class="paragraph">
-<p>Creates a LocalTime value.</p>
+<p>Creates a <code>LocalTime</code> value from an ISO local time string or a <code>Date</code> object.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | Date</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>An ISO local time string (e.g '10:15:30') or a Date object</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>localTime()</code> takes one positional argument: <code>value</code> (<code>string | Date</code> — an ISO local time such as <code>'10:15:30'</code>, or a JavaScript <code>Date</code>).</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : LocalTime</p>
+<p><strong>object</strong> : (<a href="#local-time"><code>LocalTime</code></a>)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="reference"><a class="link" href="#reference">reference</a></h3>
 <div class="paragraph">
-<p>Creates a Reference value.</p>
+<p>Creates a <code>Reference</code> value from a node ID string.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>reference()</code> takes one positional argument: <code>value</code> (string — a node ID, e.g. <code>'1234-5678-91011'</code>).</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>object</strong> : (<a href="#reference-type"><code>Reference</code></a>)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="geo-point"><a class="link" href="#geo-point">GeoPoint</a></h3>
+<div class="paragraph">
+<p>A typed geo-point value. Returned by <code>geoPoint()</code> and <code>geoPointString()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -797,27 +677,374 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getLatitude()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The latitude component.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getLongitude()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The longitude component.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>toString()</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A nodeId as string (e.g '1234-5678-91011')</p>
+<p>Serialized form — <code>'&lt;lat&gt;,&lt;lon&gt;'</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph lead">
-<p>Returns</p>
 </div>
+<div class="sect2">
+<h3 id="instant-type"><a class="link" href="#instant-type">Instant</a></h3>
 <div class="paragraph">
-<p><strong>object</strong> : Reference</p>
+<p>A typed instant (point in time) value. Returned by <code>instant()</code>.</p>
 </div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getEpochSecond()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Seconds since the Unix epoch.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getNano()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Nanoseconds adjustment within the current second.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>toEpochMilli()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Milliseconds since the Unix epoch.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="reference-type"><a class="link" href="#reference-type">Reference</a></h3>
+<div class="paragraph">
+<p>A typed node reference value. Returned by <code>reference()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getNodeId()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The referenced node ID.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>toString()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>String form of the node ID.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="local-date-time"><a class="link" href="#local-date-time">LocalDateTime</a></h3>
+<div class="paragraph">
+<p>A typed local date-time value (no time-zone). Returned by <code>localDateTime()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getYear()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The year.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMonthValue()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Month as a number (1–12).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMonth()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Month as a string constant (e.g. <code>'JANUARY'</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDayOfMonth()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Day of the month (1–31).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDayOfWeek()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Day of the week as a string constant (e.g. <code>'MONDAY'</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getHour()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Hour of day (0–23).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMinute()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Minute of hour (0–59).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getSecond()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Second of minute (0–59).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getNano()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Nanosecond of second.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="local-date"><a class="link" href="#local-date">LocalDate</a></h3>
+<div class="paragraph">
+<p>A typed local date value (no time, no time-zone). Returned by <code>localDate()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getYear()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The year.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMonthValue()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Month as a number (1–12).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMonth()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Month as a string constant (e.g. <code>'JANUARY'</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDayOfMonth()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Day of the month (1–31).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDayOfYear()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Day of the year (1–366).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDayOfWeek()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Day of the week as a string constant (e.g. <code>'MONDAY'</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>isLeapYear()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether the year is a leap year.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="local-time"><a class="link" href="#local-time">LocalTime</a></h3>
+<div class="paragraph">
+<p>A typed local time value (no date, no time-zone). Returned by <code>localTime()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getHour()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Hour of day (0–23).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMinute()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Minute of hour (0–59).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getSecond()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Second of minute (0–59).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getNano()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Nanosecond of second.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="binary-attachment"><a class="link" href="#binary-attachment">BinaryAttachment</a></h3>
+<div class="paragraph">
+<p>A typed binary attachment value wrapping a name reference and a stream. Returned by <code>binary()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getReference()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A <code>BinaryReference</code> — call <code>.toString()</code> on it to get the binary name string.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getByteSource()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The underlying binary stream.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

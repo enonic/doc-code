@@ -478,8 +478,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#applypermissions">applyPermissions</a></li>
 </ul>
 </li>
-<li><a href="#source">Source</a></li>
-<li><a href="#user">User</a></li>
+<li><a href="#type_definitions">Type Definitions</a>
+<ul class="sectlevel2">
+<li><a href="#connect-params">ConnectParams</a></li>
+<li><a href="#connect-user">ConnectUser</a></li>
+<li><a href="#node-commit">NodeCommit</a></li>
+<li><a href="#node-version">NodeVersion</a></li>
+<li><a href="#access-control-entry">AccessControlEntry</a></li>
+<li><a href="#node-query-result">NodeQueryResult</a></li>
+<li><a href="#node-multi-repo-query-result">NodeMultiRepoQueryResult</a></li>
+<li><a href="#find-nodes-by-parent-result">FindNodesByParentResult</a></li>
+<li><a href="#get-node-versions-result">GetNodeVersionsResult</a></li>
+<li><a href="#diff-branches-result">DiffBranchesResult</a></li>
+<li><a href="#push-nodes-result">PushNodesResult</a></li>
+<li><a href="#sort-node-result">SortNodeResult</a></li>
+<li><a href="#patch-node-result">PatchNodeResult</a></li>
+<li><a href="#apply-permissions-result">ApplyPermissionsResult</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -607,6 +623,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
+<div class="paragraph">
+<p><code>connect()</code> takes a single <code>ConnectParams</code> object with these properties:</p>
+</div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -616,16 +635,37 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">repoId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>object with parameters</p>
+<p>Repository ID.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Branch ID.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Additional principals to execute the connection with.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#connect-user">ConnectUser</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> User to execute the connection as. Defaults to the current user.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -659,6 +699,9 @@ const connection = connect({
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
+<div class="paragraph">
+<p><code>multiRepoConnect()</code> takes a single <code>MultiRepoConnectParams</code> object with these properties:</p>
+</div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -668,16 +711,16 @@ const connection = connect({
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sources</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#source">Source</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#connect-params">ConnectParams</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>array of repository source objects</p>
+<p>Repositories to connect to. The <code>user</code> property is not allowed on entries here.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -730,7 +773,7 @@ const searchConnection = multiRepoConnect({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>query()</code> takes a single <code>QueryNodeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -747,52 +790,59 @@ const searchConnection = multiRepoConnect({
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Start index used for paging - default: 0</p>
+<p><strong>Optional.</strong> Start index used for paging. Defaults to <code>0</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Number of content to fetch, used for paging - default: 10</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
+<p><strong>Optional.</strong> Number of nodes to fetch, used for paging. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">filters</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Query filters</p>
+<p><strong>Optional.</strong> Query filters.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sort</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Sorting expression - default: '_score DESC'</p>
+<p><strong>Optional.</strong> Sorting string or <a href="../storage/querying.ahtml#sort">DSL</a> expression. Defaults to <code>_score DESC</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">aggregations</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> <a href="../storage/aggregations.ahtml">Aggregations</a> config</p>
+<p><strong>Optional.</strong> <a href="../storage/aggregations.ahtml">Aggregations</a> config.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">highlight</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> <a href="../storage/highlighting.ahtml">Highlighting</a> config</p>
+<p><strong>Optional.</strong> <a href="../storage/highlighting.ahtml">Highlighting</a> config.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">suggestions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Term suggestions config, keyed by suggestion name.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -808,7 +858,7 @@ const searchConnection = multiRepoConnect({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : Result of query</p>
+<p><strong>object</strong> : (<a href="#node-multi-repo-query-result">NodeMultiRepoQueryResult</a>) Query result, where each hit also carries its <code>repoId</code> and <code>branch</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -903,6 +953,9 @@ const repo = connect({
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
+<div class="paragraph">
+<p><code>commit()</code> takes a single <code>CommitParams</code> object with these properties:</p>
+</div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -912,23 +965,23 @@ const repo = connect({
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">keys</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string/string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Node keys to commit. Each argument could be an id, a path or an array of the two. Prefer the usage of ID rather than paths.</p>
+<p>Node keys to commit. Each key can be an id or a path. Prefer ids over paths.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional commit message</p>
+<p><strong>Optional.</strong> Commit message.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -937,7 +990,7 @@ const repo = connect({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : Commit object. A single commit is created and applied to all the nodes referenced in <code>keys</code>.</p>
+<p><strong>object</strong> : (<a href="#node-commit">NodeCommit</a>) A single commit, created and applied to all the nodes referenced in <code>keys</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -983,14 +1036,14 @@ const repo = connect({
 <div class="sect2">
 <h3 id="create"><a class="link" href="#create">create</a></h3>
 <div class="paragraph">
-<p>Creates a node. To create a content where the name is not important and there could be multiple instances under the same parent content,
-skip the <code>name</code> parameter and specify a <code>displayName</code>.</p>
+<p>Creates a node. To create a node where the name is not important and there can be multiple instances under the same parent,
+skip the <code>_name</code> property and specify a <code>displayName</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>create()</code> takes a single <code>CreateNodeParams</code> object. Alongside the node&#8217;s own data, it accepts these reserved properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1007,53 +1060,52 @@ skip the <code>name</code> parameter and specify a <code>displayName</code>.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of content.</p>
+<p><strong>Optional.</strong> Name of the node.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_parentPath</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_parentPath</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path to place content under.</p>
+<p><strong>Optional.</strong> Path to place the node under.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_indexConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_indexConfig</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> How the document should be <a href="../storage/indexing.ahtml">indexed</a>. A default template value
-"<a href="../storage/indexing.ahtml#byType">byType</a>" will be set if no value specified.</p>
+<p><strong>Optional.</strong> How the document should be <a href="../storage/indexing.ahtml">indexed</a>. A default template value "<a href="../storage/indexing.ahtml#byType">byType</a>" will be set if no value is specified.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_permissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_permissions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> The access control list for the node. By default the creator will have full access</p>
+<p><strong>Optional.</strong> The access control list for the node. By default the creator will have full access.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_inheritsPermissions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_inheritsPermissions</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong>   Set to <code>true</code> if the permissions should be inherited from the node parent. This is a meta-property and is not persisted. Default is <code>false</code>.</p>
+<p><strong>Optional.</strong> Set to <code>true</code> if the permissions should be inherited from the node parent. This is a meta-property and is not persisted. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_manualOrderValue</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_manualOrderValue</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong>  Value used to order document when ordering by parent and child-order is set to manual</p>
+<p><strong>Optional.</strong> Value used to order the document when ordering by parent and child-order is set to manual.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_childOrder</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_childOrder</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Default ordering of children when doing getChildren if no order is given in query</p>
+<p><strong>Optional.</strong> Default ordering of children when calling <code>findChildren</code> if no order is given in the query.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1062,7 +1114,7 @@ skip the <code>name</code> parameter and specify a <code>displayName</code>.</p>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : Created object</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The created node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1205,29 +1257,9 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">keys</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Node keys to delete. Each argument could be an id, a path or an array of the two. Prefer the usage of ID rather than paths.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>delete()</code> is positional. It accepts one or more node keys (ids or paths), where each argument can be a single key or an array of keys. Prefer ids over paths.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -1262,7 +1294,7 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>diff()</code> takes a single <code>DiffBranchesParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1282,21 +1314,21 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to resolve diff for</p>
+<p>Path or id to resolve the diff for.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">target</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Branch to differentiate with</p>
+<p>Branch to differentiate with.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeChildren</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> If set to <code>true</code>, differences are resolved for all children.</p>
+<p>If set to <code>true</code>, differences are resolved for all children.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1305,7 +1337,7 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : An array with differences in the status for each node in the tree that has differences between the branches.</p>
+<p><strong>object</strong> : (<a href="#diff-branches-result">DiffBranchesResult</a>) The status difference for each node in the tree that differs between the branches.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1351,7 +1383,7 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>duplicate()</code> takes a single <code>DuplicateParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1371,7 +1403,7 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Id to the node.</p>
+<p>Id of the node.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1385,37 +1417,37 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeChildren</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Indicates that children nodes must be duplicated, too. Default is <code>true</code>.</p>
+<p><strong>Optional.</strong> Indicates that children nodes must be duplicated, too. Defaults to <code>true</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">parent</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Destination parent path. By default, a duplicated node will be added as a sibling of the source node.</p>
+<p><strong>Optional.</strong> Destination parent path. By default, a duplicated node is added as a sibling of the source node.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">refresh</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Refresh the index for the current repoConnection.</p>
+<p><strong>Optional.</strong> Refresh mode for the index of the current connection (<code>SEARCH</code>, <code>STORAGE</code> or <code>ALL</code>).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">dataProcessor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Node data processor.</p>
+<p><strong>Optional.</strong> Node data processor callback, receiving the node data and returning the processed data.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph lead">
-<p>Returns duplicated node.</p>
+<p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : Duplicated node</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The duplicated node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1445,34 +1477,14 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the node</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>exists()</code> is positional. It takes a single <code>key</code> string — the path or id of the node.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>boolean</strong> : <code>true</code> if exists, <code>false</code> otherwise</p>
+<p><strong>boolean</strong> : <code>true</code> if the node exists, <code>false</code> otherwise.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -1513,7 +1525,7 @@ if (result) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>findChildren()</code> takes a single <code>FindChildrenParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1533,42 +1545,42 @@ if (result) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">parentKey</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or ID of parent to get children of</p>
+<p>Path or id of the parent to get children of.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> start index used for paging - default: 0</p>
+<p><strong>Optional.</strong> Start index used for paging. Defaults to <code>0</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> number of content to fetch, used for paging - default: 10</p>
+<p><strong>Optional.</strong> Number of nodes to fetch, used for paging. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">childOrder</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> How to order the children - default is value stored on parent</p>
+<p><strong>Optional.</strong> How to order the children. Defaults to the value stored on the parent.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">countOnly</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Optimize for count children only - default is <code>false</code></p>
+<p><strong>Optional.</strong> Optimize for counting children only. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">recursive</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Do recursive fetching of all children of children - default is <code>false</code></p>
+<p><strong>Optional.</strong> Recursively fetch all children of children. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1577,7 +1589,7 @@ if (result) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : An object with stats about the result and an array with all IDs of the children.</p>
+<p><strong>object</strong> : (<a href="#find-nodes-by-parent-result">FindNodesByParentResult</a>) Result stats and an array with the ids of the children.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1617,7 +1629,7 @@ if (result) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getVersions()</code> takes a single <code>GetVersionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1637,21 +1649,21 @@ if (result) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or ID of a node to get versions of</p>
+<p>Path or id of the node to get versions of.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cursor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Opaque cursor returned in a previous result, used to fetch the next page</p>
+<p><strong>Optional.</strong> Opaque cursor returned in a previous result, used to fetch the next page.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Number of versions to fetch - default: 10</p>
+<p><strong>Optional.</strong> Number of versions to fetch. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1660,7 +1672,7 @@ if (result) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : An object with stats about the result, the cursor for the next page (if any), and an array listing the versions.</p>
+<p><strong>object</strong> : (<a href="#get-node-versions-result">GetNodeVersionsResult</a>) Result stats, the cursor for the next page (if any), and an array of <a href="#node-version">NodeVersion</a> entries.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1716,10 +1728,7 @@ if (firstPage.cursor) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>get()</code> accepts one or multiple strings (node ids or paths), one or multiple arrays of such strings, or one or multiple objects.</p>
-</div>
-<div class="paragraph">
-<p>When passing objects, each has these properties:</p>
+<p><code>get()</code> is positional. It accepts one or more strings (node ids or paths), one or more arrays of such strings, or one or more <code>GetNodeParams</code> objects. Each <code>GetNodeParams</code> object has these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1755,7 +1764,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : The node or node array (as JSON) fetched from the repository.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a> or <code>Node[]</code>) The node, or array of nodes, fetched from the repository. Returns <code>null</code> when a single requested node is not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1799,7 +1808,7 @@ if (firstPage.cursor) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following key and value:</p>
+<p><code>getActiveVersion()</code> takes a single <code>GetActiveVersionParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1810,8 +1819,8 @@ if (firstPage.cursor) {
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -1819,7 +1828,7 @@ if (firstPage.cursor) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or ID of the node</p>
+<p>Path or id of the node.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1828,7 +1837,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : The active node version, or <code>null</code> if the node was not found.</p>
+<p><strong>object</strong> : (<a href="#node-version">NodeVersion</a>) The active node version, or <code>null</code> if the node was not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1862,7 +1871,7 @@ if (firstPage.cursor) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>getBinary()</code> takes a single <code>GetBinaryParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1873,8 +1882,8 @@ if (firstPage.cursor) {
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -1882,14 +1891,14 @@ if (firstPage.cursor) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or ID of the node</p>
+<p>Path or id of the node.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">binaryReference</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>to the binary</p>
+<p><strong>Optional.</strong> Reference to the binary.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1898,7 +1907,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>\</strong>* : Stream of the binary</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#byte-source">ByteSource</a>) Stream of the binary.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1922,7 +1931,7 @@ if (firstPage.cursor) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their value:</p>
+<p><code>getCommit()</code> takes a single <code>GetCommitParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1933,8 +1942,8 @@ if (firstPage.cursor) {
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -1942,7 +1951,7 @@ if (firstPage.cursor) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ID of the commit</p>
+<p>Id of the commit.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1951,52 +1960,8 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : Commit object</p>
+<p><strong>object</strong> : (<a href="#node-commit">NodeCommit</a>) The commit, or <code>null</code> if not found.</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Commit ID</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional commit message</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">committer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key of commit creator</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">timestamp</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Time of creation</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph lead">
 <p>Example</p>
 </div>
@@ -2029,7 +1994,7 @@ if (firstPage.cursor) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>update()</code> takes a single <code>UpdateNodeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2040,8 +2005,8 @@ if (firstPage.cursor) {
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -2049,14 +2014,14 @@ if (firstPage.cursor) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or ID of the node</p>
+<p>Path or id of the node.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Editor callback function</p>
+<p>Editor callback that receives the node and returns the modified node.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2065,7 +2030,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : The modified node</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The modified node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2106,7 +2071,7 @@ if (firstPage.cursor) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>patch()</code> takes a single <code>PatchNodeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2126,14 +2091,14 @@ if (firstPage.cursor) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id to the node</p>
+<p>Path or id of the node.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Patcher callback function</p>
+<p>Patcher callback that receives the node and returns the patched node.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2156,7 +2121,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : Patch result, with one entry in <code>branchResults</code> per branch where the node was patched.</p>
+<p><strong>object</strong> : (<a href="#patch-node-result">PatchNodeResult</a>) Patch result, with one entry in <code>branchResults</code> per branch where the node was patched.</p>
 </div>
 <div class="paragraph lead">
 <p><strong>Patchable Fields:</strong></p>
@@ -2183,37 +2148,37 @@ if (firstPage.cursor) {
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_nodeType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_nodeType</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The type definition of the node.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_indexConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_indexConfig</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>An object defining the search <a href="../storage/indexing.ahtml">index</a> configuration for this node.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_childOrder</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_childOrder</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Defines the default sort order for the node&#8217;s direct children.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">_manualOrderValue</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_manualOrderValue</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Numeric value used for manual sorting among siblings (when parent&#8217;s <code>_childOrder</code> is manual).</p>
+<p>Numeric value used for manual sorting among siblings (when the parent&#8217;s <code>_childOrder</code> is manual).</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Any data can also be patched if the name of the field does not start with an underscore (_).</p>
+<p>Any data can also be patched if the name of the field does not start with an underscore (<code>_</code>).</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -2272,7 +2237,7 @@ const patchedNode = repo.patch({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>move()</code> takes a single <code>MoveNodeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2283,8 +2248,8 @@ const patchedNode = repo.patch({
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -2292,14 +2257,14 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">source</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or id of the node to be moved or renamed</p>
+<p>Path or id of the node to be moved or renamed.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">target</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>New path or name for the node. If the target ends in slash '/', it specifies the parent path where to be moved. Otherwise it means the new desired path or name for the node.</p>
+<p>New path or name for the node. If the target ends in slash <code>/</code>, it specifies the parent path to move the node under. Otherwise it is the new desired path or name for the node.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2308,7 +2273,7 @@ const patchedNode = repo.patch({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : The moved or renamed node.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The moved or renamed node.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -2350,7 +2315,7 @@ const patchedNode = repo.patch({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>push()</code> takes a single <code>PushNodeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2361,51 +2326,51 @@ const patchedNode = repo.patch({
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">target</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Branch to push to.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Id or path to the nodes</p>
+<p><strong>Optional.</strong> Id or path of the node. Provide either <code>key</code> or <code>keys</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">keys</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Array of ids or paths to the nodes</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">target</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Branch to push to</p>
+<p><strong>Optional.</strong> Array of ids or paths of the nodes. Provide either <code>key</code> or <code>keys</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">includeChildren</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Also push children of given nodes.  Default is <code>false</code>.</p>
+<p><strong>Optional.</strong> Also push children of the given nodes. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">resolve</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Resolve dependencies before pushing, meaning that references will also be pushed.  Default is <code>true</code>.</p>
+<p><strong>Optional.</strong> Resolve dependencies before pushing, meaning that references are also pushed. Defaults to <code>true</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">exclude</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional array of ids or paths to nodes not to be pushed.  If using this, be aware that nodes need to maintain data integrity (e.g parents must be present in target).  If data integrity is not maintained with excluded nodes, they will be pushed anyway.</p>
+<p><strong>Optional.</strong> Array of ids or paths of nodes not to be pushed. If using this, be aware that nodes need to maintain data integrity (e.g. parents must be present in the target). If data integrity is not maintained with excluded nodes, they will be pushed anyway.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2414,7 +2379,7 @@ const patchedNode = repo.patch({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : PushNodeResult</p>
+<p><strong>object</strong> : (<a href="#push-nodes-result">PushNodesResult</a>) Lists the keys that were pushed and any that failed.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -2497,13 +2462,13 @@ const patchedNode = repo.patch({
 <div class="sect2">
 <h3 id="query_2"><a class="link" href="#query_2">query</a></h3>
 <div class="paragraph">
-<p>Queries nodes</p>
+<p>Queries nodes.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>query()</code> takes a single <code>QueryNodeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2520,52 +2485,59 @@ const patchedNode = repo.patch({
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Start index used for paging - default: 0</p>
+<p><strong>Optional.</strong> Start index used for paging. Defaults to <code>0</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Number of content to fetch, used for paging - default: 10</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
+<p><strong>Optional.</strong> Number of nodes to fetch, used for paging. Defaults to <code>10</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">filters</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Query filters</p>
+<p><strong>Optional.</strong> Query filters.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sort</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string/object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Sorting string or <a href="../storage/querying.ahtml#sort">DSL</a> expression. Default: '_score DESC'</p>
+<p><strong>Optional.</strong> Sorting string or <a href="../storage/querying.ahtml#sort">DSL</a> expression. Defaults to <code>_score DESC</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">aggregations</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> <a href="../storage/aggregations.ahtml">Aggregations</a> config</p>
+<p><strong>Optional.</strong> <a href="../storage/aggregations.ahtml">Aggregations</a> config.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">highlight</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> <a href="../storage/highlighting.ahtml">Highlighting</a> config</p>
+<p><strong>Optional.</strong> <a href="../storage/highlighting.ahtml">Highlighting</a> config.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">suggestions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Term suggestions config, keyed by suggestion name.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2581,7 +2553,7 @@ const patchedNode = repo.patch({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : stats, hits and if requested, aggregations</p>
+<p><strong>object</strong> : (<a href="#node-query-result">NodeQueryResult</a>) Result stats, hits and, if requested, aggregations.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -2790,39 +2762,19 @@ const patchedNode = repo.patch({
 <div class="sect2">
 <h3 id="refresh"><a class="link" href="#refresh">refresh</a></h3>
 <div class="paragraph">
-<p>Refreshes indices for the current repoConnection.  The index has two parts: search and storage.  It is possible to index both or just one of them.</p>
+<p>Refreshes indices for the current connection. The index has two parts: search and storage. It is possible to refresh both or just one of them.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mode</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ALL for both indices, SEARCH for search-index or STORAGE for storage-index.  Default is ALL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>refresh()</code> is positional. It takes an optional <code>mode</code> string: <code>ALL</code> for both indices, <code>SEARCH</code> for the search index or <code>STORAGE</code> for the storage index. Defaults to <code>ALL</code>.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>NULL</strong></p>
+<p>Nothing.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -2849,7 +2801,7 @@ const patchedNode = repo.patch({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>sort()</code> takes a single <code>SortNodeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2860,8 +2812,8 @@ const patchedNode = repo.patch({
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -2869,14 +2821,14 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path or ID of the parent node</p>
+<p>Path or id of the parent node.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">childOrder</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>New child order expression for the parent (for example <code>displayName ASC</code> or <code>_manualOrderValue DESC</code>)</p>
+<p>New child order expression for the parent (for example <code>displayName ASC</code> or <code>_manualOrderValue DESC</code>).</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2885,7 +2837,7 @@ const patchedNode = repo.patch({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : An object with the updated parent <code>node</code> and an array of <code>reorderedNodes</code> describing children whose ordering was affected.</p>
+<p><strong>object</strong> : (<a href="#sort-node-result">SortNodeResult</a>) The updated parent <code>node</code> and an array of <code>reorderedNodes</code> describing children whose ordering was affected.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2909,7 +2861,7 @@ const patchedNode = repo.patch({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>An object with the following keys and their values:</p>
+<p><code>applyPermissions()</code> takes a single <code>ApplyPermissionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2934,21 +2886,21 @@ const patchedNode = repo.patch({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#access-control-entry">AccessControlEntry</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Array of permissions to overwrite current permissions. Cannot be combined with <code>addPermissions</code> or <code>removePermissions</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">addPermissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#access-control-entry">AccessControlEntry</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Array of permissions to add. Cannot be combined with <code>permissions</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">removePermissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#access-control-entry">AccessControlEntry</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Array of permissions to remove. Cannot be combined with <code>permissions</code>.</p>
 </div></div></td>
@@ -2957,54 +2909,14 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Scope of applying permissions. <code>'SINGLE'</code> applies permissions only to the node itself. <code>'TREE'</code> applies permissions to the node and its descendants. <code>'SUBTREE'</code> applies permissions only to the node&#8217;s descendants. Default is <code>'SINGLE'</code>.</p>
+<p><strong>Optional.</strong> Scope of applying permissions. <code>SINGLE</code> applies permissions only to the node itself. <code>TREE</code> applies permissions to the node and its descendants. <code>SUBTREE</code> applies permissions only to the node&#8217;s descendants. Defaults to <code>SINGLE</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">branches</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Array of additional branches to apply permissions to. Current context branch should not be included.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Each permission entry has the following shape:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Principal key (for example <code>role:system.everyone</code> or <code>user:system:my-user</code>).</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">allow</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Permissions to allow. Possible values are <code>READ</code>, <code>CREATE</code>, <code>MODIFY</code>, <code>DELETE</code>, <code>PUBLISH</code>, <code>READ_PERMISSIONS</code>, <code>WRITE_PERMISSIONS</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">deny</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Permissions to deny.</p>
+<p><strong>Optional.</strong> Array of additional branches to apply permissions to. The current context branch should not be included.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -3013,7 +2925,7 @@ const patchedNode = repo.patch({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : An object keyed by node id, with one <code>branchResults</code> entry per branch the permissions were applied to.</p>
+<p><strong>object</strong> : (<a href="#apply-permissions-result">ApplyPermissionsResult</a>) An object keyed by node id, with one <code>branchResults</code> entry per branch the permissions were applied to.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -3125,13 +3037,12 @@ const patchedNode = repo.patch({
 </div>
 </div>
 <div class="sect1">
-<h2 id="source"><a class="link" href="#source">Source</a></h2>
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>A source definition of repositories:</p>
-</div>
+<div class="sect2">
+<h3 id="connect-params"><a class="link" href="#connect-params">ConnectParams</a></h3>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -3142,8 +3053,8 @@ const patchedNode = repo.patch({
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -3151,42 +3062,37 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">repoId</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Repository ID</p>
+<p>Repository ID.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Branch ID</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#user">User</a></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional user to execute the callback with - default is the current user. Not allowed when this source is part of a <code>multiRepoConnect</code> call.</p>
+<p>Branch ID.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Additional principals to execute the callback with</p>
+<p><strong>Optional.</strong> Additional principals to execute the connection with.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#connect-user">ConnectUser</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> User to execute the connection as. Defaults to the current user. Not allowed when this source is part of a <code>multiRepoConnect</code> call.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="user"><a class="link" href="#user">User</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>User object to use for connections:</p>
-</div>
+<div class="sect2">
+<h3 id="connect-user"><a class="link" href="#connect-user">ConnectUser</a></h3>
 <div class="paragraph lead">
-<p>Fields</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -3197,8 +3103,8 @@ const patchedNode = repo.patch({
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -3206,24 +3112,524 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">login</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>user ID of the user</p>
+<p>User id of the user.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional ID provider containing the user. By default the <code>system</code> provider is used.</p>
+<p><strong>Optional.</strong> Id provider containing the user. Defaults to the <code>system</code> provider.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="node-commit"><a class="link" href="#node-commit">NodeCommit</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Commit id.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Commit message.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">committer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Principal key of the commit creator.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">timestamp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Time of creation.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="node-version"><a class="link" href="#node-version">NodeVersion</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">versionId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Version id.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodeId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Node id.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nodePath</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Node path.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">timestamp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Time of the version.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">commitId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Id of the commit this version belongs to.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="access-control-entry"><a class="link" href="#access-control-entry">AccessControlEntry</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Principal key (for example <code>role:system.everyone</code> or <code>user:system:my-user</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Permissions to allow. Possible values are <code>READ</code>, <code>CREATE</code>, <code>MODIFY</code>, <code>DELETE</code>, <code>PUBLISH</code>, <code>READ_PERMISSIONS</code> and <code>WRITE_PERMISSIONS</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deny</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Permissions to deny. Same possible values as <code>allow</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="node-query-result"><a class="link" href="#node-query-result">NodeQueryResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Total number of nodes matching the query.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of hits returned in this result.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of hits, each with an <code>id</code> and a <code>score</code> (and optionally <code>explanation</code> and <code>highlight</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Aggregations result, when aggregations were requested.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">suggestions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Suggestions result, when suggestions were requested.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="node-multi-repo-query-result"><a class="link" href="#node-multi-repo-query-result">NodeMultiRepoQueryResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<div class="paragraph">
+<p>Same shape as <a href="#node-query-result">NodeQueryResult</a>, except each hit also carries the <code>repoId</code> and <code>branch</code> it came from.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Total number of nodes matching the query.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of hits returned in this result.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of hits, each with <code>id</code>, <code>score</code>, <code>repoId</code> and <code>branch</code> (and optionally <code>explanation</code> and <code>highlight</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Aggregations result, when aggregations were requested.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">suggestions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Suggestions result, when suggestions were requested.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="find-nodes-by-parent-result"><a class="link" href="#find-nodes-by-parent-result">FindNodesByParentResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Total number of children.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of hits returned in this result.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of hits, each with an <code>id</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="get-node-versions-result"><a class="link" href="#get-node-versions-result">GetNodeVersionsResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">total</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Total number of versions.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of hits returned in this result.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cursor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Cursor used to fetch the next page, when more results are available.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#node-version">NodeVersion</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of node versions.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="diff-branches-result"><a class="link" href="#diff-branches-result">DiffBranchesResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">diff</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of entries, each with an <code>id</code> and a <code>status</code> describing how the node differs between the branches.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="push-nodes-result"><a class="link" href="#push-nodes-result">PushNodesResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">success</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Keys of the nodes that were successfully pushed.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">failed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of entries, each with an <code>id</code> and a <code>reason</code>, for nodes that could not be pushed.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="sort-node-result"><a class="link" href="#sort-node-result">SortNodeResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">node</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>(<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The parent node after the new child order was applied.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reorderedNodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of entries, each with a <code>node</code>, describing the children whose ordering was affected.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="patch-node-result"><a class="link" href="#patch-node-result">PatchNodeResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branchResults</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Array of entries, each with a <code>branch</code> and the patched <code>node</code>, one per branch where the node was patched.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="apply-permissions-result"><a class="link" href="#apply-permissions-result">ApplyPermissionsResult</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<div class="paragraph">
+<p>An object keyed by node id. Each value has a single <code>branchResults</code> property — an array of entries, each with a <code>branch</code> and the resulting <code>permissions</code> (<a href="#access-control-entry">AccessControlEntry</a>[]) applied in that branch.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

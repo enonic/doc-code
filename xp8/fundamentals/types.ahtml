@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Portal library</title>
+<title>Types</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,45 +437,72 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Portal library</h1>
+<h1>Types</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#usage">Usage</a></li>
-<li><a href="#functions">Functions</a>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#principals_and_keys">Principals and keys</a>
 <ul class="sectlevel2">
-<li><a href="#apiurl">apiUrl</a></li>
-<li><a href="#asseturl">assetUrl</a></li>
-<li><a href="#attachmentUrl">attachmentUrl</a></li>
-<li><a href="#baseurl">baseUrl</a></li>
-<li><a href="#componenturl">componentUrl</a></li>
-<li><a href="#getcomponent">getComponent</a></li>
-<li><a href="#getcontent">getContent</a></li>
-<li><a href="#getidproviderkey">getIdProviderKey</a></li>
-<li><a href="#getmultipartform">getMultipartForm</a></li>
-<li><a href="#getmultipartitem">getMultipartItem</a></li>
-<li><a href="#getmultipartstream">getMultipartStream</a></li>
-<li><a href="#getmultiparttext">getMultipartText</a></li>
-<li><a href="#getsite">getSite</a></li>
-<li><a href="#getsiteconfig">getSiteConfig</a></li>
-<li><a href="#idproviderurl">idProviderUrl</a></li>
-<li><a href="#imageplaceholder">imagePlaceholder</a></li>
-<li><a href="#imageUrl">imageUrl</a></li>
-<li><a href="#loginurl">loginUrl</a></li>
-<li><a href="#logouturl">logoutUrl</a></li>
-<li><a href="#pageurl">pageUrl</a></li>
-<li><a href="#processhtml">processHtml</a></li>
-<li><a href="#sanitizehtml">sanitizeHtml</a></li>
-<li><a href="#serviceurl">serviceUrl</a></li>
-<li><a href="#url">url</a></li>
+<li><a href="#principal-key">PrincipalKey</a></li>
+<li><a href="#user-key">UserKey</a></li>
+<li><a href="#group-key">GroupKey</a></li>
+<li><a href="#role-key">RoleKey</a></li>
+<li><a href="#principal-type">PrincipalType</a></li>
+<li><a href="#principal">Principal</a></li>
+<li><a href="#user">User</a></li>
+<li><a href="#group">Group</a></li>
+<li><a href="#role">Role</a></li>
 </ul>
 </li>
-<li><a href="#type_definitions">Type Definitions</a>
+<li><a href="#binary_and_resources">Binary and resources</a>
 <ul class="sectlevel2">
-<li><a href="#site">Site</a></li>
-<li><a href="#site-config">SiteConfig</a></li>
-<li><a href="#multipart-form">MultipartForm</a></li>
-<li><a href="#multipart-item">MultipartItem</a></li>
+<li><a href="#byte-source">ByteSource</a></li>
+<li><a href="#resource">Resource</a></li>
+<li><a href="#resource-key">ResourceKey</a></li>
+</ul>
+</li>
+<li><a href="#content_model">Content model</a>
+<ul class="sectlevel2">
+<li><a href="#content">Content</a></li>
+<li><a href="#attachment">Attachment</a></li>
+<li><a href="#publish-info">PublishInfo</a></li>
+<li><a href="#workflow">Workflow</a></li>
+<li><a href="#workflow-state">WorkflowState</a></li>
+<li><a href="#validation-error">ValidationError</a></li>
+</ul>
+</li>
+<li><a href="#page_and_components">Page and components</a>
+<ul class="sectlevel2">
+<li><a href="#component">Component</a></li>
+<li><a href="#page-component">PageComponent</a></li>
+<li><a href="#layout-component">LayoutComponent</a></li>
+<li><a href="#part-component">PartComponent</a></li>
+<li><a href="#text-component">TextComponent</a></li>
+<li><a href="#fragment-component">FragmentComponent</a></li>
+<li><a href="#region">Region</a></li>
+</ul>
+</li>
+<li><a href="#repository_nodes">Repository nodes</a>
+<ul class="sectlevel2">
+<li><a href="#node">Node</a></li>
+</ul>
+</li>
+<li><a href="#http">HTTP</a>
+<ul class="sectlevel2">
+<li><a href="#request">Request</a></li>
+<li><a href="#response">Response</a></li>
+</ul>
+</li>
+<li><a href="#other">Other</a>
+<ul class="sectlevel2">
+<li><a href="#script-value">ScriptValue</a></li>
+</ul>
+</li>
+<li><a href="#query_and_form_types">Query and form types</a>
+<ul class="sectlevel2">
+<li><a href="#form-item">FormItem</a></li>
+<li><a href="#query-dsl">Query DSL types</a></li>
 </ul>
 </li>
 </ul>
@@ -485,49 +512,82 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>API to access functions related to rendering.</p>
+<p>The shared types that flow across the Enonic libraries</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Add the following to your <code>build.gradle</code> file:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
-  include xplibs.portal
-}</code></pre>
-</div>
+<p>This page is the canonical reference for the cross-library types.</p>
 </div>
 <div class="paragraph">
-<p>Add the <code>import</code> statement to your code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import portalLib from '/lib/xp/portal';</code></pre>
-</div>
+<p>principals, binary streams, the content object, page components, and more. They are defined once in the <code>@enonic-types/core</code> package and re-exported by the individual <code>@enonic-types/lib-*</code> packages, so the same <code>User</code>, <code>Content</code>, or <code>ByteSource</code> you receive from one library is the exact type another library accepts.</p>
 </div>
 <div class="paragraph">
-<p>You are now ready to use the API.</p>
+<p>Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <a href="fundamentals/typescript.ahtml">TypeScript</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+These are the TypeScript shapes of the runtime objects. The conceptual models behind them — the content model, the query language, form schemas — are documented in the <a href="https://developer.enonic.com/docs/cms">CMS</a> and <a href="https://developer.enonic.com/docs/platform">XP platform</a> docs, linked from the relevant types below.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
+<h2 id="principals_and_keys"><a class="link" href="#principals_and_keys">Principals and keys</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Principal keys are branded string templates — a <code>User</code> key always reads <code>user:&lt;idprovider&gt;:&lt;id&gt;</code>, a group key <code>group:&lt;idprovider&gt;:&lt;id&gt;</code>, and a role key <code>role:&lt;id&gt;</code>.</p>
+</div>
 <div class="sect2">
-<h3 id="apiurl"><a class="link" href="#apiurl">apiUrl</a></h3>
+<h3 id="principal-key"><a class="link" href="#principal-key">PrincipalKey</a></h3>
 <div class="paragraph">
-<p>Generates a URL pointing to a <a href="web/apis.ahtml">Universal API</a>. Picks the right URL form based on the calling context — a service-point under the active service when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
+<p>A union of the three key kinds: <code>UserKey | GroupKey | RoleKey</code>.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="user-key"><a class="link" href="#user-key">UserKey</a></h3>
+<div class="paragraph">
+<p>Template string <code>user:${string}:${string}</code> — e.g. <code>user:system:alice</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="group-key"><a class="link" href="#group-key">GroupKey</a></h3>
+<div class="paragraph">
+<p>Template string <code>group:${string}:${string}</code> — e.g. <code>group:system:editors</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="role-key"><a class="link" href="#role-key">RoleKey</a></h3>
+<div class="paragraph">
+<p>Template string <code>role:${string}</code> — e.g. <code>role:system.admin</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="principal-type"><a class="link" href="#principal-type">PrincipalType</a></h3>
+<div class="paragraph">
+<p>One of <code>'user'</code>, <code>'group'</code>, or <code>'role'</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="principal"><a class="link" href="#principal">Principal</a></h3>
+<div class="paragraph">
+<p>A union of the three principal objects: <code><a href="#user">User</a> | <a href="#group">Group</a> | <a href="#role">Role</a></code>. Use the <code>type</code> discriminant to tell them apart.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="user"><a class="link" href="#user">User</a></h3>
 <div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>apiUrl()</code> takes a single <code>ApiUrlParams</code> object with these properties:</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -543,278 +603,76 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 </thead>
 <tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">api</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Descriptor key in <code>&lt;app&gt;:&lt;api&gt;</code> form.</p>
-</div></div></td>
-</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative), <code>absolute</code>, or <code>websocket</code>. Defaults to <code>server</code>.</p>
+<p>Always <code>'user'</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path appended after the API segment. Accepts a string or a string array.</p>
+<p>The principal key.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Override the resolved base URL.</p>
+<p>Human-friendly name.</p>
 </div></div></td>
 </tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {apiUrl} from '/lib/xp/portal';
-
-const url = apiUrl({
-  api: 'com.example.myapp:myapi',
-  path: '/items',
-  params: {
-    id: '42'
-  }
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="asseturl"><a class="link" href="#asseturl">assetUrl</a></h3>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p><code>assetUrl</code> is deprecated and will be removed in future versions.
-<a href="https://developer.enonic.com/docs/lib-asset"><code>lib-asset</code></a> and <a href="https://developer.enonic.com/docs/lib-static"><code>lib-static</code></a> are introduced as a replacement.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>Generates URL to a static file.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>assetUrl()</code> takes a single <code>AssetUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
 <tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">login</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path to the asset.</p>
+<p>Login name.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Other application to reference to. Defaults to current application.</p>
+<p>Key of the ID provider the user belongs to.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {assetUrl} from '/lib/xp/portal';
-
-const url = assetUrl({
-  path: 'styles/main.css'
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="attachmentUrl"><a class="link" href="#attachmentUrl">attachmentUrl</a></h3>
-<div class="paragraph">
-<p>Generates URL to an attachment.</p>
-</div>
-<div class="paragraph">
-<p>If <code>name</code> is provided, XP will try to find an attachment by the unique name and give an exception if it&#8217;s not found. If <code>name</code> is empty but <code>label</code> is provided, XP will try to find an attachment with the provided label (will return the first one if several were found, or give an exception if none were found). If both <code>name</code> and <code>label</code> are empty, XP will generate attachment url only for a binary content with an attachment.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>attachmentUrl()</code> takes a single <code>AttachmentUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Id of the content with the attachment.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path to the content with the attachment.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Unique name of the attachment.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Label of the attachment. Default is <code>source</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">download</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hasPassword</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Set to <code>true</code> if the disposition header should be set to attachment. Default is <code>false</code>.</p>
+<p>Whether the user has a password set.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">email</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+<p><strong>Optional.</strong> Email address.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Whether the user is disabled.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of the project.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of the branch.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom baseUrl.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+<p><strong>Optional.</strong> ISO timestamp of the last modification.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {attachmentUrl} from '/lib/xp/portal';
-
-const url = attachmentUrl({
-  id: '1234',
-  download: true
-});</code></pre>
-</div>
-</div>
 </div>
 <div class="sect2">
-<h3 id="baseurl"><a class="link" href="#baseurl">baseUrl</a></h3>
-<div class="paragraph">
-<p>Generates a base URL.</p>
-</div>
+<h3 id="group"><a class="link" href="#group">Group</a></h3>
 <div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>baseUrl()</code> takes a single <code>BaseUrlParams</code> object with these properties:</p>
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -834,1320 +692,44 @@ const url = attachmentUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
+<p>Always <code>'group'</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#group-key">GroupKey</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The principal key.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> ID of the content.</p>
+<p>Human-friendly name.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path to the content.</p>
+<p>ISO timestamp of the last modification.</p>
 </div></div></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of the project to use for resolving the URL.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of the branch to use for resolving the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {baseUrl} from '/lib/xp/portal';
-
-const url = baseUrl({
-  type: 'server',
-  path: '/path',
-  project: 'explicit-project',
-  branch: 'explicit-branch'
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="componenturl"><a class="link" href="#componenturl">componentUrl</a></h3>
-<div class="paragraph">
-<p>Generates URL to a page component.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>componentUrl()</code> takes a single <code>ComponentUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Id to the page.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path to the page.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">component</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path to the component. If not set, the current path is set.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {componentUrl} from '/lib/xp/portal';
-
-const url = componentUrl({
-  component: 'main/0'
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getcomponent"><a class="link" href="#getcomponent">getComponent</a></h3>
-<div class="paragraph">
-<p>Returns the component in the current execution context. Meant to be called from a layout or part. Takes no arguments.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p>*object* : (&lt;&lt;fundamentals/types#component, `Component`&gt;&gt;) The current component, or `null` if there is no component in the current context.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Returns component in the current context:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getComponent} from '/lib/xp/portal';
-
-const result = getComponent();
-log.info('Current component name = %s', result.name);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
-  path: "/main/0",
-  type: "layout",
-  descriptor: "myapplication:mylayout",
-  config: {
-    a: "1"
-  },
-  regions: {
-    bottom: {
-      components: [
-        {
-          path: "/main/0/bottom/0",
-          type: "part",
-          descriptor: "myapplication:mypart",
-          config: {
-            a: "1"
-          }
-        }
-      ],
-      name: "bottom"
-    }
-  }
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getcontent"><a class="link" href="#getcontent">getContent</a></h3>
-<div class="paragraph">
-<p>Returns the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p>*object* : (&lt;&lt;fundamentals/types#content, `Content`&gt;&gt;) The current content, or `null` if there is no content in the current context.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Get content and log the result:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getContent} from '/lib/xp/portal';
-
-const result = getContent();
-log.info('Current content path = %s', result._path);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
-  _id: "123456",
-  _name: "mycontent",
-  _path: "/a/b/mycontent",
-  creator: "user:system:admin",
-  modifier: "user:system:admin",
-  createdTime: "1970-01-01T00:00:00Z",
-  modifiedTime: "1970-01-01T00:00:00Z",
-  type: "base:unstructured",
-  displayName: "My Content",
-  hasChildren: false,
-  language: "en",
-  valid: false,
-  data: {
-    a: "1"
-  },
-  x: {},
-  page: {},
-  attachments: {},
-  publish: {}
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getidproviderkey"><a class="link" href="#getidproviderkey">getIdProviderKey</a></h3>
-<div class="paragraph">
-<p>Returns the key of ID provider in the current execution context. Takes no arguments.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string|null</strong> : The current ID provider key, or <code>null</code> if no ID provider is bound to the current context.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Returns the current ID provider:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getIdProviderKey} from '/lib/xp/portal';
-
-const idProviderKey = getIdProviderKey();
-
-if (idProviderKey) {
-    log.info('Id provider key: %s', idProviderKey);
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = "myidprovider";</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getmultipartform"><a class="link" href="#getmultipartform">getMultipartForm</a></h3>
-<div class="paragraph">
-<p>Returns a JSON containing multipart items. If the request is not multipart, an empty object is returned. Takes no arguments.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p>*object* : (&lt;&lt;multipart-form, `MultipartForm`&gt;&gt;) The multipart form items.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Get the form and log the result:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartForm} from '/lib/xp/portal';
-
-const result = getMultipartForm();
-log.info('Multipart form %s', result);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
-  item1: {
-    name: "item1",
-    fileName: "item1.jpg",
-    contentType: "image/png",
-    size: 10
-  },
-  item2: [
-    {
-      name: "item2",
-      fileName: "image1.png",
-      contentType: "image/png",
-      size: 123
-    },
-    {
-      name: "item2",
-      fileName: "image2.jpg",
-      contentType: "image/jpeg",
-      size: 456
-    }
-  ]
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getmultipartitem"><a class="link" href="#getmultipartitem">getMultipartItem</a></h3>
-<div class="paragraph">
-<p>Returns a JSON containing a named multipart item. If the item does not exist, it returns <code>null</code>.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>getMultipartItem()</code> takes the <code>name</code> of the multipart item (string) and an optional zero-based <code>index</code> (number) — specify the index when several items share the same name.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p>*object* : (&lt;&lt;multipart-item, `MultipartItem`&gt;&gt;) The named multipart form item, or `null` if it does not exist.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Get item and log the result:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartItem} from '/lib/xp/portal';
-
-const result = getMultipartItem('item1');
-log.info('Multipart item %s', result);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
-  name: "item1",
-  fileName: "item1.jpg",
-  contentType: "image/png",
-  size: 10
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getmultipartstream"><a class="link" href="#getmultipartstream">getMultipartStream</a></h3>
-<div class="paragraph">
-<p>Returns a data stream for a named multipart item. If the item does not exist, it returns <code>null</code>.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>getMultipartStream()</code> takes the <code>name</code> of the multipart item (string) and an optional zero-based <code>index</code> (number) — specify the index when several items share the same name.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p>*object* : (&lt;&lt;fundamentals/types#byte-source, `ByteSource`&gt;&gt;) Stream of multipart item data, or `null` if the item does not exist.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartStream} from '/lib/xp/portal';
-
-const stream1 = getMultipartStream('item2');
-const stream2 = getMultipartStream('item2', 1);</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getmultiparttext"><a class="link" href="#getmultiparttext">getMultipartText</a></h3>
-<div class="paragraph">
-<p>Returns the multipart item data as text. If the item does not exist, it returns <code>null</code>.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>getMultipartText()</code> takes the <code>name</code> of the multipart item (string) and an optional zero-based <code>index</code> (number) — specify the index when several items share the same name.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string|null</strong> : Text for multipart item data, or <code>null</code> if the item does not exist.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartText} from '/lib/xp/portal';
-
-const text = getMultipartText('item1');</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getsite"><a class="link" href="#getsite">getSite</a></h3>
-<div class="paragraph">
-<p>Returns the parent site of the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p>*object* : (&lt;&lt;site, `Site`&gt;&gt;) The current site, or `null` if the content has no parent site.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Get site and log the result:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getSite} from '/lib/xp/portal';
-
-const result = getSite();
-log.info('Current site name = %s', result._name);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
-  _id: "100123",
-  _name: "my-content",
-  _path: "/my-content",
-  type: "base:unstructured",
-  hasChildren: false,
-  valid: false,
-  data: {
-    siteConfig: {
-      applicationKey: "myapplication",
-      config: {
-        Field: 42
-      }
-    }
-  },
-  x: {},
-  page: {},
-  attachments: {},
-  publish: {}
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getsiteconfig"><a class="link" href="#getsiteconfig">getSiteConfig</a></h3>
-<div class="paragraph">
-<p>Returns the configuration of the parent site for the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>object|null</strong> : The site configuration for the current application, or <code>null</code> if the content has no parent site.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Get site and log the result:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getSiteConfig} from '/lib/xp/portal';
-
-const result = getSiteConfig();
-log.info('Field value for the current site config = %s', result.Field);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
-  Field: 42
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="idproviderurl"><a class="link" href="#idproviderurl">idProviderUrl</a></h3>
-<div class="paragraph">
-<p>Generates URL to an ID provider.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>idProviderUrl()</code> takes a single, optional <code>IdProviderUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Key of an ID provider. If idProvider is not set, then the id provider corresponding to the current execution context will be used.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="imageplaceholder"><a class="link" href="#imageplaceholder">imagePlaceholder</a></h3>
-<div class="paragraph">
-<p>Generates URL of an image placeholder with a specified size.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>imagePlaceholder()</code> takes a single <code>ImagePlaceholderParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">width</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Width of the image in pixels.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">height</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Height of the image in pixels.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : Placeholder image URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Obtains image encoded to base64:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imagePlaceholder} from '/lib/xp/portal';
-
-const url = imagePlaceholder({
-  width: 32,
-  height: 24
-});</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAGUlEQVR42u3BAQEAAACCIP+vbkhAAQAA7wYMGAAB93LuRQAAAABJRU5ErkJggg==';</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="imageUrl"><a class="link" href="#imageUrl">imageUrl</a></h3>
-<div class="paragraph">
-<p>Generates URL to an image.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>imageUrl()</code> takes a single <code>ImageUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> ID of the image content. Either <code>id</code> or <code>path</code> is required.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path to the image. If <code>id</code> is specified, this parameter is not used.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">scale</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Options are <code>width(px)</code>, <code>height(px)</code>, <code>block(width,height)</code>, <code>square(px)</code>, <code>max(px)</code>, <code>wide(width,height)</code> and <code>full</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">quality</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Quality for JPEG images, ranges from 0 (max compression) to 100 (min compression). Default is <code>85</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">background</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Background color.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">format</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Format of the image.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">filter</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> A number of filters are available to alter the image appearance, for example, blur(3), grayscale(), rounded(5), etc.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of the project.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Name of the branch.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom baseUrl.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Obtains image url:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
-
-const url = imageUrl({
-  id: '1234',
-  scale: 'block(1024,768)',
-  filter: 'rounded(5);sharpen()'
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="loginurl"><a class="link" href="#loginurl">loginUrl</a></h3>
-<div class="paragraph">
-<p>Generates URL to the login endpoint of an ID provider.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>loginUrl()</code> takes a single, optional <code>LoginUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Id provider key. If idProvider is not set, then the id provider corresponding to the current execution context will be used.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redirect</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> The URL to redirect to after the login.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="logouturl"><a class="link" href="#logouturl">logoutUrl</a></h3>
-<div class="paragraph">
-<p>Generates URL to the logout endpoint of ID provider in the current context.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>logoutUrl()</code> takes a single, optional <code>LogoutUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redirect</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> The URL to redirect to after the logout.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="pageurl"><a class="link" href="#pageurl">pageUrl</a></h3>
-<div class="paragraph">
-<p>Generates URL to a content page.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>pageUrl()</code> takes a single <code>PageUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Id of a content. If id is set, then path is not used.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Path of a content. Relative paths are resolved based on the current context.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Project of the context.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Branch of the project for context.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Obtains page url:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {pageUrl} from '/lib/xp/portal';
-
-const url = pageUrl({
-  path: '/my/page',
-  params: {
-    a: 1,
-    b: [1, 2]
-  }
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="processhtml"><a class="link" href="#processhtml">processHtml</a></h3>
-<div id="processHtml" class="paragraph">
-<p>Resolves internal links to images and internal content items contained in an HTML text and replaces them with correct URLs.
-It will also process embedded macros.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-When outputting processed HTML in Thymeleaf, use attribute <code>data-th-utext="${processedHtml}"</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>processHtml()</code> takes a single <code>ProcessHtmlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Html value string to process.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">imageWidths</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> A comma-separated list of image widths. If this parameter is provided, all <code>&lt;img&gt;</code> tags will have an additional <code>srcset</code> attribute with image URLs generated for specified widths.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">imageSizes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Specifies the width for an image depending on browser dimensions. The value has the following format: <code>(media-condition) width</code>. Multiple sizes are comma-separated.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The processed HTML.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Process HTML:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {processHtml} from '/lib/xp/portal';
-
-const html = processHtml({
-  value: '&lt;a href="content://123" target=""&gt;Content&lt;/a&gt;' +
-         '&lt;a href="media://inline/123" target=""&gt;Inline&lt;/a&gt;' +
-         '&lt;a href="media://download/123" target=""&gt;Download&lt;/a&gt;' +
-         '&lt;img src="image://123"/&gt;',
-  imageWidths: [32, 480, 800]
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="sanitizehtml"><a class="link" href="#sanitizehtml">sanitizeHtml</a></h3>
-<div class="paragraph">
-<p>Sanitizes an HTML string by stripping all potentially unsafe tags and attributes.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-HTML sanitization can be used to protect against cross-site scripting (XSS) attacks by sanitizing any HTML code submitted by a user.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>sanitizeHtml()</code> takes the <code>html</code> string value to process.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The sanitized HTML.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Sanitizes unsafe HTML:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {sanitizeHtml} from '/lib/xp/portal';
-
-const unsafeHtml = '&lt;p&gt;&lt;a href="https://example.com/" onclick="stealCookies()"&gt;Link&lt;/a&gt;&lt;/p&gt;' +
-                 '&lt;iframe src="javascript:alert(\'XSS\');"&gt;&lt;/iframe&gt;';
-const sanitizedHtml = sanitizeHtml(unsafeHtml);</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Return value:</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = '&lt;p&gt;&lt;a href="https://example.com/"&gt;Link&lt;/a&gt;&lt;/p&gt;';</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="serviceurl"><a class="link" href="#serviceurl">serviceUrl</a></h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-HTTP services are deprecated in XP 8 in favor of <a href="web/apis.ahtml">Universal APIs</a>. Use <a href="#apiurl">apiUrl</a> for new code; <code>serviceUrl()</code> is retained for backward compatibility with legacy services in <code>src/main/resources/services/</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Generates URL to a service.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>serviceUrl()</code> takes a single <code>ServiceUrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the service.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">application</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Other application to reference to. Default is current application.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {serviceUrl} from '/lib/xp/portal';
-
-const url = serviceUrl({
-  service: 'myservice',
-  params: {
-    a: 1,
-    b: 2
-  }
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="url"><a class="link" href="#url">url</a></h3>
-<div class="paragraph">
-<p>Generates URL to a resource.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>url()</code> takes a single <code>UrlParams</code> object with these properties:</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Path to the resource. If a string is provided, it is treated as a full path. If an array of strings is provided, each element is treated as a path segment and will be joined using <code>/</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The generated URL.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {url as buildUrl} from '/lib/xp/portal';
-
-const url = buildUrl({
-  path: '/site/master/mysite',
-  params: {
-    a: 1,
-    b: 2
-  }
-});</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="site"><a class="link" href="#site">Site</a></h3>
-<div class="paragraph">
-<p>A site is a specialized <a href="fundamentals/types.ahtml#content"><code>Content</code></a> of type <code>portal:site</code>. In addition to the standard content properties, its <code>data</code> carries the site&#8217;s app configurations.</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Site description.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">siteConfig</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#site-config">SiteConfig</a> | <a href="#site-config">SiteConfig</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Configuration for one or more applications enabled on the site. A single object when one application is configured, otherwise an array.</p>
+<p><strong>Optional.</strong> Group description.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="site-config"><a class="link" href="#site-config">SiteConfig</a></h3>
-<div class="paragraph">
-<p>Configuration entry for a single application enabled on a site.</p>
+<h3 id="role"><a class="link" href="#role">Role</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2164,30 +746,401 @@ const url = buildUrl({
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">applicationKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key of the application this configuration applies to.</p>
+<p>Always <code>'role'</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#role-key">RoleKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The application&#8217;s site configuration, shaped by its site descriptor form.</p>
+<p>The principal key.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Human-friendly name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>ISO timestamp of the last modification.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Role description.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="binary_and_resources"><a class="link" href="#binary_and_resources">Binary and resources</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="byte-source"><a class="link" href="#byte-source">ByteSource</a></h3>
+<div class="paragraph">
+<p>An opaque handle to a binary stream. You don&#8217;t read its fields directly — you pass it to library functions (for example <code>io.readText</code>, <code>io.getSize</code>, attachment and media APIs) that consume or produce binary data. Obtain one from <code><a href="libraries/lib-io.ahtml">lib-io</a></code> (<code>newStream</code>, a resource stream) or from content attachments.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resource"><a class="link" href="#resource">Resource</a></h3>
+<div class="paragraph">
+<p>A handle to an application resource on the classpath, returned by <code>io.getResource</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exists()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether the resource exists.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getSize()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Size in bytes.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getTimestamp()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Last-modified time, in milliseconds since the epoch.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getStream()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The resource&#8217;s binary stream.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="multipart-form"><a class="link" href="#multipart-form">MultipartForm</a></h3>
+<h3 id="resource-key"><a class="link" href="#resource-key">ResourceKey</a></h3>
 <div class="paragraph">
-<p>A JSON object keyed by item name, where each value is a <a href="#multipart-item">MultipartItem</a> or an array of them when several items share the same name.</p>
+<p>Identifies an application resource by application key and path.</p>
 </div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getApplicationKey()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The owning application key.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getPath()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Resource path within the application.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getUri()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Full resource URI.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getName()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Resource name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getExtension()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>File extension.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">isRoot()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether the key points at the application root.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="content_model"><a class="link" href="#content_model">Content model</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="content"><a class="link" href="#content">Content</a></h3>
+<div class="paragraph">
+<p>The object returned by the content APIs. The conceptual content model is documented in the <a href="https://developer.enonic.com/docs/cms">CMS docs</a>; this is its runtime shape.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">_id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unique content id.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">_name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Content name (unique among siblings).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">_path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Full content path.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Content type name (e.g. <code>portal:site</code>, <code>com.myapp:article</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Human-friendly name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The content&#8217;s data, shaped by its content type.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Extra data (mixins / x-data), keyed by application.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attachments</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Map of attachment name to <a href="#attachment">Attachment</a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">valid</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether the content currently validates against its type.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hasChildren</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether the content has child items.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">creator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Principal that created the content.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">createdTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>ISO creation timestamp.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">owner</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Principal key of the owner.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Principal that last modified the content.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> ISO timestamp of the last modification.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">language</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Language tag of the content&#8217;s locale.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">childOrder</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Sort order of children.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#component">Component</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The page component tree (absent on fragments).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fragment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#component">Component</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The fragment component (only on <code>portal:fragment</code> content).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publish</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#publish-info">PublishInfo</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Publishing schedule and history.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#workflow">Workflow</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Workflow state.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">validationErrors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#validation-error">ValidationError</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Validation errors, when the content is invalid.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inherit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Which aspects are inherited in a layered project (<code>CONTENT</code>, <code>PARENT</code>, <code>NAME</code>, <code>SORT</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">originProject</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Project the content was inherited from.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">variantOf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Id of the content this is a variant of.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">_score</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Relevance score, present on query hits.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">_sort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Sort values, present on sorted query hits.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
-<h3 id="multipart-item"><a class="link" href="#multipart-item">MultipartItem</a></h3>
+<h3 id="attachment"><a class="link" href="#attachment">Attachment</a></h3>
+<div class="paragraph">
+<p>A binary attached to a content item.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -2206,32 +1159,676 @@ const url = buildUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of the multipart item.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fileName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Original file name of the uploaded item.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">contentType</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>MIME content type of the item.</p>
+<p>Attachment name (unique within the content).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">size</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Size of the item in bytes.</p>
+<p>Size in bytes.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mimeType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Media type.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Attachment label.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sha512</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> SHA-512 hash of the binary.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="publish-info"><a class="link" href="#publish-info">PublishInfo</a></h3>
+<div class="paragraph">
+<p>The publishing schedule and history of a content item. All fields are ISO-8601 timestamps.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">from</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Time from which the content is published.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">to</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Time after which the content is no longer published.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">first</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Time the content was first published.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="workflow"><a class="link" href="#workflow">Workflow</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#workflow-state">WorkflowState</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The current workflow state.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="workflow-state"><a class="link" href="#workflow-state">WorkflowState</a></h3>
+<div class="paragraph">
+<p>One of <code>'IN_PROGRESS'</code>, <code>'PENDING_APPROVAL'</code>, <code>'REJECTED'</code>, or <code>'READY'</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="validation-error"><a class="link" href="#validation-error">ValidationError</a></h3>
+<div class="paragraph">
+<p>Describes a single validation failure on a content item.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">errorCode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The error code: <code>{ applicationKey: string, code: string }</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string | null</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A static, human-readable error message.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">i18n</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string | null</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The i18n localization key for the message.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">args</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">array</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Values substituted into the localized message.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="page_and_components"><a class="link" href="#page_and_components">Page and components</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A content&#8217;s <code>page</code> (and a fragment&#8217;s <code>fragment</code>) is a tree of components. Every component carries a <code>type</code> discriminant — one of <code>'page'</code>, <code>'layout'</code>, <code>'part'</code>, <code>'text'</code>, or <code>'fragment'</code>. There is no separate <code>Page</code> type: the page-level node is a <a href="#page-component">PageComponent</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="component"><a class="link" href="#component">Component</a></h3>
+<div class="paragraph">
+<p>A union of the five component kinds, discriminated by <code>type</code>:
+<code><a href="#page-component">PageComponent</a> | <a href="#layout-component">LayoutComponent</a> | <a href="#part-component">PartComponent</a> | <a href="#text-component">TextComponent</a> | <a href="#fragment-component">FragmentComponent</a></code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="page-component"><a class="link" href="#page-component">PageComponent</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Always <code>'page'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Descriptor key of the page component (e.g. <code>com.myapp:main</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The component&#8217;s configuration, shaped by the descriptor.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">regions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Map of region name to <a href="#region">Region</a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Component path; always <code>/</code> for the page root.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">template</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Page template key, when the page uses a template.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="layout-component"><a class="link" href="#layout-component">LayoutComponent</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Always <code>'layout'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Descriptor key of the layout.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The component&#8217;s configuration, shaped by the descriptor.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">regions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Map of region name to <a href="#region">Region</a> nested within the layout.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Component path within the page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="part-component"><a class="link" href="#part-component">PartComponent</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Always <code>'part'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Descriptor key of the part.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The component&#8217;s configuration, shaped by the descriptor.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Component path within the page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="text-component"><a class="link" href="#text-component">TextComponent</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Always <code>'text'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">text</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The text (HTML) content.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Component path within the page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="fragment-component"><a class="link" href="#fragment-component">FragmentComponent</a></h3>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Always <code>'fragment'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fragment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Content id of the fragment being referenced.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Component path within the page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="region"><a class="link" href="#region">Region</a></h3>
+<div class="paragraph">
+<p>A named slot holding an ordered list of components.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Region name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">components</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#component">Component</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The components placed in the region, in order.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="repository_nodes"><a class="link" href="#repository_nodes">Repository nodes</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="node"><a class="link" href="#node">Node</a></h3>
+<div class="paragraph">
+<p>A stored repository node, as returned by the <code>lib-node</code> connection methods (<code>create</code>, <code>get</code>, <code>modify</code>, <code>move</code>, …). A node is its system properties merged with the caller&#8217;s own data: every non-underscore property is application data, and the underscore-prefixed system properties are:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Generated, unique node id.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Node name, unique among its siblings.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Full path to the node.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_childOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Child order expression (for example, <code>_ts DESC</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_manualOrderValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Numeric value used when siblings are ordered manually.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_nodeType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Node type; <code>data</code> for ordinary nodes.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_permissions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Access-control entries (<code>principal</code>, <code>allow</code>, <code>deny</code>) for the node.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_indexConfig</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Index configuration controlling how the node&#8217;s data is indexed.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_ts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Timestamp of the node&#8217;s current version, as an ISO-8601 instant.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_versionKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Key of the node&#8217;s current version.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>All other properties are the node&#8217;s own data. See the <a href="https://developer.enonic.com/docs/platform">XP platform node API</a> for the full model.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="http"><a class="link" href="#http">HTTP</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="request"><a class="link" href="#request">Request</a></h3>
+<div class="paragraph">
+<p>The object passed to an HTTP function (<code>GET</code>, <code>POST</code>, filters, error handlers). Its fields — <code>method</code>, <code>path</code>, <code>params</code>, <code>headers</code>, <code>cookies</code>, <code>body</code>, and the rest — are documented in depth in <a href="web.ahtml">Web</a>, the canonical home for the request/response model.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="response"><a class="link" href="#response">Response</a></h3>
+<div class="paragraph">
+<p>The object an HTTP function returns — <code>status</code>, <code>body</code>, <code>contentType</code>, <code>headers</code>, <code>cookies</code>, <code>pageContributions</code>, <code>redirect</code>, and more. All fields are optional. See <a href="web.ahtml">Web</a> for the full model and examples.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="other"><a class="link" href="#other">Other</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="script-value"><a class="link" href="#script-value">ScriptValue</a></h3>
+<div class="paragraph">
+<p>A lazy wrapper around a value crossing the Java/JavaScript boundary — used by APIs that accept arbitrary caller data (for example audit-log data, task config). Rather than fields, it exposes inspection methods: <code>isArray()</code>, <code>isObject()</code>, <code>isValue()</code>, <code>isFunction()</code>, <code>getValue()</code>, <code>getKeys()</code>, <code>hasMember(key)</code>, <code>getMember(key)</code>, <code>getArray()</code>, <code>getMap()</code>, <code>getList()</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="query_and_form_types"><a class="link" href="#query_and_form_types">Query and form types</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="form-item"><a class="link" href="#form-item">FormItem</a></h3>
+<div class="paragraph">
+<p>A single item in a content type, mixin, or form-fragment schema. <code>FormItem</code> is a union discriminated by <code>formItemType</code>, with five kinds:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 99%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">formItemType</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Input</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A data-entry field. Properties: <code>name</code>, <code>label</code>, <code>inputType</code> (names the editor — <code>TextLine</code>, <code>HtmlArea</code>, <code>ContentSelector</code>, …), <code>occurrences</code> (<code>{ minimum, maximum }</code>), <code>helpText</code>, <code>validationRegexp</code>, <code>default</code>, <code>config</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ItemSet</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A repeatable group of nested <code>items</code> (<code>FormItem[]</code>). Properties: <code>name</code>, <code>label</code>, <code>occurrences</code>, <code>items</code>, plus <code>helpText</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Layout</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A visual grouping that carries no data of its own. Properties: <code>name</code>, <code>label</code>, <code>items</code> (<code>FormItem[]</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OptionSet</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A set of selectable <code>options</code>, each with its own nested <code>items</code>. Properties: <code>name</code>, <code>label</code>, <code>occurrences</code>, <code>selection</code> (<code>{ minimum, maximum }</code>), <code>options</code>, <code>helpText</code>, <code>expanded</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FormFragment</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A reference to a reusable form fragment. Property: <code>name</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Every kind has a <code>name</code> and a <code>label</code>. For the full per-<code>inputType</code> configuration, see the <a href="https://developer.enonic.com/docs/cms">CMS schema docs</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="query-dsl"><a class="link" href="#query-dsl">Query DSL types</a></h3>
+<div class="paragraph">
+<p><code>QueryDsl</code>, <code>SortDsl</code>, <code>Filter</code>, <code>Aggregations</code>, and <code>Highlight</code> model the query DSL. They are documented with the storage layer rather than duplicated here — see the <a href="https://developer.enonic.com/docs/platform/stable/storage">XP storage and querying docs</a> and <a href="storage/querying.ahtml">Querying</a>.</p>
+</div>
 </div>
 </div>
 </div>

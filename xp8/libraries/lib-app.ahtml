@@ -508,7 +508,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>get()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>get()</code> takes a single <code>GetApplicationParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -630,7 +630,7 @@ const apps = list();</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>getDescriptor()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>getDescriptor()</code> takes a single <code>GetApplicationDescriptorParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -677,6 +677,7 @@ const descriptor = getDescriptor({key: 'my-app-key'});</code></pre>
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
     key: 'my-app',
     description: 'my app description',
+    descriptionI18nKey: 'myapp.description',
     title: 'My app',
     titleI18nKey: 'myapp.title',
     vendorName: 'vendor name',
@@ -712,7 +713,7 @@ This function requires the Schema Admin role. It means that user role in the cur
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>createVirtualApplication()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>createVirtualApplication()</code> takes a single <code>CreateVirtualApplicationParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -778,7 +779,7 @@ This function requires the Schema Admin role. It means that user role in the cur
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>deleteVirtualApplication()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>deleteVirtualApplication()</code> takes a single <code>DeleteVirtualApplicationParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -844,7 +845,7 @@ This function requires the Schema Admin role. It means that user role in the cur
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>getApplicationMode()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>getApplicationMode()</code> takes a single <code>GetApplicationModeParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1042,6 +1043,13 @@ const result = getApplicationMode({
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">descriptionI18nKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>i18n key for the application description. May be <code>null</code></p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">title</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -1113,7 +1121,7 @@ const result = getApplicationMode({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ByteSource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Icon binary data, as a stream that can be read with <code>lib-io</code></p>
 </div></div></td>
@@ -1140,7 +1148,7 @@ const result = getApplicationMode({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

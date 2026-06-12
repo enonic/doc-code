@@ -455,6 +455,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#modify">modify</a></li>
 </ul>
 </li>
+<li><a href="#type_definitions">Type Definitions</a>
+<ul class="sectlevel2">
+<li><a href="#shared-map">SharedMap</a></li>
+<li><a href="#shared-map-value-type">SharedMapValueType</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -515,34 +521,14 @@ Due to distributed nature of <code>SharedMap</code> not all value types can be u
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mapId</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Map identifier.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>getMap()</code> takes a single positional argument: <code>mapId</code> (string) — the map identifier.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>SharedMap</strong> : An instance of <code>SharedMap</code> bound to the given identifier.</p>
+<p><strong><a href="#shared-map">SharedMap</a></strong> : An instance of <code>SharedMap</code> bound to the given identifier.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -565,6 +551,9 @@ const sharedMap = getMap('mapId');</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
+<div class="paragraph">
+<p><code>set()</code> takes a single <code>SetParams</code> object with these properties:</p>
+</div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -574,7 +563,7 @@ const sharedMap = getMap('mapId');</code></pre>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Type</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -588,7 +577,7 @@ const sharedMap = getMap('mapId');</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string|number|boolean|JSON|null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#shared-map-value-type">SharedMapValueType</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Value of the entry. Passing <code>null</code> removes the existing entry.</p>
 </div></div></td>
@@ -597,7 +586,7 @@ const sharedMap = getMap('mapId');</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ttlSeconds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional. Maximum time (in seconds) for this entry to remain in the map. <code>0</code> means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.</p>
+<p><strong>Optional.</strong> Maximum time (in seconds) for this entry to remain in the map. <code>0</code> means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -624,34 +613,14 @@ sharedMap.set({
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The key whose associated value is to be returned.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>get()</code> takes a single positional argument: <code>key</code> (string) — the key whose associated value is to be returned.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>string\|number\|boolean\|JSON\|null</strong> : The value mapped to the given key, or <code>null</code> if no mapping exists.</p>
+<p><strong><a href="#shared-map-value-type">SharedMapValueType</a></strong> : The value mapped to the given key, or <code>null</code> if no mapping exists.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -671,29 +640,9 @@ const value = sharedMap.get('key');</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The key whose associated value is to be removed.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>delete()</code> takes a single positional argument: <code>key</code> (string) — the key whose associated entry is to be removed.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">import gridLib from '/lib/xp/grid';
@@ -712,6 +661,9 @@ sharedMap.delete('key');</code></pre>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
+<div class="paragraph">
+<p><code>modify()</code> takes a single <code>ModifyParams</code> object with these properties:</p>
+</div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -721,7 +673,7 @@ sharedMap.delete('key');</code></pre>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Type</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -744,7 +696,7 @@ sharedMap.delete('key');</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ttlSeconds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Optional. Maximum time (in seconds) for this entry to remain in the map. <code>0</code> means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.</p>
+<p><strong>Optional.</strong> Maximum time (in seconds) for this entry to remain in the map. <code>0</code> means infinite; a negative value means the default TTL of the map provider (for instance, Hazelcast) or infinite if the provider has no own TTL setting.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -753,7 +705,7 @@ sharedMap.delete('key');</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>string\|number\|boolean\|JSON\|null</strong> : The new value mapped to the key, or <code>null</code> if the entry was removed (because <code>func</code> returned <code>null</code>).</p>
+<p><strong><a href="#shared-map-value-type">SharedMapValueType</a></strong> : The new value mapped to the key, or <code>null</code> if the entry was removed (because <code>func</code> returned <code>null</code>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -771,10 +723,45 @@ const newValue = sharedMap.modify({
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="shared-map"><a class="link" href="#shared-map">SharedMap</a></h3>
+<div class="paragraph lead">
+<p>Type</p>
+</div>
+<div class="paragraph">
+<p><strong>interface</strong></p>
+</div>
+<div class="paragraph lead">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p>A typed key-value store shared across all applications and cluster nodes. Obtain an instance via <code>getMap()</code>. The generic type parameter <code>Map</code> constrains which keys and value types are valid for the instance.</p>
+</div>
+<div class="paragraph">
+<p>Methods: <code>get()</code>, <code>set()</code>, <code>delete()</code>, <code>modify()</code> — documented above.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="shared-map-value-type"><a class="link" href="#shared-map-value-type">SharedMapValueType</a></h3>
+<div class="paragraph lead">
+<p>Type</p>
+</div>
+<div class="paragraph">
+<p><code>string | number | boolean | object | null</code></p>
+</div>
+<div class="paragraph">
+<p>The union of all value types that a <code>SharedMap</code> entry may hold.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

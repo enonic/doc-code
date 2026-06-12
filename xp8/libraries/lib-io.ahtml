@@ -496,39 +496,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="getmimetype"><a class="link" href="#getmimetype">getMimeType</a></h3>
 <div class="paragraph">
-<p>Returns the mime-type from a name or extension.</p>
+<p>Returns the mime-type from a file name or extension.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of file or extension</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single <code>name</code> string — the file name or extension to look up.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>string</strong> : mime-type from a name or extension.</p>
+<p><strong>string</strong> : The mime-type for the given name or extension.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -546,39 +526,19 @@ log.info('Mime type is %s', type);</code></pre>
 <div class="sect2">
 <h3 id="getresource"><a class="link" href="#getresource">getResource</a></h3>
 <div class="paragraph">
-<p>Looks up a resource.</p>
+<p>Looks up a resource on the classpath.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | ResourceKey</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Resource key to look up</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single <code>key</code> argument — a string path or a <a href="fundamentals/types.ahtml#resource-key">ResourceKey</a> identifying the resource.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Resource</strong> : Resource reference exposing <code>exists()</code>, <code>getSize()</code>, <code>getTimestamp()</code>, and <code>getStream()</code>.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#resource"><code>Resource</code></a>) A resource handle exposing <code>exists()</code>, <code>getSize()</code>, <code>getTimestamp()</code>, and <code>getStream()</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -610,34 +570,14 @@ if (res2.exists()) {
 <div class="sect2">
 <h3 id="getsize"><a class="link" href="#getsize">getSize</a></h3>
 <div class="paragraph">
-<p>Returns the size of a stream.</p>
+<p>Returns the size of a stream in bytes.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ByteSource</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Stream to get size of</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single <code>stream</code> argument — a <a href="fundamentals/types.ahtml#byte-source">ByteSource</a> to measure.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -660,39 +600,19 @@ log.info('Stream size is %s bytes', size);</code></pre>
 <div class="sect2">
 <h3 id="newstream"><a class="link" href="#newstream">newStream</a></h3>
 <div class="paragraph">
-<p>Returns a new stream from a string.</p>
+<p>Creates a new stream from a string.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">text</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>String to create a stream of</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single <code>text</code> string — the text to encode as a UTF-8 byte stream.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>ByteSource</strong> : A new stream containing the UTF-8 bytes of the input string.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#byte-source"><code>ByteSource</code></a>) A new stream containing the UTF-8 bytes of the input string.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -709,41 +629,14 @@ const stream = newStream('Hello World');</code></pre>
 <div class="sect2">
 <h3 id="processlines"><a class="link" href="#processlines">processLines</a></h3>
 <div class="paragraph">
-<p>Process lines from a stream.</p>
+<p>Reads a stream line by line, invoking a callback for each line.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ByteSource</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Stream to read lines from</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">func</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(line: string) &#8658; void</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Callback function called for each line</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes two positional arguments: a <code>stream</code> (<a href="fundamentals/types.ahtml#byte-source">ByteSource</a>) to read from, and a <code>func</code> callback <code>(line: string) &#8658; void</code> called once per line.</p>
+</div>
 <div class="paragraph lead">
 <p>Example</p>
 </div>
@@ -764,39 +657,19 @@ processLines(stream, (line) =&gt; {
 <div class="sect2">
 <h3 id="readlines"><a class="link" href="#readlines">readLines</a></h3>
 <div class="paragraph">
-<p>Reads lines from a stream.</p>
+<p>Reads all lines from a stream and returns them as an array.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ByteSource</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Stream to read lines from</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single <code>stream</code> argument — a <a href="fundamentals/types.ahtml#byte-source">ByteSource</a> to read from.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>string[]</strong> : Lines as an array.</p>
+<p><strong>string[]</strong> : Lines read from the stream.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -814,34 +687,14 @@ log.info('Num lines: %s', lines.length);</code></pre>
 <div class="sect2">
 <h3 id="readtext"><a class="link" href="#readtext">readText</a></h3>
 <div class="paragraph">
-<p>Reads text from a stream.</p>
+<p>Reads the full text content of a stream.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ByteSource</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Stream to read text from</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single <code>stream</code> argument — a <a href="fundamentals/types.ahtml#byte-source">ByteSource</a> to read from.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -866,7 +719,7 @@ log.info('Text: %s', text);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

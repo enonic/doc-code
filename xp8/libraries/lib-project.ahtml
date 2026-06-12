@@ -457,7 +457,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
+<li><a href="#project">Project</a></li>
 <li><a href="#site-config">SiteConfig</a></li>
+<li><a href="#project-permission">ProjectPermission</a></li>
 <li><a href="#project-permissions">ProjectPermissions</a></li>
 </ul>
 </li>
@@ -530,20 +532,20 @@ You can read about project permissions in the dedicated <a href="https://develop
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p><code>addPermissions()</code> takes a single <code>AddProjectPermissionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
-<col style="width: 44%;">
-<col style="width: 55%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -556,9 +558,9 @@ You can read about project permissions in the dedicated <a href="https://develop
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permissions">ProjectPermissions</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permission">ProjectPermission</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Project permissions to add. 1 to 5 properties where key is role id and value is an array of principals.</p>
+<p><strong>Optional.</strong> Project permissions to add. Keys are role ids (<code>owner</code>, <code>editor</code>, <code>author</code>, <code>contributor</code>, <code>viewer</code>); values are arrays of principal keys.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -567,7 +569,7 @@ You can read about project permissions in the dedicated <a href="https://develop
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object</strong> : All current project permissions.</p>
+<p><strong>object</strong> : (<a href="#project-permissions"><code>ProjectPermissions</code></a>) All current project permissions, or <code>null</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -620,11 +622,8 @@ Only <code>system.admin</code> and <code>cms.admin</code> roles have permissions
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
 <div class="paragraph">
-<p><code>create()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>create()</code> takes a single <code>CreateProjectParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -652,6 +651,13 @@ Only <code>system.admin</code> and <code>cms.admin</code> roles have permissions
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Project display name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publicRead</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>true</code> to grant READ permissions to <code>system.everyone</code>, <code>false</code> otherwise.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -684,16 +690,9 @@ Only <code>system.admin</code> and <code>cms.admin</code> roles have permissions
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permissions">ProjectPermissions</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permission">ProjectPermission</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Project permissions. 1 to 5 properties where key is role id and value is an array of principals.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">publicRead</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code> to grant READ permissions to <code>system.everyone</code>, <code>false</code> otherwise.</p>
+<p><strong>Optional.</strong> Project permissions. Keys are role ids; values are arrays of principal keys.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -702,7 +701,7 @@ Only <code>system.admin</code> and <code>cms.admin</code> roles have permissions
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object</strong> : Project object.</p>
+<p><strong>object</strong> : (<a href="#project"><code>Project</code></a>) The created project.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -829,8 +828,8 @@ To delete a project, user must have either <code>system.admin</code> or <code>cm
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p><code>deleteProject()</code> takes a single <code>DeleteProjectParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -841,8 +840,8 @@ To delete a project, user must have either <code>system.admin</code> or <code>cm
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -898,8 +897,8 @@ To access a project, user must have sufficient permissions for this project, or 
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p><code>get()</code> takes a single <code>GetProjectParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -910,8 +909,8 @@ To access a project, user must have sufficient permissions for this project, or 
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -928,7 +927,7 @@ To access a project, user must have sufficient permissions for this project, or 
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object</strong> : Content Project object or <code>null</code> if not found.</p>
+<p><strong>object</strong> : (<a href="#project"><code>Project</code></a>) The project, or <code>null</code> if not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -981,11 +980,14 @@ Users with <code>system.admin</code> or <code>cms.admin</code> roles will get th
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Takes no arguments.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object[]</strong> : Array of Content Project objects.</p>
+<p><strong>object[]</strong> : (<a href="#project"><code>Project[]</code></a>) Array of Content Project objects.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1041,8 +1043,8 @@ To modify a project, user must have <code>Owner</code> permissions for this proj
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p><code>modify()</code> takes a single <code>ModifyProjectParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1062,26 +1064,23 @@ To modify a project, user must have <code>Owner</code> permissions for this proj
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Unique project id (alpha-numeric characters and hyphens allowed).</p>
+<p>Unique project id (alphanumeric characters and hyphens allowed).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Function</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Function that receives the editable project, mutates fields, and returns it.</p>
+<p>Editor callback that receives the current project (a <code>Project</code> merged with <code>EditableProject</code>), mutates fields, and returns it.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>The editor&#8217;s input has the same shape as a <code>Project</code> plus the editable fields <code>displayName</code>, <code>description</code>, <code>language</code>, and <code>siteConfig</code>.</p>
-</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object</strong> : Modified project object.</p>
+<p><strong>object</strong> : (<a href="#project"><code>Project</code></a>) The modified project.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1155,8 +1154,8 @@ To modify READ access, user must have <code>Owner</code> permissions for the pro
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p><code>setPublicRead()</code> takes a single <code>SetProjectPublicReadParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1176,7 +1175,7 @@ To modify READ access, user must have <code>Owner</code> permissions for the pro
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Unique project id (alpha-numeric characters and hyphens allowed).</p>
+<p>Unique project id (alphanumeric characters and hyphens allowed).</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1232,11 +1231,8 @@ To remove permissions, user must have <code>Owner</code> permissions for the pro
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
 <div class="paragraph">
-<p><code>removePermissions()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>removePermissions()</code> takes a single <code>RemoveProjectPermissionsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1256,14 +1252,14 @@ To remove permissions, user must have <code>Owner</code> permissions for the pro
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Unique project id (alpha-numeric characters and hyphens allowed).</p>
+<p>Unique project id (alphanumeric characters and hyphens allowed).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permissions">ProjectPermissions</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permission">ProjectPermission</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Project permissions to delete. 1 to 5 properties where key is role id and value is an array of principals.</p>
+<p><strong>Optional.</strong> Project permissions to remove. Keys are role ids; values are arrays of principal keys to remove from that role.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1272,10 +1268,10 @@ To remove permissions, user must have <code>Owner</code> permissions for the pro
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object</strong> : All current project permissions.</p>
+<p><strong>object</strong> : (<a href="#project-permissions"><code>ProjectPermissions</code></a>) All current project permissions after removal, or <code>null</code>.</p>
 </div>
 <div class="listingblock">
-<div class="title">Adds and then removes permissions from an existing content project</div>
+<div class="title">Add and then remove permissions from an existing content project</div>
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">import {addPermissions,removePermissions} from '/lib/xp/project';
 
@@ -1328,8 +1324,8 @@ User must be a member of one of the project roles, or either <code>system.admin<
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p><code>getAvailableApplications()</code> takes a single <code>GetAvailableApplicationsParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1340,8 +1336,8 @@ User must be a member of one of the project roles, or either <code>system.admin<
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -1386,15 +1382,90 @@ const project = getAvailableApplications({
 <h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="project"><a class="link" href="#project">Project</a></h3>
+<div class="paragraph">
+<p>A Content Project object, as returned by <code>create()</code>, <code>get()</code>, <code>list()</code>, and <code>modify()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unique project id.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">displayName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Project display name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publicRead</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether all content in the project is publicly readable.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Parent project ids. Empty array when the project is not a Content Layer.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Project description.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">language</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Default project language.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">siteConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#site-config">SiteConfig</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Applications assigned to the project, with optional configurations.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permission">ProjectPermission</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Project role-to-principals mapping.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="site-config"><a class="link" href="#site-config">SiteConfig</a></h3>
 <div class="paragraph">
 <p>An application assignment, with optional configuration.</p>
-</div>
-<div class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
 </div>
 <div class="paragraph lead">
 <p>Properties</p>
@@ -1424,22 +1495,22 @@ const project = getAvailableApplications({
 <td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Application config json.</p>
+<p><strong>Optional.</strong> Application configuration object.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
+<h3 id="project-permission"><a class="link" href="#project-permission">ProjectPermission</a></h3>
+<div class="paragraph">
+<p>A partial mapping of project role ids to arrays of principal keys. Keys are one of <code>owner</code>, <code>editor</code>, <code>author</code>, <code>contributor</code>, or <code>viewer</code>; values are arrays of principal key strings (e.g. <code>user:mystore:alice</code>).</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="project-permissions"><a class="link" href="#project-permissions">ProjectPermissions</a></h3>
 <div class="paragraph">
-<p>Project permissions, expressed as 1 to 5 properties where each key is a role id and the value is an array of principals.</p>
-</div>
-<div class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
+<p>The object returned by <code>addPermissions()</code> and <code>removePermissions()</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Properties</p>
@@ -1459,17 +1530,10 @@ const project = getAvailableApplications({
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">role</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">permissions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#project-permission">ProjectPermission</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Role id (one of <code>owner</code>, <code>editor</code>, <code>author</code>, <code>contributor</code>, <code>viewer</code>).</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Array of principals.</p>
+<p>Current role-to-principals mapping for the project.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1480,7 +1544,7 @@ const project = getAvailableApplications({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

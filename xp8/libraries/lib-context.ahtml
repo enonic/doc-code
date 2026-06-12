@@ -450,8 +450,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
-<li><a href="#getcontext">GetContext</a></li>
-<li><a href="#runcontext">RunContext</a></li>
+<li><a href="#Context">Context</a></li>
+<li><a href="#ContextParams">ContextParams</a></li>
+<li><a href="#AuthInfo">AuthInfo</a></li>
+<li><a href="#ContextUserParams">ContextUserParams</a></li>
+<li><a href="#ContextAttributes">ContextAttributes</a></li>
 </ul>
 </li>
 </ul>
@@ -503,13 +506,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>None</p>
+<p><code>get()</code> takes no arguments.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="#getcontext"><code>Context</code></a>) The current context. The <code>attributes</code> field is always present (possibly empty); <code>branch</code>, <code>repository</code>, and <code>authInfo</code> are present when set on the calling context.</p>
+<p><strong>object</strong> : (<a href="#Context"><code>Context</code></a>) The current context. The <code>attributes</code> field is always present (possibly empty); <code>branch</code>, <code>repository</code>, and <code>authInfo</code> are present when set on the calling context.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -569,36 +572,9 @@ Commonly used when accessing repositories, or to override the current user&#8217
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a href="#runcontext"><code>ContextParams</code></a> to be used for the scope of the callback function. Any field omitted is inherited from the current context.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">callback</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Function to execute. Its return value is propagated as the return value of <code>run</code>.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><code>run()</code> takes two positional arguments: a <a href="#ContextParams"><code>ContextParams</code></a> object defining the context for the scope of the callback (any field omitted is inherited from the current context), and a callback function to execute. The callback&#8217;s return value is propagated as the return value of <code>run()</code>.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -640,107 +616,200 @@ const result = run({
 <h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="getcontext"><a class="link" href="#getcontext">GetContext</a></h3>
+<h3 id="Context"><a class="link" href="#Context">Context</a></h3>
 <div class="paragraph">
 <p>The shape of the object returned by <code>get()</code>.</p>
 </div>
-<div class="listingblock">
-<div class="title">Sample context object</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">{
-  repository: "some.repo.name", <i class="conum" data-value="1"></i><b>(1)</b>
-  branch: "master", <i class="conum" data-value="2"></i><b>(2)</b>
-  authInfo: { <i class="conum" data-value="3"></i><b>(3)</b>
-      user: { <i class="conum" data-value="4"></i><b>(4)</b>
-          type: "user",
-          key: "user:system:mylogin",
-          displayName: "My User",
-          login: "mylogin",
-          idProvider: "system",
-          hasPassword: true
-      },
-      principals: ["role:system.admin"] <i class="conum" data-value="5"></i><b>(5)</b>
-  },
-  attributes: { <i class="conum" data-value="6"></i><b>(6)</b>
-     optionalAttributes: "of any kind"
-  }
-}</code></pre>
+<div class="paragraph lead">
+<p>Properties</p>
 </div>
-</div>
-<div class="colist arabic">
-<table>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
 <tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>repository</strong> (<em>string</em>, optional) Repository context.</td>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attributes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextAttributes">ContextAttributes</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Custom attributes set on the context. Always present; may be empty.</p>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>branch</strong> (<em>string</em>, optional) Branch context.</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Branch context.</p>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><strong>authInfo</strong> (<em>object</em>, optional) Authentication information for the current context.</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Repository context.</p>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><strong>user</strong> (<em>object</em>, optional) The currently authenticated user. Omitted when no user is logged in.</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">authInfo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#AuthInfo">AuthInfo</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Authentication information for the current context.</p>
+</div></div></td>
 </tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td><strong>principals</strong> (<em>string[]</em>, optional) Principal keys (users, groups, and roles) attached to the authentication info.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="6"></i><b>6</b></td>
-<td><strong>attributes</strong> (<em>object</em>) Custom attributes set on the context. Always present; may be empty. Only values of type <code>number</code>, <code>string</code>, <code>boolean</code>, or plain <code>object</code> are serialized.</td>
-</tr>
+</tbody>
 </table>
-</div>
 </div>
 <div class="sect2">
-<h3 id="runcontext"><a class="link" href="#runcontext">RunContext</a></h3>
+<h3 id="ContextParams"><a class="link" href="#ContextParams">ContextParams</a></h3>
 <div class="paragraph">
-<p>The parameter object passed to <code>run()</code>. Any field omitted is inherited from the calling context.</p>
+<p>The context object passed as the first argument to <code>run()</code>. Any field omitted is inherited from the calling context.</p>
 </div>
-<div class="listingblock">
-<div class="title">Sample context object</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">{
-  repository: "some.repo.name", <i class="conum" data-value="1"></i><b>(1)</b>
-  branch: "master", <i class="conum" data-value="2"></i><b>(2)</b>
-  user: { <i class="conum" data-value="3"></i><b>(3)</b>
-      login: "mylogin",
-      idProvider: "system"
-  },
-  principals: ["role:system.admin"], <i class="conum" data-value="4"></i><b>(4)</b>
-  attributes: { <i class="conum" data-value="5"></i><b>(5)</b>
-     optionalAttributes: "of any kind"
-  }
-}</code></pre>
+<div class="paragraph lead">
+<p>Properties</p>
 </div>
-</div>
-<div class="colist arabic">
-<table>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
 <tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>repository</strong> (<em>string</em>, optional) Repository to run the callback in. Defaults to the current repository.</td>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Repository to run the callback in. Defaults to the current repository.</p>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>branch</strong> (<em>string</em>, optional) Branch to run the callback in. Defaults to the current branch.</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Branch to run the callback in. Defaults to the current branch.</p>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td><strong>user</strong> (<em>object</em>, optional) User to run the callback as. <code>login</code> is required; <code>idProvider</code> defaults to the system id provider when omitted.</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextUserParams">ContextUserParams</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> User to run the callback as.</p>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><strong>principals</strong> (<em>string[]</em>, optional) Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.</p>
+</div></div></td>
 </tr>
 <tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td><strong>attributes</strong> (<em>object</em>, optional) Additional context attributes. Only values of type <code>number</code>, <code>string</code>, <code>boolean</code>, or plain <code>object</code> are supported.</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attributes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextAttributes">ContextAttributes</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Additional context attributes.</p>
+</div></div></td>
 </tr>
+</tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="AuthInfo"><a class="link" href="#AuthInfo">AuthInfo</a></h3>
+<div class="paragraph">
+<p>Authentication information attached to a context.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user">User</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The currently authenticated user. Omitted when no user is logged in.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Principal keys (users, groups, and roles) attached to the authentication info.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="ContextUserParams"><a class="link" href="#ContextUserParams">ContextUserParams</a></h3>
+<div class="paragraph">
+<p>Identifies the user to run a callback as, passed in <code><a href="#ContextParams">ContextParams</a>.user</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">login</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Login name of the user.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Key of the ID provider the user belongs to. Defaults to the system ID provider when omitted.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="ContextAttributes"><a class="link" href="#ContextAttributes">ContextAttributes</a></h3>
+<div class="paragraph">
+<p>A record of custom context attributes. Keys are strings; only values of type <code>number</code>, <code>string</code>, <code>boolean</code>, or plain <code>object</code> are supported.</p>
 </div>
 </div>
 </div>
@@ -748,7 +817,7 @@ const result = run({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

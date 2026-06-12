@@ -456,8 +456,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
-<li><a href="#taskinfo">TaskInfo</a></li>
-<li><a href="#progress-type">Progress</a></li>
+<li><a href="#task-info">TaskInfo</a></li>
+<li><a href="#task-progress">TaskProgress</a></li>
+<li><a href="#task-state-type">TaskStateType</a></li>
 </ul>
 </li>
 </ul>
@@ -554,34 +555,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">taskId</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Id of the task</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single positional argument: <code>taskId</code> (string) — the id of the task to look up.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="#taskinfo"><code>TaskInfo</code></a>) Detail information for the task. Or null if the task could not be found.</p>
+<p><strong>object</strong> : (<a href="#task-info"><code>TaskInfo</code></a>) Detail information for the task. Or null if the task could not be found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -628,29 +609,9 @@ if (taskInfo) {
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">task</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name or id of the task.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single positional argument: <code>task</code> (string) — the name or id of the task.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -683,7 +644,7 @@ On clustered environments aggregated list is returned.</p>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>list()</code> takes a single, optional <code>params</code> object with these properties:</p>
+<p><code>list()</code> takes a single, optional <code>ListTasksParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -708,9 +669,9 @@ On clustered environments aggregated list is returned.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">state</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#task-state-type"><code>TaskStateType</code></a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Filter by task state (<code>WAITING</code> | <code>RUNNING</code> | <code>FINISHED</code> | <code>FAILED</code>).</p>
+<p><strong>Optional.</strong> Filter by task state.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -719,7 +680,7 @@ On clustered environments aggregated list is returned.</p>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Array</strong> : (<a href="#taskinfo"><code>TaskInfo[]</code></a>) List with task information for every task.</p>
+<p><strong>Array</strong> : (<a href="#task-info"><code>TaskInfo[]</code></a>) List with task information for every task.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -823,7 +784,7 @@ const tasks = list({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>progress()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>progress()</code> takes a single <code>TaskProgressParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -906,29 +867,9 @@ const taskId = executeFunction({
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">timeMillis</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The length of time to sleep in milliseconds</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Takes a single positional argument: <code>timeMillis</code> (number) — the length of time to sleep in milliseconds.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -967,7 +908,7 @@ while (!result &amp;&amp; retries &gt; 0) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>executeFunction()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>executeFunction()</code> takes a single <code>ExecuteFunctionParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1056,7 +997,7 @@ Recompile your application with the newer library version in order for tasks to 
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>submitTask()</code> takes a single <code>params</code> object with these properties:</p>
+<p><code>submitTask()</code> takes a single <code>SubmitTaskParams</code> object with these properties:</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -1083,7 +1024,7 @@ Recompile your application with the newer library version in order for tasks to 
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Optional name of the task which appears in task info. If not specified, the descriptor key will be used instead.</p>
+<p><strong>Optional.</strong> Name of the task which appears in task info. If not specified, the descriptor key will be used instead.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1135,13 +1076,7 @@ const taskId = submitTask({
 <h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="taskinfo"><a class="link" href="#taskinfo">TaskInfo</a></h3>
-<div class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
-</div>
+<h3 id="task-info"><a class="link" href="#task-info">TaskInfo</a></h3>
 <div class="paragraph lead">
 <p>Properties</p>
 </div>
@@ -1163,76 +1098,70 @@ const taskId = submitTask({
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Task Id</p>
+<p>Task id.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Task name</p>
+<p>Task name.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Task description</p>
+<p>Task description.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">state</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#task-state-type"><code>TaskStateType</code></a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Task state (<code>WAITING</code> | <code>RUNNING</code> | <code>FINISHED</code> | <code>FAILED</code>)</p>
+<p>Task state.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">application</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Application containing the callback function to run</p>
+<p>Application containing the callback function to run.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Key of the user that submitted the task</p>
+<p>Key of the user that submitted the task.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">startTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Time when the task was submitted (in ISO-8601 format)</p>
+<p>Time when the task was submitted (in ISO-8601 format).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">progress</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#progress-type">Progress</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#task-progress"><code>TaskProgress</code></a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Progress information provided by the running task</p>
+<p>Progress information provided by the running task.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">node</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Identifier of the cluster node where the task is running. Absent when no cluster is configured.</p>
+<p><strong>Optional.</strong> Identifier of the cluster node where the task is running. Absent when no cluster is configured.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="progress-type"><a class="link" href="#progress-type">Progress</a></h3>
-<div class="paragraph lead">
-<p>Type</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong></p>
-</div>
+<h3 id="task-progress"><a class="link" href="#task-progress">TaskProgress</a></h3>
 <div class="paragraph lead">
 <p>Properties</p>
 </div>
@@ -1274,12 +1203,18 @@ const taskId = submitTask({
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="task-state-type"><a class="link" href="#task-state-type">TaskStateType</a></h3>
+<div class="paragraph">
+<p>One of <code>'WAITING'</code>, <code>'RUNNING'</code>, <code>'FINISHED'</code>, or <code>'FAILED'</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>

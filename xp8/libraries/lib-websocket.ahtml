@@ -496,39 +496,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>Adds an id to a socket group.</p>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p>Takes two positional arguments: <code>group</code> (string — group name) and <code>id</code> (string — socket id).</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">group</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Group name</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Socket id</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -551,39 +521,9 @@ addToGroup('people', session.id);</code></pre>
 <div class="paragraph">
 <p>Removes an id from a socket group.</p>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p>Takes two positional arguments: <code>group</code> (string — group name) and <code>id</code> (string — socket id).</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">group</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Group name</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Socket id</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -606,39 +546,9 @@ removeFromGroup('people', session.id);</code></pre>
 <div class="paragraph">
 <p>Sends a message directly to a socket id.</p>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p>Takes two positional arguments: <code>id</code> (string — socket id) and <code>message</code> (string — text message).</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Socket id</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Text message</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -661,39 +571,9 @@ send(session.id, 'You said - ' + message);</code></pre>
 <div class="paragraph">
 <p>Sends a message to all sockets in group.</p>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p>Takes two positional arguments: <code>group</code> (string — group name) and <code>message</code> (string — text message).</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">group</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Group name</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Text message</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -729,32 +609,9 @@ Consider using this method only if building a message is a resource consuming op
 </tr>
 </table>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="paragraph">
+<p>Takes one positional argument: <code>group</code> (string — group name).</p>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">group</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Group name</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -777,7 +634,7 @@ getGroupSize('people');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-11 21:15:20 UTC
+Last updated 2026-06-12 19:39:50 UTC
 </div>
 </div>
 </body>
