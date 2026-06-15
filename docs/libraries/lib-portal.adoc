@@ -244,7 +244,9 @@ Returns the request-scoped <<csp-type, Content Security Policy>> builder for the
 
 One policy is shared for the whole request: each call returns a new handle, but every handle backs the same policy, so a page together with its layouts, parts and any <<web/sites/processors#, response processors>> can each contribute to the final header. The `Content-Security-Policy` header is composed and emitted automatically when the response is flushed, so contributions made late during rendering still land — you never set the header yourself.
 
-A `Content-Security-Policy` header returned directly from a controller response is not sent verbatim: it is folded into the request policy (parsed as if passed to `resetTo()`), so the policy stays the single source of truth and later contributions still apply on top. A `Content-Security-Policy-Report-Only` header is folded the same way into the request's report-only policy — and since the builder governs the enforced policy, returning that header is how a report-only policy is set.
+The builder is the way to declare a policy. For backward compatibility the platform still honors a `Content-Security-Policy` header set directly in a controller response — instead of being sent verbatim it is folded into the request policy (parsed as if passed to `resetTo()`), so the policy stays the single source of truth and later contributions still apply on top. A `Content-Security-Policy-Report-Only` header is folded the same way into the request's report-only policy.
+
+NOTE: Setting the `Content-Security-Policy` header directly is a legacy path, kept only for compatibility with existing apps. New code should declare the policy through `csp()` instead.
 
 [.lead]
 Returns
