@@ -240,18 +240,18 @@ const url = componentUrl({
 === csp
 [#csp]
 
-Returns the request-scoped <<csp-type, Content Security Policy>> builder for the current portal request. Takes no arguments.
+Returns the request-scoped <<csp-type, Content Security Policy>> builder for the current portal request. Its directives are composed into the `Content-Security-Policy` header emitted on the response. Takes no arguments.
 
-One policy is shared for the whole request: each call returns a new handle, but every handle backs the same policy, so a page together with its layouts, parts and any <<web/sites/processors#, response processors>> can each contribute to the final header. The `Content-Security-Policy` header is composed and emitted automatically when the response is flushed, so contributions made late during rendering still land — you never set the header yourself.
+One policy is shared for the whole request: each call returns a new handle, but every handle backs the same policy, so a page together with its layouts, parts and any <<web/sites/processors#, response processors>> can each contribute to the final header. The `Content-Security-Policy` response header is composed and emitted automatically when the response is flushed, so contributions made late during rendering still land — you never set the header yourself.
 
-The builder is the way to declare a policy. For backward compatibility the platform still honors a `Content-Security-Policy` header set directly in a controller response — instead of being sent verbatim it is folded into the request policy (parsed as if passed to `resetTo()`), so the policy stays the single source of truth and later contributions still apply on top. A `Content-Security-Policy-Report-Only` header is folded the same way into the request's report-only policy.
+The builder is the way to declare a policy. For backward compatibility the platform still honors a `Content-Security-Policy` header set directly in a controller response — instead of being sent verbatim it is folded into the policy (parsed as if passed to `resetTo()`), so the policy stays the single source of truth and later contributions still apply on top. A `Content-Security-Policy-Report-Only` header is folded the same way into the report-only policy.
 
 NOTE: Setting the `Content-Security-Policy` header directly is a legacy path, kept only for compatibility with existing apps. New code should declare the policy through `csp()` instead.
 
 [.lead]
 Returns
 
-+*object* : (<<csp-type, `Csp`>>) The Content Security Policy bound to the current portal request.+
++*object* : (<<csp-type, `Csp`>>) The request-scoped Content Security Policy; its directives are emitted as the response's `Content-Security-Policy` header.+
 
 [.lead]
 Example
@@ -1045,7 +1045,7 @@ A JSON object keyed by item name, where each value is a <<multipart-item, Multip
 [#csp-type]
 === Csp
 
-A request-scoped Content Security Policy builder, obtained from <<csp, `csp()`>>. The same instance backs the whole request, so every controller, layout, part and processor contributes to one emitted `Content-Security-Policy` header. Every method except the nonce getters returns the same `Csp` instance, so calls chain.
+A request-scoped Content Security Policy builder, obtained from <<csp, `csp()`>>. The same instance backs the whole request, so every controller, layout, part and processor contributes to the one `Content-Security-Policy` header emitted on the response. Every method except the nonce getters returns the same `Csp` instance, so calls chain.
 
 Contributions merge by **union**: a directive's source list is the union of every contributor's sources, deduped and emitted in the order added. The builder does not arbitrate between sources that interact in the browser — notably `'unsafe-inline'` sharing a directive with a `'nonce-…'`, a hash, or `'strict-dynamic'`, which makes the browser ignore `'unsafe-inline'`. It emits what you declare; that precedence is the browser's documented behaviour and the secure default. A contributor that genuinely needs the looser source to win uses `override()` to replace the directive.
 
