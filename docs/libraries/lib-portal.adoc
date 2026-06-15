@@ -1049,7 +1049,7 @@ A request-scoped Content Security Policy builder, obtained from <<csp, `csp()`>>
 
 Contributions merge by **union**: a directive's source list is the union of every contributor's sources, deduped and emitted in the order added. The builder does not arbitrate between sources that interact in the browser — notably `'unsafe-inline'` sharing a directive with a `'nonce-…'`, a hash, or `'strict-dynamic'`, which makes the browser ignore `'unsafe-inline'`. It emits what you declare; that precedence is the browser's documented behaviour and the secure default. A contributor that genuinely needs the looser source to win uses `override()` to replace the directive.
 
-Sources are validated: a value containing `;` or whitespace (a policy-injection attempt) throws, and a hand-supplied `'nonce-…'` source is rejected — only `nonceScriptSrc()` / `nonceStyleSrc()` mint the request nonce.
+Sources are validated: a value containing `;` or whitespace (a policy-injection attempt) throws, and a hand-supplied `'nonce-…'` source is rejected — only the `+nonce*+` methods mint the request nonce.
 
 [.lead]
 Source-list directives
@@ -1115,8 +1115,10 @@ Nonces and hashes
 [grid="none"]
 |===
 | Method | Returns | Description
-| `nonceScriptSrc()` | `string` | Wires the request nonce into `script-src` and returns its value, to stamp on inline `+<script nonce="...">+` tags. Stable for the whole request.
-| `nonceStyleSrc()` | `string` | Wires the request nonce into `style-src` and returns its value, to stamp on inline `+<style nonce="...">+` tags. The same value as `nonceScriptSrc()`.
+| `nonceScriptSrc()` | `string` | Wires the request nonce into `script-src` and returns its value, to stamp on inline `+<script nonce="...">+` tags. Stable for the whole request — every `+nonce*+` method returns this same value.
+| `nonceScriptSrcElem()` | `string` | Wires the same nonce into `script-src-elem` (governs `+<script>+` elements). Use it when that directive is set with `'strict-dynamic'`, where `'self'` and host sources are ignored.
+| `nonceStyleSrc()` | `string` | Wires the same nonce into `style-src`, to stamp on inline `+<style nonce="...">+` tags.
+| `nonceStyleSrcElem()` | `string` | Wires the same nonce into `style-src-elem` (governs `+<style>+` and `+<link rel=stylesheet>+`). Use it when that directive is set with `'strict-dynamic'`.
 | `shaScriptSrc(source)` | `Csp` | Unions a hash source into `script-src`. Takes a <<csp-hash-source, `CspHashSource`>>.
 | `shaStyleSrc(source)` | `Csp` | Unions a hash source into `style-src`. Takes a <<csp-hash-source, `CspHashSource`>>.
 |===
