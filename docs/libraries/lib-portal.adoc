@@ -237,6 +237,52 @@ const url = componentUrl({
 });
 ----
 
+=== csp
+[#csp]
+
+Returns the request-scoped <<csp-type, Content Security Policy>> builder for the current portal request. Takes no arguments.
+
+One policy is shared for the whole request: each call returns a new handle, but every handle backs the same policy, so a page together with its layouts, parts and any <<web/sites/processors#, response processors>> can each contribute to the final header. The `Content-Security-Policy` header is composed and emitted automatically when the response is flushed, so contributions made late during rendering still land — you never set the header yourself.
+
+A `Content-Security-Policy` header returned directly from a controller response is not sent verbatim: it is folded into the request policy (parsed as if passed to `resetTo()`), so the policy stays the single source of truth and later contributions still apply on top. A `Content-Security-Policy-Report-Only` header is folded the same way into the request's report-only policy — and since the builder governs the enforced policy, returning that header is how a report-only policy is set.
+
+[.lead]
+Returns
+
++*object* : (<<csp-type, `Csp`>>) The Content Security Policy bound to the current portal request.+
+
+[.lead]
+Example
+
+.Seed a deny-all baseline, then open up only what the page needs:
+[source,typescript]
+----
+import {csp, CspSource} from '/lib/xp/portal';
+
+const policy = csp();
+
+// Deny-all baseline: default-src, base-uri and frame-ancestors all 'none'
+policy.strict();
+
+// Open up only the directives this page needs (calls chain)
+policy
+  .scriptSrc(CspSource.SELF, 'https://cdn.example.com')
+  .styleSrc(CspSource.SELF)
+  .imgSrc(CspSource.SELF, CspSource.DATA);
+----
+
+.Allow one inline script with a per-request nonce:
+[source,typescript]
+----
+import {csp} from '/lib/xp/portal';
+
+// Wires 'nonce-<value>' into script-src and returns the value to stamp on the tag
+const nonce = csp().nonceScriptSrc();
+
+const view = `<script nonce="${nonce}">window.app = {};</script>`;
+----
+
+
 === getComponent
 
 Returns the component in the current execution context. Meant to be called from a layout or part. Takes no arguments.
@@ -992,4 +1038,182 @@ A JSON object keyed by item name, where each value is a <<multipart-item, Multip
 | fileName | string | Original file name of the uploaded item.
 | contentType | string | MIME content type of the item.
 | size | number | Size of the item in bytes.
+|===
+
+[#csp-type]
+=== Csp
+
+A request-scoped Content Security Policy builder, obtained from <<csp, `csp()`>>. The same instance backs the whole request, so every controller, layout, part and processor contributes to one emitted `Content-Security-Policy` header. Every method except the nonce getters returns the same `Csp` instance, so calls chain.
+
+Contributions merge by **union**: a directive's source list is the union of every contributor's sources, deduped and emitted in the order added. The builder does not arbitrate between sources that interact in the browser — notably `'unsafe-inline'` sharing a directive with a `'nonce-…'`, a hash, or `'strict-dynamic'`, which makes the browser ignore `'unsafe-inline'`. It emits what you declare; that precedence is the browser's documented behaviour and the secure default. A contributor that genuinely needs the looser source to win uses `override()` to replace the directive.
+
+Sources are validated: a value containing `;` or whitespace (a policy-injection attempt) throws, and a hand-supplied `'nonce-…'` source is rejected — only `nonceScriptSrc()` / `nonceStyleSrc()` mint the request nonce.
+
+[.lead]
+Source-list directives
+
+Each unions the given sources — <<csp-source, `CspSource`>> values or raw strings (hosts, schemes, paths, URLs) — into the named directive.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Method | Returns | Description
+| `defaultSrc(...sources)` | `Csp` | Unions sources into `default-src`, the fallback for directives left unset.
+| `scriptSrc(...sources)` | `Csp` | Unions sources into `script-src`.
+| `styleSrc(...sources)` | `Csp` | Unions sources into `style-src`.
+| `imgSrc(...sources)` | `Csp` | Unions sources into `img-src`.
+| `fontSrc(...sources)` | `Csp` | Unions sources into `font-src`.
+| `connectSrc(...sources)` | `Csp` | Unions sources into `connect-src` (fetch, XHR, WebSocket, etc.).
+| `mediaSrc(...sources)` | `Csp` | Unions sources into `media-src`.
+| `objectSrc(...sources)` | `Csp` | Unions sources into `object-src`.
+| `frameSrc(...sources)` | `Csp` | Unions sources into `frame-src`.
+| `workerSrc(...sources)` | `Csp` | Unions sources into `worker-src`.
+| `manifestSrc(...sources)` | `Csp` | Unions sources into `manifest-src`.
+| `childSrc(...sources)` | `Csp` | Unions sources into `child-src`.
+| `scriptSrcElem(...sources)` | `Csp` | Unions sources into `script-src-elem` (governs `+<script>+` elements).
+| `scriptSrcAttr(...sources)` | `Csp` | Unions sources into `script-src-attr` (governs inline event handlers).
+| `styleSrcElem(...sources)` | `Csp` | Unions sources into `style-src-elem` (governs `+<style>+` and `+<link rel=stylesheet>+`).
+| `styleSrcAttr(...sources)` | `Csp` | Unions sources into `style-src-attr` (governs inline `style` attributes).
+|===
+
+[.lead]
+Document and navigation directives
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Method | Returns | Description
+| `frameAncestors(...sources)` | `Csp` | Unions sources into `frame-ancestors` — which origins may embed this page in a frame.
+| `baseUri(...sources)` | `Csp` | Unions sources into `base-uri` — what the document's `+<base>+` element may set.
+| `formAction(...sources)` | `Csp` | Unions sources into `form-action` — where forms may submit.
+|===
+
+[.lead]
+Baseline and low-level
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Method | Returns | Description
+| `strict()` | `Csp` | Seeds a deny-all baseline — `default-src`, `base-uri` and `frame-ancestors` all set to `'none'`. Call it first, then open up only the directives you need.
+| `add(directive, ...sources)` | `Csp` | Unions sources into any directive by name (deduped). With no sources, registers a boolean directive such as `upgrade-insecure-requests`. A `'nonce-…'` source is rejected.
+| `override(directive, ...sources)` | `Csp` | Replaces a directive's source list with exactly these sources, overriding what other contributors set. Not frozen — a later `add()` still extends it.
+| `reset(...directives)` | `Csp` | Removes the named directives (for example to unset a boolean directive). With no argument, removes nothing.
+| `resetTo(headerValue?)` | `Csp` | Replaces the whole policy with the directives parsed from a raw header string; later contributions still apply on top. Parsing is lenient, mirroring the browser — invalid tokens are skipped, `'nonce-…'` sources are dropped, and of repeated directives only the first counts. A `null`, `undefined`, empty or blank value clears the policy. A value carrying several comma-separated policies is honored (the browser enforces each).
+|===
+
+[.lead]
+Nonces and hashes
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Method | Returns | Description
+| `nonceScriptSrc()` | `string` | Wires the request nonce into `script-src` and returns its value, to stamp on inline `+<script nonce="...">+` tags. Stable for the whole request.
+| `nonceStyleSrc()` | `string` | Wires the request nonce into `style-src` and returns its value, to stamp on inline `+<style nonce="...">+` tags. The same value as `nonceScriptSrc()`.
+| `shaScriptSrc(source)` | `Csp` | Unions a hash source into `script-src`. Takes a <<csp-hash-source, `CspHashSource`>>.
+| `shaStyleSrc(source)` | `Csp` | Unions a hash source into `style-src`. Takes a <<csp-hash-source, `CspHashSource`>>.
+|===
+
+[.lead]
+Sandbox and Trusted Types
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Method | Returns | Description
+| `sandbox(...flags)` | `Csp` | Unions <<sandbox-flag, `SandboxFlag`>> values into the `sandbox` directive. With no flags, registers an empty `sandbox` (every restriction applied).
+| `requireTrustedTypesForScript()` | `Csp` | Registers `require-trusted-types-for 'script'`.
+| `trustedTypes(...values)` | `Csp` | Adds policy names and/or <<trusted-types-keyword, `TrustedTypesKeyword`>> keywords to the `trusted-types` directive.
+|===
+
+[.lead]
+Reporting
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Method | Returns | Description
+| `reportTo(group)` | `Csp` | Adds the `report-to` directive naming a reporting group. Define the group with a companion `Reporting-Endpoints` response header (the caller's responsibility). The older `report-uri` is deprecated; use `add('report-uri', ...)` if still needed.
+|===
+
+[#csp-source]
+=== CspSource
+
+Common source-list keywords and schemes for a CSP source expression, per W3C CSP3. Keyword values are single-quoted; scheme values end in a colon. Pass these to any source-list directive method, alongside raw strings for hosts, paths and URLs.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Value | Description
+| `+SELF+` | `+'self'+` | The page's own origin.
+| `+NONE+` | `+'none'+` | The empty set — matches nothing.
+| `+UNSAFE_INLINE+` | `+'unsafe-inline'+` | Allows inline scripts and styles. The browser ignores it when a nonce or hash is also present.
+| `+UNSAFE_EVAL+` | `+'unsafe-eval'+` | Allows `eval()` and similar string-to-code APIs.
+| `+STRICT_DYNAMIC+` | `+'strict-dynamic'+` | Propagates trust from a nonced/hashed script to the scripts it loads.
+| `+UNSAFE_HASHES+` | `+'unsafe-hashes'+` | Allows specific inline event handlers and `style` attributes matched by hash.
+| `+WASM_UNSAFE_EVAL+` | `+'wasm-unsafe-eval'+` | Allows WebAssembly compilation without allowing `eval()`.
+| `+REPORT_SAMPLE+` | `+'report-sample'+` | Asks the browser to include a sample of the offending content in violation reports.
+| `+DATA+` | `+data:+` | The `data:` scheme.
+| `+BLOB+` | `+blob:+` | The `blob:` scheme.
+| `+WILDCARD+` | `+*+` | Matches any URL, except the `data:`, `blob:` and `filesystem:` schemes.
+|===
+
+[#sandbox-flag]
+=== SandboxFlag
+
+Flags for the `sandbox` directive, passed to `sandbox()`. Tokens are emitted unquoted, as the CSP spec defines them. Each flag lifts one of the sandbox's default restrictions.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Value | Description
+| `+ALLOW_SCRIPTS+` | `+allow-scripts+` | Lets the content run scripts.
+| `+ALLOW_SAME_ORIGIN+` | `+allow-same-origin+` | Lets the content keep its origin instead of being forced into an opaque one.
+| `+ALLOW_FORMS+` | `+allow-forms+` | Lets the content submit forms.
+| `+ALLOW_POPUPS+` | `+allow-popups+` | Lets the content open popups.
+| `+ALLOW_MODALS+` | `+allow-modals+` | Lets the content open modal dialogs.
+| `+ALLOW_TOP_NAVIGATION+` | `+allow-top-navigation+` | Lets the content navigate the top-level browsing context.
+| `+ALLOW_DOWNLOADS+` | `+allow-downloads+` | Lets the content start downloads.
+| `+ALLOW_POINTER_LOCK+` | `+allow-pointer-lock+` | Lets the content use the Pointer Lock API.
+| `+ALLOW_PRESENTATION+` | `+allow-presentation+` | Lets the content start a presentation session.
+| `+ALLOW_ORIENTATION_LOCK+` | `+allow-orientation-lock+` | Lets the content lock the screen orientation.
+|===
+
+[#trusted-types-keyword]
+=== TrustedTypesKeyword
+
+Special keywords for the `trusted-types` directive, passed to `trustedTypes()` alongside user-defined policy names.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Value | Description
+| `+ALLOW_DUPLICATES+` | `+'allow-duplicates'+` | Allows creating more than one Trusted Types policy with the same name.
+| `+NONE+` | `+'none'+` | Disallows creating any Trusted Types policy.
+| `+WILDCARD+` | `+*+` | Allows any policy name.
+|===
+
+[#csp-hash-source]
+=== CspHashSource
+
+A hash source passed to `shaScriptSrc()` / `shaStyleSrc()`. Provide either inline `content` to digest, or a precomputed `hash` — the two are mutually exclusive.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| content | string | *Optional.* Inline script or style text to digest. The computed `+'<algo>-<base64>'+` source is added to the directive. Provide either `content` or `hash`.
+| hash | string | *Optional.* Precomputed base64 digest, emitted verbatim as `+'<algo>-<hash>'+`. Provide either `content` or `hash`; when used, `algo` is required.
+| algo | string | *Optional.* Hash algorithm — one of `sha256`, `sha384` or `sha512`. Defaults to `sha256` when digesting `content`; required with `hash`. Any other value throws.
 |===
