@@ -242,9 +242,9 @@ const url = componentUrl({
 
 Returns the request-scoped *enforced* <<csp-type, Content Security Policy>> builder for the current portal request. Its directives are composed into the `Content-Security-Policy` header emitted on the response. For the report-only companion, use <<cspReportOnly, `cspReportOnly()`>>. Takes no arguments.
 
-One policy is shared for the whole request: each call returns a new handle, but every handle backs the same policy, so a page together with its layouts, parts and any <<web/sites/processors#, response processors>> can each contribute to the final header. The `Content-Security-Policy` response header is composed and emitted automatically when the response is flushed, so contributions made late during rendering still land — you never set the header yourself.
+One policy is shared for the whole request, so a page with its layouts, parts and any <<web/sites/processors#, response processors>> all contribute to the same header. It is composed and emitted automatically when the response is flushed, so late contributions still land — you never set the header yourself.
 
-The builder is the way to declare a policy. For backward compatibility the platform still honors a `Content-Security-Policy` header set directly in a controller response — instead of being sent verbatim it is folded into the policy (parsed as if passed to `resetTo()`), so the policy stays the single source of truth and later contributions still apply on top. A `Content-Security-Policy-Report-Only` header is folded the same way into the report-only policy.
+A `Content-Security-Policy` header set directly on the response is folded into the policy (as if passed to `resetTo()`) rather than sent verbatim, so later contributions still apply on top; a `Content-Security-Policy-Report-Only` header is folded into the report-only policy the same way.
 
 NOTE: Setting the `Content-Security-Policy` header directly is a legacy path, kept only for compatibility with existing apps. New code should declare the policy through `csp()` (and <<cspReportOnly, `cspReportOnly()`>> for report-only) instead.
 
@@ -1073,11 +1073,11 @@ A JSON object keyed by item name, where each value is a <<multipart-item, Multip
 [#csp-type]
 === Csp
 
-A request-scoped Content Security Policy builder, obtained from <<csp, `csp()`>> (enforced) or <<cspReportOnly, `cspReportOnly()`>> (report-only). Within each, every call returns a new handle backed by the same policy, so every controller, layout, part and processor contributes to the one header emitted on the response — `Content-Security-Policy` for the enforced policy, `Content-Security-Policy-Report-Only` for the report-only one. Every method except the nonce getters and `directive()` returns the same `Csp` instance, so calls chain.
+A request-scoped Content Security Policy builder, obtained from <<csp, `csp()`>> (enforced) or <<cspReportOnly, `cspReportOnly()`>> (report-only). Within each, repeated calls to the accessor hand back a fresh handle onto the same underlying policy, so every page, layout, part and processor contributes to the one emitted header. Method calls on a handle, by contrast, all return the same `Csp` instance (except the nonce getters and `directive()`), so calls chain.
 
-Contributions merge by **union**: a directive's source list is the union of every contributor's sources, deduped and emitted in the order added. The builder does not arbitrate between sources that interact in the browser — notably `'unsafe-inline'` sharing a directive with a `'nonce-…'`, a hash, or `'strict-dynamic'`, which makes the browser ignore `'unsafe-inline'`. It emits what you declare; that precedence is the browser's documented behaviour and the secure default. 
+Contributions merge by **union**: a directive's source list is the union of every contributor's sources, deduped and emitted in the order added. The builder does not arbitrate between sources that interact in the browser — for example `'unsafe-inline'` alongside a `'nonce-…'`, a hash, or `'strict-dynamic'`, which the browser then ignores. It emits exactly what you declare.
 
-Sources are validated: a value containing `;` or whitespace (a policy-injection attempt) throws, and a hand-supplied `'nonce-…'` source is rejected — only the `+nonce*+` methods mint the request nonce.
+Sources are validated: a value containing `;` or whitespace (a policy-injection attempt) throws, and a hand-supplied `'nonce-…'` source is rejected — only the `+nonce*+` methods generate the request nonce.
 
 [.lead]
 Source-list directives
@@ -1132,8 +1132,8 @@ Prefer the typed methods above; reach for these for directives the typed API doe
 | Method | Returns | Description
 | `strict()` | `Csp` | Seeds a deny-all baseline — `default-src`, `base-uri` and `frame-ancestors` all set to `'none'`. Call it first, then open up only the directives you need.
 | `add(directive, ...sources)` | `Csp` | Unions sources into any directive by name (deduped). With no sources, registers a valueless directive such as `upgrade-insecure-requests`. A `'nonce-…'` source is rejected.
-| `merge(headerValue?)` | `Csp` | Additive counterpart to `resetTo()`: parses a `Content-Security-Policy` header value and unions each directive's sources onto the policy — existing directives are extended and absent ones added, so you can grant extra permissions on top of a policy built elsewhere without restating it. A wired nonce is kept; `'nonce-…'` sources in the value are dropped. Lenient (invalid tokens skipped); `null` / `undefined` adds nothing.
-| `directive(name)` | `string[] \| null` | The sources currently declared for `name` (deduped, in serialized order), or `null` if no contributor has declared it. A declared valueless directive returns an empty array. Reads this policy only — useful to inspect before an `override()` or to gap-fill.
+| `merge(headerValue?)` | `Csp` | Parses a `Content-Security-Policy` header value and unions each directive's sources onto the policy — existing directives are extended and absent ones added, so you can grant extra permissions on top of a policy built elsewhere without restating it. A wired nonce is kept; `'nonce-…'` sources in the value are dropped. Lenient (invalid tokens skipped); `null` / `undefined` adds nothing.
+| `directive(name)` | `string[] \| null` | The sources currently declared for `name` (deduped, in serialized order), or `null` if no contributor has declared it. A declared valueless directive returns an empty array. Reads this policy only.
 | `override(directive, ...sources)` | `Csp` | Replaces a directive's source list with exactly these sources, overriding what other contributors set. Not frozen — a later `add()` still extends it. To remove a directive entirely, use `reset()`.
 | `reset(...directives)` | `Csp` | Removes the named directives (for example to unset a valueless directive). With no argument, removes nothing.
 | `resetTo(headerValue?)` | `Csp` | Replaces the whole policy with the directives parsed from a raw header string; later contributions still apply on top. Parsing is lenient, mirroring the browser — invalid tokens are skipped, `'nonce-…'` sources are dropped, and of repeated directives only the first counts. A comma (which would begin a further policy) and everything after it is ignored — only the first policy is applied. A `null`, `undefined`, empty or blank value clears the policy.
@@ -1148,9 +1148,9 @@ Nonces and hashes
 |===
 | Method | Returns | Description
 | `nonceScriptSrc()` | `string` | Wires the request nonce into `script-src` and returns its value, to stamp on inline `+<script nonce="...">+` tags. Stable for the whole request — every `+nonce*+` method returns this same value.
-| `nonceScriptSrcElem()` | `string` | Wires the same nonce into `script-src-elem` (governs `+<script>+` elements). Use it when that directive is set with `'strict-dynamic'`, where `'self'` and host sources are ignored.
+| `nonceScriptSrcElem()` | `string` | Wires the same nonce into `script-src-elem` (governs `+<script>+` elements). Use it when that directive is set with `'strict-dynamic'`.
 | `nonceStyleSrc()` | `string` | Wires the same nonce into `style-src`, to stamp on inline `+<style nonce="...">+` tags.
-| `nonceStyleSrcElem()` | `string` | Wires the same nonce into `style-src-elem` (governs `+<style>+` and `+<link rel=stylesheet>+`). Use it when that directive is set with `'strict-dynamic'`.
+| `nonceStyleSrcElem()` | `string` | Wires the same nonce into `style-src-elem` (governs `+<style>+` and `+<link rel=stylesheet>+`).
 | `shaScriptSrc(source)` | `Csp` | Unions a hash source into `script-src`. Takes a <<csp-hash-source, `CspHashSource`>>.
 | `shaStyleSrc(source)` | `Csp` | Unions a hash source into `style-src`. Takes a <<csp-hash-source, `CspHashSource`>>.
 |===
