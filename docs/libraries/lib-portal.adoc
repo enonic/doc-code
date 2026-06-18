@@ -251,7 +251,7 @@ NOTE: Setting the `Content-Security-Policy` header directly is a legacy path, ke
 [.lead]
 Returns
 
-+*object* : (<<csp-type, `Csp`>>) The request-scoped Content Security Policy; its directives are emitted as the response's `Content-Security-Policy` header.+
+*object* : (<<csp-type, `Csp`>>) The request-scoped Content Security Policy; its directives are emitted as the response's `Content-Security-Policy` header.
 
 [.lead]
 Example
@@ -295,7 +295,7 @@ It is an independent companion to the enforced policy from <<csp, `csp()`>> — 
 [.lead]
 Returns
 
-+*object* : (<<csp-type, `Csp`>>) The request-scoped report-only Content Security Policy; its directives are emitted as the response's `Content-Security-Policy-Report-Only` header.+
+*object* : (<<csp-type, `Csp`>>) The request-scoped report-only Content Security Policy; its directives are emitted as the response's `Content-Security-Policy-Report-Only` header.
 
 [.lead]
 Example
@@ -320,7 +320,7 @@ Returns the component in the current execution context. Meant to be called from 
 [.lead]
 Returns
 
-+*object* : (<<fundamentals/types#component, `Component`>>) The current component, or `null` if there is no component in the current context.+
+*object* : (<<fundamentals/types#component, `Component`>>) The current component, or `null` if there is no component in the current context.
 
 [.lead]
 Example
@@ -369,7 +369,7 @@ Returns the content in the current execution context. Meant to be called from a 
 [.lead]
 Returns
 
-+*object* : (<<fundamentals/types#content, `Content`>>) The current content, or `null` if there is no content in the current context.+
+*object* : (<<fundamentals/types#content, `Content`>>) The current content, or `null` if there is no content in the current context.
 
 [.lead]
 Example
@@ -446,7 +446,7 @@ Returns a JSON containing multipart items. If the request is not multipart, an e
 [.lead]
 Returns
 
-+*object* : (<<multipart-form, `MultipartForm`>>) The multipart form items.+
+*object* : (<<multipart-form, `MultipartForm`>>) The multipart form items.
 
 [.lead]
 Example
@@ -499,7 +499,7 @@ Parameters
 [.lead]
 Returns
 
-+*object* : (<<multipart-item, `MultipartItem`>>) The named multipart form item, or `null` if it does not exist.+
+*object* : (<<multipart-item, `MultipartItem`>>) The named multipart form item, or `null` if it does not exist.
 
 [.lead]
 Example
@@ -536,7 +536,7 @@ Parameters
 [.lead]
 Returns
 
-+*object* : (<<fundamentals/types#byte-source, `ByteSource`>>) Stream of multipart item data, or `null` if the item does not exist.+
+*object* : (<<fundamentals/types#byte-source, `ByteSource`>>) Stream of multipart item data, or `null` if the item does not exist.
 
 [.lead]
 Example
@@ -580,7 +580,7 @@ Returns the parent site of the content in the current execution context. Meant t
 [.lead]
 Returns
 
-+*object* : (<<site, `Site`>>) The current site, or `null` if the content has no parent site.+
+*object* : (<<site, `Site`>>) The current site, or `null` if the content has no parent site.
 
 [.lead]
 Example
