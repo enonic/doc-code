@@ -1004,7 +1004,7 @@ Setting the <code>Content-Security-Policy</code> header directly is a legacy pat
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;csp-type, `Csp`&gt;&gt;) The request-scoped Content Security Policy; its directives are emitted as the response's `Content-Security-Policy` header.</p>
+<p><strong>object</strong> : (<a href="#csp-type"><code>Csp</code></a>) The request-scoped Content Security Policy; its directives are emitted as the response&#8217;s <code>Content-Security-Policy</code> header.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1050,7 +1050,7 @@ const view = `&lt;script nonce="${nonce}"&gt;window.app = {};&lt;/script&gt;`;</
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;csp-type, `Csp`&gt;&gt;) The request-scoped report-only Content Security Policy; its directives are emitted as the response's `Content-Security-Policy-Report-Only` header.</p>
+<p><strong>object</strong> : (<a href="#csp-type"><code>Csp</code></a>) The request-scoped report-only Content Security Policy; its directives are emitted as the response&#8217;s <code>Content-Security-Policy-Report-Only</code> header.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1077,7 +1077,7 @@ cspReportOnly().scriptSrc(CspSource.SELF);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;fundamentals/types#component, `Component`&gt;&gt;) The current component, or `null` if there is no component in the current context.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#component"><code>Component</code></a>) The current component, or <code>null</code> if there is no component in the current context.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1129,7 +1129,7 @@ log.info('Current component name = %s', result.name);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;fundamentals/types#content, `Content`&gt;&gt;) The current content, or `null` if there is no content in the current context.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#content"><code>Content</code></a>) The current content, or <code>null</code> if there is no content in the current context.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1212,7 +1212,7 @@ if (idProviderKey) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;multipart-form, `MultipartForm`&gt;&gt;) The multipart form items.</p>
+<p><strong>object</strong> : (<a href="#multipart-form"><code>MultipartForm</code></a>) The multipart form items.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1269,7 +1269,7 @@ log.info('Multipart form %s', result);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;multipart-item, `MultipartItem`&gt;&gt;) The named multipart form item, or `null` if it does not exist.</p>
+<p><strong>object</strong> : (<a href="#multipart-item"><code>MultipartItem</code></a>) The named multipart form item, or <code>null</code> if it does not exist.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1310,7 +1310,7 @@ log.info('Multipart item %s', result);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;fundamentals/types#byte-source, `ByteSource`&gt;&gt;) Stream of multipart item data, or `null` if the item does not exist.</p>
+<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#byte-source"><code>ByteSource</code></a>) Stream of multipart item data, or <code>null</code> if the item does not exist.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1361,7 +1361,7 @@ const text = getMultipartText('item1');</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;site, `Site`&gt;&gt;) The current site, or `null` if the content has no parent site.</p>
+<p><strong>object</strong> : (<a href="#site"><code>Site</code></a>) The current site, or <code>null</code> if the content has no parent site.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2997,7 +2997,7 @@ const url = buildUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-18 11:08:57 UTC
+Last updated 2026-06-18 11:23:06 UTC
 </div>
 </div>
 </body>
