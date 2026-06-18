@@ -2551,10 +2551,10 @@ const url = buildUrl({
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>merge(headerValue?)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>merge(headerValue)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Parses a <code>Content-Security-Policy</code> header value and unions each directive&#8217;s sources onto the policy — existing directives are extended and absent ones added, so you can grant extra permissions on top of a policy built elsewhere without restating it. A wired nonce is kept; <code>'nonce-…'</code> sources in the value are dropped. Lenient (invalid tokens skipped); <code>null</code> / <code>undefined</code> adds nothing.</p>
+<p>Parses a <code>Content-Security-Policy</code> header value and unions each directive&#8217;s sources onto the policy — existing directives are extended and absent ones added, so you can grant extra permissions on top of a policy built elsewhere without restating it. A wired nonce is kept; <code>'nonce-…'</code> sources in the value are dropped. Lenient (invalid tokens skipped); an empty or blank value adds nothing.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2579,10 +2579,10 @@ const url = buildUrl({
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resetTo(headerValue?)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resetTo(headerValue)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Replaces the whole policy with the directives parsed from a raw header string; later contributions still apply on top. Parsing is lenient, mirroring the browser — invalid tokens are skipped, <code>'nonce-…'</code> sources are dropped, and of repeated directives only the first counts. A comma (which would begin a further policy) and everything after it is ignored — only the first policy is applied. A <code>null</code>, <code>undefined</code>, empty or blank value clears the policy.</p>
+<p>Replaces the whole policy with the directives parsed from a raw header string; later contributions still apply on top. Parsing is lenient, mirroring the browser — invalid tokens are skipped, <code>'nonce-…'</code> sources are dropped, and of repeated directives only the first counts. A comma (which would begin a further policy) and everything after it is ignored — only the first policy is applied. An empty or blank value clears the policy.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2997,7 +2997,7 @@ const url = buildUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-18 11:23:06 UTC
+Last updated 2026-06-18 11:45:56 UTC
 </div>
 </div>
 </body>
