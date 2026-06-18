@@ -1,0 +1,3004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<title>Portal library</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock pre>code{display:block}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="article toc2 toc-right">
+<div id="header">
+<h1>Portal library</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#usage">Usage</a></li>
+<li><a href="#functions">Functions</a>
+<ul class="sectlevel2">
+<li><a href="#apiurl">apiUrl</a></li>
+<li><a href="#asseturl">assetUrl</a></li>
+<li><a href="#attachmentUrl">attachmentUrl</a></li>
+<li><a href="#baseurl">baseUrl</a></li>
+<li><a href="#componenturl">componentUrl</a></li>
+<li><a href="#csp">csp</a></li>
+<li><a href="#cspreportonly">cspReportOnly</a></li>
+<li><a href="#getcomponent">getComponent</a></li>
+<li><a href="#getcontent">getContent</a></li>
+<li><a href="#getidproviderkey">getIdProviderKey</a></li>
+<li><a href="#getmultipartform">getMultipartForm</a></li>
+<li><a href="#getmultipartitem">getMultipartItem</a></li>
+<li><a href="#getmultipartstream">getMultipartStream</a></li>
+<li><a href="#getmultiparttext">getMultipartText</a></li>
+<li><a href="#getsite">getSite</a></li>
+<li><a href="#getsiteconfig">getSiteConfig</a></li>
+<li><a href="#idproviderurl">idProviderUrl</a></li>
+<li><a href="#imageplaceholder">imagePlaceholder</a></li>
+<li><a href="#imageUrl">imageUrl</a></li>
+<li><a href="#loginurl">loginUrl</a></li>
+<li><a href="#logouturl">logoutUrl</a></li>
+<li><a href="#pageurl">pageUrl</a></li>
+<li><a href="#processhtml">processHtml</a></li>
+<li><a href="#sanitizehtml">sanitizeHtml</a></li>
+<li><a href="#serviceurl">serviceUrl</a></li>
+<li><a href="#url">url</a></li>
+</ul>
+</li>
+<li><a href="#type_definitions">Type Definitions</a>
+<ul class="sectlevel2">
+<li><a href="#site">Site</a></li>
+<li><a href="#site-config">SiteConfig</a></li>
+<li><a href="#multipart-form">MultipartForm</a></li>
+<li><a href="#multipart-item">MultipartItem</a></li>
+<li><a href="#csp-type">Csp</a></li>
+<li><a href="#csp-source">CspSource</a></li>
+<li><a href="#sandbox-flag">SandboxFlag</a></li>
+<li><a href="#trusted-types-keyword">TrustedTypesKeyword</a></li>
+<li><a href="#csp-hash-source">CspHashSource</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>API to access functions related to rendering.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Add the following to your <code>build.gradle</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+  include xplibs.portal
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the <code>import</code> statement to your code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import portalLib from '/lib/xp/portal';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You are now ready to use the API.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="apiurl"><a class="link" href="#apiurl">apiUrl</a></h3>
+<div class="paragraph">
+<p>Generates a URL pointing to a <a href="web/apis.ahtml">Universal API</a>. Picks the right URL form based on the calling context — a service-point under the active service when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>apiUrl()</code> takes a single <code>ApiUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">api</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Descriptor key in <code>&lt;app&gt;:&lt;api&gt;</code> form.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative), <code>absolute</code>, or <code>websocket</code>. Defaults to <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Path appended after the API segment. Accepts a string or a string array.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Override the resolved base URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {apiUrl} from '/lib/xp/portal';
+
+const url = apiUrl({
+  api: 'com.example.myapp:myapi',
+  path: '/items',
+  params: {
+    id: '42'
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="asseturl"><a class="link" href="#asseturl">assetUrl</a></h3>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p><code>assetUrl</code> is deprecated and will be removed in future versions.
+<a href="https://developer.enonic.com/docs/lib-asset"><code>lib-asset</code></a> and <a href="https://developer.enonic.com/docs/lib-static"><code>lib-static</code></a> are introduced as a replacement.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Generates URL to a static file.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>assetUrl()</code> takes a single <code>AssetUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Path to the asset.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Other application to reference to. Defaults to current application.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {assetUrl} from '/lib/xp/portal';
+
+const url = assetUrl({
+  path: 'styles/main.css'
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="attachmentUrl"><a class="link" href="#attachmentUrl">attachmentUrl</a></h3>
+<div class="paragraph">
+<p>Generates URL to an attachment.</p>
+</div>
+<div class="paragraph">
+<p>If <code>name</code> is provided, XP will try to find an attachment by the unique name and give an exception if it&#8217;s not found. If <code>name</code> is empty but <code>label</code> is provided, XP will try to find an attachment with the provided label (will return the first one if several were found, or give an exception if none were found). If both <code>name</code> and <code>label</code> are empty, XP will generate attachment url only for a binary content with an attachment.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>attachmentUrl()</code> takes a single <code>AttachmentUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Id of the content with the attachment.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Path to the content with the attachment.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Unique name of the attachment.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Label of the attachment. Default is <code>source</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">download</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Set to <code>true</code> if the disposition header should be set to attachment. Default is <code>false</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Name of the project.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Name of the branch.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom baseUrl.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {attachmentUrl} from '/lib/xp/portal';
+
+const url = attachmentUrl({
+  id: '1234',
+  download: true
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="baseurl"><a class="link" href="#baseurl">baseUrl</a></h3>
+<div class="paragraph">
+<p>Generates a base URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>baseUrl()</code> takes a single <code>BaseUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> ID of the content.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Path to the content.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Name of the project to use for resolving the URL.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Name of the branch to use for resolving the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {baseUrl} from '/lib/xp/portal';
+
+const url = baseUrl({
+  type: 'server',
+  path: '/path',
+  project: 'explicit-project',
+  branch: 'explicit-branch'
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="componenturl"><a class="link" href="#componenturl">componentUrl</a></h3>
+<div class="paragraph">
+<p>Generates URL to a page component.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>componentUrl()</code> takes a single <code>ComponentUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Id to the page.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Path to the page.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">component</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Path to the component. If not set, the current path is set.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {componentUrl} from '/lib/xp/portal';
+
+const url = componentUrl({
+  component: 'main/0'
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="csp"><a class="link" href="#csp">csp</a></h3>
+<div id="csp" class="paragraph">
+<p>Returns the request-scoped <strong>enforced</strong> <a href="#csp-type">Content Security Policy</a> builder for the current portal request. Its directives are composed into the <code>Content-Security-Policy</code> header emitted on the response. For the report-only companion, use <a href="#cspReportOnly"><code>cspReportOnly()</code></a>. Takes no arguments.</p>
+</div>
+<div class="paragraph">
+<p>One policy is shared for the whole request, so a page with its layouts, parts and any <a href="web/sites/processors.ahtml">response processors</a> all contribute to the same header. It is composed and emitted automatically when the response is flushed, so late contributions still land — you never set the header yourself.</p>
+</div>
+<div class="paragraph">
+<p>A <code>Content-Security-Policy</code> header set directly on the response is folded into the policy (as if passed to <code>resetTo()</code>) rather than sent verbatim, so later contributions still apply on top; a <code>Content-Security-Policy-Report-Only</code> header is folded into the report-only policy the same way.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Setting the <code>Content-Security-Policy</code> header directly is a legacy path, kept only for compatibility with existing apps. New code should declare the policy through <code>csp()</code> (and <a href="#cspReportOnly"><code>cspReportOnly()</code></a> for report-only) instead.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;csp-type, `Csp`&gt;&gt;) The request-scoped Content Security Policy; its directives are emitted as the response's `Content-Security-Policy` header.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Seed a deny-all baseline, then open up only what the page needs:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {csp, CspSource} from '/lib/xp/portal';
+
+const policy = csp();
+
+// Deny-all baseline: default-src, base-uri and frame-ancestors all 'none'
+policy.strict();
+
+// Open up only the directives this page needs (calls chain)
+policy
+  .scriptSrc(CspSource.SELF, 'https://cdn.example.com')
+  .styleSrc(CspSource.SELF)
+  .imgSrc(CspSource.SELF, CspSource.DATA);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Allow one inline script with a per-request nonce:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {csp} from '/lib/xp/portal';
+
+// Wires 'nonce-&lt;value&gt;' into script-src and returns the value to stamp on the tag
+const nonce = csp().nonceScriptSrc();
+
+const view = `&lt;script nonce="${nonce}"&gt;window.app = {};&lt;/script&gt;`;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cspreportonly"><a class="link" href="#cspreportonly">cspReportOnly</a></h3>
+<div id="cspReportOnly" class="paragraph">
+<p>Returns the request-scoped <strong>report-only</strong> <a href="#csp-type">Content Security Policy</a> builder, emitted as the <code>Content-Security-Policy-Report-Only</code> header. Takes no arguments.</p>
+</div>
+<div class="paragraph">
+<p>It is an independent companion to the enforced policy from <a href="#csp"><code>csp()</code></a> — the same <a href="#csp-type"><code>Csp</code></a> API, sharing the request nonce — and the two headers can coexist on one response, so you can enforce a settled policy while trialling a stricter one. While the report-only policy is left empty, no header is emitted.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;csp-type, `Csp`&gt;&gt;) The request-scoped report-only Content Security Policy; its directives are emitted as the response's `Content-Security-Policy-Report-Only` header.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Enforce one policy while trialling a stricter one in report-only mode:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {csp, cspReportOnly, CspSource} from '/lib/xp/portal';
+
+// Enforced: still allow inline scripts for now
+csp().scriptSrc(CspSource.SELF, CspSource.UNSAFE_INLINE);
+
+// Report-only: trial a strict policy — violations are reported, not blocked
+cspReportOnly().scriptSrc(CspSource.SELF);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getcomponent"><a class="link" href="#getcomponent">getComponent</a></h3>
+<div class="paragraph">
+<p>Returns the component in the current execution context. Meant to be called from a layout or part. Takes no arguments.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;fundamentals/types#component, `Component`&gt;&gt;) The current component, or `null` if there is no component in the current context.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Returns component in the current context:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getComponent} from '/lib/xp/portal';
+
+const result = getComponent();
+log.info('Current component name = %s', result.name);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
+  path: "/main/0",
+  type: "layout",
+  descriptor: "myapplication:mylayout",
+  config: {
+    a: "1"
+  },
+  regions: {
+    bottom: {
+      components: [
+        {
+          path: "/main/0/bottom/0",
+          type: "part",
+          descriptor: "myapplication:mypart",
+          config: {
+            a: "1"
+          }
+        }
+      ],
+      name: "bottom"
+    }
+  }
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getcontent"><a class="link" href="#getcontent">getContent</a></h3>
+<div class="paragraph">
+<p>Returns the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;fundamentals/types#content, `Content`&gt;&gt;) The current content, or `null` if there is no content in the current context.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Get content and log the result:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getContent} from '/lib/xp/portal';
+
+const result = getContent();
+log.info('Current content path = %s', result._path);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
+  _id: "123456",
+  _name: "mycontent",
+  _path: "/a/b/mycontent",
+  creator: "user:system:admin",
+  modifier: "user:system:admin",
+  createdTime: "1970-01-01T00:00:00Z",
+  modifiedTime: "1970-01-01T00:00:00Z",
+  type: "base:unstructured",
+  displayName: "My Content",
+  hasChildren: false,
+  language: "en",
+  valid: false,
+  data: {
+    a: "1"
+  },
+  x: {},
+  page: {},
+  attachments: {},
+  publish: {}
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getidproviderkey"><a class="link" href="#getidproviderkey">getIdProviderKey</a></h3>
+<div class="paragraph">
+<p>Returns the key of ID provider in the current execution context. Takes no arguments.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string|null</strong> : The current ID provider key, or <code>null</code> if no ID provider is bound to the current context.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Returns the current ID provider:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getIdProviderKey} from '/lib/xp/portal';
+
+const idProviderKey = getIdProviderKey();
+
+if (idProviderKey) {
+    log.info('Id provider key: %s', idProviderKey);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = "myidprovider";</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getmultipartform"><a class="link" href="#getmultipartform">getMultipartForm</a></h3>
+<div class="paragraph">
+<p>Returns a JSON containing multipart items. If the request is not multipart, an empty object is returned. Takes no arguments.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;multipart-form, `MultipartForm`&gt;&gt;) The multipart form items.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Get the form and log the result:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartForm} from '/lib/xp/portal';
+
+const result = getMultipartForm();
+log.info('Multipart form %s', result);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
+  item1: {
+    name: "item1",
+    fileName: "item1.jpg",
+    contentType: "image/png",
+    size: 10
+  },
+  item2: [
+    {
+      name: "item2",
+      fileName: "image1.png",
+      contentType: "image/png",
+      size: 123
+    },
+    {
+      name: "item2",
+      fileName: "image2.jpg",
+      contentType: "image/jpeg",
+      size: 456
+    }
+  ]
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getmultipartitem"><a class="link" href="#getmultipartitem">getMultipartItem</a></h3>
+<div class="paragraph">
+<p>Returns a JSON containing a named multipart item. If the item does not exist, it returns <code>null</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>getMultipartItem()</code> takes the <code>name</code> of the multipart item (string) and an optional zero-based <code>index</code> (number) — specify the index when several items share the same name.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;multipart-item, `MultipartItem`&gt;&gt;) The named multipart form item, or `null` if it does not exist.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Get item and log the result:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartItem} from '/lib/xp/portal';
+
+const result = getMultipartItem('item1');
+log.info('Multipart item %s', result);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
+  name: "item1",
+  fileName: "item1.jpg",
+  contentType: "image/png",
+  size: 10
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getmultipartstream"><a class="link" href="#getmultipartstream">getMultipartStream</a></h3>
+<div class="paragraph">
+<p>Returns a data stream for a named multipart item. If the item does not exist, it returns <code>null</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>getMultipartStream()</code> takes the <code>name</code> of the multipart item (string) and an optional zero-based <code>index</code> (number) — specify the index when several items share the same name.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;fundamentals/types#byte-source, `ByteSource`&gt;&gt;) Stream of multipart item data, or `null` if the item does not exist.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartStream} from '/lib/xp/portal';
+
+const stream1 = getMultipartStream('item2');
+const stream2 = getMultipartStream('item2', 1);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getmultiparttext"><a class="link" href="#getmultiparttext">getMultipartText</a></h3>
+<div class="paragraph">
+<p>Returns the multipart item data as text. If the item does not exist, it returns <code>null</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>getMultipartText()</code> takes the <code>name</code> of the multipart item (string) and an optional zero-based <code>index</code> (number) — specify the index when several items share the same name.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string|null</strong> : Text for multipart item data, or <code>null</code> if the item does not exist.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMultipartText} from '/lib/xp/portal';
+
+const text = getMultipartText('item1');</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getsite"><a class="link" href="#getsite">getSite</a></h3>
+<div class="paragraph">
+<p>Returns the parent site of the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>*object* : (&lt;&lt;site, `Site`&gt;&gt;) The current site, or `null` if the content has no parent site.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Get site and log the result:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getSite} from '/lib/xp/portal';
+
+const result = getSite();
+log.info('Current site name = %s', result._name);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
+  _id: "100123",
+  _name: "my-content",
+  _path: "/my-content",
+  type: "base:unstructured",
+  hasChildren: false,
+  valid: false,
+  data: {
+    siteConfig: {
+      applicationKey: "myapplication",
+      config: {
+        Field: 42
+      }
+    }
+  },
+  x: {},
+  page: {},
+  attachments: {},
+  publish: {}
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="getsiteconfig"><a class="link" href="#getsiteconfig">getSiteConfig</a></h3>
+<div class="paragraph">
+<p>Returns the configuration of the parent site for the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>object|null</strong> : The site configuration for the current application, or <code>null</code> if the content has no parent site.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Get site and log the result:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getSiteConfig} from '/lib/xp/portal';
+
+const result = getSiteConfig();
+log.info('Field value for the current site config = %s', result.Field);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = {
+  Field: 42
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="idproviderurl"><a class="link" href="#idproviderurl">idProviderUrl</a></h3>
+<div class="paragraph">
+<p>Generates URL to an ID provider.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>idProviderUrl()</code> takes a single, optional <code>IdProviderUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Key of an ID provider. If idProvider is not set, then the id provider corresponding to the current execution context will be used.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="imageplaceholder"><a class="link" href="#imageplaceholder">imagePlaceholder</a></h3>
+<div class="paragraph">
+<p>Generates URL of an image placeholder with a specified size.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>imagePlaceholder()</code> takes a single <code>ImagePlaceholderParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">width</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Width of the image in pixels.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">height</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Height of the image in pixels.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : Placeholder image URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Obtains image encoded to base64:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imagePlaceholder} from '/lib/xp/portal';
+
+const url = imagePlaceholder({
+  width: 32,
+  height: 24
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAGUlEQVR42u3BAQEAAACCIP+vbkhAAQAA7wYMGAAB93LuRQAAAABJRU5ErkJggg==';</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="imageUrl"><a class="link" href="#imageUrl">imageUrl</a></h3>
+<div class="paragraph">
+<p>Generates URL to an image.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>imageUrl()</code> takes a single <code>ImageUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> ID of the image content. Either <code>id</code> or <code>path</code> is required.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Path to the image. If <code>id</code> is specified, this parameter is not used.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scale</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Options are <code>width(px)</code>, <code>height(px)</code>, <code>block(width,height)</code>, <code>square(px)</code>, <code>max(px)</code>, <code>wide(width,height)</code> and <code>full</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">quality</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Quality for JPEG images, ranges from 0 (max compression) to 100 (min compression). Default is <code>85</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">background</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Background color.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">format</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Format of the image.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">filter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> A number of filters are available to alter the image appearance, for example, blur(3), grayscale(), rounded(5), etc.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Name of the project.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Name of the branch.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom baseUrl.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Obtains image url:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+  id: '1234',
+  scale: 'block(1024,768)',
+  filter: 'rounded(5);sharpen()'
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="loginurl"><a class="link" href="#loginurl">loginUrl</a></h3>
+<div class="paragraph">
+<p>Generates URL to the login endpoint of an ID provider.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>loginUrl()</code> takes a single, optional <code>LoginUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Id provider key. If idProvider is not set, then the id provider corresponding to the current execution context will be used.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redirect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The URL to redirect to after the login.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="logouturl"><a class="link" href="#logouturl">logoutUrl</a></h3>
+<div class="paragraph">
+<p>Generates URL to the logout endpoint of ID provider in the current context.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>logoutUrl()</code> takes a single, optional <code>LogoutUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redirect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The URL to redirect to after the logout.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="pageurl"><a class="link" href="#pageurl">pageUrl</a></h3>
+<div class="paragraph">
+<p>Generates URL to a content page.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>pageUrl()</code> takes a single <code>PageUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Id of a content. If id is set, then path is not used.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Path of a content. Relative paths are resolved based on the current context.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Project of the context.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Branch of the project for context.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Obtains page url:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {pageUrl} from '/lib/xp/portal';
+
+const url = pageUrl({
+  path: '/my/page',
+  params: {
+    a: 1,
+    b: [1, 2]
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="processhtml"><a class="link" href="#processhtml">processHtml</a></h3>
+<div id="processHtml" class="paragraph">
+<p>Resolves internal links to images and internal content items contained in an HTML text and replaces them with correct URLs.
+It will also process embedded macros.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+When outputting processed HTML in Thymeleaf, use attribute <code>data-th-utext="${processedHtml}"</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>processHtml()</code> takes a single <code>ProcessHtmlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Html value string to process.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imageWidths</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> A comma-separated list of image widths. If this parameter is provided, all <code>&lt;img&gt;</code> tags will have an additional <code>srcset</code> attribute with image URLs generated for specified widths.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">imageSizes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Specifies the width for an image depending on browser dimensions. The value has the following format: <code>(media-condition) width</code>. Multiple sizes are comma-separated.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The processed HTML.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Process HTML:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {processHtml} from '/lib/xp/portal';
+
+const html = processHtml({
+  value: '&lt;a href="content://123" target=""&gt;Content&lt;/a&gt;' +
+         '&lt;a href="media://inline/123" target=""&gt;Inline&lt;/a&gt;' +
+         '&lt;a href="media://download/123" target=""&gt;Download&lt;/a&gt;' +
+         '&lt;img src="image://123"/&gt;',
+  imageWidths: [32, 480, 800]
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sanitizehtml"><a class="link" href="#sanitizehtml">sanitizeHtml</a></h3>
+<div class="paragraph">
+<p>Sanitizes an HTML string by stripping all potentially unsafe tags and attributes.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+HTML sanitization can be used to protect against cross-site scripting (XSS) attacks by sanitizing any HTML code submitted by a user.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>sanitizeHtml()</code> takes the <code>html</code> string value to process.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The sanitized HTML.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Sanitizes unsafe HTML:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {sanitizeHtml} from '/lib/xp/portal';
+
+const unsafeHtml = '&lt;p&gt;&lt;a href="https://example.com/" onclick="stealCookies()"&gt;Link&lt;/a&gt;&lt;/p&gt;' +
+                 '&lt;iframe src="javascript:alert(\'XSS\');"&gt;&lt;/iframe&gt;';
+const sanitizedHtml = sanitizeHtml(unsafeHtml);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Return value:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const expected = '&lt;p&gt;&lt;a href="https://example.com/"&gt;Link&lt;/a&gt;&lt;/p&gt;';</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="serviceurl"><a class="link" href="#serviceurl">serviceUrl</a></h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+HTTP services are deprecated in XP 8 in favor of <a href="web/apis.ahtml">Universal APIs</a>. Use <a href="#apiurl">apiUrl</a> for new code; <code>serviceUrl()</code> is retained for backward compatibility with legacy services in <code>src/main/resources/services/</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Generates URL to a service.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>serviceUrl()</code> takes a single <code>ServiceUrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the service.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Other application to reference to. Default is current application.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {serviceUrl} from '/lib/xp/portal';
+
+const url = serviceUrl({
+  service: 'myservice',
+  params: {
+    a: 1,
+    b: 2
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="url"><a class="link" href="#url">url</a></h3>
+<div class="paragraph">
+<p>Generates URL to a resource.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>url()</code> takes a single <code>UrlParams</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Path to the resource. If a string is provided, it is treated as a full path. If an array of strings is provided, each element is treated as a path segment and will be joined using <code>/</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The generated URL.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {url as buildUrl} from '/lib/xp/portal';
+
+const url = buildUrl({
+  path: '/site/master/mysite',
+  params: {
+    a: 1,
+    b: 2
+  }
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="site"><a class="link" href="#site">Site</a></h3>
+<div class="paragraph">
+<p>A site is a specialized <a href="fundamentals/types.ahtml#content"><code>Content</code></a> of type <code>portal:site</code>. In addition to the standard content properties, its <code>data</code> carries the site&#8217;s app configurations.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Site description.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">siteConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#site-config">SiteConfig</a> | <a href="#site-config">SiteConfig</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configuration for one or more applications enabled on the site. A single object when one application is configured, otherwise an array.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="site-config"><a class="link" href="#site-config">SiteConfig</a></h3>
+<div class="paragraph">
+<p>Configuration entry for a single application enabled on a site.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">applicationKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Key of the application this configuration applies to.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The application&#8217;s site configuration, shaped by its site descriptor form.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="multipart-form"><a class="link" href="#multipart-form">MultipartForm</a></h3>
+<div class="paragraph">
+<p>A JSON object keyed by item name, where each value is a <a href="#multipart-item">MultipartItem</a> or an array of them when several items share the same name.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="multipart-item"><a class="link" href="#multipart-item">MultipartItem</a></h3>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the multipart item.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fileName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Original file name of the uploaded item.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contentType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>MIME content type of the item.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Size of the item in bytes.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="csp-type"><a class="link" href="#csp-type">Csp</a></h3>
+<div class="paragraph">
+<p>A request-scoped Content Security Policy builder, obtained from <a href="#csp"><code>csp()</code></a> (enforced) or <a href="#cspReportOnly"><code>cspReportOnly()</code></a> (report-only). Within each, repeated calls to the accessor hand back a fresh handle onto the same underlying policy, so every page, layout, part and processor contributes to the one emitted header. Method calls on a handle, by contrast, all return the same <code>Csp</code> instance (except the nonce getters and <code>directive()</code>), so calls chain.</p>
+</div>
+<div class="paragraph">
+<p>Contributions merge by <strong>union</strong>: a directive&#8217;s source list is the union of every contributor&#8217;s sources, deduped and emitted in the order added. The builder does not arbitrate between sources that interact in the browser — for example <code>'unsafe-inline'</code> alongside a <code>'nonce-…'</code>, a hash, or <code>'strict-dynamic'</code>, which the browser then ignores. It emits exactly what you declare.</p>
+</div>
+<div class="paragraph">
+<p>Sources are validated: a value containing <code>;</code> or whitespace (a policy-injection attempt) throws, and a hand-supplied <code>'nonce-…'</code> source is rejected — only the <code>nonce*</code> methods generate the request nonce.</p>
+</div>
+<div class="paragraph lead">
+<p>Source-list directives</p>
+</div>
+<div class="paragraph">
+<p>Each unions the given sources — <a href="#csp-source"><code>CspSource</code></a> values or raw strings (hosts, schemes, paths, URLs) — into the named directive.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>defaultSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>default-src</code> — the fetch directive the others fall back to when omitted.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scriptSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>script-src</code> (JavaScript and WebAssembly); the fallback for <code>script-src-elem</code> and <code>script-src-attr</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>styleSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>style-src</code> (stylesheets); the fallback for <code>style-src-elem</code> and <code>style-src-attr</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>img-src</code> (images and favicons).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fontSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>font-src</code> (fonts loaded with <code>@font-face</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>connect-src</code> (<code>fetch</code>, <code>XMLHttpRequest</code>, <code>WebSocket</code>, <code>EventSource</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mediaSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>media-src</code> (<code>&lt;audio&gt;</code>, <code>&lt;video&gt;</code>, <code>&lt;track&gt;</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>objectSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>object-src</code> (<code>&lt;object&gt;</code> and <code>&lt;embed&gt;</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>frameSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>frame-src</code> (<code>&lt;frame&gt;</code>, <code>&lt;iframe&gt;</code>); falls back to <code>child-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workerSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>worker-src</code> (<code>Worker</code>, <code>SharedWorker</code>, <code>ServiceWorker</code>); falls back to <code>child-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>manifestSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>manifest-src</code> (application manifest files).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>childSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>child-src</code> — the fallback for <code>frame-src</code> and <code>worker-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scriptSrcElem(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>script-src-elem</code> (governs <code>&lt;script&gt;</code> elements); falls back to <code>script-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scriptSrcAttr(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>script-src-attr</code> (governs inline event handlers such as <code>onclick</code>); falls back to <code>script-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>styleSrcElem(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>style-src-elem</code> (governs <code>&lt;style&gt;</code> and <code>&lt;link rel=stylesheet&gt;</code>); falls back to <code>style-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>styleSrcAttr(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>style-src-attr</code> (governs inline <code>style</code> attributes); falls back to <code>style-src</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Document and navigation directives</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>frameAncestors(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>frame-ancestors</code> — which parents may embed this page via <code>&lt;frame&gt;</code>/<code>&lt;iframe&gt;</code>/<code>&lt;object&gt;</code>/<code>&lt;embed&gt;</code>. Does not fall back to <code>default-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUri(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>base-uri</code> — the URLs allowed in a <code>&lt;base&gt;</code> element. Does not fall back to <code>default-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>formAction(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>form-action</code> — where forms may submit.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Baseline and low-level building blocks</p>
+</div>
+<div class="paragraph">
+<p>Prefer the typed methods above; reach for these for directives the typed API does not cover, to inspect the policy, or for whole-policy operations.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>strict()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Seeds a deny-all baseline — <code>default-src</code>, <code>base-uri</code> and <code>frame-ancestors</code> all set to <code>'none'</code>. Call it first, then open up only the directives you need.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>add(directive, &#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into any directive by name (deduped). With no sources, registers a valueless directive such as <code>upgrade-insecure-requests</code>. A <code>'nonce-…'</code> source is rejected.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>merge(headerValue?)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Parses a <code>Content-Security-Policy</code> header value and unions each directive&#8217;s sources onto the policy — existing directives are extended and absent ones added, so you can grant extra permissions on top of a policy built elsewhere without restating it. A wired nonce is kept; <code>'nonce-…'</code> sources in the value are dropped. Lenient (invalid tokens skipped); <code>null</code> / <code>undefined</code> adds nothing.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>directive(name)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string[] | null</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The sources currently declared for <code>name</code> (deduped, in serialized order), or <code>null</code> if no contributor has declared it. A declared valueless directive returns an empty array. Reads this policy only.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>override(directive, &#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Replaces a directive&#8217;s source list with exactly these sources, overriding what other contributors set. Not frozen — a later <code>add()</code> still extends it. To remove a directive entirely, use <code>reset()</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reset(&#8230;&#8203;directives)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Removes the named directives (for example to unset a valueless directive). With no argument, removes nothing.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resetTo(headerValue?)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Replaces the whole policy with the directives parsed from a raw header string; later contributions still apply on top. Parsing is lenient, mirroring the browser — invalid tokens are skipped, <code>'nonce-…'</code> sources are dropped, and of repeated directives only the first counts. A comma (which would begin a further policy) and everything after it is ignored — only the first policy is applied. A <code>null</code>, <code>undefined</code>, empty or blank value clears the policy.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Nonces and hashes</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceScriptSrc()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the request nonce into <code>script-src</code> and returns its value, to stamp on inline <code>&lt;script nonce="..."&gt;</code> tags. Stable for the whole request — every <code>nonce*</code> method returns this same value.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceScriptSrcElem()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the same nonce into <code>script-src-elem</code> (governs <code>&lt;script&gt;</code> elements). Use it when that directive is set with <code>'strict-dynamic'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceStyleSrc()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the same nonce into <code>style-src</code>, to stamp on inline <code>&lt;style nonce="..."&gt;</code> tags.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceStyleSrcElem()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the same nonce into <code>style-src-elem</code> (governs <code>&lt;style&gt;</code> and <code>&lt;link rel=stylesheet&gt;</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>shaScriptSrc(source)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions a hash source into <code>script-src</code>. Takes a <a href="#csp-hash-source"><code>CspHashSource</code></a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>shaStyleSrc(source)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions a hash source into <code>style-src</code>. Takes a <a href="#csp-hash-source"><code>CspHashSource</code></a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Sandbox and Trusted Types</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sandbox(&#8230;&#8203;flags)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions <a href="#sandbox-flag"><code>SandboxFlag</code></a> values into the <code>sandbox</code> directive. With no flags, registers an empty <code>sandbox</code> (every restriction applied).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requireTrustedTypesForScript()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Registers <code>require-trusted-types-for 'script'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustedTypes(&#8230;&#8203;values)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Adds policy names and/or <a href="#trusted-types-keyword"><code>TrustedTypesKeyword</code></a> keywords to the <code>trusted-types</code> directive.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Reporting</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportTo(group)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Adds the <code>report-to</code> directive naming a reporting group. Define the group with a companion <code>Reporting-Endpoints</code> response header (the caller&#8217;s responsibility). The older <code>report-uri</code> is deprecated; use <code>add('report-uri', &#8230;&#8203;)</code> if still needed.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="csp-source"><a class="link" href="#csp-source">CspSource</a></h3>
+<div class="paragraph">
+<p>Common source-list keywords and schemes for a CSP source expression, per W3C CSP3. Keyword values are single-quoted; scheme values end in a colon. Pass these to any source-list directive method, alongside raw strings for hosts, paths and URLs.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SELF</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'self'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The page&#8217;s own origin.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'none'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The empty set — matches nothing.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSAFE_INLINE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'unsafe-inline'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows inline scripts and styles. The browser ignores it when a nonce or hash is also present.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSAFE_EVAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'unsafe-eval'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows <code>eval()</code> and similar string-to-code APIs.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>STRICT_DYNAMIC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'strict-dynamic'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Propagates trust from a nonced/hashed script to the scripts it loads.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSAFE_HASHES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'unsafe-hashes'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows specific inline event handlers and <code>style</code> attributes matched by hash.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WASM_UNSAFE_EVAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'wasm-unsafe-eval'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows WebAssembly compilation without allowing <code>eval()</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REPORT_SAMPLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'report-sample'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Asks the browser to include a sample of the offending content in violation reports.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data:</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The <code>data:</code> scheme.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>blob:</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The <code>blob:</code> scheme.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WILDCARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Matches any URL, except the <code>data:</code>, <code>blob:</code> and <code>filesystem:</code> schemes.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="sandbox-flag"><a class="link" href="#sandbox-flag">SandboxFlag</a></h3>
+<div class="paragraph">
+<p>Flags for the <code>sandbox</code> directive, passed to <code>sandbox()</code>. Tokens are emitted unquoted, as the CSP spec defines them. Each flag lifts one of the sandbox&#8217;s default restrictions.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_SCRIPTS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-scripts</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content run scripts.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_SAME_ORIGIN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-same-origin</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content keep its origin instead of being forced into an opaque one.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_FORMS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-forms</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content submit forms.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_POPUPS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-popups</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content open popups.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_MODALS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-modals</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content open modal dialogs.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_TOP_NAVIGATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-top-navigation</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content navigate the top-level browsing context.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_DOWNLOADS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-downloads</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content start downloads.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_POINTER_LOCK</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-pointer-lock</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content use the Pointer Lock API.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_PRESENTATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-presentation</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content start a presentation session.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_ORIENTATION_LOCK</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-orientation-lock</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content lock the screen orientation.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="trusted-types-keyword"><a class="link" href="#trusted-types-keyword">TrustedTypesKeyword</a></h3>
+<div class="paragraph">
+<p>Special keywords for the <code>trusted-types</code> directive, passed to <code>trustedTypes()</code> alongside user-defined policy names.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_DUPLICATES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'allow-duplicates'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows creating more than one Trusted Types policy with the same name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'none'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Disallows creating any Trusted Types policy.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WILDCARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows any policy name.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="csp-hash-source"><a class="link" href="#csp-hash-source">CspHashSource</a></h3>
+<div class="paragraph">
+<p>A hash source passed to <code>shaScriptSrc()</code> / <code>shaStyleSrc()</code>. Provide either inline <code>content</code> to digest, or a precomputed <code>hash</code> — the two are mutually exclusive.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Inline script or style text to digest. The computed <code>'&lt;algo&gt;-&lt;base64&gt;'</code> source is added to the directive. Provide either <code>content</code> or <code>hash</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hash</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Precomputed base64 digest, emitted verbatim as <code>'&lt;algo&gt;-&lt;hash&gt;'</code>. Provide either <code>content</code> or <code>hash</code>; when used, <code>algo</code> is required.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">algo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Hash algorithm — one of <code>sha256</code>, <code>sha384</code> or <code>sha512</code>. Defaults to <code>sha256</code> when digesting <code>content</code>; required with <code>hash</code>. Any other value throws.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-06-18 11:08:57 UTC
+</div>
+</div>
+</body>
+</html>

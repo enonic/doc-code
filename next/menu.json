@@ -1,0 +1,336 @@
+{
+  "menuItems": [
+    {
+      "title": "Intro",
+      "document": "index"
+    },
+    {
+      "title": "Tooling",
+      "document": "tooling",
+      "menuItems": [
+        {
+          "title": "CLI",
+          "document": "tooling/cli"
+        },
+        {
+          "title": "Sandboxes",
+          "document": "tooling/sandboxes"
+        },
+        {
+          "title": "Starters",
+          "document": "tooling/starters"
+        },
+        {
+          "title": "Build system",
+          "document": "tooling/build"
+        },
+        {
+          "title": "CI/CD",
+          "document": "tooling/ci-cd"
+        }
+      ]
+    },
+    {
+      "title": "Schemas",
+      "document": "schemas"
+    },
+    {
+      "title": "Storage",
+      "document": "storage",
+      "menuItems": [
+        {
+          "title": "Querying",
+          "document": "storage/querying"
+        },
+        {
+          "title": "Aggregations",
+          "document": "storage/aggregations"
+        },
+        {
+          "title": "Highlighting",
+          "document": "storage/highlighting"
+        },
+        {
+          "title": "Editors",
+          "document": "storage/editors"
+        },
+        {
+          "title": "Permissions",
+          "document": "storage/permissions"
+        },
+        {
+          "title": "Properties",
+          "document": "storage/properties"
+        },
+        {
+          "title": "Indexing",
+          "document": "storage/indexing"
+        },
+        {
+          "title": "NoQL (legacy)",
+          "document": "storage/noql"
+        },
+        {
+          "title": "Filters (legacy)",
+          "document": "storage/filters"
+        }
+      ]
+    },
+    {
+      "title": "Fundamentals",
+      "document": "fundamentals",
+      "menuItems": [
+        {
+          "title": "Runtime",
+          "document": "fundamentals/runtime"
+        },
+        {
+          "title": "TypeScript",
+          "document": "fundamentals/typescript"
+        },
+        {
+          "title": "Types",
+          "document": "fundamentals/types"
+        },
+        {
+          "title": "Apps",
+          "document": "fundamentals/apps"
+        },
+        {
+          "title": "Functions",
+          "document": "fundamentals/functions"
+        },
+        {
+          "title": "Main",
+          "document": "fundamentals/main"
+        },
+        {
+          "title": "Globals",
+          "document": "fundamentals/globals"
+        },
+        {
+          "title": "Events",
+          "document": "fundamentals/events"
+        },
+        {
+          "title": "Localization",
+          "document": "fundamentals/i18n"
+        },
+        {
+          "title": "Java bridge",
+          "document": "fundamentals/java-bridge"
+        }
+      ]
+    },
+    {
+      "title": "Libraries",
+      "document": "libraries",
+      "menuItems": [
+        {
+          "title": "Admin",
+          "document": "libraries/lib-admin"
+        },
+        {
+          "title": "Application",
+          "document": "libraries/lib-app"
+        },
+        {
+          "title": "Audit",
+          "document": "libraries/lib-auditlog"
+        },
+        {
+          "title": "Auth / Identity",
+          "document": "libraries/lib-auth"
+        },
+        {
+          "title": "Cluster",
+          "document": "libraries/lib-cluster"
+        },
+        {
+          "title": "Common",
+          "document": "libraries/lib-common"
+        },
+        {
+          "title": "Content",
+          "document": "libraries/lib-content"
+        },
+        {
+          "title": "Context",
+          "document": "libraries/lib-context"
+        },
+        {
+          "title": "Event",
+          "document": "libraries/lib-event"
+        },
+        {
+          "title": "Export",
+          "document": "libraries/lib-export"
+        },
+        {
+          "title": "Grid",
+          "document": "libraries/lib-grid"
+        },
+        {
+          "title": "I18N",
+          "document": "libraries/lib-i18n"
+        },
+        {
+          "title": "IO",
+          "document": "libraries/lib-io"
+        },
+        {
+          "title": "Mail",
+          "document": "libraries/lib-mail"
+        },
+        {
+          "title": "Node",
+          "document": "libraries/lib-node"
+        },
+        {
+          "title": "Portal",
+          "document": "libraries/lib-portal"
+        },
+        {
+          "title": "Project",
+          "document": "libraries/lib-project"
+        },
+        {
+          "title": "Repo",
+          "document": "libraries/lib-repo"
+        },
+        {
+          "title": "Scheduler",
+          "document": "libraries/lib-scheduler"
+        },
+        {
+          "title": "Schema",
+          "document": "libraries/lib-schema"
+        },
+        {
+          "title": "Tasks",
+          "document": "libraries/lib-task"
+        },
+        {
+          "title": "Value",
+          "document": "libraries/lib-value"
+        },
+        {
+          "title": "SSE",
+          "document": "libraries/lib-sse"
+        },
+        {
+          "title": "VHost",
+          "document": "libraries/lib-vhost"
+        },
+        {
+          "title": "Websocket",
+          "document": "libraries/lib-websocket"
+        }
+      ]
+    },
+    {
+      "title": "Web",
+      "document": "web",
+      "menuItems": [
+        {
+          "title": "APIs",
+          "document": "web/apis"
+        },
+        {
+          "title": "Tools",
+          "document": "web/tools"
+        },
+        {
+          "title": "Extensions",
+          "document": "web/extensions",
+          "menuItems": [
+            {
+              "title": "Context panel",
+              "document": "web/extensions/contextpanel"
+            },
+            {
+              "title": "Custom selector",
+              "document": "web/extensions/customselector"
+            },
+            {
+              "title": "Live view",
+              "document": "web/extensions/liveview"
+            },
+            {
+              "title": "Menu item",
+              "document": "web/extensions/menuitem"
+            }
+          ]
+        },
+        {
+          "title": "ID providers",
+          "document": "web/id-providers"
+        },
+        {
+          "title": "Sites",
+          "document": "web/sites",
+          "menuItems": [
+            {
+              "title": "Mappings",
+              "document": "web/sites/mappings"
+            },
+            {
+              "title": "Components",
+              "document": "web/sites/components"
+            },
+            {
+              "title": "Contributions",
+              "document": "web/sites/contributions"
+            },
+            {
+              "title": "Processors",
+              "document": "web/sites/processors"
+            }
+          ]
+        },
+        {
+          "title": "Webapps",
+          "document": "web/webapps"
+        },
+        {
+          "title": "Request & Response",
+          "document": "web/request-response"
+        },
+        {
+          "title": "Filters",
+          "document": "web/filters"
+        },
+        {
+          "title": "Error handler",
+          "document": "web/error"
+        },
+        {
+          "title": "Websocket",
+          "document": "web/websocket"
+        },
+        {
+          "title": "SSE",
+          "document": "web/sse"
+        }
+      ]
+    },
+    {
+      "title": "Background",
+      "document": "background",
+      "menuItems": [
+        {
+          "title": "Tasks",
+          "document": "background/tasks"
+        },
+        {
+          "title": "Scheduler",
+          "document": "background/scheduler"
+        }
+      ]
+    },
+    {
+      "title": "Upgrading",
+      "document": "upgrade"
+    }
+  ]
+}
