@@ -6,7 +6,7 @@
       "latest": true
     },
     {
-      "label": "next",
+      "label": "next", 
       "checkout": "master"
     }
   ]
