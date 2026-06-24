@@ -16,6 +16,10 @@ GraalVM JavaScript:: Available as an experimental alternative. Currently not rec
 
 NOTE: XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScript is also available but is currently experimental and not recommended for production use.
 
+=== Language level
+
+Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
+
 == Modules and bundling
 
 Each `.ts` or `.js` file in your app is a module under the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS module specification]. Modules export values via `exports`, and consume other modules via `require()`. Paths are rooted at the app bundle, not the filesystem — `require('/lib/greet')` loads `src/main/resources/lib/greet.ts` from the same app.
