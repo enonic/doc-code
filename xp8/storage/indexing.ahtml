@@ -933,21 +933,16 @@ Language-specific indexing slows down indexing and increases the index size, so 
 </dd>
 <dt class="hdlist1">Collation</dt>
 <dd>
-<p><code>custom</code> means language-specific sorting rules are applied; <code>DUCET</code> means the language-neutral fallback is used (also applied for any language not listed here).</p>
-</dd>
-<dt class="hdlist1">Description</dt>
-<dd>
-<p>Summarizes the custom collation rules, where applicable.</p>
+<p><code>custom</code> means the language&#8217;s ICU/CLDR collation tailoring is applied; <code>DUCET</code> means the language-neutral fallback is used (also applied for any language not listed here). See the <a href="https://unicode-org.github.io/icu/userguide/collation/">ICU collation guide</a> for the exact per-language rules.</p>
 </dd>
 </dl>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 10%;">
 <col style="width: 20%;">
-<col style="width: 10%;">
-<col style="width: 10%;">
-<col style="width: 50%;">
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
 </colgroup>
 <thead>
 <tr>
@@ -955,334 +950,359 @@ Language-specific indexing slows down indexing and increases the index size, so 
 <th class="tableblock halign-left valign-top">Language</th>
 <th class="tableblock halign-left valign-top">Stemming</th>
 <th class="tableblock halign-left valign-top">Collation</th>
-<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">af</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Afrikaans</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Albanian</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ar</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Arabic</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Correctly handles script-specific shaping and ignores non-spacing vowels by default.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hy</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Armenian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Follows classical Armenian alphabetical sequence rules.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">az</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Azerbaijani</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Correctly handles the distinction between dotted İ and dotless I.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">eu</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Basque</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tailored modern Spanish-adjacent layout excluding character combinations like ch.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">be</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Belarusian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Custom Cyrillic sorting prioritizing the letter ў appropriately.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">bn</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Bengali</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groups and sorts based on traditional Indic script phonetic structure.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">bs</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Bosnian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Supports both Latin and Cyrillic variants, accommodating specific digraphs (lj, nj, dž).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pt-br</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Brazilian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">bg</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Bulgarian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard Cyrillic rules mapping ь and ъ distinctively.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ca</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Catalan</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Treats characters like l·l (ela geminada) according to Spanish/French-hybrid rules.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">zh</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Chinese</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Supports multi-rule sets like Pinyin sorting or traditional radical/stroke count.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hr</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Croatian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sorts custom Latin digraphs (č, ć, dž, đ, lj, nj, š, ž) as independent letters.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cs</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Czech</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Treats the two-letter combination ch as a distinct entity sorting after h.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">da</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Danish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Places specific vowels Æ, Ø, and Å sequentially at the absolute end of the alphabet.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">nl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dutch</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standardized Latin sorting; optionally handles IJ variations depending on context.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">en</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">English</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard Latin alphabet sorting with case/accent sensitivity levels.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">et</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Estonian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Places modified characters õ, ä, ö, ü between v and x.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Faroese</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">fi</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Finnish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Treats V and W as primarily identical, sorting custom vowels Å, Ä, Ö at the end.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">fr</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">French</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluates accent changes backwards (from right to left) for secondary string tie-breaking.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">gl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Galician</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Adapts traditional Spanish rules to match standard local dictionary frameworks.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ka</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Georgian</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maps the unique Mkhedruli script characters sequentially.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">de</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">German</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Supports standard sorting or Phonebook (ä expands to ae) via variants.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">el</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Greek</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Correctly aligns modern Greek characters and ignores diacritics on uppercase variants.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">he</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Hebrew</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Properly sequences right-to-left Hebrew script characters, ignoring cantillation points.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hi</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Hindi</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Alphabetizes native Devanagari script according to strict phonetic vowel/consonant orders.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hu</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Hungarian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Recognizes compound consonants (cs, dz, dzs, gy) as distinct, singular letters.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">is</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Icelandic</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Retains classical letters like Þ (thorn) and Ð (eth) in historical positions.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indonesian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard Latin alphabet sorting order.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ga</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Irish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Handles specialized Gaelic prefix sorting rules (e.g., ignoring mutations like t- or n-).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">it</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Italian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard Latin rules with typical accent-insensitive initial matching.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ja</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Japanese</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Supports intricate Kanji/Kana sorting structures including Hiragana vs. Katakana levels.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kazakh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ko</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Korean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sorts according to the foundational structural order of Hangul Jamo syllables.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lv</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Latvian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sorts modified characters (like č, ģ, ķ) directly behind their unmodified base.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lt</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Lithuanian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Places the character Y distinctly between I and J.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Macedonian</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Norwegian</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Norwegian Bokmål</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Aligns identically with Danish rules, grouping Æ, Ø, and Å at the end.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Norwegian Nynorsk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">fa</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Persian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Customizes standard Arabic script ordering to account for distinct Persian extensions (پ, چ, ژ, گ).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Polish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standardized to place accented elements (ą, ć, ę, ł, ń, ó, ś, ź, ż) after base characters.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">pt</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Portuguese</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard Latin alphabetic sorting matching Iberian/Brazilian requirements.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ro</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Romanian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groups specific characters (ă, â, î, ș, ț) sequentially behind their base counterparts.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ru</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Russian</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard modern Cyrillic ordering, treating Е and Ё distinctly based on context levels.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sr</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serbian</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sk</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Slovak</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Treats unique digraphs like ch and accented sets (ä, č, ď) with independent spacing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Slovenian</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ku</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sorani</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">DUCET</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">es</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Spanish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Supports standard layout or traditional option sets treating ch and ll as unique letters.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sv</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Swedish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Places Å, Ä, and Ö at the end; traditionally treats W as a variant of V.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">th</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Thai</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Automatically rearranges leading vowels when preceding consonants for accurate grouping.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">tr</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Turkish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Strictly separates I (uppercase dotless) to ı from İ (uppercase dotted) to i.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ukrainian</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ur</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Urdu</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vietnamese</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom</p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Both <code>no</code> and <code>nb</code> resolve to Norwegian Bokmål and can be used interchangeably; <code>nn</code> (Nynorsk) is a separate entry. Brazilian Portuguese is keyed as <code>pt-BR</code>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="stemming"><a class="link" href="#stemming">Stemming</a></h3>
@@ -1475,7 +1495,7 @@ Rather than providing a full config object, you may instead reference a standard
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-18 11:45:32 UTC
+Last updated 2026-06-24 09:14:58 UTC
 </div>
 </div>
 </body>
