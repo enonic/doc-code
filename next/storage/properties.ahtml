@@ -460,7 +460,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Properties contain the actual data inside a <a href="https://developer.enonic.com/docs/platform/stable/storage/nodes">node</a>.
+<p>Properties contain the actual data inside a <a href="../libraries/lib-node.ahtml">node</a>.
 Properties use a key-value format</p>
 </div>
 <div class="paragraph">
@@ -679,7 +679,7 @@ The value type enables the data storage to handle both validation and <a href="#
 <p>XP also maintains a system property called <code>_allText</code> that aggregates the text content of all indexed string properties on a node — useful for "search everything" queries.</p>
 </div>
 <div class="paragraph">
-<p>Applications can override the default mappings per property via the <code>_indexConfig</code> system property. For the full configuration reference — config options, templates, property-path patterns, and the language list for stemming — see <a href="storage/indexing.ahtml">Indexing</a>.</p>
+<p>Applications can override the default mappings per property via the <code>_indexConfig</code> system property. For the full configuration reference — config options, templates, property-path patterns, and the language list for stemming — see <a href="indexing.ahtml">Indexing</a>.</p>
 </div>
 </div>
 </div>
@@ -822,7 +822,7 @@ The value type enables the data storage to handle both validation and <a href="#
 </tbody>
 </table>
 <div class="paragraph">
-<p>Node permissions are also flattened into indexed <code><em>permissions</em>*</code> system properties at write time. See <a href="storage/permissions.ahtml#_querying_by_permission">Permissions — Querying by permission</a> for the full list and usage.</p>
+<p>Node permissions are also flattened into indexed <code><em>permissions</em>*</code> system properties at write time. See <a href="permissions.ahtml#_querying_by_permission">Permissions — Querying by permission</a> for the full list and usage.</p>
 </div>
 </div>
 </div>
@@ -830,7 +830,7 @@ The value type enables the data storage to handle both validation and <a href="#
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 12:23:23 UTC
+Last updated 2026-06-25 14:55:09 UTC
 </div>
 </div>
 </body>
