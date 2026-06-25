@@ -476,10 +476,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Listed in the XP menu with icon and name</p>
 </li>
 <li>
-<p>Can mount contextual <a href="web/apis.ahtml">Universal APIs</a> .</p>
+<p>Can mount contextual <a href="apis.ahtml">Universal APIs</a> .</p>
 </li>
 <li>
-<p>Can connect to <a href="web/extensions.ahtml">Admin extensions</a> by declaring named interfaces that extensions implement.</p>
+<p>Can connect to <a href="extensions.ahtml">Admin extensions</a> by declaring named interfaces that extensions implement.</p>
 </li>
 <li>
 <p>Mounts at <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;</code> — one URL per tool.</p>
@@ -567,7 +567,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><strong>apis</strong> — list of <a href="web/apis.ahtml">Universal API</a> descriptor keys mounted under this tool&#8217;s URL. Bare names refer to APIs in the same app; <code>&lt;app&gt;:&lt;api&gt;</code> form borrows from another app. APIs become reachable as service points at <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>.</td>
+<td><strong>apis</strong> — list of <a href="apis.ahtml">Universal API</a> descriptor keys mounted under this tool&#8217;s URL. Bare names refer to APIs in the same app; <code>&lt;app&gt;:&lt;api&gt;</code> form borrows from another app. APIs become reachable as service points at <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -593,7 +593,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 <h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The implementation lives at <code>src/main/resources/admin/tools/&lt;tool-name&gt;/&lt;tool-name&gt;.ts</code> and exports an <a href="web/request-response.ahtml">HTTP function</a> for each method the tool should respond to.</p>
+<p>The implementation lives at <code>src/main/resources/admin/tools/&lt;tool-name&gt;/&lt;tool-name&gt;.ts</code> and exports an <a href="request-response.ahtml">HTTP function</a> for each method the tool should respond to.</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample my-tool.ts</div>
@@ -629,7 +629,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </ul>
 </div>
 <div class="paragraph">
-<p>Generate URLs from the implementation with the <a href="libraries/lib-portal.ahtml">Portal library</a>: <code>adminUrl()</code> for the tool itself, <code>apiUrl()</code> for mounted APIs.</p>
+<p>Generate URLs from the implementation with the <a href="../libraries/lib-portal.ahtml">Portal library</a>: <code>adminUrl()</code> for the tool itself, <code>apiUrl()</code> for mounted APIs.</p>
 </div>
 </div>
 </div>
@@ -658,7 +658,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 <h2 id="mounting_universal_apis"><a class="link" href="#mounting_universal_apis">Mounting Universal APIs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Any API listed in <code>apis:</code> is mounted as a service point under the tool&#8217;s URL. The same API can simultaneously be mounted on the Web endpoint (<code>mount: ["web"]</code> in the API descriptor) — the two mounts are independent. See <a href="web/apis.ahtml#service-point">Universal API: Service point</a>.</p>
+<p>Any API listed in <code>apis:</code> is mounted as a service point under the tool&#8217;s URL. The same API can simultaneously be mounted on the Web endpoint (<code>mount: ["web"]</code> in the API descriptor) — the two mounts are independent. See <a href="apis.ahtml#service-point">Universal API: Service point</a>.</p>
 </div>
 </div>
 </div>
@@ -666,7 +666,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 <h2 id="hosting_admin_extensions"><a class="link" href="#hosting_admin_extensions">Hosting admin extensions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A tool publishes the interface names it exposes in <code>interfaces:</code>. Any deployed admin extension whose own <code>interfaces:</code> list intersects with this set becomes eligible to be mounted into the tool, subject to the extension&#8217;s own <code>allow:</code> list. The reserved interface name <code>"generic"</code> matches any tool. See <a href="web/extensions.ahtml">Admin extensions</a> for the consumer side.</p>
+<p>A tool publishes the interface names it exposes in <code>interfaces:</code>. Any deployed admin extension whose own <code>interfaces:</code> list intersects with this set becomes eligible to be mounted into the tool, subject to the extension&#8217;s own <code>allow:</code> list. The reserved interface name <code>"generic"</code> matches any tool. See <a href="extensions.ahtml">Admin extensions</a> for the consumer side.</p>
 </div>
 </div>
 </div>
@@ -681,7 +681,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 11:39:18 UTC
+Last updated 2026-06-25 11:39:53 UTC
 </div>
 </div>
 </body>
