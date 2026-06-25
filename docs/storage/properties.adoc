@@ -4,7 +4,7 @@
 
 == Introduction
 
-Properties contain the actual data inside a https://developer.enonic.com/docs/platform/stable/storage/nodes[node].
+Properties contain the actual data inside a <<../libraries/lib-node#, node>>.
 Properties use a key-value format
 
 The key must be unique within the node, and the value must have a specific <<#value_types, valueType>>, such as ``String``, or ``GeoPoint``.
@@ -139,7 +139,7 @@ orderby:: Generated automatically for every indexed property. Used to sort text 
 
 XP also maintains a system property called `_allText` that aggregates the text content of all indexed string properties on a node — useful for "search everything" queries.
 
-Applications can override the default mappings per property via the `_indexConfig` system property. For the full configuration reference — config options, templates, property-path patterns, and the language list for stemming — see <<storage/indexing#, Indexing>>.
+Applications can override the default mappings per property via the `_indexConfig` system property. For the full configuration reference — config options, templates, property-path patterns, and the language list for stemming — see <<indexing#, Indexing>>.
 
 [#sysprops]
 == System Properties
@@ -236,4 +236,4 @@ In order to separate system defined properties from user defined properties, `_`
 
 |===
 
-Node permissions are also flattened into indexed `_permissions_*` system properties at write time. See <<storage/permissions#_querying_by_permission, Permissions — Querying by permission>> for the full list and usage.
+Node permissions are also flattened into indexed `_permissions_*` system properties at write time. See <<permissions#_querying_by_permission, Permissions — Querying by permission>> for the full list and usage.
