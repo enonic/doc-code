@@ -4,7 +4,7 @@
 
 Indexing is the process of extracting, processing and storing a search-optimized version of the property value.
 
-Properties are mapped to specific indexes based on their <<storage/properties#value_types, value type>> and the node's <<Index config>> — as illustrated below:
+Properties are mapped to specific indexes based on their <<properties#value_types, value type>> and the node's <<Index config>> — as illustrated below:
 
 image::indexmapping.svg[]
 
@@ -47,7 +47,7 @@ For more information about how the nGram-function works, check out the nGram-fun
 === analyzed
 
 Splits the string into tokens for effective free text search.
-Used by the <<storage/querying#fulltext, fulltext>> query expression (and the legacy <<storage/noql#fulltext, fulltext()>> NoQL function).
+Used by the <<querying#fulltext, fulltext>> query expression (and the legacy <<noql#fulltext, fulltext()>> NoQL function).
 
 Consider a `String` property, with the value `This is test-driven development`
 When analyzed, it is split into the following tokens:
@@ -58,7 +58,7 @@ When analyzed, it is split into the following tokens:
 === stemmed
 
 Language optimized version of the `analyzed` index mapping.
-Used by the <<storage/querying#stemmed, stemmed>> query expression (and the legacy <<storage/noql#stemmed, stemmed()>> NoQL function).
+Used by the <<querying#stemmed, stemmed>> query expression (and the legacy <<noql#stemmed, stemmed()>> NoQL function).
 
 Tokens are trimmed based on language specific features such as plurals and gender specific endings.
 Consider the following sentence stemmed for English content: "The monkey loved bananas".
@@ -82,7 +82,7 @@ By default, orderby uses UNICODE collation, which is fast but comes with some li
 
 TIP: The CMS (Content API) automatically adds locale-aware indexing for the displayName property, should you need it in your queries.
 
-Read more about collation in the <<storage/querying#orderby, orderby>> section.
+Read more about collation in the <<querying#sort, Sort DSL>> section.
 
 [#_allText]
 == _allText
@@ -99,7 +99,7 @@ NOTE: When defining custom index configurations, you may choose if a property wi
 
 == Index config
 
-By default, properties are indexed based on their specific <<storage/properties#value_types, value type>>.
+By default, properties are indexed based on their specific <<properties#value_types, value type>>.
 This strategy is known as `decideByType`.
 
 Every now and then, you may need more detailed control of how your properties are indexed.
@@ -172,8 +172,8 @@ A basic index config might look something like this:
 The following options can be added to a configuration entry:
 
 enabled:: If false, indexing will be disabled for the affected properties
-decideByType:: If true, indexing is done based on the property's <<storage/properties#value_types, value type>>. I.e. numeric values are indexed as both `text` and `number`.
-fulltext:: Values are indexed as `analyzed`, enabling the <<storage/querying#fulltext, fulltext>> query expression
+decideByType:: If true, indexing is done based on the property's <<properties#value_types, value type>>. I.e. numeric values are indexed as both `text` and `number`.
+fulltext:: Values are indexed as `analyzed`, enabling the <<querying#fulltext, fulltext>> query expression
 nGram:: Values are indexed as `ngram`, enabling the nGram-function in queries
 path:: Values are indexed as `path` and applicable for the pathMatch-function
 includeInAllText:: Affected values will be added to the `_allText` property
@@ -186,7 +186,7 @@ languages:: Generates a stemming index (where supported) and a collation index f
 All config entires, with exception of default must specify a path.
 The path element defines the property scope within the node where this index configuration applies.
 
-Paths follow the <<storage/noql#propertyPath, propertyPath>> format, optionally including double wildcard character **.
+Paths follow the <<noql#propertyPath, propertyPath>> format, optionally including double wildcard character **.
 
 Examples:
 
@@ -360,7 +360,7 @@ When a property is configured with a language-specific stemming index:
 
 This means that searches for "running", "runs", or "ran" can all match content containing "run" and vice versa.
 
-For examples on querying stemmed fields, visit the <<storage/querying#stemmed, Query DSL>> (or the legacy <<storage/noql#stemmed, NoQL>> documentation).
+For examples on querying stemmed fields, visit the <<querying#stemmed, Query DSL>> (or the legacy <<noql#stemmed, NoQL>> documentation).
 
 
 === Collation
@@ -371,7 +371,7 @@ For each supported language specified, an additional orderby index is created, a
 
 NOTE: Sorting by a collation index is slower at query time than the default UNICODE sort.
 
-For examples on sorting text fields using collation, visit the <<storage/querying#sort, Query DSL>> (or the legacy <<storage/noql#sort, NoQL>> documentation).
+For examples on sorting text fields using collation, visit the <<querying#sort, Query DSL>> (or the legacy <<noql#sort, NoQL>> documentation).
 
 
 == Templates
