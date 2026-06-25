@@ -526,7 +526,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>principals, binary streams, the content object, page components, and more. They are defined once in the <code>@enonic-types/core</code> package and re-exported by the individual <code>@enonic-types/lib-*</code> packages, so the same <code>User</code>, <code>Content</code>, or <code>ByteSource</code> you receive from one library is the exact type another library accepts.</p>
 </div>
 <div class="paragraph">
-<p>Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <a href="fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <a href="typescript.ahtml">TypeScript</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -791,7 +791,7 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 <div class="sect2">
 <h3 id="byte-source"><a class="link" href="#byte-source">ByteSource</a></h3>
 <div class="paragraph">
-<p>An opaque handle to a binary stream. You don&#8217;t read its fields directly — you pass it to library functions (for example <code>io.readText</code>, <code>io.getSize</code>, attachment and media APIs) that consume or produce binary data. Obtain one from <code><a href="libraries/lib-io.ahtml">lib-io</a></code> (<code>newStream</code>, a resource stream) or from content attachments.</p>
+<p>An opaque handle to a binary stream. You don&#8217;t read its fields directly — you pass it to library functions (for example <code>io.readText</code>, <code>io.getSize</code>, attachment and media APIs) that consume or produce binary data. Obtain one from <code><a href="../libraries/lib-io.ahtml">lib-io</a></code> (<code>newStream</code>, a resource stream) or from content attachments.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1746,13 +1746,13 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 <div class="sect2">
 <h3 id="request"><a class="link" href="#request">Request</a></h3>
 <div class="paragraph">
-<p>The object passed to an HTTP function (<code>GET</code>, <code>POST</code>, filters, error handlers). Its fields — <code>method</code>, <code>path</code>, <code>params</code>, <code>headers</code>, <code>cookies</code>, <code>body</code>, and the rest — are documented in depth in <a href="web.ahtml">Web</a>, the canonical home for the request/response model.</p>
+<p>The object passed to an HTTP function (<code>GET</code>, <code>POST</code>, filters, error handlers). Its fields — <code>method</code>, <code>path</code>, <code>params</code>, <code>headers</code>, <code>cookies</code>, <code>body</code>, and the rest — are documented in depth in <a href="../web.ahtml">Web</a>, the canonical home for the request/response model.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="response"><a class="link" href="#response">Response</a></h3>
 <div class="paragraph">
-<p>The object an HTTP function returns — <code>status</code>, <code>body</code>, <code>contentType</code>, <code>headers</code>, <code>cookies</code>, <code>pageContributions</code>, <code>redirect</code>, and more. All fields are optional. See <a href="web.ahtml">Web</a> for the full model and examples.</p>
+<p>The object an HTTP function returns — <code>status</code>, <code>body</code>, <code>contentType</code>, <code>headers</code>, <code>cookies</code>, <code>pageContributions</code>, <code>redirect</code>, and more. All fields are optional. See <a href="../web.ahtml">Web</a> for the full model and examples.</p>
 </div>
 </div>
 </div>
@@ -1827,7 +1827,7 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 <div class="sect2">
 <h3 id="query-dsl"><a class="link" href="#query-dsl">Query DSL types</a></h3>
 <div class="paragraph">
-<p><code>QueryDsl</code>, <code>SortDsl</code>, <code>Filter</code>, <code>Aggregations</code>, and <code>Highlight</code> model the query DSL. They are documented with the storage layer rather than duplicated here — see the <a href="https://developer.enonic.com/docs/platform/stable/storage">XP storage and querying docs</a> and <a href="storage/querying.ahtml">Querying</a>.</p>
+<p><code>QueryDsl</code>, <code>SortDsl</code>, <code>Filter</code>, <code>Aggregations</code>, and <code>Highlight</code> model the query DSL. They are documented with the storage layer rather than duplicated here — see the <a href="https://developer.enonic.com/docs/platform/stable/storage">XP storage and querying docs</a> and <a href="../storage/querying.ahtml">Querying</a>.</p>
 </div>
 </div>
 </div>
@@ -1835,7 +1835,7 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-24 09:15:27 UTC
+Last updated 2026-06-25 11:31:29 UTC
 </div>
 </div>
 </body>
