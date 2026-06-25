@@ -533,7 +533,7 @@ To force search in a field&#8217;s advanced analysed index (like dates and geoPo
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Search could be done by an expression with particular type only for analyzed fields with compatible <a href="storage/properties.ahtml#value_types">value type</a> and not prohibiting type mapping.
+Search could be done by an expression with particular type only for analyzed fields with compatible <a href="properties.ahtml#value_types">value type</a> and not prohibiting type mapping.
 </td>
 </tr>
 </table>
@@ -546,13 +546,13 @@ Search could be done by an expression with particular type only for analyzed fie
 <div class="sect4">
 <h5 id="time"><a class="link" href="#time">time</a></h5>
 <div class="paragraph">
-<p>Time expression converts expression as <a href="storage/properties.ahtml#value_types">LocalTime</a> string and makes a search for a field indexed as 'string'.</p>
+<p>Time expression converts expression as <a href="properties.ahtml#value_types">LocalTime</a> string and makes a search for a field indexed as 'string'.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="datetime"><a class="link" href="#datetime">dateTime</a></h5>
 <div class="paragraph">
-<p>DateTime expression makes a search for fields indexed as 'datetime' (<code>Instant</code>, <code>LocalDate</code>, <code>LocalDateTime</code> <a href="storage/properties.ahtml#value_types">value types</a>). If time is not specified it will be set to zero. If timezone is not specified it will be set to UTC.</p>
+<p>DateTime expression makes a search for fields indexed as 'datetime' (<code>Instant</code>, <code>LocalDate</code>, <code>LocalDateTime</code> <a href="properties.ahtml#value_types">value types</a>). If time is not specified it will be set to zero. If timezone is not specified it will be set to UTC.</p>
 </div>
 </div>
 </div>
@@ -1387,7 +1387,7 @@ E.g. source text <code>The monkey loved bananas</code> will be transformed to <c
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Stemming is language-dependent, so <a href="storage/indexing.ahtml#languages">language</a> must be set either on the content or directly in the node indices via indexConfig.
+Stemming is language-dependent, so <a href="indexing.ahtml#languages">language</a> must be set either on the content or directly in the node indices via indexConfig.
 </td>
 </tr>
 </table>
@@ -1403,7 +1403,7 @@ Only <code>_allText</code> field is currently indexed for stemming by default.</
 <dt class="hdlist1">language</dt>
 <dd>
 <p>Content language that was used for stemming.
-List of <a href="storage/indexing.ahtml#languages">supported languages</a></p>
+List of <a href="indexing.ahtml#languages">supported languages</a></p>
 </dd>
 </dl>
 </div>
@@ -1604,7 +1604,7 @@ All sub-expressions can contain a single expression or an array.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Migrating from the legacy <a href="storage/filters.ahtml">filters</a> API? See the <a href="storage/filters.ahtml#legacy_filter_migration">mapping table</a>.
+Migrating from the legacy <a href="filters.ahtml">filters</a> API? See the <a href="filters.ahtml#legacy_filter_migration">mapping table</a>.
 </td>
 </tr>
 </table>
@@ -1930,7 +1930,7 @@ Locale-aware sorting is only supported for text fields that are indexed with a l
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 12:19:15 UTC
+Last updated 2026-06-25 12:23:05 UTC
 </div>
 </div>
 </body>
