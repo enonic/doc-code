@@ -21,7 +21,7 @@ Each node field could be indexed in many ways according to its type and user map
 By default, a query searches in base primitive value index of a field (number, string, boolean).
 To force search in a field's advanced analysed index (like dates and geoPoints), a `type` of expression must be provided.
 
-NOTE: Search could be done by an expression with particular type only for analyzed fields with compatible <<storage/properties#value_types, value type>> and not prohibiting type mapping.
+NOTE: Search could be done by an expression with particular type only for analyzed fields with compatible <<properties#value_types, value type>> and not prohibiting type mapping.
 
 
 ==== Value types
@@ -31,11 +31,11 @@ As said above, fields could be indexed in many ways. Which one will be used to m
 
 ===== time
 
-Time expression converts expression as <<storage/properties#value_types, LocalTime>> string and makes a search for a field indexed as 'string'.
+Time expression converts expression as <<properties#value_types, LocalTime>> string and makes a search for a field indexed as 'string'.
 
 ===== dateTime
 
-DateTime expression makes a search for fields indexed as 'datetime' (`Instant`, `LocalDate`, `LocalDateTime` <<storage/properties#value_types, value types>>). If time is not specified it will be set to zero. If timezone is not specified it will be set to UTC.
+DateTime expression makes a search for fields indexed as 'datetime' (`Instant`, `LocalDate`, `LocalDateTime` <<properties#value_types, value types>>). If time is not specified it will be set to zero. If timezone is not specified it will be set to UTC.
 
 ==== Expression types
 ===== term
@@ -570,7 +570,7 @@ This includes, by default, all text-based fields in the content domain.
 The stemmed expression is similar to <<fulltext,Fulltext>> except that it searches language optimized tokens instead of a source text.
 E.g. source text `The monkey loved bananas` will be transformed to `the`, `monkey`, `love`, `banana` tokens and they will be used for search.
 
-NOTE: Stemming is language-dependent, so <<storage/indexing#languages,language>> must be set either on the content or directly in the node indices via indexConfig.
+NOTE: Stemming is language-dependent, so <<indexing#languages,language>> must be set either on the content or directly in the node indices via indexConfig.
 
 .special expression fields:
 
@@ -578,7 +578,7 @@ fields:: Comma-separated list of <<propertyPath, propertyPaths>> to include in t
 Only `_allText` field is currently indexed for stemming by default.
 
 language:: Content language that was used for stemming.
-List of <<storage/indexing#languages, supported languages>>
+List of <<indexing#languages, supported languages>>
 
 *Request examples:*
 
@@ -758,7 +758,7 @@ Any expression or compound documented above can be used inside `filter`; there i
 }
 ----
 
-TIP: Migrating from the legacy <<storage/filters#, filters>> API? See the <<storage/filters#legacy_filter_migration, mapping table>>.
+TIP: Migrating from the legacy <<filters#, filters>> API? See the <<filters#legacy_filter_migration, mapping table>>.
 
 
 === Boosting
