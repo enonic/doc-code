@@ -9,7 +9,7 @@ As part of the XP's Identity and Access Management (IAM) system, services may be
 
 The ID provider is responsible for providing  user authentication, independent of the source identity system.
 
-ID providers are wired tightly into the <<web#common_request_pipeline, common HTTP request pipeline>>.
+ID providers are wired tightly into the <<../web#common_request_pipeline, common HTTP request pipeline>>.
 They participate both in pipeline execution steps, and through the contextually mounted ID provider API.
 
 This section describes how to implement an ID provider application.
@@ -19,7 +19,7 @@ TIP: Two ready-made ID providers are published on https://market.enonic.com[Enon
 [[idprovider-endpoints]]
 == Endpoints and mounting
 
-Unlike the four <<web#, services>>, an ID provider has no URL prefix of its own. Instead, every ID provider is reachable through a single fixed mountpoint:
+Unlike the four <<../web#, services>>, an ID provider has no URL prefix of its own. Instead, every ID provider is reachable through a single fixed mountpoint:
 
 `+/_/idprovider/<idprovider-name>+`
 
@@ -31,7 +31,7 @@ Three behaviours are reachable under the mountpoint, each invoking the matching 
 // Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.idprovider-pipeline.mmd -o docs/web/images/idprovider-pipeline.svg -b transparent
 image::idprovider-pipeline.svg[ID provider endpoint pipeline, 350px]
 
-NOTE: This diagram covers the ID provider's *endpoint* surfaces. Its two *pipeline hooks* — `autoLogin` (the autologin filter) and `handle401` — are triggered by the request pipeline rather than the endpoint, and appear in the <<web#common_request_pipeline, common pipeline>> diagram.
+NOTE: This diagram covers the ID provider's *endpoint* surfaces. Its two *pipeline hooks* — `autoLogin` (the autologin filter) and `handle401` — are triggered by the request pipeline rather than the endpoint, and appear in the <<../web#common_request_pipeline, common pipeline>> diagram.
 
 `+/_/idprovider/<name>/login+`:: Invokes `login` — a deterministic login endpoint, available for every provider.
 
@@ -43,7 +43,7 @@ Rather than hardcoding these paths, generate them with the portal library helper
 
 [NOTE]
 ====
-The endpoint is *mounted* everywhere, but an ID provider only *activates* for a request when it is bound to the request's virtual host. The vhost mapping declares which ID provider(s) apply, and the one marked `default` is the provider whose `autoLogin` filter runs. See the <<../deployment/config#vhost, vhost configuration>> for the binding rules.
+The endpoint is *mounted* everywhere, but an ID provider only *activates* for a request when it is bound to the request's virtual host. The vhost mapping declares which ID provider(s) apply, and the one marked `default` is the provider whose `autoLogin` filter runs. See the https://developer.enonic.com/docs/platform/xp8/config/vhosts[vhost configuration] for the binding rules.
 ====
 
 == Descriptor
@@ -72,7 +72,7 @@ form:         # <2>
 * *MIXED* - Users exist in a remote system, but the groups are created and managed locally in XP.
 +
 <2> *form* defines config options that can be defined from the UI when setting up ID providers.
-Forms are based on the <<../cms/schemas#, schema system>>
+Forms are based on the https://developer.enonic.com/docs/cms/xp8/schemas[schema system]
 +
 NOTE: This forms does not support CMS-specific input types, such as contentSelector and htmlArea.
 
@@ -127,13 +127,13 @@ If no user already exists in the context, the autoLogin filter is executed early
 
 [NOTE]
 ====
-`autoLogin` works only for identity providers that are configured as `default` in the virtual host mapping. Visit the <<../deployment/config#vhost,vhost configuration>> section for more details.
+`autoLogin` works only for identity providers that are configured as `default` in the virtual host mapping. Visit the https://developer.enonic.com/docs/platform/xp8/config/vhosts[vhost configuration] section for more details.
 ====
 
 
 === GET/POST etc
 
-Additionally, an ID provider may also act as a regular <<web/request-response#, HTTP function>> — supporting any interaction as desired.
+Additionally, an ID provider may also act as a regular <<request-response#, HTTP function>> — supporting any interaction as desired.
 Communication with the implementation is handled via the ID provider endpoint.
 
 The URL to this endpoint can be generated using the <<../libraries/lib-portal#_idproviderurl, idProviderUrl() function in the portal library>>
