@@ -488,7 +488,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Indexing is the process of extracting, processing and storing a search-optimized version of the property value.</p>
 </div>
 <div class="paragraph">
-<p>Properties are mapped to specific indexes based on their <a href="storage/properties.ahtml#value_types">value type</a> and the node&#8217;s <a href="#index_config">Index config</a> — as illustrated below:</p>
+<p>Properties are mapped to specific indexes based on their <a href="properties.ahtml#value_types">value type</a> and the node&#8217;s <a href="#index_config">Index config</a> — as illustrated below:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -554,7 +554,7 @@ ngram indexing will split the string into the following tokens when analyzed::</
 <h3 id="analyzed"><a class="link" href="#analyzed">analyzed</a></h3>
 <div class="paragraph">
 <p>Splits the string into tokens for effective free text search.
-Used by the <a href="storage/querying.ahtml#fulltext">fulltext</a> query expression (and the legacy <a href="storage/noql.ahtml#fulltext">fulltext()</a> NoQL function).</p>
+Used by the <a href="querying.ahtml#fulltext">fulltext</a> query expression (and the legacy <a href="noql.ahtml#fulltext">fulltext()</a> NoQL function).</p>
 </div>
 <div class="paragraph">
 <p>Consider a <code>String</code> property, with the value <code>This is test-driven development</code>
@@ -570,7 +570,7 @@ When analyzed, it is split into the following tokens:</p>
 <h3 id="stemmed"><a class="link" href="#stemmed">stemmed</a></h3>
 <div class="paragraph">
 <p>Language optimized version of the <code>analyzed</code> index mapping.
-Used by the <a href="storage/querying.ahtml#stemmed">stemmed</a> query expression (and the legacy <a href="storage/noql.ahtml#stemmed">stemmed()</a> NoQL function).</p>
+Used by the <a href="querying.ahtml#stemmed">stemmed</a> query expression (and the legacy <a href="noql.ahtml#stemmed">stemmed()</a> NoQL function).</p>
 </div>
 <div class="paragraph">
 <p>Tokens are trimmed based on language specific features such as plurals and gender specific endings.
@@ -615,7 +615,7 @@ The CMS (Content API) automatically adds locale-aware indexing for the displayNa
 </table>
 </div>
 <div class="paragraph">
-<p>Read more about collation in the <a href="storage/querying.ahtml#orderby">orderby</a> section.</p>
+<p>Read more about collation in the <a href="querying.ahtml#sort">Sort DSL</a> section.</p>
 </div>
 </div>
 </div>
@@ -651,7 +651,7 @@ When defining custom index configurations, you may choose if a property will be 
 <h2 id="index_config"><a class="link" href="#index_config">Index config</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default, properties are indexed based on their specific <a href="storage/properties.ahtml#value_types">value type</a>.
+<p>By default, properties are indexed based on their specific <a href="properties.ahtml#value_types">value type</a>.
 This strategy is known as <code>decideByType</code>.</p>
 </div>
 <div class="paragraph">
@@ -759,11 +759,11 @@ A basic index config might look something like this:</p>
 </dd>
 <dt class="hdlist1">decideByType</dt>
 <dd>
-<p>If true, indexing is done based on the property&#8217;s <a href="storage/properties.ahtml#value_types">value type</a>. I.e. numeric values are indexed as both <code>text</code> and <code>number</code>.</p>
+<p>If true, indexing is done based on the property&#8217;s <a href="properties.ahtml#value_types">value type</a>. I.e. numeric values are indexed as both <code>text</code> and <code>number</code>.</p>
 </dd>
 <dt class="hdlist1">fulltext</dt>
 <dd>
-<p>Values are indexed as <code>analyzed</code>, enabling the <a href="storage/querying.ahtml#fulltext">fulltext</a> query expression</p>
+<p>Values are indexed as <code>analyzed</code>, enabling the <a href="querying.ahtml#fulltext">fulltext</a> query expression</p>
 </dd>
 <dt class="hdlist1">nGram</dt>
 <dd>
@@ -791,7 +791,7 @@ A basic index config might look something like this:</p>
 The path element defines the property scope within the node where this index configuration applies.</p>
 </div>
 <div class="paragraph">
-<p>Paths follow the <a href="storage/noql.ahtml#propertyPath">propertyPath</a> format, optionally including double wildcard character **.</p>
+<p>Paths follow the <a href="noql.ahtml#propertyPath">propertyPath</a> format, optionally including double wildcard character **.</p>
 </div>
 <div class="paragraph">
 <p>Examples:</p>
@@ -1330,7 +1330,7 @@ It works by reducing words to their root form, making search results more flexib
 <p>This means that searches for "running", "runs", or "ran" can all match content containing "run" and vice versa.</p>
 </div>
 <div class="paragraph">
-<p>For examples on querying stemmed fields, visit the <a href="storage/querying.ahtml#stemmed">Query DSL</a> (or the legacy <a href="storage/noql.ahtml#stemmed">NoQL</a> documentation).</p>
+<p>For examples on querying stemmed fields, visit the <a href="querying.ahtml#stemmed">Query DSL</a> (or the legacy <a href="noql.ahtml#stemmed">NoQL</a> documentation).</p>
 </div>
 </div>
 <div class="sect2">
@@ -1354,7 +1354,7 @@ Sorting by a collation index is slower at query time than the default UNICODE so
 </table>
 </div>
 <div class="paragraph">
-<p>For examples on sorting text fields using collation, visit the <a href="storage/querying.ahtml#sort">Query DSL</a> (or the legacy <a href="storage/noql.ahtml#sort">NoQL</a> documentation).</p>
+<p>For examples on sorting text fields using collation, visit the <a href="querying.ahtml#sort">Query DSL</a> (or the legacy <a href="noql.ahtml#sort">NoQL</a> documentation).</p>
 </div>
 </div>
 </div>
@@ -1495,7 +1495,7 @@ Rather than providing a full config object, you may instead reference a standard
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:06:55 UTC
+Last updated 2026-06-25 15:07:12 UTC
 </div>
 </div>
 </body>
