@@ -469,7 +469,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dl>
 <dt class="hdlist1">Vhost filters</dt>
 <dd>
-<p>Request routing based on <a href="https://developer.enonic.com/docs/platform/stable/deployment/vhosts">virtual hosts</a>.</p>
+<p>Request routing based on <a href="https://developer.enonic.com/docs/platform/xp8/config/vhosts">virtual hosts</a>.</p>
 </dd>
 <dt class="hdlist1">Platform filters</dt>
 <dd>
@@ -530,7 +530,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 13:54:40 UTC
+Last updated 2026-06-26 14:59:49 UTC
 </div>
 </div>
 </body>
