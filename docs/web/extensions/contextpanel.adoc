@@ -4,7 +4,7 @@
 
 Context Panel is an admin extension that implements the `contentstudio.contextpanel` interface.
 
-TIP: More details on what this looks like in the: https://developer.enonic.com/docs/content-studio/next/workbench/contextpanel[Content Studio context panel].
+TIP: More details on what this looks like in the: https://developer.enonic.com/docs/content-studio/stable/workbench/contextpanel[Content Studio context panel].
 
 == Introduction
 

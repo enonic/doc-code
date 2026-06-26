@@ -244,7 +244,7 @@ Returns the component in the current execution context. Meant to be called from 
 [.lead]
 Returns
 
-+*object* : (<<fundamentals/types#component, `Component`>>) The current component, or `null` if there is no component in the current context.+
++*object* : (<<../fundamentals/types#component, `Component`>>) The current component, or `null` if there is no component in the current context.+
 
 [.lead]
 Example
@@ -293,7 +293,7 @@ Returns the content in the current execution context. Meant to be called from a 
 [.lead]
 Returns
 
-+*object* : (<<fundamentals/types#content, `Content`>>) The current content, or `null` if there is no content in the current context.+
++*object* : (<<../fundamentals/types#content, `Content`>>) The current content, or `null` if there is no content in the current context.+
 
 [.lead]
 Example
@@ -460,7 +460,7 @@ Parameters
 [.lead]
 Returns
 
-+*object* : (<<fundamentals/types#byte-source, `ByteSource`>>) Stream of multipart item data, or `null` if the item does not exist.+
++*object* : (<<../fundamentals/types#byte-source, `ByteSource`>>) Stream of multipart item data, or `null` if the item does not exist.+
 
 [.lead]
 Example
@@ -864,7 +864,7 @@ const expected = '<p><a href="https://example.com/">Link</a></p>';
 
 === serviceUrl
 
-WARNING: HTTP services are deprecated in XP 8 in favor of <<web/apis#, Universal APIs>>. Use <<apiUrl>> for new code; `serviceUrl()` is retained for backward compatibility with legacy services in `src/main/resources/services/`.
+WARNING: HTTP services are deprecated in XP 8 in favor of <<../web/apis#, Universal APIs>>. Use <<apiUrl>> for new code; `serviceUrl()` is retained for backward compatibility with legacy services in `src/main/resources/services/`.
 
 Generates URL to a service.
 
@@ -950,7 +950,7 @@ const url = buildUrl({
 [#site]
 === Site
 
-A site is a specialized <<fundamentals/types#content, `Content`>> of type `portal:site`. In addition to the standard content properties, its `data` carries the site's app configurations.
+A site is a specialized <<../fundamentals/types#content, `Content`>> of type `portal:site`. In addition to the standard content properties, its `data` carries the site's app configurations.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]

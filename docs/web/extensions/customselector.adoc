@@ -6,7 +6,7 @@ Implements the `contentstudio.customselector` interface.
 
 == Introduction
 
-Provides a back-end for the https://developer.enonic.com/docs/cms/schemas/form-items/customselector[CustomSelector form item] when used in Content Studio.
+Provides a back-end for the https://developer.enonic.com/docs/cms/xp8/schemas/form-items/customselector[CustomSelector form item] when used in Content Studio.
 
 The CustomSelector form item fetches options from this extension whenever the user opens the dropdown, types in the search field, or when the content is loaded with pre-selected options. The extension receives the selected options and the search query as parameters and returns a list of matching options.
 

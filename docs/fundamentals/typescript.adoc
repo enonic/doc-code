@@ -9,7 +9,7 @@ NOTE: XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to J
 
 == TypeScript starter
 
-The quickest way to start a TypeScript project — with types, `tsconfig`, and build already wired up — is the https://market.enonic.com/starters/typescript-starter[TypeScript Starter]. Scaffold a new project from it with the https://developer.enonic.com/docs/enonic-cli[Enonic CLI]:
+The quickest way to start a TypeScript project — with types, `tsconfig`, and build already wired up — is the https://market.enonic.com/starters/typescript-starter[TypeScript Starter]. Scaffold a new project from it with the https://developer.enonic.com/docs/enonic-cli/stable[Enonic CLI]:
 
 [source,sh]
 ----

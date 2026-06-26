@@ -11,7 +11,7 @@ NOTE: For hands on tutorials on building native Enonic XP sites, visit https://d
 
 As an alternative to using 3rd party front-end frameworks like Next.js, the site service is purpose-built for delivering content-driven websites, and is closesly linked to the CMS features of the platform.
 
-TIP: Visit the https://developer.enonic.com/docs/cms/stable[CMS documentation] for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
+TIP: Visit the https://developer.enonic.com/docs/cms/xp8[CMS documentation] for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
 
 
 === Usage

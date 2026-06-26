@@ -57,8 +57,9 @@ Via the file system:: Drop the JAR into the XP `deploy/` folder. Used during dev
 
 For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the https://developer.enonic.com/docs/platform[XP platform documentation].
 
+[#configuration]
 == Configuration
 
 Each app may read configuration from a `<app-name>.cfg` file (e.g. `com.example.myapp.cfg`) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform's configuration APIs.
 
-See https://developer.enonic.com/docs/platform/xp8/deployment/config[App configuration] for the file format, location, and reload behavior.
+The file format, location, and reload behavior are documented in the https://developer.enonic.com/docs/platform/stable/deployment/config[XP platform documentation].

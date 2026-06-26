@@ -7,7 +7,7 @@ Desciption of how to ship your *CMS schemas* as code as part of your Enonic app
 
 The CMS schemas control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.
 
-NOTE: Visit the https://developer.enonic.com/docs/cms/stable/schemas[CMS docs] for details on content modeling.
+NOTE: Visit the https://developer.enonic.com/docs/cms/xp8/schemas[CMS docs] for details on content modeling.
 
 You may bundle schemas in any Enonic app. https://market.enonic.com/vendors/enonic/starter-vanilla[The Vanilla starter] is a minimalistic approach.
 
@@ -70,7 +70,7 @@ The folder name, file name, and the schema's referenceable name must match: `cms
 
 == A content type, end to end
 
-The descriptor is YAML. Here is a minimal content type, using the canonical shape from the https://developer.enonic.com/docs/cms/stable/content/content-types[CMS content-types reference]:
+The descriptor is YAML. Here is a minimal content type, using the canonical shape from the https://developer.enonic.com/docs/cms/xp8/content/content-types[CMS content-types reference]:
 
 .src/main/resources/cms/content-types/person/person.yaml
 [source,yaml]
@@ -98,7 +98,7 @@ form:
     label: "Biography"
 ----
 
-NOTE: The full set of form items is documented in the https://developer.enonic.com/docs/cms/stable/schemas/form-items[CMS forms reference].
+NOTE: The full set of form items is documented in the https://developer.enonic.com/docs/cms/xp8/schemas/form-items[CMS forms reference].
 
 
 [#cms-yaml]
@@ -131,7 +131,7 @@ There is no separate "publish schemas" step. The bundle *is* the source of truth
 
 == References
 
-* https://developer.enonic.com/docs/cms/stable/schemas[CMS schemas reference] — the schema language, field types, and per-kind documentation.
-* https://developer.enonic.com/docs/cms/stable[CMS documentation] — content modelling, queries, and runtime APIs.
+* https://developer.enonic.com/docs/cms/xp8/schemas[CMS schemas reference] — the schema language, field types, and per-kind documentation.
+* https://developer.enonic.com/docs/cms/xp8[CMS documentation] — content modelling, queries, and runtime APIs.
 * <<tooling/starters#, Starters>> — folder layout for the rest of an Enonic app.
 * <<web/sites#, Sites>> — wiring page/part/layout schemas to rendering implementations.
