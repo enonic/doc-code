@@ -474,7 +474,7 @@ Using CLI, and sandbox may be created and started with the following commands: <
 <h2 id="download_distro"><a class="link" href="#download_distro">Download distro</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Start by downloading an <a href="https://developer.enonic.com/docs/platform/xp8/deployment/distro">Enonic XP distribution file</a>. This is essentially the software version of the Enonic XP platform.</p>
+<p>Start by downloading an <a href="https://developer.enonic.com/docs/platform/stable/deployment/distro">Enonic XP distribution file</a>. This is essentially the software version of the Enonic XP platform.</p>
 </div>
 <div class="paragraph">
 <p>Distros for your architecture can be downloaded from <a href="https://repo.enonic.com/service/rest/repository/browse/public/com/enonic/xp/">the Enonic repo</a>. Look for folders named <code>enonic-xp-&lt;architecture&gt;-sdk</code>.</p>
@@ -551,7 +551,7 @@ Only distros ending with <code>sdk</code> are suitable for development purposes
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 13:21:07 UTC
+Last updated 2026-06-26 13:21:39 UTC
 </div>
 </div>
 </body>

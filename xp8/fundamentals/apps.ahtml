@@ -579,14 +579,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Each app may read configuration from a <code>&lt;app-name&gt;.cfg</code> file (e.g. <code>com.example.myapp.cfg</code>) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform&#8217;s configuration APIs.</p>
 </div>
 <div class="paragraph">
-<p>See <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config">App configuration</a> for the file format, location, and reload behavior.</p>
+<p>The file format, location, and reload behavior are documented in the <a href="https://developer.enonic.com/docs/platform/stable/deployment/config">XP platform documentation</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 13:21:07 UTC
+Last updated 2026-06-26 13:21:39 UTC
 </div>
 </div>
 </body>

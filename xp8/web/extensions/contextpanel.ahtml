@@ -463,7 +463,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-More details on what this looks like in the: <a href="https://developer.enonic.com/docs/content-studio/next/workbench/contextpanel">Content Studio context panel</a>.
+More details on what this looks like in the: <a href="https://developer.enonic.com/docs/content-studio/stable/workbench/contextpanel">Content Studio context panel</a>.
 </td>
 </tr>
 </table>
@@ -677,7 +677,7 @@ exports.GET = (req) =&gt; {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 13:21:07 UTC
+Last updated 2026-06-26 13:21:39 UTC
 </div>
 </div>
 </body>

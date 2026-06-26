@@ -462,7 +462,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Provides a back-end for the <a href="https://developer.enonic.com/docs/cms/schemas/form-items/customselector">CustomSelector form item</a> when used in Content Studio.</p>
+<p>Provides a back-end for the <a href="https://developer.enonic.com/docs/cms/xp8/schemas/form-items/customselector">CustomSelector form item</a> when used in Content Studio.</p>
 </div>
 <div class="paragraph">
 <p>The CustomSelector form item fetches options from this extension whenever the user opens the dropdown, types in the search field, or when the content is loaded with pre-selected options. The extension receives the selected options and the search query as parameters and returns a list of matching options.</p>
@@ -799,7 +799,7 @@ interfaces:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 13:21:07 UTC
+Last updated 2026-06-26 13:21:39 UTC
 </div>
 </div>
 </body>

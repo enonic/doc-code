@@ -646,7 +646,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are two ways to configure custom scheduled jobs: <a href="../libraries/lib-scheduler.ahtml">lib</a> API provides methods to manipulate jobs and <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#scheduler">config</a> file is used to configure default permanent cron jobs.</p>
+<p>There are two ways to configure custom scheduled jobs: <a href="../libraries/lib-scheduler.ahtml">lib</a> API provides methods to manipulate jobs and <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler">config</a> file is used to configure default permanent cron jobs.</p>
 </div>
 </div>
 </div>
@@ -654,7 +654,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="system_jobs"><a class="link" href="#system_jobs">System jobs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP platform provides predefined system jobs, which can be enabled and overridden by user in <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#scheduler">config</a> file. Config modification doesn&#8217;t update job nodes automatically, so make sure you&#8217;ve removed or changed old job nodes manually before any config change.</p>
+<p>XP platform provides predefined system jobs, which can be enabled and overridden by user in <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler">config</a> file. Config modification doesn&#8217;t update job nodes automatically, so make sure you&#8217;ve removed or changed old job nodes manually before any config change.</p>
 </div>
 <div class="paragraph">
 <div class="title">Vacuum</div>
@@ -683,7 +683,7 @@ init-job.vacuum.user=system:su</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Common vacuum process config can be found in <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#vacuum">Vacuum config file</a>.</p>
+<p>Common vacuum process config can be found in <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#vacuum">Vacuum config file</a>.</p>
 </div>
 <div class="paragraph">
 <div class="title">Audit log cleanUp</div>
@@ -712,7 +712,7 @@ init-job.audit-log-cleanup.user=system:su</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Common cleanup process config can be found in <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#audit">Audit config file</a>.</p>
+<p>Common cleanup process config can be found in <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#audit">Audit config file</a>.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -754,7 +754,7 @@ Several jobs can describe the same task descriptor, so the same code can be run 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 13:21:07 UTC
+Last updated 2026-06-26 13:21:39 UTC
 </div>
 </div>
 </body>
