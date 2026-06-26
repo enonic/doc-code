@@ -60,7 +60,7 @@ Apps deployed to a cluster are installed and started on every node. The runtime 
 Apps run inside a fully equipped platform. The runtime gives you, without extra setup:
 
 * *Persistence* — content, nodes, repositories, blobs, all queryable and clusterable.
-* *HTTP routing* — the https://developer.enonic.com/docs/platform/xp8/portal[Portal] dispatches incoming requests to four services (`/api`, `/admin`, `/site`, `/webapp`); you provide the implementations.
+* *HTTP routing* — the https://developer.enonic.com/docs/platform/stable/portal[Portal] dispatches incoming requests to four services (`/api`, `/admin`, `/site`, `/webapp`); you provide the implementations.
 * *Identity & access management* — pluggable <<../web/id-providers#, ID providers>>, role-based permissions, audit logging.
 * *Cluster-wide events* — see <<events#, Events>>.
 * *Background work* — <<../background/tasks#, tasks>> and <<../background/scheduler#, scheduled jobs>>.

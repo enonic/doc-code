@@ -27,7 +27,7 @@ const user = getUser();
 
 == Headless APIs
 
-Visit the https://developer.enonic.com/doc/cms[CMS documentation] for details regarding the content schemas and our headless GraphQL API
+Visit the https://developer.enonic.com/docs/cms/xp8[CMS documentation] for details regarding the content schemas and our headless GraphQL API
 
 == JavaDoc
 

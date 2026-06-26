@@ -17,7 +17,7 @@ The actionable directory, descriptor, and method renames are detailed in the ste
 
 Before you start the upgrade procedure:
 
-. Make sure you have https://developer.enonic.com/docs/enonic-cli[Enonic CLI] installed
+. Make sure you have https://developer.enonic.com/docs/enonic-cli/stable[Enonic CLI] installed
 . Check out the project source code to a local folder i.e. myapp/
 . Ensure you have an XP8 sandbox for the application using Enonic CLI
 

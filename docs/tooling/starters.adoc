@@ -85,7 +85,7 @@ enonic.svg:: Application icon in SVG format. Should be in a square format.
 
 enonic.yaml:: Application descriptor (`kind: "Application"`).
 
-assets/:: Standard folder for static assets such as CSS and JavaScript. Serve them with the https://developer.enonic.com/docs/lib-asset[lib-asset] library, available on https://market.enonic.com[Enonic Market].
+assets/:: Standard folder for static assets such as CSS and JavaScript. Serve them with the https://developer.enonic.com/docs/lib-asset/stable[lib-asset] library, available on https://market.enonic.com[Enonic Market].
 
 error/error.ts:: The <<../web/error#, HTTP error handler>>.
 
@@ -103,15 +103,15 @@ cms/site.yaml:: Site configuration — API mounts, processors, and mappings.
 
 cms/cms.yaml:: Site form and mixin references.
 
-cms/content-types/:: https://developer.enonic.com/docs/cms/xp8/content-types[Content type] definitions.
+cms/content-types/:: https://developer.enonic.com/docs/cms/xp8/content/content-types[Content type] definitions.
 
 cms/processors/:: <<../web/sites/processors#, Response processors>> for post-processing the HTML response from sites.
 
-cms/layouts/:: https://developer.enonic.com/docs/cms/xp8/pages/layouts[Layout components].
+cms/layouts/:: https://developer.enonic.com/docs/cms/xp8/pages/parts[Layout components].
 
 cms/form-fragments/:: Reusable form pieces (formerly known as `mixins`).
 
-cms/macros/:: https://developer.enonic.com/docs/cms/xp8/macros[Rich-text macro components].
+cms/macros/:: https://developer.enonic.com/learn/next.xp/stable/macros[Rich-text macro components].
 
 cms/pages/:: https://developer.enonic.com/docs/cms/xp8/pages[Page components].
 

@@ -26,7 +26,7 @@ See the https://developer.enonic.com/docs/enonic-cli/stable/xp#environment_varia
 
 === GitHub Actions
 
-GitHub Actions integrates via the `enonic/action-app-build` and `enonic/action-app-deploy` actions. Deployment uses a https://developer.enonic.com/docs/platform/stable/iam/system-idp#service_account_key[Service Account Key] rather than basic auth. Store the key file contents and the management URL as repository secrets; add client certificate and key secrets if mTLS is enabled.
+GitHub Actions integrates via the `enonic/action-app-build` and `enonic/action-app-deploy` actions. Deployment uses a https://developer.enonic.com/docs/platform/xp8/security/service-accounts[Service Account Key] rather than basic auth. Store the key file contents and the management URL as repository secrets; add client certificate and key secrets if mTLS is enabled.
 
 Example workflow (`.github/workflows/enonic.yml`):
 

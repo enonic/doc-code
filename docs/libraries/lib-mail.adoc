@@ -26,7 +26,7 @@ You are now ready to use the API.
 
 [NOTE]
 ====
-You also need to configure your smtp-server before you can send out email. For details, see https://developer.enonic.com/docs/platform/xp8/deployment/config#mail[the configuration page]
+You also need to configure your smtp-server before you can send out email. For details, see https://developer.enonic.com/docs/platform/stable/deployment/config#mail[the configuration page]
 ====
 
 == Functions
@@ -126,7 +126,7 @@ const flag2 = send({
 === getDefaultFromEmail
 [[getDefaultFromEmail]]
 
-Returns the default _from_ email address configured in the https://developer.enonic.com/docs/platform/xp8/deployment/config#mail[XP mail configuration].
+Returns the default _from_ email address configured in the https://developer.enonic.com/docs/platform/stable/deployment/config#mail[XP mail configuration].
 
 [.lead]
 Returns

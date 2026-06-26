@@ -8,7 +8,7 @@ Explicit Page, part, and layout components rendereing.
 
 TIP: For a hands-on introduction tutorial, visit the https://developer.enonic.com/docs/my-first-site[My first site tutorial].
 
-A component implementation is created in the same folder as its https://developer.enonic.com/docs/cms/stable/pages/page[CMS component schema]. It exports the same HTTP functions as any other endpoint, but is always executed in the context of a content item. It may also make use of <<contributions#, page contributions>>.
+A component implementation is created in the same folder as its https://developer.enonic.com/docs/cms/xp8/pages/page[CMS component schema]. It exports the same HTTP functions as any other endpoint, but is always executed in the context of a content item. It may also make use of <<contributions#, page contributions>>.
 
 IMPORTANT: Markup returned by a component must have a single root element.
 
@@ -24,7 +24,7 @@ TIP: The site service uses the underlying permissions of the content, which mean
 
 == Pages
 
-The page implementation lives next to its https://developer.enonic.com/docs/cms/stable/pages/page[Page schema] at `src/main/resources/cms/pages/<page-name>/<page-name>.ts`.
+The page implementation lives next to its https://developer.enonic.com/docs/cms/xp8/pages/page[Page schema] at `src/main/resources/cms/pages/<page-name>/<page-name>.ts`.
 
 .Sample page implementation using the context
 [source,typescript]
@@ -45,7 +45,7 @@ exports.GET = (req) => {
 
 == Parts
 
-A part implementation lives next to its https://developer.enonic.com/docs/cms/stable/pages/parts[Part schema] at `src/main/resources/cms/parts/<part-name>/<part-name>.ts`.
+A part implementation lives next to its https://developer.enonic.com/docs/cms/xp8/pages/parts[Part schema] at `src/main/resources/cms/parts/<part-name>/<part-name>.ts`.
 
 .Sample part implementation using the form value
 [source,typescript]
@@ -64,7 +64,7 @@ exports.GET = (req) => {
 
 == Layouts
 
-The layout implementation lives next to its https://developer.enonic.com/docs/cms/stable/pages/parts[Layout schema] at `src/main/resources/cms/layouts/<layout-name>/<layout-name>.ts`.
+The layout implementation lives next to its https://developer.enonic.com/docs/cms/xp8/pages/parts[Layout schema] at `src/main/resources/cms/layouts/<layout-name>/<layout-name>.ts`.
 
 .Sample layout using Thymeleaf to render two regions
 [source,typescript]

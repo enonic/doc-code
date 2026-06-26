@@ -4,7 +4,7 @@
 
 Menu Item is an admin extension that implements the `contentstudio.menuitem` interface.
 
-TIP: More details on what this looks like in the: https://developer.enonic.com/docs/content-studio/next/workbench#menuitem[Content Studio menu item].
+TIP: More details on what this looks like in the: https://developer.enonic.com/docs/content-studio/stable/workbench#menuitem[Content Studio menu item].
 
 == Introduction
 
