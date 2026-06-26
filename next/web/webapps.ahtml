@@ -470,7 +470,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The webapp pipeline is executed as a subset of the <a href="web.ahtml#common_request_pipeline">common pipeline</a>:</p>
+<p>The webapp pipeline is executed as a subset of the <a href="../web.ahtml#common_request_pipeline">common pipeline</a>:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -485,7 +485,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1">Universal API</dt>
 <dd>
-<p>The webapp may optionally mount contextual <a href="web/apis.ahtml">APIs</a> which become available within the same URL space (e.g. <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>). These are mounted via the webapp descriptor.</p>
+<p>The webapp may optionally mount contextual <a href="apis.ahtml">APIs</a> which become available within the same URL space (e.g. <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>). These are mounted via the webapp descriptor.</p>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -507,7 +507,7 @@ Visit the <a href="apis.ahtml#universal_apis">Universal API section</a> for deta
 <h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To turn an application into a webapp, place an implementation at <code>/src/main/resources/webapp/webapp.ts</code> that exports one function per HTTP method it handles (<code>GET</code>, <code>POST</code>, etc.) — see <a href="web/request-response.ahtml">HTTP functions</a>.</p>
+<p>To turn an application into a webapp, place an implementation at <code>/src/main/resources/webapp/webapp.ts</code> that exports one function per HTTP method it handles (<code>GET</code>, <code>POST</code>, etc.) — see <a href="request-response.ahtml">HTTP functions</a>.</p>
 </div>
 <div class="paragraph">
 <p>Once deployed, the webapp is reachable at <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/</code> (e.g. <code>localhost:8080/webapp/my.webapp/</code>).</p>
@@ -533,7 +533,7 @@ For anything beyond a couple of static endpoints, use the <a href="https://marke
 <p>A webapp descriptor is <strong>optional</strong>. A webapp consisting of just <code>webapp.ts</code> runs without one.</p>
 </div>
 <div class="paragraph">
-<p>The descriptor <strong>can be used to mount <a href="web/apis.ahtml">Universal APIs</a> as service points</strong>. Place a <code>webapp.yaml</code> alongside <code>webapp.ts</code> and list the APIs in its <code>apis:</code> field:</p>
+<p>The descriptor <strong>can be used to mount <a href="apis.ahtml">Universal APIs</a> as service points</strong>. Place a <code>webapp.yaml</code> alongside <code>webapp.ts</code> and list the APIs in its <code>apis:</code> field:</p>
 </div>
 <div class="listingblock">
 <div class="title">src/main/resources/webapp/webapp.yaml</div>
@@ -545,7 +545,7 @@ apis:
 </div>
 </div>
 <div class="paragraph">
-<p>Each listed API becomes reachable as a service point at <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>. See <a href="web/apis.ahtml#service-point">Universal API: Service point</a> for the full mounting rules.</p>
+<p>Each listed API becomes reachable as a service point at <code>&lt;server&gt;:&lt;port&gt;/webapp/&lt;app-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>. See <a href="apis.ahtml#service-point">Universal API: Service point</a> for the full mounting rules.</p>
 </div>
 </div>
 </div>
@@ -553,7 +553,7 @@ apis:
 <h2 id="websocket_and_sse"><a class="link" href="#websocket_and_sse">WebSocket and SSE</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A webapp can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. But we generally recommend contextually mounting WebSocket and SSE APIs via the <a href="web/apis.ahtml">API service</a> instead of using the webapp service directly.</p>
+<p>A webapp can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. But we generally recommend contextually mounting WebSocket and SSE APIs via the <a href="apis.ahtml">API service</a> instead of using the webapp service directly.</p>
 </div>
 </div>
 </div>
@@ -568,7 +568,7 @@ apis:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

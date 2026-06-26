@@ -456,7 +456,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Admin extensions are dynamic endpoints that plug into into existing <a href="web/tools.ahtml">admin tools</a> at their named interfaces.</p>
+<p>Admin extensions are dynamic endpoints that plug into into existing <a href="tools.ahtml">admin tools</a> at their named interfaces.</p>
 </div>
 </div>
 </div>
@@ -573,7 +573,7 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 <h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The implementation lives at <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/&lt;extension-name&gt;.ts</code> and exports an <a href="web/request-response.ahtml">HTTP function</a> for each method the extension responds to. The response shape is determined by the host tool — UI widgets typically return HTML fragments, but a data-feed extension might return JSON, and an asset-serving extension might return binary content with the appropriate <code>contentType</code>.</p>
+<p>The implementation lives at <code>src/main/resources/admin/extensions/&lt;extension-name&gt;/&lt;extension-name&gt;.ts</code> and exports an <a href="request-response.ahtml">HTTP function</a> for each method the extension responds to. The response shape is determined by the host tool — UI widgets typically return HTML fragments, but a data-feed extension might return JSON, and an asset-serving extension might return binary content with the appropriate <code>contentType</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample my-extension.ts</div>
@@ -596,7 +596,7 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 <h2 id="extension_url"><a class="link" href="#extension_url">Extension URL</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The URL at which an extension is reachable is a platform internal and may change between XP releases — <strong>do not hard-code it</strong>. Use <code>extensionUrl()</code> from <a href="libraries/lib-admin.ahtml#extensionurl">lib-admin</a>; it resolves the URL based on the current admin tool context.</p>
+<p>The URL at which an extension is reachable is a platform internal and may change between XP releases — <strong>do not hard-code it</strong>. Use <code>extensionUrl()</code> from <a href="../libraries/lib-admin.ahtml#extensionurl">lib-admin</a>; it resolves the URL based on the current admin tool context.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -685,7 +685,7 @@ const url = adminLib.extensionUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

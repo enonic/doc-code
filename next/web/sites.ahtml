@@ -526,7 +526,7 @@ apis:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You will also need implementations of <a href="web/sites/mappings.ahtml">Mapping function</a> or <a href="web/sites/components.ahtml">component functions</a> to start rendering.
+You will also need implementations of <a href="sites/mappings.ahtml">Mapping function</a> or <a href="sites/components.ahtml">component functions</a> to start rendering.
 </td>
 </tr>
 </table>
@@ -538,7 +538,7 @@ You will also need implementations of <a href="web/sites/mappings.ahtml">Mapping
 <h2 id="site_request_pipeline"><a class="link" href="#site_request_pipeline">Site Request pipeline</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The site pipeline is executed as a subset of the <a href="web.ahtml#common_request_pipeline">common pipeline</a>:</p>
+<p>The site pipeline is executed as a subset of the <a href="../web.ahtml#common_request_pipeline">common pipeline</a>:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -654,7 +654,7 @@ In <code>inline</code> rendering mode the status is <code>418</code> instead of 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

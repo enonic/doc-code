@@ -460,7 +460,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Filters work differently from <a href="storage/querying.ahtml">queries</a>.
+<p>Filters work differently from <a href="querying.ahtml">queries</a>.
 When searching with a regular query, steps like sorting and scoring are done to produce the result.</p>
 </div>
 <div class="paragraph">
@@ -475,7 +475,7 @@ A filter <em>only</em> removes nodes from the result - and is executed after the
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Filters are deprecated and will be removed in future XP versions. Use <a href="storage/querying.ahtml#_filter">query filtering</a> instead — see the <a href="#legacy_filter_migration">mapping table below</a> for how each filter type translates to the DSL.
+Filters are deprecated and will be removed in future XP versions. Use <a href="querying.ahtml#_filter">query filtering</a> instead — see the <a href="#legacy_filter_migration">mapping table below</a> for how each filter type translates to the DSL.
 </td>
 </tr>
 </table>
@@ -486,7 +486,7 @@ Filters are deprecated and will be removed in future XP versions. Use <a href="s
 <h2 id="legacy_filter_migration"><a class="link" href="#legacy_filter_migration">Migrating to the Query DSL</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Each legacy filter has a direct equivalent inside <code>boolean.filter</code> (or <code>boolean.mustNot</code>) in the <a href="storage/querying.ahtml">Query DSL</a>:</p>
+<p>Each legacy filter has a direct equivalent inside <code>boolean.filter</code> (or <code>boolean.mustNot</code>) in the <a href="querying.ahtml">Query DSL</a>:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -503,25 +503,25 @@ Filters are deprecated and will be removed in future XP versions. Use <a href="s
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>exists</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a href="storage/querying.ahtml#exists">exists</a> expression inside <code>filter</code></p>
+<p><a href="querying.ahtml#exists">exists</a> expression inside <code>filter</code></p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>notExists</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a href="storage/querying.ahtml#exists">exists</a> expression inside <code>mustNot</code></p>
+<p><a href="querying.ahtml#exists">exists</a> expression inside <code>mustNot</code></p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>hasValue</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a href="storage/querying.ahtml#in">in</a> expression inside <code>filter</code></p>
+<p><a href="querying.ahtml#in">in</a> expression inside <code>filter</code></p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ids</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a href="storage/querying.ahtml#in">in</a> expression on the <code>_id</code> field inside <code>filter</code></p>
+<p><a href="querying.ahtml#in">in</a> expression on the <code>_id</code> field inside <code>filter</code></p>
 </div></div></td>
 </tr>
 <tr>
@@ -750,7 +750,7 @@ Array of values to decide a match</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

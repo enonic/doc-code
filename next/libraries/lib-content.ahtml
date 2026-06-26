@@ -810,7 +810,7 @@ log.info('Archived content ids: %s', result2.join(','));</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Content <a href="fundamentals/types.ahtml#page-component">page</a>.</p>
+<p><strong>Optional.</strong> Content <a href="../fundamentals/types.ahtml#page-component">page</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2880,7 +2880,7 @@ const result = updateWorkflow({
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object describing the <a href="fundamentals/types.ahtml#page-component">page</a> configuration including regions and components.</p>
+<p>A JSON object describing the <a href="../fundamentals/types.ahtml#page-component">page</a> configuration including regions and components.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2950,7 +2950,7 @@ const result = updateWorkflow({
 <td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object containing <a href="fundamentals/types.ahtml#workflow">workflow</a> state information.</p>
+<p>A JSON object containing <a href="../fundamentals/types.ahtml#workflow">workflow</a> state information.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2976,7 +2976,7 @@ const result = updateWorkflow({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">validationErrors</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#validation-error">ValidationError</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#validation-error">ValidationError</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>An array of objects describing validation errors.</p>
 </div></div></td>
@@ -4303,7 +4303,7 @@ const expected = [
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Form schema — an array of form items.</p>
 </div></div></td>
@@ -4339,7 +4339,7 @@ const expected = [
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Stream with the binary data for the icon. Read it with <code>lib-io</code>.</p>
 </div></div></td>
@@ -4364,7 +4364,7 @@ const expected = [
 <div class="sect2">
 <h3 id="schedule"><a class="link" href="#schedule">Schedule</a></h3>
 <div class="paragraph">
-<p>A publish schedule. Same shape as <a href="fundamentals/types.ahtml#publish-info">PublishInfo</a> without the <code>first</code> field.</p>
+<p>A publish schedule. Same shape as <a href="../fundamentals/types.ahtml#publish-info">PublishInfo</a> without the <code>first</code> field.</p>
 </div>
 <div class="paragraph lead">
 <p>Properties</p>
@@ -4424,7 +4424,7 @@ const expected = [
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal the entry applies to (for example, <code>role:system.admin</code>, <code>user:system:su</code>).</p>
 </div></div></td>
@@ -4451,7 +4451,7 @@ const expected = [
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

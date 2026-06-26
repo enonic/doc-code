@@ -574,7 +574,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="websocket_and_sse"><a class="link" href="#websocket_and_sse">WebSocket and SSE</a></h3>
 <div class="paragraph">
-<p>A custom API can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. Return a <code>webSocket</code> or <code>sse</code> object from the request handler. See <a href="web/websocket.ahtml">WebSocket</a> and <a href="web/sse.ahtml">SSE</a> for the details.</p>
+<p>A custom API can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. Return a <code>webSocket</code> or <code>sse</code> object from the request handler. See <a href="websocket.ahtml">WebSocket</a> and <a href="sse.ahtml">SSE</a> for the details.</p>
 </div>
 </div>
 </div>
@@ -961,7 +961,7 @@ This list includes but is not limited to:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

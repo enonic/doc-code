@@ -491,7 +491,7 @@ This section covers code-level localization, not multi-lingual content or websit
 </dd>
 <dt class="hdlist1">Admin Console</dt>
 <dd>
-<p>Localize labels and texts in <a href="../cms/schemas.ahtml#schema_localization">schemas</a> such as content types. The framework will use the locale derived from the browser&#8217;s <code>Accept-Language</code> header.</p>
+<p>Localize labels and texts in <a href="https://developer.enonic.com/docs/cms/xp8/schemas#schema_localization">schemas</a> such as content types. The framework will use the locale derived from the browser&#8217;s <code>Accept-Language</code> header.</p>
 </dd>
 <dt class="hdlist1">Webapps and more</dt>
 <dd>
@@ -735,7 +735,7 @@ Placeholders are formatted according to the requested locale.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

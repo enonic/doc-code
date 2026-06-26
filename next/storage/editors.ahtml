@@ -541,12 +541,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="libraries/lib-node.ahtml#update"><code>lib-node.update</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-node.ahtml#update"><code>lib-node.update</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Full node</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">General-purpose write. Re-indexes the node.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="libraries/lib-node.ahtml#patch"><code>lib-node.patch</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-node.ahtml#patch"><code>lib-node.patch</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Full node</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Low-level. Optionally targets multiple branches; can backport a single change.</p></td>
 </tr>
@@ -568,22 +568,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="libraries/lib-content.ahtml#update"><code>lib-content.update</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-content.ahtml#update"><code>lib-content.update</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Full content (incl. <code>data</code>, <code>publish</code>, <code>workflow</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Validates against the content type unless <code>requireValid: false</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="libraries/lib-content.ahtml#patch"><code>lib-content.patch</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-content.ahtml#patch"><code>lib-content.patch</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Partial content shape</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The canonical tool for content upgrades and data migrations. Skips validation and accepts a <code>branches</code> list. Callback parameter is named <code>patcher</code> but follows the same editor pattern.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="libraries/lib-content.ahtml#updatemetadata"><code>lib-content.updateMetadata</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-content.ahtml#updatemetadata"><code>lib-content.updateMetadata</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ source, owner, variantOf }</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Scoped editor for content metadata only.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="libraries/lib-content.ahtml#updateworkflow"><code>lib-content.updateWorkflow</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-content.ahtml#updateworkflow"><code>lib-content.updateWorkflow</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ source, state }</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Scoped editor for the workflow state.</p></td>
 </tr>
@@ -660,7 +660,7 @@ repo.update({
 <p><code>lib-content.patch</code> is the workhorse for content upgrades and data migrations. Unlike <code>update</code>, it skips content-type validation — exactly what you want when the schema has changed and existing contents do not yet match the new shape.</p>
 </div>
 <div class="paragraph">
-<p>Pair it with a query (see <a href="storage/querying.ahtml">Query DSL</a>) to walk the affected contents and apply the change to each:</p>
+<p>Pair it with a query (see <a href="querying.ahtml">Query DSL</a>) to walk the affected contents and apply the change to each:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -750,7 +750,7 @@ updateWorkflow({
 <p><strong><code>update</code> validates; <code>patch</code> doesn&#8217;t.</strong> Use <code>update</code> for routine content changes. Reach for <code>patch</code> when migrating content to a new schema, backporting a change across branches, or otherwise intentionally bypassing content-type validation.</p>
 </li>
 <li>
-<p><strong>Editors run as the calling principal.</strong> For changes that exceed the caller&#8217;s permissions — bulk fixes, migrations — wrap the editor block in <a href="libraries/lib-context.ahtml#run"><code>lib-context.run</code></a> with a service principal. See <a href="storage/permissions.ahtml#_running_as_a_different_principal">Permissions</a> for the pattern.</p>
+<p><strong>Editors run as the calling principal.</strong> For changes that exceed the caller&#8217;s permissions — bulk fixes, migrations — wrap the editor block in <a href="../libraries/lib-context.ahtml#run"><code>lib-context.run</code></a> with a service principal. See <a href="permissions.ahtml#_running_as_a_different_principal">Permissions</a> for the pattern.</p>
 </li>
 </ul>
 </div>
@@ -759,7 +759,7 @@ updateWorkflow({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>

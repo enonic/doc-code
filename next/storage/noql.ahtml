@@ -479,7 +479,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-NoQL is deprecated. Use the <a href="storage/querying.ahtml">Query DSL</a> for new code. This reference is kept for maintaining existing applications.
+NoQL is deprecated. Use the <a href="querying.ahtml">Query DSL</a> for new code. This reference is kept for maintaining existing applications.
 </td>
 </tr>
 </table>
@@ -510,7 +510,7 @@ A query normally targets a single repository, but may also query multiple reposi
 <div class="sect2">
 <h3 id="query_dsl"><a class="link" href="#query_dsl">Query DSL</a></h3>
 <div class="paragraph">
-<p>Query DSL is an AST (Abstract Syntax Tree) expressed in JSON to define query expressions. See <a href="storage/querying.ahtml">documentation</a> for further explanation and examples.</p>
+<p>Query DSL is an AST (Abstract Syntax Tree) expressed in JSON to define query expressions. See <a href="querying.ahtml">documentation</a> for further explanation and examples.</p>
 </div>
 </div>
 <div class="sect2">
@@ -538,7 +538,7 @@ For instance, we could limit the result further:</p>
 The fulltext() expression performs a free text search on the property <code>article</code> for the specified search string.</p>
 </div>
 <div class="paragraph">
-<p>For both the integer comparison and fulltext expression to work, the weight, and article properties need to be <a href="storage/indexing.ahtml">indexed</a> properly.</p>
+<p>For both the integer comparison and fulltext expression to work, the weight, and article properties need to be <a href="indexing.ahtml">indexed</a> properly.</p>
 </div>
 <div class="paragraph">
 <p>If the query is empty, all nodes will be considered matches and returned.</p>
@@ -628,7 +628,7 @@ myLocation IN ('59.9127300,10.7460900','59.2181000,10.9298000')</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<code>instant</code>, <code>dateTime</code>, <code>localDateTime</code>, <code>date</code> functions will force search in <code>datetime</code> index, meanwhile for <code>time</code> function  usual <code>text</code> index will be used. Using expressions without functions perform a search in <code>text</code> index for any time-related field. See more about indexing <a href="storage/indexing.ahtml">there</a>.
+<code>instant</code>, <code>dateTime</code>, <code>localDateTime</code>, <code>date</code> functions will force search in <code>datetime</code> index, meanwhile for <code>time</code> function  usual <code>text</code> index will be used. Using expressions without functions perform a search in <code>text</code> index for any time-related field. See more about indexing <a href="indexing.ahtml">there</a>.
 </td>
 </tr>
 </table>
@@ -914,7 +914,7 @@ By providing more than one field to the query by appending a weight-factor: <cod
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Stemming is language-dependent, so <a href="storage/indexing.ahtml#languages">language</a> must be set either on the content or directly in the node indices via indexConfig.
+Stemming is language-dependent, so <a href="indexing.ahtml#languages">language</a> must be set either on the content or directly in the node indices via indexConfig.
 </td>
 </tr>
 </table>
@@ -995,7 +995,7 @@ Only <code>_alltext</code> field is currently indexed for stemming
 </dd>
 <dt class="hdlist1">language</dt>
 <dd>
-<p>Content language that was used for stemming. List of <a href="storage/indexing.ahtml#languages">supported languages</a></p>
+<p>Content language that was used for stemming. List of <a href="indexing.ahtml#languages">supported languages</a></p>
 </dd>
 </dl>
 </div>
@@ -1228,7 +1228,7 @@ To sort by ranking, use the following statement:</p>
 It exposes field values used for sorting.</p>
 </div>
 <div class="paragraph">
-<p>To use DSL sort check <a href="storage/querying.ahtml#sort">documentation</a>.</p>
+<p>To use DSL sort check <a href="querying.ahtml#sort">documentation</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="syntax_2"><a class="link" href="#syntax_2">Syntax</a></h3>
@@ -1387,7 +1387,7 @@ how often the term appears in the documents when searching for text etc.</p>
 <div class="sect2">
 <h3 id="sort_dsl"><a class="link" href="#sort_dsl">Sort DSL</a></h3>
 <div class="paragraph">
-<p>Sort DSL is an AST (Abstract Syntax Tree) expressed in JSON to define sort expressions. See <a href="storage/querying.ahtml#sort">documentation</a> for further explanation and examples.</p>
+<p>Sort DSL is an AST (Abstract Syntax Tree) expressed in JSON to define sort expressions. See <a href="querying.ahtml#sort">documentation</a> for further explanation and examples.</p>
 </div>
 </div>
 </div>
@@ -1687,7 +1687,7 @@ myDateTime = dateTime('2015-03-19T11:25:00+03:00')</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-25 15:07:40 UTC
+Last updated 2026-06-26 11:31:55 UTC
 </div>
 </div>
 </body>
