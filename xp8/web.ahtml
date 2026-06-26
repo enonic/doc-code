@@ -477,7 +477,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1">Autologin filter</dt>
 <dd>
-<p>The <a href="https://developer.enonic.com/docs/platform/stable/deployment/vhosts">virtual host contextual ID provider</a> is invoked, unless a user already exists in the context.</p>
+<p>The <a href="https://developer.enonic.com/docs/platform/xp8/config/system#idprovider">virtual host contextual ID provider</a> is invoked, unless a user already exists in the context.</p>
 </dd>
 <dt class="hdlist1">Service pipeline</dt>
 <dd>
@@ -530,7 +530,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 15:31:34 UTC
+Last updated 2026-06-26 15:31:53 UTC
 </div>
 </div>
 </body>
