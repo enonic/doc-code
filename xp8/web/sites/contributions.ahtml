@@ -518,7 +518,7 @@ Page contributions will only be triggered if the response type is <code>text/htm
 <h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The component or HTTP function must add a <code>pageContributions</code> property to the <a href="web/request-response.ahtml#response">HTTP response object</a>.</p>
+<p>The component or HTTP function must add a <code>pageContributions</code> property to the <a href="../request-response.ahtml#response">HTTP response object</a>.</p>
 </div>
 <div class="paragraph">
 <p>Example response adding a script element to <code>headEnd</code>:</p>
@@ -596,7 +596,7 @@ Duplicate page contributions are automatically removed, so if multiple component
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

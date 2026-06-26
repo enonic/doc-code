@@ -557,15 +557,15 @@ exports.GET = () =&gt; ({
 <div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><a href="web/request-response.ahtml">HTTP functions</a></dt>
+<dt class="hdlist1"><a href="../web/request-response.ahtml">HTTP functions</a></dt>
 <dd>
 <p>Respond to HTTP requests. Exports match HTTP methods (<code>GET</code>, <code>POST</code>, <code>DELETE</code>, <code>PATCH</code>, …) plus an <code>all</code> fallback. Receive a Request, return a Response.</p>
 </dd>
-<dt class="hdlist1"><a href="web/filters.ahtml">Filters</a></dt>
+<dt class="hdlist1"><a href="../web/filters.ahtml">Filters</a></dt>
 <dd>
 <p>Wrap downstream HTTP functions with pre- and post-processing in the site or webapp pipeline.</p>
 </dd>
-<dt class="hdlist1"><a href="web/error.ahtml">Error handlers</a></dt>
+<dt class="hdlist1"><a href="../web/error.ahtml">Error handlers</a></dt>
 <dd>
 <p>Invoked when an exception bubbles out of an HTTP function. Receive the error plus the original request, return a Response.</p>
 </dd>
@@ -581,7 +581,7 @@ exports.GET = () =&gt; ({
 <dd>
 <p>Run on a cron or interval schedule. Same shape as tasks.</p>
 </dd>
-<dt class="hdlist1"><a href="web/websocket.ahtml">Websocket handlers</a></dt>
+<dt class="hdlist1"><a href="../web/websocket.ahtml">Websocket handlers</a></dt>
 <dd>
 <p>React to websocket lifecycle events (open, message, close, error).</p>
 </dd>
@@ -592,14 +592,14 @@ exports.GET = () =&gt; ({
 </dl>
 </div>
 <div class="paragraph">
-<p>Page, part, and layout implementations export HTTP functions invoked by the site service when rendering content — see <a href="web/sites/components.ahtml">components</a>.</p>
+<p>Page, part, and layout implementations export HTTP functions invoked by the site service when rendering content — see <a href="../web/sites/components.ahtml">components</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

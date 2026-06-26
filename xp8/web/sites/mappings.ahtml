@@ -469,7 +469,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Mappings are the first custom processing step in the <a href="../sites.ahtml">site service</a>. Mappings execute before the component rendering. You may define mappings for both <a href="web/request-response.ahtml">HTTP functions</a> and <a href="web/filters.ahtml">filters</a>. The use cases are vast.</p>
+<p>Mappings are the first custom processing step in the <a href="../sites.ahtml">site service</a>. Mappings execute before the component rendering. You may define mappings for both <a href="../request-response.ahtml">HTTP functions</a> and <a href="../filters.ahtml">filters</a>. The use cases are vast.</p>
 </div>
 </div>
 </div>
@@ -514,7 +514,7 @@ mappings:
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>controller</strong> — path to an <a href="web/request-response.ahtml">HTTP function</a> implementation.</td>
+<td><strong>controller</strong> — path to an <a href="../request-response.ahtml">HTTP function</a> implementation.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -530,7 +530,7 @@ mappings:
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td><strong>filter</strong> — path to an <a href="web/filters.ahtml">HTTP filter</a> implementation.</td>
+<td><strong>filter</strong> — path to an <a href="../filters.ahtml">HTTP filter</a> implementation.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
@@ -731,7 +731,7 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<a href="web/apis.ahtml">Universal APIs</a> mounted as points (<code>/_/&lt;app&gt;:&lt;api&gt;</code>) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+<a href="../apis.ahtml">Universal APIs</a> mounted as points (<code>/_/&lt;app&gt;:&lt;api&gt;</code>) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
 </td>
 </tr>
 </table>
@@ -741,7 +741,7 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

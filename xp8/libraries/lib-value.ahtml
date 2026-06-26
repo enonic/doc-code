@@ -514,7 +514,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p><code>binary()</code> takes two positional arguments: <code>name</code> (string — the binary name) and <code>stream</code> (<a href="fundamentals/types.ahtml#byte-source">ByteSource</a> — the binary stream).</p>
+<p><code>binary()</code> takes two positional arguments: <code>name</code> (string — the binary name) and <code>stream</code> (<a href="../fundamentals/types.ahtml#byte-source">ByteSource</a> — the binary stream).</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -1031,7 +1031,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getByteSource()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The underlying binary stream.</p>
 </div></div></td>
@@ -1044,7 +1044,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

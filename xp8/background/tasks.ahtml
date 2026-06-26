@@ -584,7 +584,7 @@ Nodes that do not accept distributable tasks execution are still capable to subm
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For fine-grained control which nodes should be capable to execute distributable tasks use <a href="../deployment/config.ahtml#application">Application</a> filter config or local apps. Or disable execution of named tasks entirely on some nodes by <a href="../deployment/config.ahtml#task">Task</a> config.
+For fine-grained control which nodes should be capable to execute distributable tasks use <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#application">Application</a> filter config or local apps. Or disable execution of named tasks entirely on some nodes by <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#task">Task</a> config.
 </td>
 </tr>
 </table>
@@ -608,7 +608,7 @@ For fine-grained control which nodes should be capable to execute distributable 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

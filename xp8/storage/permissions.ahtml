@@ -585,7 +585,7 @@ When programmatically creating a repository, set root permissions explicitly and
 </tbody>
 </table>
 <div class="paragraph">
-<p>These can be used in any <a href="storage/querying.ahtml">query</a> — for example, to find every node a given role can modify:</p>
+<p>These can be used in any <a href="querying.ahtml">query</a> — for example, to find every node a given role can modify:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -644,7 +644,7 @@ Code running in an elevated context bypasses node-level access checks entirely. 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

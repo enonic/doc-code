@@ -713,7 +713,7 @@ const result = run({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.</p>
 </div></div></td>
@@ -752,14 +752,14 @@ const result = run({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user">User</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user">User</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> The currently authenticated user. Omitted when no user is logged in.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Principal keys (users, groups, and roles) attached to the authentication info.</p>
 </div></div></td>
@@ -817,7 +817,7 @@ const result = run({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

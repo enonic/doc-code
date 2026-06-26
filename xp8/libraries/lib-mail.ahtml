@@ -496,7 +496,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </td>
 <td class="content">
 <div class="paragraph">
-<p>You also need to configure your smtp-server before you can send out email. For details, see <a href="../deployment/config.ahtml#mail">the configuration page</a></p>
+<p>You also need to configure your smtp-server before you can send out email. For details, see <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#mail">the configuration page</a></p>
 </div>
 </td>
 </tr>
@@ -679,7 +679,7 @@ const flag2 = send({
 <div class="sect2">
 <h3 id="getdefaultfromemail"><a class="link" href="#getdefaultfromemail">getDefaultFromEmail</a></h3>
 <div id="getDefaultFromEmail" class="paragraph">
-<p>Returns the default <em>from</em> email address configured in the <a href="../deployment/config.ahtml#mail">XP mail configuration</a>.</p>
+<p>Returns the default <em>from</em> email address configured in the <a href="https://developer.enonic.com/docs/platform/xp8/deployment/config#mail">XP mail configuration</a>.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -735,7 +735,7 @@ const defaultFromEmail = getDefaultFromEmail();</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Attachment stream.</p>
 </div></div></td>
@@ -762,7 +762,7 @@ const defaultFromEmail = getDefaultFromEmail();</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

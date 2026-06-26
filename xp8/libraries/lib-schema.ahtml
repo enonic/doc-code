@@ -2266,7 +2266,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">creator</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal that created the schema.</p>
 </div></div></td>
@@ -2280,7 +2280,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifier</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal that last modified the schema.</p>
 </div></div></td>
@@ -2339,7 +2339,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Content type form.</p>
 </div></div></td>
@@ -2454,7 +2454,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Form fragment form.</p>
 </div></div></td>
@@ -2492,7 +2492,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Mixin form.</p>
 </div></div></td>
@@ -2600,7 +2600,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Component form.</p>
 </div></div></td>
@@ -2777,7 +2777,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Site descriptor form.</p>
 </div></div></td>
@@ -3029,7 +3029,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Icon stream data.</p>
 </div></div></td>
@@ -3056,7 +3056,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

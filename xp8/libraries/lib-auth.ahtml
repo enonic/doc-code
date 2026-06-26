@@ -545,7 +545,7 @@ In this case you must explicitly execute the function in the <a href="lib-contex
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to add members to, and an array of <code>members</code> — the <a href="fundamentals/types.ahtml#user-key">UserKey</a> or <a href="fundamentals/types.ahtml#group-key">GroupKey</a> values to add.</p>
+<p>Takes the <code>principalKey</code> (a <a href="../fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="../fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to add members to, and an array of <code>members</code> — the <a href="../fundamentals/types.ahtml#user-key">UserKey</a> or <a href="../fundamentals/types.ahtml#group-key">GroupKey</a> values to add.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -690,7 +690,7 @@ if (user) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#group"><code>Group</code></a>) The created group.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#group"><code>Group</code></a>) The created group.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -884,7 +884,7 @@ const idProvider = createIdProvider({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#role"><code>Role</code></a>) The created role.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#role"><code>Role</code></a>) The created role.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -972,7 +972,7 @@ const role = createRole({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a>) The created user.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#user"><code>User</code></a>) The created user.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1015,7 +1015,7 @@ const user = createUser({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>) of the principal to delete.</p>
+<p>Takes the <code>principalKey</code> (a <a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>) of the principal to delete.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -1062,7 +1062,7 @@ const deleted = deletePrincipal('user:myIdProvider:userId');</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-type">PrincipalType</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-type">PrincipalType</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Principal type to look for, one of <code>'user'</code>, <code>'group'</code> or <code>'role'</code>. If not specified all principal types are included.</p>
 </div></div></td>
@@ -1214,7 +1214,7 @@ const result = findPrincipals({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="#find-principals-result"><code>FindPrincipalsResult</code></a>) The total number of hits, the number returned, and an array of the matching <a href="fundamentals/types.ahtml#user"><code>User</code></a> objects.</p>
+<p><strong>object</strong> : (<a href="#find-principals-result"><code>FindPrincipalsResult</code></a>) The total number of hits, the number returned, and an array of the matching <a href="../fundamentals/types.ahtml#user"><code>User</code></a> objects.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1395,13 +1395,13 @@ const idProviders = getIdProviders();</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to retrieve members for.</p>
+<p>Takes the <code>principalKey</code> (a <a href="../fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="../fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to retrieve members for.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object[]</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a> | <a href="fundamentals/types.ahtml#group"><code>Group</code></a>)[] A list of users and groups that are members of the principal, or an empty array if none.</p>
+<p><strong>object[]</strong> : (<a href="../fundamentals/types.ahtml#user"><code>User</code></a> | <a href="../fundamentals/types.ahtml#group"><code>Group</code></a>)[] A list of users and groups that are members of the principal, or an empty array if none.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1449,13 +1449,13 @@ const result = getMembers('group:system:content-managers');</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#user-key">UserKey</a> or <a href="fundamentals/types.ahtml#group-key">GroupKey</a>) of the user or group to retrieve memberships for, and an optional <code>transitive</code> boolean — retrieve transitive memberships. Considered <code>false</code> if not specified.</p>
+<p>Takes the <code>principalKey</code> (a <a href="../fundamentals/types.ahtml#user-key">UserKey</a> or <a href="../fundamentals/types.ahtml#group-key">GroupKey</a>) of the user or group to retrieve memberships for, and an optional <code>transitive</code> boolean — retrieve transitive memberships. Considered <code>false</code> if not specified.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object[]</strong> : (<a href="fundamentals/types.ahtml#group"><code>Group</code></a> | <a href="fundamentals/types.ahtml#role"><code>Role</code></a>)[] A list of groups and roles that the specified principal is a member of.</p>
+<p><strong>object[]</strong> : (<a href="../fundamentals/types.ahtml#group"><code>Group</code></a> | <a href="../fundamentals/types.ahtml#role"><code>Role</code></a>)[] A list of groups and roles that the specified principal is a member of.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1517,19 +1517,19 @@ const result = getMemberships('user:system:user1', true);</code></pre>
 <div class="sect2">
 <h3 id="getprincipal"><a class="link" href="#getprincipal">getPrincipal</a></h3>
 <div class="paragraph">
-<p>Returns the principal with the specified key. The result is narrowed to <a href="fundamentals/types.ahtml#user"><code>User</code></a>, <a href="fundamentals/types.ahtml#group"><code>Group</code></a> or <a href="fundamentals/types.ahtml#role"><code>Role</code></a> when the key type makes the principal type unambiguous.</p>
+<p>Returns the principal with the specified key. The result is narrowed to <a href="../fundamentals/types.ahtml#user"><code>User</code></a>, <a href="../fundamentals/types.ahtml#group"><code>Group</code></a> or <a href="../fundamentals/types.ahtml#role"><code>Role</code></a> when the key type makes the principal type unambiguous.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>) of the principal to look for.</p>
+<p>Takes the <code>principalKey</code> (a <a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>) of the principal to look for.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#principal"><code>Principal</code></a>) The principal as an object, or <code>null</code> if it does not exist.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#principal"><code>Principal</code></a>) The principal as an object, or <code>null</code> if it does not exist.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1585,7 +1585,7 @@ const result = getPrincipal('user:system:user1');</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key of the user.</p>
 </div></div></td>
@@ -1665,7 +1665,7 @@ const result = getProfile({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a>) The logged-in user, or <code>null</code> if not logged in. When <code>includeProfile</code> is <code>true</code>, the user also carries a <code>profile</code> property.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#user"><code>User</code></a>) The logged-in user, or <code>null</code> if not logged in. When <code>includeProfile</code> is <code>true</code>, the user also carries a <code>profile</code> property.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1877,7 +1877,7 @@ const loginResult = login({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#group-key">GroupKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#group-key">GroupKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key of the group to modify.</p>
 </div></div></td>
@@ -1886,7 +1886,7 @@ const loginResult = login({
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Editor callback <code>(group: Group) =&gt; Group</code> that receives the current <a href="fundamentals/types.ahtml#group"><code>Group</code></a> and returns the modified group.</p>
+<p>Editor callback <code>(group: Group) =&gt; Group</code> that receives the current <a href="../fundamentals/types.ahtml#group"><code>Group</code></a> and returns the modified group.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1895,7 +1895,7 @@ const loginResult = login({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#group"><code>Group</code></a>) The updated group, or <code>null</code> if the group was not found.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#group"><code>Group</code></a>) The updated group, or <code>null</code> if the group was not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1958,7 +1958,7 @@ const group = modifyGroup({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key of the user.</p>
 </div></div></td>
@@ -2045,7 +2045,7 @@ const profileModified = modifyProfile({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#role-key">RoleKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#role-key">RoleKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key of the role to modify.</p>
 </div></div></td>
@@ -2054,7 +2054,7 @@ const profileModified = modifyProfile({
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Editor callback <code>(role: Role) =&gt; Role</code> that receives the current <a href="fundamentals/types.ahtml#role"><code>Role</code></a> and returns the modified role.</p>
+<p>Editor callback <code>(role: Role) =&gt; Role</code> that receives the current <a href="../fundamentals/types.ahtml#role"><code>Role</code></a> and returns the modified role.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2063,7 +2063,7 @@ const profileModified = modifyProfile({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#role"><code>Role</code></a>) The updated role, or <code>null</code> if the role was not found.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#role"><code>Role</code></a>) The updated role, or <code>null</code> if the role was not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2126,7 +2126,7 @@ const theRole = modifyRole({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key of the user to modify.</p>
 </div></div></td>
@@ -2135,7 +2135,7 @@ const theRole = modifyRole({
 <td class="tableblock halign-left valign-top"><p class="tableblock">editor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Editor callback <code>(user: User) =&gt; User</code> that receives the current <a href="fundamentals/types.ahtml#user"><code>User</code></a> and returns the modified user.</p>
+<p>Editor callback <code>(user: User) =&gt; User</code> that receives the current <a href="../fundamentals/types.ahtml#user"><code>User</code></a> and returns the modified user.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2144,7 +2144,7 @@ const theRole = modifyRole({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#user"><code>User</code></a>) The updated user, or <code>null</code> if the user was not found.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#user"><code>User</code></a>) The updated user, or <code>null</code> if the user was not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2193,7 +2193,7 @@ const theUser = modifyUser({
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes the <code>principalKey</code> (a <a href="fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to remove members from, and an array of <code>members</code> — the <a href="fundamentals/types.ahtml#user-key">UserKey</a> or <a href="fundamentals/types.ahtml#group-key">GroupKey</a> values to remove.</p>
+<p>Takes the <code>principalKey</code> (a <a href="../fundamentals/types.ahtml#group-key">GroupKey</a> or <a href="../fundamentals/types.ahtml#role-key">RoleKey</a>) of the group or role to remove members from, and an array of <code>members</code> — the <a href="../fundamentals/types.ahtml#user-key">UserKey</a> or <a href="../fundamentals/types.ahtml#group-key">GroupKey</a> values to remove.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -2219,7 +2219,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 <h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The core principal types — <a href="fundamentals/types.ahtml#user"><code>User</code></a>, <a href="fundamentals/types.ahtml#group"><code>Group</code></a>, <a href="fundamentals/types.ahtml#role"><code>Role</code></a>, <a href="fundamentals/types.ahtml#principal"><code>Principal</code></a>, and the key types <a href="fundamentals/types.ahtml#principal-key"><code>PrincipalKey</code></a>, <a href="fundamentals/types.ahtml#user-key"><code>UserKey</code></a>, <a href="fundamentals/types.ahtml#group-key"><code>GroupKey</code></a>, <a href="fundamentals/types.ahtml#role-key"><code>RoleKey</code></a> and <a href="fundamentals/types.ahtml#principal-type"><code>PrincipalType</code></a> — are shared across the libraries and defined on the <a href="fundamentals/types.ahtml">Types</a> page.</p>
+<p>The core principal types — <a href="../fundamentals/types.ahtml#user"><code>User</code></a>, <a href="../fundamentals/types.ahtml#group"><code>Group</code></a>, <a href="../fundamentals/types.ahtml#role"><code>Role</code></a>, <a href="../fundamentals/types.ahtml#principal"><code>Principal</code></a>, and the key types <a href="../fundamentals/types.ahtml#principal-key"><code>PrincipalKey</code></a>, <a href="../fundamentals/types.ahtml#user-key"><code>UserKey</code></a>, <a href="../fundamentals/types.ahtml#group-key"><code>GroupKey</code></a>, <a href="../fundamentals/types.ahtml#role-key"><code>RoleKey</code></a> and <a href="../fundamentals/types.ahtml#principal-type"><code>PrincipalType</code></a> — are shared across the libraries and defined on the <a href="../fundamentals/types.ahtml">Types</a> page.</p>
 </div>
 <div class="sect2">
 <h3 id="login-scope-type"><a class="link" href="#login-scope-type">LoginScopeType</a></h3>
@@ -2255,7 +2255,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#user">User</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user">User</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> The authenticated user. Present when <code>authenticated</code> is <code>true</code>.</p>
 </div></div></td>
@@ -2308,9 +2308,9 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal">Principal</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal">Principal</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The matching principals. For <code>findUsers()</code> the hits are <a href="fundamentals/types.ahtml#user"><code>User</code></a> objects.</p>
+<p>The matching principals. For <code>findUsers()</code> the hits are <a href="../fundamentals/types.ahtml#user"><code>User</code></a> objects.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2423,7 +2423,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal the entry grants access to.</p>
 </div></div></td>
@@ -2449,7 +2449,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

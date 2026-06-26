@@ -478,7 +478,7 @@ Get started running. Use one of our <a href="https://market.enonic.com/starters"
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. However, thanks to the <a href="../runtime.ahtml">XP runtime</a> being a polyglot, applications may contain Java, Kotlin, Scala, or any other language that compiles to Java bytecode.
+Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. However, thanks to the <a href="../fundamentals/runtime.ahtml">XP runtime</a> being a polyglot, applications may contain Java, Kotlin, Scala, or any other language that compiles to Java bytecode.
 </td>
 </tr>
 </table>
@@ -581,7 +581,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">apis/</dt>
 <dd>
-<p><a href="web/apis.ahtml">Universal API</a> implementations and descriptors.</p>
+<p><a href="../web/apis.ahtml">Universal API</a> implementations and descriptors.</p>
 </dd>
 <dt class="hdlist1">enonic.svg</dt>
 <dd>
@@ -597,7 +597,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">error/error.ts</dt>
 <dd>
-<p>The <a href="web/error.ahtml">HTTP error handler</a>.</p>
+<p>The <a href="../web/error.ahtml">HTTP error handler</a>.</p>
 </dd>
 <dt class="hdlist1">main.ts</dt>
 <dd>
@@ -609,7 +609,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">idprovider/</dt>
 <dd>
-<p>The application may implement an <a href="web/id-providers.ahtml">ID Provider</a> here.</p>
+<p>The application may implement an <a href="../web/id-providers.ahtml">ID Provider</a> here.</p>
 </dd>
 <dt class="hdlist1">tasks/</dt>
 <dd>
@@ -617,7 +617,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">webapp/</dt>
 <dd>
-<p>Optional <a href="web/webapps.ahtml">webapp</a> entry point. Contains <code>webapp.ts</code> (implementation) and an optional <code>webapp.yaml</code> (descriptor).</p>
+<p>Optional <a href="../web/webapps.ahtml">webapp</a> entry point. Contains <code>webapp.ts</code> (implementation) and an optional <code>webapp.yaml</code> (descriptor).</p>
 </dd>
 <dt class="hdlist1">cms/site.yaml</dt>
 <dd>
@@ -629,15 +629,15 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">cms/content-types/</dt>
 <dd>
-<p><a href="../cms/content-types.ahtml">Content type</a> definitions.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/content-types">Content type</a> definitions.</p>
 </dd>
 <dt class="hdlist1">cms/processors/</dt>
 <dd>
-<p><a href="web/sites/processors.ahtml">Response processors</a> for post-processing the HTML response from sites.</p>
+<p><a href="../web/sites/processors.ahtml">Response processors</a> for post-processing the HTML response from sites.</p>
 </dd>
 <dt class="hdlist1">cms/layouts/</dt>
 <dd>
-<p><a href="../cms/pages/layouts.ahtml">Layout components</a>.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/pages/layouts">Layout components</a>.</p>
 </dd>
 <dt class="hdlist1">cms/form-fragments/</dt>
 <dd>
@@ -645,15 +645,15 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">cms/macros/</dt>
 <dd>
-<p><a href="../cms/macros.ahtml">Rich-text macro components</a>.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/macros">Rich-text macro components</a>.</p>
 </dd>
 <dt class="hdlist1">cms/pages/</dt>
 <dd>
-<p><a href="../cms/pages.ahtml">Page components</a>.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/pages">Page components</a>.</p>
 </dd>
 <dt class="hdlist1">cms/parts/</dt>
 <dd>
-<p><a href="../cms/pages/parts.ahtml">Part components</a>.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/pages/parts">Part components</a>.</p>
 </dd>
 <dt class="hdlist1">cms/mixins/</dt>
 <dd>
@@ -715,7 +715,7 @@ Check out <a href="https://market.enonic.com/starters/library-starter">the libra
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>

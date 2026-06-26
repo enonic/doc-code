@@ -516,7 +516,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><strong>Do not use <code>lib-node</code> against the CMS (content) repository.</strong> Content is layered on top of nodes with content-type validation, draft/master synchronization, publish-state bookkeeping, audit-log entries, child-project propagation, and indexing of system fields. Direct <code>lib-node</code> writes against a content node bypass all of that and corrupt the content model.</p>
 </div>
 <div class="paragraph">
-<p>Use <a href="libraries/lib-content.ahtml"><code>lib-content</code></a> for content. Reach for <code>lib-node</code> only when working with custom (non-content) repositories. See <a href="storage/editors.ahtml">Editors</a> for the pattern.</p>
+<p>Use <a href="lib-content.ahtml"><code>lib-content</code></a> for content. Reach for <code>lib-node</code> only when working with custom (non-content) repositories. See <a href="../storage/editors.ahtml">Editors</a> for the pattern.</p>
 </div>
 </td>
 </tr>
@@ -656,7 +656,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Additional principals to execute the connection with.</p>
 </div></div></td>
@@ -1114,7 +1114,7 @@ skip the <code>_name</code> property and specify a <code>displayName</code>.</p>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The created node.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The created node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1447,7 +1447,7 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The duplicated node.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The duplicated node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1764,7 +1764,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a> or <code>Node[]</code>) The node, or array of nodes, fetched from the repository. Returns <code>null</code> when a single requested node is not found.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a> or <code>Node[]</code>) The node, or array of nodes, fetched from the repository. Returns <code>null</code> when a single requested node is not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1907,7 +1907,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#byte-source">ByteSource</a>) Stream of the binary.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#byte-source">ByteSource</a>) Stream of the binary.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2030,7 +2030,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The modified node.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The modified node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2273,7 +2273,7 @@ const patchedNode = repo.patch({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The moved or renamed node.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The moved or renamed node.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -3074,7 +3074,7 @@ const patchedNode = repo.patch({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Additional principals to execute the connection with.</p>
 </div></div></td>
@@ -3253,7 +3253,7 @@ const patchedNode = repo.patch({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key (for example <code>role:system.everyone</code> or <code>user:system:my-user</code>).</p>
 </div></div></td>
@@ -3573,7 +3573,7 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">node</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>(<a href="fundamentals/types.ahtml#node"><code>Node</code></a>) The parent node after the new child order was applied.</p>
+<p>(<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The parent node after the new child order was applied.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3629,7 +3629,7 @@ const patchedNode = repo.patch({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:31:29 UTC
+Last updated 2026-06-26 11:35:27 UTC
 </div>
 </div>
 </body>
