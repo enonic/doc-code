@@ -478,7 +478,7 @@ Visit the <a href="https://developer.enonic.com/docs/cms/xp8/schemas">CMS docs</
 </table>
 </div>
 <div class="paragraph">
-<p>You may bundle schemas in any Enonic app. <a href="https://market.enonic.com/vendors/enonic/starter-vanilla">The Vanilla starter</a> is a minimalistic approach.</p>
+<p>You may bundle schemas in any Enonic app. <a href="https://market.enonic.com/starters/vanilla-starter">The Vanilla starter</a> is a minimalistic approach.</p>
 </div>
 <div class="paragraph">
 <p>Create a new app using Enonic CLI:</p>
@@ -707,7 +707,7 @@ form:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 15:02:13 UTC
+Last updated 2026-06-26 15:02:33 UTC
 </div>
 </div>
 </body>
