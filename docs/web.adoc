@@ -13,11 +13,11 @@ Every request, regardless of which service ultimately handles it, passes through
 // Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.common-pipeline.mmd -o docs/web/images/common-pipeline.svg -b transparent
 image::common-pipeline.svg[Common HTTP request pipeline, 500px]
 
-Vhost filters:: Request routing based on <<deployment/vhosts#, virtual hosts>>.
+Vhost filters:: Request routing based on https://developer.enonic.com/docs/platform/xp8/deployment/vhosts[virtual hosts].
 
 Platform filters:: Optional system-level request filters. Implemented in Java as OSGi components — a platform extension mechanism, not part of the JS/TS app surface.
 
-Autologin filter:: The <<deployment/vhosts#, virtual host contextual ID provider>> is invoked, unless a user already exists in the context.
+Autologin filter:: The https://developer.enonic.com/docs/platform/xp8/deployment/vhosts[virtual host contextual ID provider] is invoked, unless a user already exists in the context.
 
 Service pipeline:: The Web endpoint (default port `8080`) dispatches the request to one of four services — each with a fixed URL prefix and a distinct role — and runs the matching service's own pipeline:
 <<web/apis#, /api>>::: Custom web APIs, microservices, headless integrations etc.

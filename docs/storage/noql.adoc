@@ -2,7 +2,7 @@
 :toc: right
 :imagesdir: ../images
 
-WARNING: NoQL is deprecated. Use the <<storage/querying#, Query DSL>> for new code. This reference is kept for maintaining existing applications.
+WARNING: NoQL is deprecated. Use the <<querying#, Query DSL>> for new code. This reference is kept for maintaining existing applications.
 
 == Introduction
 
@@ -21,7 +21,7 @@ There are two types of query's format available in XP: String format and DSL (Do
 
 === Query DSL
 
-Query DSL is an AST (Abstract Syntax Tree) expressed in JSON to define query expressions. See <<storage/querying#, documentation>> for further explanation and examples.
+Query DSL is an AST (Abstract Syntax Tree) expressed in JSON to define query expressions. See <<querying#, documentation>> for further explanation and examples.
 
 === String Query
 String queries are built from traditional expressions.
@@ -37,7 +37,7 @@ For instance, we could limit the result further:
 In this case we are adding a so-called dynamic expression to the query.
 The fulltext() expression performs a free text search on the property `article` for the specified search string.
 
-For both the integer comparison and fulltext expression to work, the weight, and article properties need to be <<storage/indexing#, indexed>> properly.
+For both the integer comparison and fulltext expression to work, the weight, and article properties need to be <<indexing#, indexed>> properly.
 
 
 If the query is empty, all nodes will be considered matches and returned.
@@ -110,7 +110,7 @@ myLocation = '59.9127300,10.7460900'
 myLocation IN ('59.9127300,10.7460900','59.2181000,10.9298000')
 ----
 
-NOTE: `instant`, `dateTime`, `localDateTime`, `date` functions will force search in `datetime` index, meanwhile for `time` function  usual `text` index will be used. Using expressions without functions perform a search in `text` index for any time-related field. See more about indexing <<storage/indexing#, there>>.
+NOTE: `instant`, `dateTime`, `localDateTime`, `date` functions will force search in `datetime` index, meanwhile for `time` function  usual `text` index will be used. Using expressions without functions perform a search in `text` index for any time-related field. See more about indexing <<indexing#, there>>.
 
 ==== logicalExpr
 
@@ -324,7 +324,7 @@ fulltext('data.*', '"gone fishing today"~2', "AND")
 
 The stemmed function is similar to <<fulltext,fulltext()>> except that it searches language optimized tokens instead of a source text. E.g. source text `The monkey loved bananas` will be transformed to `the`, `monkey`, `love`, `banana` tokens and they will be used for search.
 
-NOTE: Stemming is language-dependent, so <<storage/indexing#languages,language>> must be set either on the content or directly in the node indices via indexConfig.
+NOTE: Stemming is language-dependent, so <<indexing#languages,language>> must be set either on the content or directly in the node indices via indexConfig.
 
 .Function definition
 [source,sql]
@@ -353,7 +353,7 @@ operator:: Allowed operators are:
 * `OR` Any of the words in the search-string matches.
 * `AND` All words in search-string matches.
 
-language:: Content language that was used for stemming. List of <<storage/indexing#languages, supported languages>>
+language:: Content language that was used for stemming. List of <<indexing#languages, supported languages>>
 
 *Examples*
 
@@ -519,7 +519,7 @@ If sort specified for a query, results will contain a meta system property `_sor
 It exposes field values used for sorting.
 
 
-To use DSL sort check <<storage/querying#sort, documentation>>.
+To use DSL sort check <<querying#sort, documentation>>.
 
 === Syntax
 
@@ -616,7 +616,7 @@ For more details, check out the Elasticsearch documentation.
 
 === Sort DSL
 
-Sort DSL is an AST (Abstract Syntax Tree) expressed in JSON to define sort expressions. See <<storage/querying#sort, documentation>> for further explanation and examples.
+Sort DSL is an AST (Abstract Syntax Tree) expressed in JSON to define sort expressions. See <<querying#sort, documentation>> for further explanation and examples.
 
 
 == More examples

@@ -58,13 +58,13 @@ The <<globals#, framework globals>> (`app`, `log`, `require`, etc.) are availabl
 
 == Types of contracts
 
-<<web/request-response#, HTTP functions>>:: Respond to HTTP requests. Exports match HTTP methods (`GET`, `POST`, `DELETE`, `PATCH`, …) plus an `all` fallback. Receive a Request, return a Response.
-<<web/filters#, Filters>>:: Wrap downstream HTTP functions with pre- and post-processing in the site or webapp pipeline.
-<<web/error#, Error handlers>>:: Invoked when an exception bubbles out of an HTTP function. Receive the error plus the original request, return a Response.
+<<../web/request-response#, HTTP functions>>:: Respond to HTTP requests. Exports match HTTP methods (`GET`, `POST`, `DELETE`, `PATCH`, …) plus an `all` fallback. Receive a Request, return a Response.
+<<../web/filters#, Filters>>:: Wrap downstream HTTP functions with pre- and post-processing in the site or webapp pipeline.
+<<../web/error#, Error handlers>>:: Invoked when an exception bubbles out of an HTTP function. Receive the error plus the original request, return a Response.
 <<events#, Event listeners>>:: Subscribe to the cluster-wide event bus. Receive the event payload; return value is ignored.
 <<../background/tasks#, Tasks>>:: Fire-and-forget background jobs. Receive a `params` object, report progress.
 <<../background/scheduler#, Scheduled jobs>>:: Run on a cron or interval schedule. Same shape as tasks.
-<<web/websocket#, Websocket handlers>>:: React to websocket lifecycle events (open, message, close, error).
+<<../web/websocket#, Websocket handlers>>:: React to websocket lifecycle events (open, message, close, error).
 <<main#, Main lifecycle>>:: `main.js` hooks that run when your app starts and stops.
 
-Page, part, and layout implementations export HTTP functions invoked by the site service when rendering content — see <<web/sites/components#, components>>.
+Page, part, and layout implementations export HTTP functions invoked by the site service when rendering content — see <<../web/sites/components#, components>>.

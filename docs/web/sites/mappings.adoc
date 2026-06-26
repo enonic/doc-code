@@ -6,7 +6,7 @@ Bind HTTP functions and filters to specific content types or site-relative URLs
 
 == Introduction
 
-Mappings are the first custom processing step in the <<../sites#, site service>>. Mappings execute before the component rendering. You may define mappings for both <<web/request-response#, HTTP functions>> and <<web/filters#, filters>>. The use cases are vast.
+Mappings are the first custom processing step in the <<../sites#, site service>>. Mappings execute before the component rendering. You may define mappings for both <<../request-response#, HTTP functions>> and <<../filters#, filters>>. The use cases are vast.
 
 == Usage
 
@@ -34,7 +34,7 @@ mappings:
   service: "image"
 ----
 
-<1> *controller* — path to an <<web/request-response#, HTTP function>> implementation.
+<1> *controller* — path to an <<../request-response#, HTTP function>> implementation.
 
 <2> *order* — execution order across apps. Default `50`. Lower number means higher priority, with `1` being the pole position. See <<Execution order>>.
 
@@ -42,7 +42,7 @@ mappings:
 
 <4> *match* — property condition evaluated against the contextual content. See <<Match mappings>>.
 
-<5> *filter* — path to an <<web/filters#, HTTP filter>> implementation.
+<5> *filter* — path to an <<../filters#, HTTP filter>> implementation.
 
 <6> *service* — system service handled by this mapping (e.g. the `+.../_/image/...+` endpoint). See <<service_mappings, Service mappings>>.
 
@@ -131,4 +131,4 @@ Supported services:
 `attachment` (deprecated):: Override the legacy attachment service at `+/_/attachment/<mode>/<id>[:<fingerprint>]/<name>+` (e.g. `+/_/attachment/inline/123456/logo.png+`). Replaced by the `media:attachment` Universal API.
 
 
-NOTE: <<web/apis#, Universal APIs>> mounted as points (`+/_/<app>:<api>+`) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+NOTE: <<../apis#, Universal APIs>> mounted as points (`+/_/<app>:<api>+`) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.

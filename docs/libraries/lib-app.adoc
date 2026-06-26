@@ -369,7 +369,7 @@ Properties
 [grid="none"]
 |===
 | Name                      | Type       | Description
-| data                      | <<fundamentals/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
+| data                      | <<../fundamentals/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
 | mimeType                  | string     | Icon MIME type
 | modifiedTime              | string     | Icon modified time, ISO-8601 instant
 

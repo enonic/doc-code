@@ -4,35 +4,35 @@
 
 == Introduction
 
-Filters work differently from <<storage/querying#, queries>>.
+Filters work differently from <<querying#, queries>>.
 When searching with a regular query, steps like sorting and scoring are done to produce the result.
 
 These are relatively costly operations.
 A filter does none of these steps.
 A filter _only_ removes nodes from the result - and is executed after the query statement, if it exists.
 
-WARNING: Filters are deprecated and will be removed in future XP versions. Use <<storage/querying#_filter, query filtering>> instead — see the <<legacy_filter_migration, mapping table below>> for how each filter type translates to the DSL.
+WARNING: Filters are deprecated and will be removed in future XP versions. Use <<querying#_filter, query filtering>> instead — see the <<legacy_filter_migration, mapping table below>> for how each filter type translates to the DSL.
 
 [#legacy_filter_migration]
 == Migrating to the Query DSL
 
-Each legacy filter has a direct equivalent inside `boolean.filter` (or `boolean.mustNot`) in the <<storage/querying#, Query DSL>>:
+Each legacy filter has a direct equivalent inside `boolean.filter` (or `boolean.mustNot`) in the <<querying#, Query DSL>>:
 
 [cols="1,2a"]
 |===
 |Legacy filter |DSL equivalent
 
 |`exists`
-|<<storage/querying#exists, exists>> expression inside `filter`
+|<<querying#exists, exists>> expression inside `filter`
 
 |`notExists`
-|<<storage/querying#exists, exists>> expression inside `mustNot`
+|<<querying#exists, exists>> expression inside `mustNot`
 
 |`hasValue`
-|<<storage/querying#in, in>> expression inside `filter`
+|<<querying#in, in>> expression inside `filter`
 
 |`ids`
-|<<storage/querying#in, in>> expression on the `+_id+` field inside `filter`
+|<<querying#in, in>> expression on the `+_id+` field inside `filter`
 
 |`boolean`
 |`boolean` compound (combine `must`, `mustNot`, `should`, `filter` as needed)

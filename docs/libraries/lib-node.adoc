@@ -9,7 +9,7 @@ This API provides functions to get, query and manipulate nodes.
 ====
 *Do not use `lib-node` against the CMS (content) repository.* Content is layered on top of nodes with content-type validation, draft/master synchronization, publish-state bookkeeping, audit-log entries, child-project propagation, and indexing of system fields. Direct `lib-node` writes against a content node bypass all of that and corrupt the content model.
 
-Use <<libraries/lib-content#, `lib-content`>> for content. Reach for `lib-node` only when working with custom (non-content) repositories. See <<storage/editors#, Editors>> for the pattern.
+Use <<lib-content#, `lib-content`>> for content. Reach for `lib-node` only when working with custom (non-content) repositories. See <<../storage/editors#, Editors>> for the pattern.
 ====
 
 == Usage
@@ -90,7 +90,7 @@ Parameters
 | Name | Type | Description
 | repoId | string | Repository ID.
 | branch | string | Branch ID.
-| principals | <<fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principals to execute the connection with.
+| principals | <<../fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principals to execute the connection with.
 | user | <<connect-user, ConnectUser>> | *Optional.* User to execute the connection as. Defaults to the current user.
 |===
 
@@ -364,7 +364,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#node, `Node`>>) The created node.
+*object* : (<<../fundamentals/types#node, `Node`>>) The created node.
 
 [.lead]
 Example
@@ -597,7 +597,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#node, `Node`>>) The duplicated node.
+*object* : (<<../fundamentals/types#node, `Node`>>) The duplicated node.
 
 [.lead]
 Example
@@ -805,7 +805,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#node, `Node`>> or `Node[]`) The node, or array of nodes, fetched from the repository. Returns `null` when a single requested node is not found.
+*object* : (<<../fundamentals/types#node, `Node`>> or `Node[]`) The node, or array of nodes, fetched from the repository. Returns `null` when a single requested node is not found.
 
 
 [.lead]
@@ -905,7 +905,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#byte-source, ByteSource>>) Stream of the binary.
+*object* : (<<../fundamentals/types#byte-source, ByteSource>>) Stream of the binary.
 
 [.lead]
 Example
@@ -984,7 +984,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#node, `Node`>>) The modified node.
+*object* : (<<../fundamentals/types#node, `Node`>>) The modified node.
 
 [.lead]
 Example
@@ -1123,7 +1123,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#node, `Node`>>) The moved or renamed node.
+*object* : (<<../fundamentals/types#node, `Node`>>) The moved or renamed node.
 
 [.lead]
 Examples
@@ -1711,7 +1711,7 @@ Properties
 | Name | Type | Description
 | repoId | string | Repository ID.
 | branch | string | Branch ID.
-| principals | <<fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principals to execute the connection with.
+| principals | <<../fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principals to execute the connection with.
 | user | <<connect-user, ConnectUser>> | *Optional.* User to execute the connection as. Defaults to the current user. Not allowed when this source is part of a `multiRepoConnect` call.
 |===
 
@@ -1776,7 +1776,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| principal | <<fundamentals/types#principal-key, PrincipalKey>> | Principal key (for example `role:system.everyone` or `user:system:my-user`).
+| principal | <<../fundamentals/types#principal-key, PrincipalKey>> | Principal key (for example `role:system.everyone` or `user:system:my-user`).
 | allow | string[] | *Optional.* Permissions to allow. Possible values are `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `+READ_PERMISSIONS+` and `+WRITE_PERMISSIONS+`.
 | deny | string[] | *Optional.* Permissions to deny. Same possible values as `allow`.
 |===
@@ -1892,7 +1892,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| node | object | (<<fundamentals/types#node, `Node`>>) The parent node after the new child order was applied.
+| node | object | (<<../fundamentals/types#node, `Node`>>) The parent node after the new child order was applied.
 | reorderedNodes | object[] | Array of entries, each with a `node`, describing the children whose ordering was affected.
 |===
 

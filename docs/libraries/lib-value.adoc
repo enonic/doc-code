@@ -33,7 +33,7 @@ Creates a `BinaryAttachment` value from a name and a binary stream.
 [.lead]
 Parameters
 
-`binary()` takes two positional arguments: `name` (string — the binary name) and `stream` (<<fundamentals/types#byte-source, ByteSource>> — the binary stream).
+`binary()` takes two positional arguments: `name` (string — the binary name) and `stream` (<<../fundamentals/types#byte-source, ByteSource>> — the binary stream).
 
 [.lead]
 Returns
@@ -272,5 +272,5 @@ Methods
 |===
 | Name | Type | Description
 | `getReference()` | object | A `BinaryReference` — call `.toString()` on it to get the binary name string.
-| `getByteSource()` | <<fundamentals/types#byte-source, ByteSource>> | The underlying binary stream.
+| `getByteSource()` | <<../fundamentals/types#byte-source, ByteSource>> | The underlying binary stream.
 |===

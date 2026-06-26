@@ -108,8 +108,8 @@ The HTTP function returns a ``response`` object that XP converts to the outgoing
 <5> Cookies to set on the response. See <<#cookies, Cookies>>.
 <6> URI to redirect to. If set, XP places it in the `Location` header and sets the status to `303`.
 <7> Site service only. If `true`, the rendered page is post-processed for component tags (default `true`).
-<8> Site service only. HTML fragments contributed to the rendered markup — see <<web/sites/contributions#, page contributions>>.
-<9> Site service only. If `false`, no further <<web/sites/processors#, response processors>> or filters run (default `true`).
+<8> Site service only. HTML fragments contributed to the rendered markup — see <<sites/contributions#, page contributions>>.
+<9> Site service only. If `false`, no further <<sites/processors#, response processors>> or filters run (default `true`).
 
 [#cookies]
 == Cookies
