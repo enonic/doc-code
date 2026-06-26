@@ -588,7 +588,7 @@ XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScrip
 <p><strong>Persistence</strong> — content, nodes, repositories, blobs, all queryable and clusterable.</p>
 </li>
 <li>
-<p><strong>HTTP routing</strong> — the <a href="https://developer.enonic.com/docs/platform/stable/portal">Portal</a> dispatches incoming requests to four services (<code>/api</code>, <code>/admin</code>, <code>/site</code>, <code>/webapp</code>); you provide the implementations.</p>
+<p><strong>HTTP routing</strong> — the <a href="../web/request-response.ahtml">Portal</a> dispatches incoming requests to four services (<code>/api</code>, <code>/admin</code>, <code>/site</code>, <code>/webapp</code>); you provide the implementations.</p>
 </li>
 <li>
 <p><strong>Identity &amp; access management</strong> — pluggable <a href="../web/id-providers.ahtml">ID providers</a>, role-based permissions, audit logging.</p>
@@ -620,7 +620,7 @@ XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScrip
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 15:11:35 UTC
+Last updated 2026-06-26 15:11:50 UTC
 </div>
 </div>
 </body>
