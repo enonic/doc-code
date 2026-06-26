@@ -1283,9 +1283,9 @@ Properties
 | description | string | Schema description.
 | descriptionI18nKey | string | Schema description i18n key.
 | createdTime | string | Created zulu time.
-| creator | <<fundamentals/types#user-key, UserKey>> | Principal that created the schema.
+| creator | <<../fundamentals/types#user-key, UserKey>> | Principal that created the schema.
 | modifiedTime | string | Modified zulu time.
-| modifier | <<fundamentals/types#user-key, UserKey>> | Principal that last modified the schema.
+| modifier | <<../fundamentals/types#user-key, UserKey>> | Principal that last modified the schema.
 | resource | string | Schema resource value (YAML).
 | type | string | Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, `MIXIN`).
 | icon | <<icon,Icon>> | *Optional.* Schema icon.
@@ -1308,7 +1308,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| form | <<fundamentals/types#form-item, FormItem>>[] | Content type form.
+| form | <<../fundamentals/types#form-item, FormItem>>[] | Content type form.
 | config | object | Content type config. Map of config values keyed by name.
 | superType | string | *Optional.* Key of the content type this one inherits from.
 | abstract | boolean | *Optional.* `true` if the content type cannot be instantiated directly.
@@ -1339,7 +1339,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| form | <<fundamentals/types#form-item, FormItem>>[] | Form fragment form.
+| form | <<../fundamentals/types#form-item, FormItem>>[] | Form fragment form.
 |===
 
 [#mixin]
@@ -1359,7 +1359,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| form | <<fundamentals/types#form-item, FormItem>>[] | Mixin form.
+| form | <<../fundamentals/types#form-item, FormItem>>[] | Mixin form.
 | config | object | Mixin config. Map of config values keyed by name.
 |===
 
@@ -1389,7 +1389,7 @@ Properties
 | modifiedTime | string | Modified zulu time.
 | resource | string | Component resource value (YAML).
 | type | string | Component type (`PAGE`, `PART`, `LAYOUT`).
-| form | <<fundamentals/types#form-item, FormItem>>[] | Component form.
+| form | <<../fundamentals/types#form-item, FormItem>>[] | Component form.
 | config | object | Component config. Map of config values keyed by name.
 |===
 
@@ -1472,7 +1472,7 @@ Properties
 | application | string | Application key.
 | resource | string | Site CMS descriptor YAML resource value.
 | modifiedTime | string | Site zulu modified time.
-| form | <<fundamentals/types#form-item, FormItem>>[] | Site descriptor form.
+| form | <<../fundamentals/types#form-item, FormItem>>[] | Site descriptor form.
 | mixinMappings | <<mixin-mapping,MixinMapping[]>> | *Optional.* Mixin mappings.
 |===
 
@@ -1578,7 +1578,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| data | <<fundamentals/types#byte-source, ByteSource>> | Icon stream data.
+| data | <<../fundamentals/types#byte-source, ByteSource>> | Icon stream data.
 | mimeType | string | Icon mime type.
 | modifiedTime | string | Icon modified time.
 |===

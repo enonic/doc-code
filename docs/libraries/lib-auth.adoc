@@ -38,7 +38,7 @@ Adds members to a principal (group or role).
 [.lead]
 Parameters
 
-Takes the `principalKey` (a <<fundamentals/types#group-key, GroupKey>> or <<fundamentals/types#role-key, RoleKey>>) of the group or role to add members to, and an array of `members` — the <<fundamentals/types#user-key, UserKey>> or <<fundamentals/types#group-key, GroupKey>> values to add.
+Takes the `principalKey` (a <<../fundamentals/types#group-key, GroupKey>> or <<../fundamentals/types#role-key, RoleKey>>) of the group or role to add members to, and an array of `members` — the <<../fundamentals/types#user-key, UserKey>> or <<../fundamentals/types#group-key, GroupKey>> values to add.
 
 [.lead]
 Returns
@@ -121,7 +121,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#group, `Group`>>) The created group.
+*object* : (<<../fundamentals/types#group, `Group`>>) The created group.
 
 [.lead]
 Example
@@ -241,7 +241,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#role, `Role`>>) The created role.
+*object* : (<<../fundamentals/types#role, `Role`>>) The created role.
 
 [.lead]
 Example
@@ -292,7 +292,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#user, `User`>>) The created user.
+*object* : (<<../fundamentals/types#user, `User`>>) The created user.
 
 [.lead]
 Example
@@ -332,7 +332,7 @@ Deletes the principal with the specified key.
 [.lead]
 Parameters
 
-Takes the `principalKey` (a <<fundamentals/types#principal-key, PrincipalKey>>) of the principal to delete.
+Takes the `principalKey` (a <<../fundamentals/types#principal-key, PrincipalKey>>) of the principal to delete.
 
 [.lead]
 Returns
@@ -364,7 +364,7 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| type | <<fundamentals/types#principal-type, PrincipalType>> | *Optional.* Principal type to look for, one of `'user'`, `'group'` or `'role'`. If not specified all principal types are included.
+| type | <<../fundamentals/types#principal-type, PrincipalType>> | *Optional.* Principal type to look for, one of `'user'`, `'group'` or `'role'`. If not specified all principal types are included.
 | idProvider | string | *Optional.* Key of the id provider to look for. If not specified, all id providers are included.
 | start | number | *Optional.* First principal to return from the search results. Used for pagination. Defaults to `0`.
 | count | number | *Optional.* A limit on the number of principals to return. Defaults to `10`.
@@ -439,7 +439,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<find-principals-result, `FindPrincipalsResult`>>) The total number of hits, the number returned, and an array of the matching <<fundamentals/types#user, `User`>> objects.
+*object* : (<<find-principals-result, `FindPrincipalsResult`>>) The total number of hits, the number returned, and an array of the matching <<../fundamentals/types#user, `User`>> objects.
 
 [.lead]
 Example
@@ -596,12 +596,12 @@ Returns a list of principals that are members of the specified principal.
 [.lead]
 Parameters
 
-Takes the `principalKey` (a <<fundamentals/types#group-key, GroupKey>> or <<fundamentals/types#role-key, RoleKey>>) of the group or role to retrieve members for.
+Takes the `principalKey` (a <<../fundamentals/types#group-key, GroupKey>> or <<../fundamentals/types#role-key, RoleKey>>) of the group or role to retrieve members for.
 
 [.lead]
 Returns
 
-*object[]* : (<<fundamentals/types#user, `User`>> | <<fundamentals/types#group, `Group`>>)[] A list of users and groups that are members of the principal, or an empty array if none.
+*object[]* : (<<../fundamentals/types#user, `User`>> | <<../fundamentals/types#group, `Group`>>)[] A list of users and groups that are members of the principal, or an empty array if none.
 
 [.lead]
 Example
@@ -646,12 +646,12 @@ Returns the list of principals which the specified principal is a member of.
 [.lead]
 Parameters
 
-Takes the `principalKey` (a <<fundamentals/types#user-key, UserKey>> or <<fundamentals/types#group-key, GroupKey>>) of the user or group to retrieve memberships for, and an optional `transitive` boolean — retrieve transitive memberships. Considered `false` if not specified.
+Takes the `principalKey` (a <<../fundamentals/types#user-key, UserKey>> or <<../fundamentals/types#group-key, GroupKey>>) of the user or group to retrieve memberships for, and an optional `transitive` boolean — retrieve transitive memberships. Considered `false` if not specified.
 
 [.lead]
 Returns
 
-*object[]* : (<<fundamentals/types#group, `Group`>> | <<fundamentals/types#role, `Role`>>)[] A list of groups and roles that the specified principal is a member of.
+*object[]* : (<<../fundamentals/types#group, `Group`>> | <<../fundamentals/types#role, `Role`>>)[] A list of groups and roles that the specified principal is a member of.
 
 [.lead]
 Example
@@ -711,17 +711,17 @@ const result = getMemberships('user:system:user1', true);
 
 === getPrincipal
 
-Returns the principal with the specified key. The result is narrowed to <<fundamentals/types#user, `User`>>, <<fundamentals/types#group, `Group`>> or <<fundamentals/types#role, `Role`>> when the key type makes the principal type unambiguous.
+Returns the principal with the specified key. The result is narrowed to <<../fundamentals/types#user, `User`>>, <<../fundamentals/types#group, `Group`>> or <<../fundamentals/types#role, `Role`>> when the key type makes the principal type unambiguous.
 
 [.lead]
 Parameters
 
-Takes the `principalKey` (a <<fundamentals/types#principal-key, PrincipalKey>>) of the principal to look for.
+Takes the `principalKey` (a <<../fundamentals/types#principal-key, PrincipalKey>>) of the principal to look for.
 
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#principal, `Principal`>>) The principal as an object, or `null` if it does not exist.
+*object* : (<<../fundamentals/types#principal, `Principal`>>) The principal as an object, or `null` if it does not exist.
 
 [.lead]
 Example
@@ -763,7 +763,7 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| key | <<fundamentals/types#user-key, UserKey>> | Principal key of the user.
+| key | <<../fundamentals/types#user-key, UserKey>> | Principal key of the user.
 | scope | string | *Optional.* Scope of the data to retrieve.
 |===
 
@@ -814,7 +814,7 @@ Parameters
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#user, `User`>>) The logged-in user, or `null` if not logged in. When `includeProfile` is `true`, the user also carries a `profile` property.
+*object* : (<<../fundamentals/types#user, `User`>>) The logged-in user, or `null` if not logged in. When `includeProfile` is `true`, the user also carries a `profile` property.
 
 [.lead]
 Example
@@ -955,14 +955,14 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| key | <<fundamentals/types#group-key, GroupKey>> | Principal key of the group to modify.
-| editor | function | Editor callback `+(group: Group) => Group+` that receives the current <<fundamentals/types#group, `Group`>> and returns the modified group.
+| key | <<../fundamentals/types#group-key, GroupKey>> | Principal key of the group to modify.
+| editor | function | Editor callback `+(group: Group) => Group+` that receives the current <<../fundamentals/types#group, `Group`>> and returns the modified group.
 |===
 
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#group, `Group`>>) The updated group, or `null` if the group was not found.
+*object* : (<<../fundamentals/types#group, `Group`>>) The updated group, or `null` if the group was not found.
 
 [.lead]
 Example
@@ -1011,7 +1011,7 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| key | <<fundamentals/types#user-key, UserKey>> | Principal key of the user.
+| key | <<../fundamentals/types#user-key, UserKey>> | Principal key of the user.
 | scope | string | *Optional.* Scope of the data to retrieve and update.
 | editor | function | Editor callback `+(profile: Profile) => Profile+` that receives the current profile and returns the modified profile.
 |===
@@ -1067,14 +1067,14 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| key | <<fundamentals/types#role-key, RoleKey>> | Principal key of the role to modify.
-| editor | function | Editor callback `+(role: Role) => Role+` that receives the current <<fundamentals/types#role, `Role`>> and returns the modified role.
+| key | <<../fundamentals/types#role-key, RoleKey>> | Principal key of the role to modify.
+| editor | function | Editor callback `+(role: Role) => Role+` that receives the current <<../fundamentals/types#role, `Role`>> and returns the modified role.
 |===
 
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#role, `Role`>>) The updated role, or `null` if the role was not found.
+*object* : (<<../fundamentals/types#role, `Role`>>) The updated role, or `null` if the role was not found.
 
 [.lead]
 Example
@@ -1123,14 +1123,14 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| key | <<fundamentals/types#user-key, UserKey>> | Principal key of the user to modify.
-| editor | function | Editor callback `+(user: User) => User+` that receives the current <<fundamentals/types#user, `User`>> and returns the modified user.
+| key | <<../fundamentals/types#user-key, UserKey>> | Principal key of the user to modify.
+| editor | function | Editor callback `+(user: User) => User+` that receives the current <<../fundamentals/types#user, `User`>> and returns the modified user.
 |===
 
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#user, `User`>>) The updated user, or `null` if the user was not found.
+*object* : (<<../fundamentals/types#user, `User`>>) The updated user, or `null` if the user was not found.
 
 [.lead]
 Example
@@ -1176,7 +1176,7 @@ Removes members from a principal (group or role).
 [.lead]
 Parameters
 
-Takes the `principalKey` (a <<fundamentals/types#group-key, GroupKey>> or <<fundamentals/types#role-key, RoleKey>>) of the group or role to remove members from, and an array of `members` — the <<fundamentals/types#user-key, UserKey>> or <<fundamentals/types#group-key, GroupKey>> values to remove.
+Takes the `principalKey` (a <<../fundamentals/types#group-key, GroupKey>> or <<../fundamentals/types#role-key, RoleKey>>) of the group or role to remove members from, and an array of `members` — the <<../fundamentals/types#user-key, UserKey>> or <<../fundamentals/types#group-key, GroupKey>> values to remove.
 
 [.lead]
 Returns
@@ -1196,7 +1196,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);
 
 == Type Definitions
 
-The core principal types — <<fundamentals/types#user, `User`>>, <<fundamentals/types#group, `Group`>>, <<fundamentals/types#role, `Role`>>, <<fundamentals/types#principal, `Principal`>>, and the key types <<fundamentals/types#principal-key, `PrincipalKey`>>, <<fundamentals/types#user-key, `UserKey`>>, <<fundamentals/types#group-key, `GroupKey`>>, <<fundamentals/types#role-key, `RoleKey`>> and <<fundamentals/types#principal-type, `PrincipalType`>> — are shared across the libraries and defined on the <<fundamentals/types#, Types>> page.
+The core principal types — <<../fundamentals/types#user, `User`>>, <<../fundamentals/types#group, `Group`>>, <<../fundamentals/types#role, `Role`>>, <<../fundamentals/types#principal, `Principal`>>, and the key types <<../fundamentals/types#principal-key, `PrincipalKey`>>, <<../fundamentals/types#user-key, `UserKey`>>, <<../fundamentals/types#group-key, `GroupKey`>>, <<../fundamentals/types#role-key, `RoleKey`>> and <<../fundamentals/types#principal-type, `PrincipalType`>> — are shared across the libraries and defined on the <<../fundamentals/types#, Types>> page.
 
 [#login-scope-type]
 === LoginScopeType
@@ -1214,7 +1214,7 @@ Properties
 |===
 | Name | Type | Description
 | authenticated | boolean | Whether the user was successfully authenticated.
-| user | <<fundamentals/types#user, User>> | *Optional.* The authenticated user. Present when `authenticated` is `true`.
+| user | <<../fundamentals/types#user, User>> | *Optional.* The authenticated user. Present when `authenticated` is `true`.
 | message | string | *Optional.* A message describing the result, typically present on failure.
 |===
 
@@ -1232,7 +1232,7 @@ Properties
 | Name | Type | Description
 | total | number | Total number of principals matching the search.
 | count | number | Number of principals included in `hits`.
-| hits | <<fundamentals/types#principal, Principal>>[] | The matching principals. For `findUsers()` the hits are <<fundamentals/types#user, `User`>> objects.
+| hits | <<../fundamentals/types#principal, Principal>>[] | The matching principals. For `findUsers()` the hits are <<../fundamentals/types#user, `User`>> objects.
 |===
 
 [#id-provider]
@@ -1275,7 +1275,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| principal | <<fundamentals/types#principal-key, PrincipalKey>> | Principal the entry grants access to.
+| principal | <<../fundamentals/types#principal-key, PrincipalKey>> | Principal the entry grants access to.
 | access | <<id-provider-access, IdProviderAccess>> | Permission level.
 |===
 

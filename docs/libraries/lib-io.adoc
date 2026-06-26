@@ -59,12 +59,12 @@ Looks up a resource on the classpath.
 [.lead]
 Parameters
 
-Takes a single `key` argument — a string path or a <<fundamentals/types#resource-key, ResourceKey>> identifying the resource.
+Takes a single `key` argument — a string path or a <<../fundamentals/types#resource-key, ResourceKey>> identifying the resource.
 
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#resource, `Resource`>>) A resource handle exposing `exists()`, `getSize()`, `getTimestamp()`, and `getStream()`.
+*object* : (<<../fundamentals/types#resource, `Resource`>>) A resource handle exposing `exists()`, `getSize()`, `getTimestamp()`, and `getStream()`.
 
 [.lead]
 Examples
@@ -99,7 +99,7 @@ Returns the size of a stream in bytes.
 [.lead]
 Parameters
 
-Takes a single `stream` argument — a <<fundamentals/types#byte-source, ByteSource>> to measure.
+Takes a single `stream` argument — a <<../fundamentals/types#byte-source, ByteSource>> to measure.
 
 [.lead]
 Returns
@@ -130,7 +130,7 @@ Takes a single `text` string — the text to encode as a UTF-8 byte stream.
 [.lead]
 Returns
 
-*object* : (<<fundamentals/types#byte-source, `ByteSource`>>) A new stream containing the UTF-8 bytes of the input string.
+*object* : (<<../fundamentals/types#byte-source, `ByteSource`>>) A new stream containing the UTF-8 bytes of the input string.
 
 [.lead]
 Example
@@ -150,7 +150,7 @@ Reads a stream line by line, invoking a callback for each line.
 [.lead]
 Parameters
 
-Takes two positional arguments: a `stream` (<<fundamentals/types#byte-source, ByteSource>>) to read from, and a `func` callback `(line: string) => void` called once per line.
+Takes two positional arguments: a `stream` (<<../fundamentals/types#byte-source, ByteSource>>) to read from, and a `func` callback `(line: string) => void` called once per line.
 
 [.lead]
 Example
@@ -175,7 +175,7 @@ Reads all lines from a stream and returns them as an array.
 [.lead]
 Parameters
 
-Takes a single `stream` argument — a <<fundamentals/types#byte-source, ByteSource>> to read from.
+Takes a single `stream` argument — a <<../fundamentals/types#byte-source, ByteSource>> to read from.
 
 [.lead]
 Returns
@@ -201,7 +201,7 @@ Reads the full text content of a stream.
 [.lead]
 Parameters
 
-Takes a single `stream` argument — a <<fundamentals/types#byte-source, ByteSource>> to read from.
+Takes a single `stream` argument — a <<../fundamentals/types#byte-source, ByteSource>> to read from.
 
 [.lead]
 Returns

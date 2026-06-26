@@ -40,18 +40,18 @@ Reach for `lib-content` whenever the target is content. Use `lib-node` only for 
 [cols="2,3,3", options="header"]
 |===
 | Function | Receives | Notes
-| <<libraries/lib-node#update, `lib-node.update`>>          | Full node    | General-purpose write. Re-indexes the node.
-| <<libraries/lib-node#patch, `lib-node.patch`>>            | Full node    | Low-level. Optionally targets multiple branches; can backport a single change.
+| <<../libraries/lib-node#update, `lib-node.update`>>          | Full node    | General-purpose write. Re-indexes the node.
+| <<../libraries/lib-node#patch, `lib-node.patch`>>            | Full node    | Low-level. Optionally targets multiple branches; can backport a single change.
 |===
 
 .Content (`lib-content`)
 [cols="2,3,3", options="header"]
 |===
 | Function | Receives | Notes
-| <<libraries/lib-content#update, `lib-content.update`>>    | Full content (incl. `data`, `publish`, `workflow`) | Validates against the content type unless `requireValid: false`.
-| <<libraries/lib-content#patch, `lib-content.patch`>>      | Partial content shape | The canonical tool for content upgrades and data migrations. Skips validation and accepts a `branches` list. Callback parameter is named `patcher` but follows the same editor pattern.
-| <<libraries/lib-content#updatemetadata, `lib-content.updateMetadata`>> | `{ source, owner, variantOf }` | Scoped editor for content metadata only.
-| <<libraries/lib-content#updateworkflow, `lib-content.updateWorkflow`>> | `{ source, state }`           | Scoped editor for the workflow state.
+| <<../libraries/lib-content#update, `lib-content.update`>>    | Full content (incl. `data`, `publish`, `workflow`) | Validates against the content type unless `requireValid: false`.
+| <<../libraries/lib-content#patch, `lib-content.patch`>>      | Partial content shape | The canonical tool for content upgrades and data migrations. Skips validation and accepts a `branches` list. Callback parameter is named `patcher` but follows the same editor pattern.
+| <<../libraries/lib-content#updatemetadata, `lib-content.updateMetadata`>> | `{ source, owner, variantOf }` | Scoped editor for content metadata only.
+| <<../libraries/lib-content#updateworkflow, `lib-content.updateWorkflow`>> | `{ source, state }`           | Scoped editor for the workflow state.
 |===
 
 NOTE: Earlier XP releases exposed `modify` (in both `lib-node` and `lib-content`) for the same role as `update`. `modify` is deprecated — use `update`. The two coexist for backward compatibility, but new code should use `update` to stay consistent with the rest of the API surface.
@@ -104,7 +104,7 @@ A naive read-then-write in application code would race; the editor pattern does 
 
 `lib-content.patch` is the workhorse for content upgrades and data migrations. Unlike `update`, it skips content-type validation — exactly what you want when the schema has changed and existing contents do not yet match the new shape.
 
-Pair it with a query (see <<storage/querying#, Query DSL>>) to walk the affected contents and apply the change to each:
+Pair it with a query (see <<querying#, Query DSL>>) to walk the affected contents and apply the change to each:
 
 [source,typescript]
 ----
@@ -178,4 +178,4 @@ updateWorkflow({
 
 * *No-op edits still produce a new version.* If you want to skip the write when nothing changed, gate the editor call upstream — the editor itself can't suppress the version bump once it runs.
 * *`update` validates; `patch` doesn't.* Use `update` for routine content changes. Reach for `patch` when migrating content to a new schema, backporting a change across branches, or otherwise intentionally bypassing content-type validation.
-* *Editors run as the calling principal.* For changes that exceed the caller's permissions — bulk fixes, migrations — wrap the editor block in <<libraries/lib-context#run, `lib-context.run`>> with a service principal. See <<storage/permissions#_running_as_a_different_principal, Permissions>> for the pattern.
+* *Editors run as the calling principal.* For changes that exceed the caller's permissions — bulk fixes, migrations — wrap the editor block in <<../libraries/lib-context#run, `lib-context.run`>> with a service principal. See <<permissions#_running_as_a_different_principal, Permissions>> for the pattern.

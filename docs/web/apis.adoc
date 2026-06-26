@@ -58,7 +58,7 @@ A request to `+/api/<app>:<api>/foo/bar+` (or the equivalent service-point URL) 
 
 === WebSocket and SSE
 
-A custom API can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. Return a `webSocket` or `sse` object from the request handler. See <<web/websocket#, WebSocket>> and <<web/sse#, SSE>> for the details.
+A custom API can act as a WebSocket channel or a Server-Sent Events stream, like any other HTTP function in XP. Return a `webSocket` or `sse` object from the request handler. See <<websocket#, WebSocket>> and <<sse#, SSE>> for the details.
 
 [#descriptor]
 == Descriptor

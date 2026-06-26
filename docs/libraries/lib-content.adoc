@@ -163,7 +163,7 @@ To create a content where `name` is not important and there could be multiple in
 | language | string | *Optional.* The language tag representing the content's locale.
 | childOrder | string | *Optional.* Default ordering of children when doing `getChildren` if no order is given in query.
 | data | object | Actual content data.
-| page | object | *Optional.* Content <<fundamentals/types#page-component, page>>.
+| page | object | *Optional.* Content <<../fundamentals/types#page-component, page>>.
 | x | object | *Optional.* eXtra data to use.
 | workflow | object | *Optional.* Workflow information to use. Default has state `READY` and an empty check list.
 |===
@@ -1546,7 +1546,7 @@ It should be used with caution. Access is restricted to users with `admin` or `c
 | valid | boolean | Sets the content's validity status.
 
 | data | object | A JSON object containing the main data (properties) of the content, according to its content type.
-| page | object | A JSON object describing the <<fundamentals/types#page-component, page>> configuration including regions and components.
+| page | object | A JSON object describing the <<../fundamentals/types#page-component, page>> configuration including regions and components.
 | x | object | A JSON object containing extra data (x-data) associated with the content.
 
 | owner | string | The owner of the content. Must be a PrincipalKey string.
@@ -1558,12 +1558,12 @@ It should be used with caution. Access is restricted to users with `admin` or `c
 | archivedTime | string | The archival timestamp. Must be an ISO 8601 formatted string.
 
 | publish | object | A JSON object containing publishing information.
-| workflow | object | A JSON object containing <<fundamentals/types#workflow, workflow>> state information.
+| workflow | object | A JSON object containing <<../fundamentals/types#workflow, workflow>> state information.
 
 | inherit | string[] | An array of strings specifying which properties to inherit from the parent (e.g., ["owner", "language"]).
 | variantOf | string | The ContentId (as a string) of the content this item is a variant of (used for localization).
 | processedReferences | string[] | An array of ContentId strings that this content references.
-| validationErrors | <<fundamentals/types#validation-error, ValidationError>>[] | An array of objects describing validation errors.
+| validationErrors | <<../fundamentals/types#validation-error, ValidationError>>[] | An array of objects describing validation errors.
 | originProject | string | The name of the project this content was inherited from.
 | originalParentPath | string | The original parent path in the parent project.
 | originalName | string | The original name in the parent project.
@@ -2430,7 +2430,7 @@ Properties
 | allowChildContent | boolean | Whether or not to allow creating child items on content of this type.
 | modifiedTime | string | Modified time of the content type.
 | icon | <<Icon>> | *Optional.* Icon of the content type.
-| form | <<fundamentals/types#form-item, FormItem>>[] | Form schema — an array of form items.
+| form | <<../fundamentals/types#form-item, FormItem>>[] | Form schema — an array of form items.
 | config | object | Custom schema configuration for the descriptor.
 |===
 
@@ -2444,14 +2444,14 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| data | <<fundamentals/types#byte-source, ByteSource>> | Stream with the binary data for the icon. Read it with `lib-io`.
+| data | <<../fundamentals/types#byte-source, ByteSource>> | Stream with the binary data for the icon. Read it with `lib-io`.
 | mimeType | string | Mime type of the icon image.
 | modifiedTime | string | Modified time of the icon. May be used for caching.
 |===
 
 === Schedule
 
-A publish schedule. Same shape as <<fundamentals/types#publish-info, PublishInfo>> without the `first` field.
+A publish schedule. Same shape as <<../fundamentals/types#publish-info, PublishInfo>> without the `first` field.
 
 [.lead]
 Properties
@@ -2477,7 +2477,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| principal | <<fundamentals/types#principal-key, PrincipalKey>> | Principal the entry applies to (for example, `role:system.admin`, `user:system:su`).
+| principal | <<../fundamentals/types#principal-key, PrincipalKey>> | Principal the entry applies to (for example, `role:system.admin`, `user:system:su`).
 | allow | string[] | *Optional.* Permissions to grant. Each value is one of `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
 | deny | string[] | *Optional.* Permissions to deny. Same set of values as `allow`.
 |===

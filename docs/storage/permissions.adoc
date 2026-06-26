@@ -52,7 +52,7 @@ The effective ACL on each node is flattened into indexed system properties at wr
 |`_permissions_writepermissions`|`WRITE_PERMISSIONS`
 |===
 
-These can be used in any <<storage/querying#, query>> — for example, to find every node a given role can modify:
+These can be used in any <<querying#, query>> — for example, to find every node a given role can modify:
 
 [source,json]
 ----

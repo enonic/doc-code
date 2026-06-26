@@ -14,7 +14,7 @@ The XP framework provides localization for the following use cases:
 
 CMS/Sites:: Use the <<../libraries/lib-i18n#,localization API>> to dynamically localize any text phrases in your app. The framework will apply the locale specified in the site's language property.
 
-Admin Console:: Localize labels and texts in <<../cms/schemas#schema_localization, schemas>> such as content types. The framework will use the locale derived from the browser's `Accept-Language` header.
+Admin Console:: Localize labels and texts in https://developer.enonic.com/docs/cms/xp8/schemas#schema_localization[schemas] such as content types. The framework will use the locale derived from the browser's `Accept-Language` header.
 
 Webapps and more:: The <<../libraries/lib-i18n#,localization API>> may also be used for any other purpose. In these cases the developer controls and specifies the locale explicitly.
 

@@ -71,10 +71,10 @@ Should be used for repeatable tasks. https://www.unix.com/man-page/linux/5/cront
 ----
 
 == Configuration
-There are two ways to configure custom scheduled jobs: <<../libraries/lib-scheduler#, lib>> API provides methods to manipulate jobs and <<../deployment/config#scheduler, config>> file is used to configure default permanent cron jobs.
+There are two ways to configure custom scheduled jobs: <<../libraries/lib-scheduler#, lib>> API provides methods to manipulate jobs and https://developer.enonic.com/docs/platform/xp8/deployment/config#scheduler[config] file is used to configure default permanent cron jobs.
 
 == System jobs
-XP platform provides predefined system jobs, which can be enabled and overridden by user in <<../deployment/config#scheduler, config>> file. Config modification doesn't update job nodes automatically, so make sure you've removed or changed old job nodes manually before any config change.
+XP platform provides predefined system jobs, which can be enabled and overridden by user in https://developer.enonic.com/docs/platform/xp8/deployment/config#scheduler[config] file. Config modification doesn't update job nodes automatically, so make sure you've removed or changed old job nodes manually before any config change.
 
 .Vacuum
 Deletes unused blobs and binaries from a blobstore.
@@ -91,7 +91,7 @@ init-job.vacuum.description=Job to run vacuum
 init-job.vacuum.user=system:su
 ----
 
-Common vacuum process config can be found in <<../deployment/config#vacuum, Vacuum config file>>.
+Common vacuum process config can be found in https://developer.enonic.com/docs/platform/xp8/deployment/config#vacuum[Vacuum config file].
 
 .Audit log cleanUp
 Deletes records from audit log repository.
@@ -108,7 +108,7 @@ init-job.audit-log-cleanup.description=Job to clean up old audit log history
 init-job.audit-log-cleanup.user=system:su
 ----
 
-Common cleanup process config can be found in <<../deployment/config#audit,Audit config file>>.
+Common cleanup process config can be found in https://developer.enonic.com/docs/platform/xp8/deployment/config#audit[Audit config file].
 
 IMPORTANT: `ageThreshold` property must be set to appropriate value, otherwise nothing will be removed.
 

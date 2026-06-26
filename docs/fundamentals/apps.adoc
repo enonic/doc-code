@@ -61,4 +61,4 @@ For deployment, scaling, and isolation details that are platform-level rather th
 
 Each app may read configuration from a `<app-name>.cfg` file (e.g. `com.example.myapp.cfg`) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform's configuration APIs.
 
-See <<deployment/config#, App configuration>> for the file format, location, and reload behavior.
+See https://developer.enonic.com/docs/platform/xp8/deployment/config[App configuration] for the file format, location, and reload behavior.
