@@ -541,7 +541,7 @@ To run this upgrade automatically with an AI coding agent, use the <a href="http
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Make sure you have <a href="https://developer.enonic.com/docs/enonic-cli">Enonic CLI</a> installed</p>
+<p>Make sure you have <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a> installed</p>
 </li>
 <li>
 <p>Check out the project source code to a local folder i.e. myapp/</p>
@@ -2345,7 +2345,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:35:54 UTC
+Last updated 2026-06-26 13:21:33 UTC
 </div>
 </div>
 </body>

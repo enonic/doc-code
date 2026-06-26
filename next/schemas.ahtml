@@ -472,7 +472,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Visit the <a href="https://developer.enonic.com/docs/cms/stable/schemas">CMS docs</a> for details on content modeling.
+Visit the <a href="https://developer.enonic.com/docs/cms/xp8/schemas">CMS docs</a> for details on content modeling.
 </td>
 </tr>
 </table>
@@ -597,7 +597,7 @@ Choose the app name carefully. It becomes part of the schema namespace and is aw
 <h2 id="a_content_type_end_to_end"><a class="link" href="#a_content_type_end_to_end">A content type, end to end</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The descriptor is YAML. Here is a minimal content type, using the canonical shape from the <a href="https://developer.enonic.com/docs/cms/stable/content/content-types">CMS content-types reference</a>:</p>
+<p>The descriptor is YAML. Here is a minimal content type, using the canonical shape from the <a href="https://developer.enonic.com/docs/cms/xp8/content/content-types">CMS content-types reference</a>:</p>
 </div>
 <div class="listingblock">
 <div class="title">src/main/resources/cms/content-types/person/person.yaml</div>
@@ -632,7 +632,7 @@ form:
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The full set of form items is documented in the <a href="https://developer.enonic.com/docs/cms/stable/schemas/form-items">CMS forms reference</a>.
+The full set of form items is documented in the <a href="https://developer.enonic.com/docs/cms/xp8/schemas/form-items">CMS forms reference</a>.
 </td>
 </tr>
 </table>
@@ -689,10 +689,10 @@ form:
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://developer.enonic.com/docs/cms/stable/schemas">CMS schemas reference</a> — the schema language, field types, and per-kind documentation.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/schemas">CMS schemas reference</a> — the schema language, field types, and per-kind documentation.</p>
 </li>
 <li>
-<p><a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a> — content modelling, queries, and runtime APIs.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8">CMS documentation</a> — content modelling, queries, and runtime APIs.</p>
 </li>
 <li>
 <p><a href="tooling/starters.ahtml">Starters</a> — folder layout for the rest of an Enonic app.</p>
@@ -707,7 +707,7 @@ form:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:35:54 UTC
+Last updated 2026-06-26 13:21:33 UTC
 </div>
 </div>
 </body>

@@ -522,7 +522,7 @@ Response processors are only available in <a href="components.ahtml">component r
 <h2 id="triggering"><a class="link" href="#triggering">Triggering</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To wire a processor into the execution pipeline, declare it in the app&#8217;s <a href="https://developer.enonic.com/docs/cms/xp8/sites#site_xml">site descriptor</a>, and add the application to the site.</p>
+<p>To wire a processor into the execution pipeline, declare it in the app&#8217;s <a href="../sites.ahtml">site descriptor</a>, and add the application to the site.</p>
 </div>
 <div class="listingblock">
 <div class="title">cms/site.yaml</div>
@@ -560,7 +560,7 @@ Multiple applications can be added to a Site.
 When a page is rendered, all processors are ordered and executed accordingly.</p>
 </div>
 <div class="paragraph">
-<p>The order of execution is determined by the <code>order</code> value (as defined in the <a href="https://developer.enonic.com/docs/cms/xp8/sites#site_xml">site descriptor</a>) combined with the order of the application list within the site.</p>
+<p>The order of execution is determined by the <code>order</code> value (as defined in the <a href="../sites.ahtml">site descriptor</a>) combined with the order of the application list within the site.</p>
 </div>
 <div class="paragraph">
 <p>Processors with a <strong>lower</strong> order will be executed first (across all apps within the site).</p>
@@ -585,7 +585,7 @@ If <code>applyFilters</code> is set to <code>false</code> in the <a href="../req
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:35:54 UTC
+Last updated 2026-06-26 13:21:33 UTC
 </div>
 </div>
 </body>

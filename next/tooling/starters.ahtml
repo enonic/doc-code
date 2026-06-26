@@ -593,7 +593,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">assets/</dt>
 <dd>
-<p>Standard folder for static assets such as CSS and JavaScript. Serve them with the <a href="https://developer.enonic.com/docs/lib-asset">lib-asset</a> library, available on <a href="https://market.enonic.com">Enonic Market</a>.</p>
+<p>Standard folder for static assets such as CSS and JavaScript. Serve them with the <a href="https://developer.enonic.com/docs/lib-asset/stable">lib-asset</a> library, available on <a href="https://market.enonic.com">Enonic Market</a>.</p>
 </dd>
 <dt class="hdlist1">error/error.ts</dt>
 <dd>
@@ -629,7 +629,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">cms/content-types/</dt>
 <dd>
-<p><a href="https://developer.enonic.com/docs/cms/xp8/content-types">Content type</a> definitions.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/content/content-types">Content type</a> definitions.</p>
 </dd>
 <dt class="hdlist1">cms/processors/</dt>
 <dd>
@@ -637,7 +637,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">cms/layouts/</dt>
 <dd>
-<p><a href="https://developer.enonic.com/docs/cms/xp8/pages/layouts">Layout components</a>.</p>
+<p><a href="https://developer.enonic.com/docs/cms/xp8/pages/parts">Layout components</a>.</p>
 </dd>
 <dt class="hdlist1">cms/form-fragments/</dt>
 <dd>
@@ -645,7 +645,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">cms/macros/</dt>
 <dd>
-<p><a href="https://developer.enonic.com/docs/cms/xp8/macros">Rich-text macro components</a>.</p>
+<p><a href="https://developer.enonic.com/learn/next.xp/stable/macros">Rich-text macro components</a>.</p>
 </dd>
 <dt class="hdlist1">cms/pages/</dt>
 <dd>
@@ -715,7 +715,7 @@ Check out <a href="https://market.enonic.com/starters/library-starter">the libra
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:35:54 UTC
+Last updated 2026-06-26 13:21:33 UTC
 </div>
 </div>
 </body>

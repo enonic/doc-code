@@ -498,7 +498,7 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 <h2 id="typescript_starter"><a class="link" href="#typescript_starter">TypeScript starter</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TypeScript Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli">Enonic CLI</a>:</p>
+<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TypeScript Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -747,7 +747,7 @@ const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:35:54 UTC
+Last updated 2026-06-26 13:21:33 UTC
 </div>
 </div>
 </body>

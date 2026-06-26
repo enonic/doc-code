@@ -484,7 +484,7 @@ For hands on tutorials on building native Enonic XP sites, visit <a href="https:
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Visit the <a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a> for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
+Visit the <a href="https://developer.enonic.com/docs/cms/xp8">CMS documentation</a> for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
 </td>
 </tr>
 </table>
@@ -654,7 +654,7 @@ In <code>inline</code> rendering mode the status is <code>418</code> instead of 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 11:35:54 UTC
+Last updated 2026-06-26 13:21:33 UTC
 </div>
 </div>
 </body>
