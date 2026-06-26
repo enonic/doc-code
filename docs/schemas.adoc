@@ -9,7 +9,7 @@ The CMS schemas control your content model. The schemas descriptors are writte i
 
 NOTE: Visit the https://developer.enonic.com/docs/cms/xp8/schemas[CMS docs] for details on content modeling.
 
-You may bundle schemas in any Enonic app. https://market.enonic.com/vendors/enonic/starter-vanilla[The Vanilla starter] is a minimalistic approach.
+You may bundle schemas in any Enonic app. https://market.enonic.com/starters/vanilla-starter[The Vanilla starter] is a minimalistic approach.
 
 Create a new app using Enonic CLI:
 
