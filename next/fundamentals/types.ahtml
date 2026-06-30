@@ -1236,6 +1236,13 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 <p><strong>Optional.</strong> Time the content was first published.</p>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Marker for whether the draft has changes to publish. Present when the draft matches the published version; absent when the draft has diverged. Only its presence is meaningful — the timestamp value itself is a hint and should not be interpreted.</p>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1835,7 +1842,7 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 15:36:58 UTC
+Last updated 2026-06-30 11:15:18 UTC
 </div>
 </div>
 </body>

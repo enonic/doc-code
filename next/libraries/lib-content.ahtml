@@ -4364,7 +4364,7 @@ const expected = [
 <div class="sect2">
 <h3 id="schedule"><a class="link" href="#schedule">Schedule</a></h3>
 <div class="paragraph">
-<p>A publish schedule. Same shape as <a href="../fundamentals/types.ahtml#publish-info">PublishInfo</a> without the <code>first</code> field.</p>
+<p>A publish schedule. Same shape as <a href="../fundamentals/types.ahtml#publish-info">PublishInfo</a> without the <code>first</code> and <code>time</code> fields.</p>
 </div>
 <div class="paragraph lead">
 <p>Properties</p>
@@ -4451,7 +4451,7 @@ const expected = [
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-26 15:36:58 UTC
+Last updated 2026-06-30 11:15:18 UTC
 </div>
 </div>
 </body>
