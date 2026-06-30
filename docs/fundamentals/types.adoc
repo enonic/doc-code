@@ -232,6 +232,7 @@ Properties
 | from | string | *Optional.* Time from which the content is published.
 | to | string | *Optional.* Time after which the content is no longer published.
 | first | string | *Optional.* Time the content was first published.
+| time | string | *Optional.* Marker for whether the draft has changes to publish. Present when the draft matches the published version; absent when the draft has diverged. Only its presence is meaningful — the timestamp value itself is a hint and should not be interpreted.
 |===
 
 [#workflow]

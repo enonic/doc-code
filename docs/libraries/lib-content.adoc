@@ -2451,7 +2451,7 @@ Properties
 
 === Schedule
 
-A publish schedule. Same shape as <<../fundamentals/types#publish-info, PublishInfo>> without the `first` field.
+A publish schedule. Same shape as <<../fundamentals/types#publish-info, PublishInfo>> without the `first` and `time` fields.
 
 [.lead]
 Properties
