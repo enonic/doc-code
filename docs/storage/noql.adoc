@@ -235,8 +235,10 @@ fields:: Comma-separated list of <<propertyPath, propertyPaths>> to include in t
 'data.*' // Wildcard usage
 ----
 
-You can boost  - thus increasing or decreasing hit-score per field basis.
-By providing more than one field to the query by appending a weight-factor: ``^N``
+You can boost the relevance score on a per-field basis by appending a weight-factor ``^N`` to a field name (for example ``displayName^5``).
+The weight is a *positive multiplier* on the field's score contribution, compared to the default weight of ``1``: a value above ``1`` makes the field contribute more, a value between ``0`` and ``1`` makes it contribute less.
+The contribution always stays positive — a match adds to the score, it is never a penalty. Negative weights are not allowed.
+Decimal weights (for example ``displayName^1.5``) are supported from XP 8.0.0; in earlier versions the field weight must be an integer.
 
 .Boosting example
 [source,sql]
