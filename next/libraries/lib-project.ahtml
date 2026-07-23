@@ -527,7 +527,7 @@ To modify permissions, user must have <code>Owner</code> permissions for the pro
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-You can read about project permissions in the dedicated <a href="https://developer.enonic.com/docs/content-studio/stable/projects#roles">Content Projects</a> section
+You can read about project permissions in the dedicated <a href="https://developer.enonic.com/docs/content-studio/stable/projects#project-roles">Content Projects</a> section
 </td>
 </tr>
 </table>
@@ -1544,7 +1544,7 @@ const project = getAvailableApplications({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-02 20:41:02 UTC
+Last updated 2026-07-23 08:52:45 UTC
 </div>
 </div>
 </body>
