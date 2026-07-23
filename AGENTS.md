@@ -8,6 +8,7 @@ This documentation covers only the **Development of Enonic apps** , targeted at 
 
 Keep content focused on XP development, and avoid repeating information from the other main Enonic XP documentation.
 
+
 ## Content Guidelines
 
 This is **reference documentation**, including examples, not tutorials. Tutorials and getting-started guides live in the learn section on developer.enonic.com and build on top of this content. Every page should be self-contained and useful on its own.
