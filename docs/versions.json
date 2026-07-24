@@ -4,7 +4,7 @@
       "label": "stable",
       "checkout": "xp8",
       "latest": true,
-      "displayName": "XP8"
+      "displayName": "8.x"
     },
     {
       "label": "next", 
