@@ -1,9 +1,10 @@
 {
   "versions": [
     {
-      "label": "xp8",
+      "label": "stable",
       "checkout": "xp8",
-      "latest": true
+      "latest": true,
+      "displayName": "8.x"
     }
   ]
 }
