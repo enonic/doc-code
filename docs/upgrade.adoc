@@ -968,6 +968,8 @@ Reading the project's root content (path `/`) via `lib-content` (`get`, `getByPa
 
 The `hasChildren` property has been removed from content.
 
+`publish` no longer accepts the `sourceBranch` and `targetBranch` parameters — publishing always pushes from `draft` to `master`, and keys are resolved against `draft` regardless of the current context branch. XP 7 code passing these parameters gets no error: they are silently ignored, so a former `master` → `draft` push now runs as a normal `draft` → `master` publish. For branch-to-branch operations in custom repositories, use `push` in `lib-node`.
+
 `setPermissions` method is removed. Use `applyPermissions` instead.
 
 `applyPermissions` method applies permissions on published and draft content simply.

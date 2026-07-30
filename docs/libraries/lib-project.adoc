@@ -310,9 +310,7 @@ const expected = {
             'user:mystore:user2'
         ]
     },
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 }
 ----
 
@@ -349,17 +347,13 @@ const expected = [{
     displayName: 'Default',
     description: 'Default project',
     permissions: {},
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 },
 {
     id: 'my-project',
     displayName: 'My Content Project',
     permissions: {},
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 }]
 ----
 
