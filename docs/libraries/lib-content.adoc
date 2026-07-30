@@ -73,7 +73,7 @@ Adds an attachment to an existing content.
 | name | string | Attachment name (unique within the content).
 | mimeType | string | Attachment content type.
 | label | string | *Optional.* Attachment label.
-| data | object | *Optional.* Stream with the binary data for the attachment.
+| data | <<../fundamentals/types#byte-source, ByteSource>> | Stream with the binary data for the attachment.
 |===
 
 [.lead]
@@ -165,13 +165,14 @@ To create a content where `name` is not important and there could be multiple in
 | data | object | Actual content data.
 | page | object | *Optional.* Content <<../fundamentals/types#page-component, page>>.
 | x | object | *Optional.* eXtra data to use.
-| workflow | object | *Optional.* Workflow information to use. Default has state `READY` and an empty check list.
+| idGenerator | function | *Optional.* Function used to generate the id-suffix appended to the content name. Only called when `name` is auto-generated from `displayName` and the generated name is already taken.
+| workflow | <<../fundamentals/types#workflow, Workflow>> | *Optional.* Workflow information to use. Defaults to `{ state: "READY" }`.
 |===
 
 [.lead]
 Returns
 
-*object* : Content created as JSON
+*object* : (<<../fundamentals/types#content, Content>>) The content that was created
 
 [.lead]
 Examples
@@ -206,10 +207,7 @@ const result1 = create({
         }
     },
     workflow: {
-        state: 'PENDING_APPROVAL',
-        checks: {
-            'Review by lawyer': 'PENDING'
-        }
+        state: 'PENDING_APPROVAL'
     },
 });
 
@@ -312,7 +310,7 @@ Creates a media content
 [.lead]
 Returns
 
-*object* : Returns the created media content
+*object* : (<<../fundamentals/types#content, Content>>) The media content that was created
 
 [.lead]
 Examples
@@ -353,6 +351,8 @@ const expected = {
 
 Updates a media content
 
+NOTE: `modifyMedia` is the deprecated predecessor of `updateMedia`, still exported for backward compatibility. Use `updateMedia` in new code.
+
 [.lead]
 *Parameters:*
 
@@ -377,7 +377,7 @@ Updates a media content
 [.lead]
 Returns
 
-*object* : Returns the modified media content
+*object* : (<<../fundamentals/types#content, Content>>) The media content that was updated, or `null` if it was not found
 
 [.lead]
 Examples
@@ -487,7 +487,7 @@ Duplicates a content.
 |===
 | Name | Type | Description
 | contentId | string | Id of the content.
-| workflow | object | *Optional.* Workflow state. Defaults to `{ state: "READY", checks: {} }`.
+| workflow | <<../fundamentals/types#workflow, Workflow>> | *Optional.* Workflow information to use. Defaults to `{ state: "READY" }`.
 | includeChildren | boolean | *Optional.* Indicates that children contents must be duplicated, too. Ignored if `variant=true`. Defaults to `true`.
 | variant | boolean | *Optional.* Indicates that duplicated content is a variant. Defaults to `false`.
 | parent | string | *Optional.* Destination parent path. By default, a duplicated content will be added as a sibling of the source content.
@@ -495,9 +495,9 @@ Duplicates a content.
 |===
 
 [.lead]
-Returns summary of the content duplicate.
+Returns
 
-*object* : Summary of the content duplicate.
+*object* : (<<duplicate-contents-result, DuplicateContentsResult>>) Summary of the content duplicate
 
 [.lead]
 Examples
@@ -607,7 +607,7 @@ Returns a content
 [.lead]
 Returns
 
-*object* : The content (as JSON) fetched from the repository
+*object* : (<<../fundamentals/types#content, Content>>) The content fetched from the repository, or `null` if it was not found
 
 [.lead]
 Examples
@@ -688,7 +688,7 @@ Returns the active content version for each specified branch.
 [.lead]
 Returns
 
-*object* : Object with branch names as keys and content versions as values.
+*object* : (<<active-content-versions, ActiveContentVersions>>) Object with branch names as keys and content versions as values
 
 [.lead]
 Examples
@@ -719,7 +719,7 @@ This function returns a content attachments
 [.lead]
 Returns
 
-*object* : An object with all the attachments stored in the content, where the key is the attachment name. Or null if the content was not found.
+*object* : A map of <<../fundamentals/types#attachment, Attachment>> objects keyed by attachment name, or `null` if the content was not found
 
 [.lead]
 Examples
@@ -763,7 +763,7 @@ This function returns a data-stream for the specified content attachment
 [.lead]
 Returns
 
-*object* : Stream of the attachment data
+*object* : (<<../fundamentals/types#byte-source, ByteSource>>) Stream of the attachment data, or `null` if the content or attachment was not found
 
 [.lead]
 Examples
@@ -802,7 +802,7 @@ Fetches children of a content
 [.lead]
 Returns
 
-*object* : Result object with `total`, `count` and `hits` properties listing the children fetched from the repository
+*object* : (<<contents-result, ContentsResult>>) The children fetched from the repository
 
 [.lead]
 Examples
@@ -937,7 +937,7 @@ Returns content permissions
 [.lead]
 Returns
 
-*object* : Content permissions
+*object* : (<<permissions-type, Permissions>>) Content permissions, or `null` if the content was not found
 
 [.lead]
 Examples
@@ -952,7 +952,9 @@ const result = getPermissions({
 });
 
 if (result) {
-    log.info('Content inherits permissions: %s', result.inheritPermissions);
+    result.permissions.forEach((entry) => {
+        log.info('%s is allowed: %s', entry.principal, entry.allow.join(','));
+    });
 } else {
     log.info('Content not found');
 }
@@ -994,7 +996,7 @@ Returns the parent site of a content
 [.lead]
 Returns
 
-*object* : The current site as JSON
+*object* : (<<../fundamentals/types#content, Content>>) The parent site, or `null` if the content has none
 
 [.lead]
 Examples
@@ -1093,7 +1095,7 @@ Returns properties and icon of the specified content type
 [.lead]
 Returns
 
-*<<ContentType>>* : The content type object if found, or `null` otherwise. See ContentType type definition below
+*object* : (<<content-type, ContentType>>) The content type if found, or `null` otherwise
 
 [.lead]
 Examples
@@ -1233,7 +1235,7 @@ Returns the list of all the content types currently registered in the system
 [.lead]
 Returns
 
-*<<ContentType>>[]* : Array with all the content types found. See ContentType type definition below
+*array* : (<<content-type, ContentType>>[]) All the content types found
 
 [.lead]
 Examples
@@ -1275,7 +1277,7 @@ Returns content versions, with cursor-based pagination.
 [.lead]
 Returns
 
-*object* : Result object with `total`, `count`, `cursor` and `hits` properties listing the content versions.
+*object* : (<<content-versions-result, ContentVersionsResult>>) The content versions
 
 [.lead]
 Examples
@@ -1308,6 +1310,8 @@ Update a content
 
 NOTE: Properties starting with `_` may not be modified using this function. To rename or move a content (ie to change the `_name` property), use the <<move, move function>> instead.
 
+NOTE: `modify` is the deprecated predecessor of `update`. It is still exported for backward compatibility and is backed by the same implementation, so everything on this page — including the editable-field restrictions below — applies to it unchanged. Use `update` in new code.
+
 [.lead]
 *Parameters:*
 
@@ -1323,10 +1327,46 @@ NOTE: Properties starting with `_` may not be modified using this function. To r
 | requireValid | boolean | *Optional.* The content has to be valid (according to the content type) to be updated. If `true` and the content is not strictly valid, an error will be thrown. Defaults to `true`.
 |===
 
+The `editor` callback receives the current content and must return it with the desired modifications.
+
+[.lead]
+*Editable Fields:*
+
+Only these properties are read back from the object the editor returns:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| displayName | string | The display name of the content.
+| language | string | The language tag representing the content's locale.
+| data | object | The main data (properties) of the content, according to its content type.
+| x | object | Extra data (x-data) associated with the content.
+| page | object | The <<../fundamentals/types#page-component, page>> configuration, including regions and components.
+|===
+
+IMPORTANT: Any other property assigned inside the editor is *silently ignored* — no error is thrown, and the returned content reflects the unchanged value. Notably, setting `workflow` or `publish` in the editor worked in XP 7 but has no effect in XP 8. Use the dedicated functions instead:
+
+* `workflow` – <<updateworkflow, updateWorkflow()>>
+* `publish` – <<publish, publish()>>
+* `owner`, `variantOf` – <<updatemetadata, updateMetadata()>>
+* `_name`, `_path` – <<move, move()>>
+* `valid`, `childOrder`, `creator`, `modifier`, timestamps, `inherit`, and the remaining system properties – <<patch, patch()>>
+
+[IMPORTANT]
+====
+*A genuine update resets workflow state to `IN_PROGRESS`.* Whenever the editor actually changes the content, the update also re-validates it and stamps `workflow.state: IN_PROGRESS`, `modifier` and `modifiedTime`. An editor that returns the content unchanged is a no-op: no new version is written and no transition happens.
+
+Since <<publish, publish()>> refuses content that is not `READY`, any create → update sequence ends unpublishable — for example *create a content, create its image, update the content to reference the image id* necessarily leaves the content `IN_PROGRESS`. Mark it ready with <<updateworkflow, updateWorkflow()>> before publishing.
+
+The same transition applies to every function built on the same underlying update operation: `modify`, <<updatemedia, updateMedia()>>, <<addattachment, addAttachment()>> and <<removeattachment, removeAttachment()>>.
+====
+
 [.lead]
 Returns
 
-*object* : Modified content as JSON
+*object* : (<<../fundamentals/types#content, Content>>) The updated content, or `null` if it was not found
 
 [.lead]
 Examples
@@ -1341,8 +1381,6 @@ function editor(c) {
     c.language = 'en';
     c.data.myCheckbox = false;
     c.data["myTime"] = "11:00";
-    c.publish.from = "2016-11-03T10:01:34Z";
-    c.workflow.state = "READY";
     return c;
 }
 
@@ -1396,13 +1434,7 @@ const expected = {
             mimeType: "application/pdf"
         }
     },
-    publish: {
-        from: "2016-11-03T10:01:34Z"
-    },
-    workflow: {
-        state: "READY",
-        checks: {}
-    }
+    publish: {}
 };
 ----
 
@@ -1429,7 +1461,7 @@ The editor callback receives an object with the current `source` content, `owner
 [.lead]
 Returns
 
-*object* : Result object with the updated `content` property.
+*object* : (<<update-metadata-result, UpdateMetadataResult>>) The updated content, wrapped in a `content` property
 
 [.lead]
 Examples
@@ -1456,7 +1488,7 @@ if (result) {
 
 === updateWorkflow
 
-Updates workflow information (state and checks) for a content. The update is applied to the draft branch only.
+Updates the workflow state of a content. The update is applied to the draft branch only.
 
 [.lead]
 *Parameters:*
@@ -1472,12 +1504,12 @@ Updates workflow information (state and checks) for a content. The update is app
 | editor | function | Editor callback function to modify workflow
 |===
 
-The editor callback receives an object with the current `source` content and a writable `state` property, and must return the same object with the desired modifications.
+The editor callback receives an object with the current `source` content and a writable `state` property, and must return the same object with the desired modifications. `state` must be set — returning the object without it throws.
 
 [.lead]
 Returns
 
-*object* : Result object with the updated `content` property.
+*object* : (<<update-workflow-result, UpdateWorkflowResult>>) The updated content, wrapped in a `content` property
 
 [.lead]
 Examples
@@ -1507,6 +1539,9 @@ This is a low-level and potentially dangerous operation.
 It should be used with caution. Access is restricted to users with `admin` or `cms.admin` roles.
 ====
 
+[.lead]
+*Parameters:*
+
 `patch()` takes a single `PatchContentParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
@@ -1529,6 +1564,8 @@ It should be used with caution. Access is restricted to users with `admin` or `c
 |===
 
 `patcher` is a function that receives the current content as parameter and must return the modified content. A list of supported fields that can be patched is provided below.
+
+NOTE: Unlike <<update, update()>>, `patch` does no bookkeeping of its own: workflow state, `valid`, `modifier` and `modifiedTime` are left untouched unless the patcher sets them explicitly.
 
 [.lead]
 *Patchable Fields:*
@@ -1583,9 +1620,10 @@ Each entry is an object with these properties:
 | name | string | Name of the attachment to create.
 | mimeType | string | *Optional.* Mime-type of the data.
 | label | string | *Optional.* Label of the attachment.
-| textContent | string | *Optional.* Text content to set.
-| data | object \| string | *Optional.* Data (as stream) to use.
+| data | <<../fundamentals/types#byte-source, ByteSource>> \| string | *Optional.* Data to use. A string is stored as its UTF-8 bytes.
 |===
+
+CAUTION: These are the only keys accepted. Any other key throws `Unknown CreateAttachment key: <name>`.
 
 [[modifyAttachments_details]]
 [.lead]
@@ -1600,10 +1638,16 @@ Each entry is an object with these properties:
 | name | string | Name of the attachment to modify.
 | mimeType | string | *Optional.* Mime-type of the data.
 | label | string | *Optional.* Label of the attachment.
-| textContent | string | *Optional.* Text content to set.
 | sha512 | string | *Optional.* SHA-512 hash of the data.
 | size | number | *Optional.* Size of the data in bytes.
 |===
+
+CAUTION: These are the only keys accepted. Any other key throws `Unknown attachment key: <name>`. `modifyAttachments` cannot introduce a new attachment either — naming one that does not already exist throws `Attachments can only be added using createAttachments`.
+
+[.lead]
+Returns
+
+*object* : (<<patch-content-result, PatchContentResult>>) The content id and one result entry per patched branch
 
 [.lead]
 Examples
@@ -1664,6 +1708,24 @@ const result = patch({
 });
 ----
 
+[source,typescript]
+----
+// Result returned.
+const expected = {
+    contentId: "123456",
+    results: [
+        {
+            branch: "draft",
+            content: {/* the patched content */}
+        },
+        {
+            branch: "master",
+            content: {/* the patched content */}
+        }
+    ]
+};
+----
+
 === move
 
 Renames a content or moves it to a new path
@@ -1685,7 +1747,7 @@ Renames a content or moves it to a new path
 [.lead]
 Returns
 
-*object* : The content that was moved or renamed
+*object* : (<<../fundamentals/types#content, Content>>) The content that was moved or renamed
 
 [.lead]
 Examples
@@ -1777,7 +1839,7 @@ Publishes content to the master branch
 |===
 | Name | Type | Description
 | keys | string[] | List of all content keys (path or id) that should be published.
-| schedule | <<Schedule>> | *Optional.* Schedule publishing.
+| schedule | <<schedule, Schedule>> | *Optional.* Schedule publishing.
 | excludeDescendantsOf | string[] | *Optional.* List of content keys whose descendants should be excluded from publishing.
 | excludeChildrenIds | string[] | *Optional.* _Deprecated, use_ `excludeDescendantsOf` _instead._
 | includeDependencies | boolean | *Optional.* Whether all related content should be included when publishing content. Defaults to `true`.
@@ -1787,7 +1849,27 @@ Publishes content to the master branch
 [.lead]
 Returns
 
-*object* : Status of the publish operation as JSON
+*object* : (<<publish-content-result, PublishContentResult>>) Status of the publish operation
+
+NOTE: `failedContents` holds content ids for items that failed to publish, and content *paths* for keys that could not be resolved to an existing content.
+
+[WARNING]
+====
+*Publishing is all-or-nothing.* XP validates the entire resolved set before pushing anything. If a single item is ineligible, the whole publish is abandoned: `pushedContents` comes back empty, every id lands in `failedContents`, and *nothing is written to the server log*. The call itself succeeds — there is no exception to catch.
+
+Two conditions abort the batch:
+
+* `valid` is `false` — the content does not satisfy its content type.
+* `workflow.state` is set to anything other than `READY` — that is, `IN_PROGRESS`, `PENDING_APPROVAL` or `REJECTED`.
+
+Note that any <<update, update()>> that genuinely changes a content resets its state to `IN_PROGRESS`, so a create → update → publish sequence blocks unless the content is marked ready in between.
+
+The check runs on the *resolved* set, not just the keys you passed. With `includeDependencies` left at its default `true`, a single invalid dependency you never named is enough to block everything.
+
+https://developer.enonic.com/docs/content-studio/stable/workflow[Content Studio] enforces the same rule, but interactively: its publishing wizard flags in-progress items and lets the user mark them as ready — one at a time, or all at once via the *Mark as ready* option in the wizard — before publishing. `publish()` has no such affordance and never promotes workflow state; to publish in-progress content, first set it ready with <<updateworkflow, updateWorkflow()>>.
+
+Internally XP records a reason per failed item (`INVALID`, `NOT_READY`, `ALREADY_EXIST`, `PARENT_NOT_FOUND`, `ACCESS_DENIED`), but the library discards it: `failedContents` is a flat list of ids. To identify the blockers, query for them before publishing — see the example below.
+====
 
 [.lead]
 Examples
@@ -1829,6 +1911,47 @@ const expected = {
 };
 ----
 
+Because a failed publish reports no reason, find the blockers up front. This query applies the same two conditions XP checks internally, scoped to the subtree you are about to publish:
+
+[source,typescript]
+----
+import {query, publish} from '/lib/xp/content';
+
+const blockers = query({
+    count: -1,
+    query: {
+        boolean: {
+            must: {
+                pathMatch: {
+                    field: '_path',
+                    path: '/content/mysite'
+                }
+            },
+            should: [
+                {
+                    term: {field: 'valid', value: false}
+                },
+                {
+                    boolean: {
+                        must: {exists: {field: 'workflow.state'}},
+                        mustNot: {term: {field: 'workflow.state', value: 'READY'}}
+                    }
+                }
+            ]
+        }
+    }
+});
+
+if (blockers.total > 0) {
+    blockers.hits.forEach((content) => {
+        log.warning('Blocks publishing: %s (valid=%s, workflow=%s)',
+            content._path, content.valid, content.workflow && content.workflow.state);
+    });
+} else {
+    publish({keys: ['/mysite']});
+}
+----
+
 === query
 
 Retrieves content using a query
@@ -1856,7 +1979,7 @@ Retrieves content using a query
 [.lead]
 Returns
 
-*object* : Result of query
+*object* : (<<contents-result, ContentsResult>>) Result of the query
 
 If `sort` was specified, results will contain system meta properties `_sort` and `_score: null`, otherwise `_score`
  will have a relevant value.
@@ -2245,16 +2368,16 @@ NOTE: If the content is published, the permissions will be applied to the publis
 |===
 | Name | Type | Description
 | key | string | Path or id of the content.
-| permissions | <<AccessControlEntry>>[] | *Optional.* Array of permissions to overwrite current permissions. Cannot be used with `addPermissions` or `removePermissions`.
-| addPermissions | <<AccessControlEntry>>[] | *Optional.* Array of permissions to add. Cannot be used simultaneously with `permissions`.
-| removePermissions | <<AccessControlEntry>>[] | *Optional.* Array of permissions to remove. Cannot be used simultaneously with `permissions`.
+| permissions | <<access-control-entry, AccessControlEntry>>[] | *Optional.* Array of permissions to overwrite current permissions. Cannot be used with `addPermissions` or `removePermissions`.
+| addPermissions | <<access-control-entry, AccessControlEntry>>[] | *Optional.* Array of permissions to add. Cannot be used simultaneously with `permissions`.
+| removePermissions | <<access-control-entry, AccessControlEntry>>[] | *Optional.* Array of permissions to remove. Cannot be used simultaneously with `permissions`.
 | scope | string (`SINGLE` \| `TREE` \| `SUBTREE`) | *Optional.* Scope of applying permissions. `SINGLE` applies permissions only to the content itself. `TREE` applies permissions to the content and its descendants. `SUBTREE` applies permissions only to the content's descendants. Defaults to `SINGLE`.
 |===
 
 [.lead]
 Returns
 
-*object* : The map <ContentId, Permissions> indicating for each content id which permissions were applied
+*object* : (<<apply-permissions-result, ApplyPermissionsResult>>) A map keyed by content id, indicating for each affected content which permissions were applied
 
 
 [.lead]
@@ -2411,6 +2534,7 @@ const expected = [
 
 == Type Definitions
 
+[#content-type]
 === ContentType
 
 [.lead]
@@ -2429,11 +2553,12 @@ Properties
 | final | boolean | Whether or not it may be used as super type of other content types.
 | allowChildContent | boolean | Whether or not to allow creating child items on content of this type.
 | modifiedTime | string | Modified time of the content type.
-| icon | <<Icon>> | *Optional.* Icon of the content type.
+| icon | <<icon, Icon>> | *Optional.* Icon of the content type.
 | form | <<../fundamentals/types#form-item, FormItem>>[] | Form schema — an array of form items.
 | config | object | Custom schema configuration for the descriptor.
 |===
 
+[#icon]
 === Icon
 
 [.lead]
@@ -2449,6 +2574,7 @@ Properties
 | modifiedTime | string | Modified time of the icon. May be used for caching.
 |===
 
+[#schedule]
 === Schedule
 
 A publish schedule. Same shape as <<../fundamentals/types#publish-info, PublishInfo>> without the `first` field.
@@ -2465,6 +2591,7 @@ Properties
 | to | string | *Optional.* Time until which the content is considered published. ISO-8601 instant.
 |===
 
+[#access-control-entry]
 === AccessControlEntry
 
 A permission entry for a single principal.
@@ -2480,4 +2607,246 @@ Properties
 | principal | <<../fundamentals/types#principal-key, PrincipalKey>> | Principal the entry applies to (for example, `role:system.admin`, `user:system:su`).
 | allow | string[] | *Optional.* Permissions to grant. Each value is one of `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
 | deny | string[] | *Optional.* Permissions to deny. Same set of values as `allow`.
+|===
+
+[#permissions-type]
+=== Permissions
+
+The permission set on a single content. Returned by <<getpermissions, getPermissions()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| permissions | <<access-control-entry, AccessControlEntry>>[] | One entry per principal with permissions on the content.
+|===
+
+[#apply-permissions-result]
+=== ApplyPermissionsResult
+
+Returned by <<applypermissions, applyPermissions()>>. An object keyed by content id — one key per content the operation touched, which for `TREE` and `SUBTREE` scope includes descendants. Each value is a <<permissions-type, Permissions>> object holding the permissions that ended up on that content.
+
+[source,typescript]
+----
+// Result returned.
+const expected = {
+    "d7ad428b-eae2-4ff1-9427-e8e8a8a3ab23": {
+        permissions: [
+            {
+                principal: "role:system.everyone",
+                allow: ["READ"],
+                deny: []
+            }
+        ]
+    }
+};
+----
+
+[#contents-result]
+=== ContentsResult
+
+A page of content hits. Returned by <<query, query()>> and <<getchildren, getChildren()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| total | number | Total number of contents matching the request, ignoring `start` and `count`.
+| count | number | Number of contents in `hits`.
+| hits | <<../fundamentals/types#content, Content>>[] | The contents on this page.
+| aggregations | object | *Optional.* Aggregation results, keyed by the names used in the `aggregations` request. Present only when the request asked for aggregations.
+| highlight | object | *Optional.* Highlight results, keyed by content id. Present only when the request asked for highlighting.
+|===
+
+[#content-versions-result]
+=== ContentVersionsResult
+
+A page of content versions. Returned by <<getversions, getVersions()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| total | number | Total number of versions for the content.
+| count | number | Number of versions in `hits`.
+| cursor | string | Cursor to pass to the next `getVersions()` call, or `null` when there are no more pages.
+| hits | <<content-version, ContentVersion>>[] | The versions on this page, newest first.
+|===
+
+[#content-version]
+=== ContentVersion
+
+A single version of a content.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| versionId | string | Id of this version.
+| contentId | string | Id of the content the version belongs to.
+| path | string | Path the content had at this version.
+| timestamp | string | Time the version was created, as an ISO-8601 instant.
+| comment | string | *Optional.* Version comment.
+| actions | <<content-version-action, ContentVersionAction>>[] | *Optional.* The operations recorded on this version.
+|===
+
+[#content-version-action]
+=== ContentVersionAction
+
+One operation recorded on a content version.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| operation | string | The operation performed, for example `create`, `update`, `publish` or `unpublish`.
+| user | <<../fundamentals/types#principal-key, PrincipalKey>> | Principal that performed the operation.
+| opTime | string | Time the operation was performed, as an ISO-8601 instant.
+| origin | string | *Optional.* Branch the operation was performed in.
+| editorial | string | *Optional.* Id of the version this one's editorial content traces back to. Lets you tell versions that changed content substance (`displayName`, `data`, `language`, `x`, page components, attachments, ordering) apart from ones that only changed bookkeeping.
+|===
+
+[#active-content-versions]
+=== ActiveContentVersions
+
+Returned by <<getactiveversions, getActiveVersions()>>. An object keyed by branch name — one key per branch given in `branches` — where each value is the <<content-version, ContentVersion>> currently active in that branch.
+
+[source,typescript]
+----
+// Result returned.
+const expected = {
+    draft: {
+        versionId: "eb5f5b2e-fd0e-4b6a-b1a8-af7e0d0f0f3a",
+        contentId: "123456",
+        path: "/a/b/mycontent",
+        timestamp: "1970-01-01T00:00:00Z"
+    },
+    master: {
+        versionId: "0c1b3f1d-3ba1-4cbb-9a0f-2c2f31f0b7c9",
+        contentId: "123456",
+        path: "/a/b/mycontent",
+        timestamp: "1970-01-01T00:00:00Z"
+    }
+};
+----
+
+[#duplicate-contents-result]
+=== DuplicateContentsResult
+
+Returned by <<duplicate, duplicate()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| contentName | string | Name given to the duplicated content.
+| sourceContentPath | string | Path of the content that was duplicated.
+| duplicatedContents | string[] | Ids of every content created by the operation, including children when `includeChildren` was set.
+|===
+
+[#patch-content-result]
+=== PatchContentResult
+
+Returned by <<patch, patch()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| contentId | string | Id of the content that was patched.
+| results | <<branch-patch-result, BranchPatchResult>>[] | One entry per branch the patch was applied to.
+|===
+
+[#branch-patch-result]
+=== BranchPatchResult
+
+The outcome of a patch in one branch.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| branch | string | Name of the branch.
+| content | <<../fundamentals/types#content, Content>> | The patched content in that branch, or `null` if the content does not exist there.
+|===
+
+[#publish-content-result]
+=== PublishContentResult
+
+Returned by <<publish, publish()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| pushedContents | string[] | Ids of the contents that were published. Empty if the batch was aborted by an ineligible item.
+| failedContents | string[] | Ids of the contents that failed to publish, plus the *paths* of any keys that could not be resolved to an existing content. No failure reason is included — see the warning under <<publish, publish()>>.
+|===
+
+[#update-metadata-result]
+=== UpdateMetadataResult
+
+Returned by <<updatemetadata, updateMetadata()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| content | <<../fundamentals/types#content, Content>> | The content with its updated metadata.
+|===
+
+[#update-workflow-result]
+=== UpdateWorkflowResult
+
+Returned by <<updateworkflow, updateWorkflow()>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| content | <<../fundamentals/types#content, Content>> | The content with its updated workflow state.
 |===
