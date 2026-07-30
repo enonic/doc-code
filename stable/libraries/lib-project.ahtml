@@ -956,9 +956,7 @@ const project = getProject({
             'user:mystore:user2'
         ]
     },
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 }</code></pre>
 </div>
 </div>
@@ -1008,17 +1006,13 @@ const projects = list();</code></pre>
     displayName: 'Default',
     description: 'Default project',
     permissions: {},
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 },
 {
     id: 'my-project',
     displayName: 'My Content Project',
     permissions: {},
-    readAccess: {
-        public: true
-    }
+    publicRead: true
 }]</code></pre>
 </div>
 </div>
@@ -1544,7 +1538,7 @@ const project = getAvailableApplications({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-30 14:44:00 UTC
+Last updated 2026-07-30 19:03:29 UTC
 </div>
 </div>
 </body>

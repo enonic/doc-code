@@ -1858,6 +1858,9 @@ exports.all = function(req) {
 <p>The <code>hasChildren</code> property has been removed from content.</p>
 </div>
 <div class="paragraph">
+<p><code>publish</code> no longer accepts the <code>sourceBranch</code> and <code>targetBranch</code> parameters — publishing always pushes from <code>draft</code> to <code>master</code>, and keys are resolved against <code>draft</code> regardless of the current context branch. XP 7 code passing these parameters gets no error: they are silently ignored, so a former <code>master</code> → <code>draft</code> push now runs as a normal <code>draft</code> → <code>master</code> publish. For branch-to-branch operations in custom repositories, use <code>push</code> in <code>lib-node</code>.</p>
+</div>
+<div class="paragraph">
 <p><code>setPermissions</code> method is removed. Use <code>applyPermissions</code> instead.</p>
 </div>
 <div class="paragraph">
@@ -2345,7 +2348,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-30 14:44:00 UTC
+Last updated 2026-07-30 19:03:29 UTC
 </div>
 </div>
 </body>
