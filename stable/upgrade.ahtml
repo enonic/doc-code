@@ -1488,6 +1488,9 @@ form:
 <div class="paragraph">
 <p>Note that input configuration is no longer nested: keys inside XP 7&#8217;s <code>&lt;config&gt;</code> element become flat properties of the input in YAML. There is no <code>config:</code> wrapper — a nested <code>config:</code> block is not recognized and its settings are ignored.</p>
 </div>
+<div class="paragraph">
+<p>XP 7&#8217;s <code>&lt;display-name-label&gt;</code> element is renamed to <code>displayNamePlaceholder</code>. Unknown keys in the YAML descriptor — including the literal <code>displayNameLabel</code> — fail the parse, so a mistranslated descriptor is rejected at registration rather than silently ignored.</p>
+</div>
 <div class="listingblock">
 <div class="title">XP 7 - site/content-types/article/article.xml</div>
 <div class="content">
@@ -2366,7 +2369,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-30 19:32:30 UTC
+Last updated 2026-07-30 20:22:56 UTC
 </div>
 </div>
 </body>
