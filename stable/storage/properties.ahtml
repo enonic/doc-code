@@ -822,7 +822,7 @@ The value type enables the data storage to handle both validation and <a href="#
 </tbody>
 </table>
 <div class="paragraph">
-<p>Node permissions are also flattened into indexed <code><em>permissions</em>*</code> system properties at write time. See <a href="permissions.ahtml#_querying_by_permission">Permissions — Querying by permission</a> for the full list and usage.</p>
+<p>Node permissions are also flattened into indexed <code><em>permissions</em>*</code> system properties at write time. See <a href="permissions.ahtml#querying_by_permission">Permissions — Querying by permission</a> for the full list and usage.</p>
 </div>
 </div>
 </div>
@@ -830,7 +830,7 @@ The value type enables the data storage to handle both validation and <a href="#
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-24 08:48:00 UTC
+Last updated 2026-07-30 14:44:00 UTC
 </div>
 </div>
 </body>

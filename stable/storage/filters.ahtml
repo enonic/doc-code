@@ -475,7 +475,7 @@ A filter <em>only</em> removes nodes from the result - and is executed after the
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Filters are deprecated and will be removed in future XP versions. Use <a href="querying.ahtml#_filter">query filtering</a> instead — see the <a href="#legacy_filter_migration">mapping table below</a> for how each filter type translates to the DSL.
+Filters are deprecated and will be removed in future XP versions. Use <a href="querying.ahtml#filter">query filtering</a> instead — see the <a href="#legacy_filter_migration">mapping table below</a> for how each filter type translates to the DSL.
 </td>
 </tr>
 </table>
@@ -750,7 +750,7 @@ Array of values to decide a match</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-24 08:48:00 UTC
+Last updated 2026-07-30 14:44:00 UTC
 </div>
 </div>
 </body>

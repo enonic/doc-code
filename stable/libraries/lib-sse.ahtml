@@ -442,7 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#usage">Usage</a></li>
-<li><a href="#message_shape">Message shape</a></li>
+<li><a href="#message-shape">Message shape</a></li>
 <li><a href="#functions">Functions</a>
 <ul class="sectlevel2">
 <li><a href="#send">send</a></li>
@@ -504,7 +504,7 @@ Unlike <code>lib-websocket</code>, every function in this library takes a single
 </div>
 </div>
 <div class="sect1">
-<h2 id="message_shape"><a class="link" href="#message_shape">Message shape</a></h2>
+<h2 id="message-shape"><a class="link" href="#message-shape">Message shape</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>send</code> and <code>sendToGroup</code> functions accept a <code>message</code> object with the following optional fields:</p>
@@ -945,7 +945,7 @@ const count = getGroupSize({group: 'live'});</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-24 08:48:00 UTC
+Last updated 2026-07-30 14:44:00 UTC
 </div>
 </div>
 </body>

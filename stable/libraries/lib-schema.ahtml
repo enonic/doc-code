@@ -508,7 +508,7 @@ In XP 8 all <code>resource</code> strings passed to and returned from this libra
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Functions of this library require the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <a href="lib-context.ahtml#runcontext">context</a> of <code>system.schema.admin</code> role.
+Functions of this library require the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <a href="lib-context.ahtml#run">context</a> of <code>system.schema.admin</code> role.
 </td>
 </tr>
 </table>
@@ -3056,7 +3056,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-24 08:48:00 UTC
+Last updated 2026-07-30 14:44:00 UTC
 </div>
 </div>
 </body>
