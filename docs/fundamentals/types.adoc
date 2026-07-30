@@ -232,7 +232,10 @@ Properties
 | from | string | *Optional.* Time from which the content is published.
 | to | string | *Optional.* Time after which the content is no longer published.
 | first | string | *Optional.* Time the content was first published.
+| time | string | *Optional.* Marker used to detect whether there is anything to publish from draft: if present, the draft matches the published version; if absent, the draft has unpublished changes. Treat the value itself as a hint only.
 |===
+
+NOTE: A content that has never been published still carries a `publish` property — as an empty object `{}`.
 
 [#workflow]
 === Workflow
