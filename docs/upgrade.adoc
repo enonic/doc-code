@@ -647,6 +647,8 @@ form:
 
 === Content type descriptor
 
+Note that input configuration is no longer nested: keys inside XP 7's `<config>` element become flat properties of the input in YAML. There is no `config:` wrapper — a nested `config:` block is not recognized and its settings are ignored.
+
 .XP 7 - site/content-types/article/article.xml
 [source,xml]
 ----
@@ -658,6 +660,13 @@ form:
     <input name="title" type="TextLine">
       <label>Title</label>
       <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="author" type="ContentSelector">
+      <label>Author</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowContentType>com.example.app:author</allowContentType>
+      </config>
     </input>
   </form>
 </content-type>
@@ -676,6 +685,14 @@ form:
   occurrences:
     min: 1
     max: 1
+- type: "ContentSelector"
+  name: "author"
+  label: "Author"
+  occurrences:
+    min: 0
+    max: 1
+  allowContentType:
+    - "com.example.app:author"
 ----
 
 === Mixins renamed to Form Fragments

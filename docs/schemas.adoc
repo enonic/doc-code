@@ -91,12 +91,24 @@ form:
     type: "TextLine"
     label: "Full name"
     occurrences:
-      minimum: 1
-      maximum: 1
+      min: 1
+      max: 1
   - name: "bio"
     type: "TextArea"
     label: "Biography"
+  - name: "spouse"
+    type: "ContentSelector"
+    label: "Spouse"
+    occurrences:
+      min: 0
+      max: 1
+    allowContentType:
+      - "com.company.myapp:person"
 ----
+
+Input-specific settings — like `allowContentType` above — sit directly on the input. XP 7's XML wrapped them in a `<config>` element; the YAML model has no such wrapper.
+
+NOTE: In the descriptor, `occurrences` takes `min`/`max`. The *runtime* form JSON — what `lib-content` `getType()` and `lib-schema` return — spells them `minimum`/`maximum`; the two serializations differ.
 
 NOTE: The full set of form items is documented in the https://developer.enonic.com/docs/cms/xp8/schemas/form-items[CMS forms reference].
 
