@@ -618,12 +618,35 @@ form:
     type: "TextLine"
     label: "Full name"
     occurrences:
-      minimum: 1
-      maximum: 1
+      min: 1
+      max: 1
   - name: "bio"
     type: "TextArea"
-    label: "Biography"</code></pre>
+    label: "Biography"
+  - name: "spouse"
+    type: "ContentSelector"
+    label: "Spouse"
+    occurrences:
+      min: 0
+      max: 1
+    allowContentType:
+      - "com.company.myapp:person"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Input-specific settings — like <code>allowContentType</code> above — sit directly on the input. XP 7&#8217;s XML wrapped them in a <code>&lt;config&gt;</code> element; the YAML model has no such wrapper.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In the descriptor, <code>occurrences</code> takes <code>min</code>/<code>max</code>. The <strong>runtime</strong> form JSON — what <code>lib-content</code> <code>getType()</code> and <code>lib-schema</code> return — spells them <code>minimum</code>/<code>maximum</code>; the two serializations differ.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -707,7 +730,7 @@ form:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-30 19:03:29 UTC
+Last updated 2026-07-30 19:32:30 UTC
 </div>
 </div>
 </body>
