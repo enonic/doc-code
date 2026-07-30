@@ -87,7 +87,7 @@ allowChildContentType:
   - "base:folder"
   - "article-*"
 form:
-  - name: "fullName"
+  - name: "full_name"
     type: "TextLine"
     label: "Full name"
     occurrences:
