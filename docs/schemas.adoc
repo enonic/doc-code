@@ -77,7 +77,7 @@ The descriptor is YAML. Here is a minimal content type, using the canonical shap
 ----
 kind: "ContentType"
 title: "Person"
-displayNameLabel: "Full Name"
+displayNamePlaceholder: "Full Name"
 description: "Create a new person"
 superType: "base:structured"
 abstract: false

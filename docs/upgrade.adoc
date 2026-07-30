@@ -649,6 +649,8 @@ form:
 
 Note that input configuration is no longer nested: keys inside XP 7's `<config>` element become flat properties of the input in YAML. There is no `config:` wrapper — a nested `config:` block is not recognized and its settings are ignored.
 
+XP 7's `<display-name-label>` element is renamed to `displayNamePlaceholder`. Unknown keys in the YAML descriptor — including the literal `displayNameLabel` — fail the parse, so a mistranslated descriptor is rejected at registration rather than silently ignored.
+
 .XP 7 - site/content-types/article/article.xml
 [source,xml]
 ----
