@@ -236,4 +236,4 @@ In order to separate system defined properties from user defined properties, `_`
 
 |===
 
-Node permissions are also flattened into indexed `_permissions_*` system properties at write time. See <<permissions#_querying_by_permission, Permissions — Querying by permission>> for the full list and usage.
+Node permissions are also flattened into indexed `_permissions_*` system properties at write time. See <<permissions#querying_by_permission, Permissions — Querying by permission>> for the full list and usage.

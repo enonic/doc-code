@@ -39,7 +39,7 @@ NOTE: This diagram covers the ID provider's *endpoint* surfaces. Its two *pipeli
 
 `+/_/idprovider/<name>+`:: The base endpoint dispatches to the provider's `GET`/`POST`/… HTTP functions.
 
-Rather than hardcoding these paths, generate them with the portal library helpers — <<../libraries/lib-portal#_loginurl, loginUrl()>>, <<../libraries/lib-portal#_logouturl, logoutUrl()>> and <<../libraries/lib-portal#_idproviderurl, idProviderUrl()>> — which resolve the correct contextual URL for the current request.
+Rather than hardcoding these paths, generate them with the portal library helpers — <<../libraries/lib-portal#loginurl, loginUrl()>>, <<../libraries/lib-portal#logouturl, logoutUrl()>> and <<../libraries/lib-portal#idproviderurl, idProviderUrl()>> — which resolve the correct contextual URL for the current request.
 
 [NOTE]
 ====
@@ -95,7 +95,7 @@ hopefully giving access to the resource.
 Clients may request a login directly through a pre-defined endpoint, available for all ID providers. 
 This provides a deterministic endpoint for accessing the login page of any ID provider.
 
-The URL to the endpoint can be generated using the <<../libraries/lib-portal#_loginurl, loginUrl() function in the portal library>>
+The URL to the endpoint can be generated using the <<../libraries/lib-portal#loginurl, loginUrl() function in the portal library>>
 
 [NOTE]
 ====
@@ -108,7 +108,7 @@ The result of this validation is then passed to the ID Provider as a request pro
 Clients may request a logout directly through a pre-defined endpoint, available for all ID providers. 
 This provides a deterministic endpoint for logging out of any ID provider.
 
-The URL for this endpoint can be generated using the <<../libraries/lib-portal#_logouturl, logoutUrl() function in the portal library>>
+The URL for this endpoint can be generated using the <<../libraries/lib-portal#logouturl, logoutUrl() function in the portal library>>
 
 [NOTE]
 ====
@@ -136,7 +136,7 @@ If no user already exists in the context, the autoLogin filter is executed early
 Additionally, an ID provider may also act as a regular <<request-response#, HTTP function>> — supporting any interaction as desired.
 Communication with the implementation is handled via the ID provider endpoint.
 
-The URL to this endpoint can be generated using the <<../libraries/lib-portal#_idproviderurl, idProviderUrl() function in the portal library>>
+The URL to this endpoint can be generated using the <<../libraries/lib-portal#idproviderurl, idProviderUrl() function in the portal library>>
 
 == Sample
 The code below demonstrates how an ID provider may be implemented

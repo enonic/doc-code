@@ -26,6 +26,7 @@ You are now ready to use the API.
 
 NOTE: Unlike `lib-websocket`, every function in this library takes a single object parameter.
 
+[#message-shape]
 == Message shape
 
 The `send` and `sendToGroup` functions accept a `message` object with the following optional fields:

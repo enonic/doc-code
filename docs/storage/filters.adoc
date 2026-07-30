@@ -11,7 +11,7 @@ These are relatively costly operations.
 A filter does none of these steps.
 A filter _only_ removes nodes from the result - and is executed after the query statement, if it exists.
 
-WARNING: Filters are deprecated and will be removed in future XP versions. Use <<querying#_filter, query filtering>> instead — see the <<legacy_filter_migration, mapping table below>> for how each filter type translates to the DSL.
+WARNING: Filters are deprecated and will be removed in future XP versions. Use <<querying#filter, query filtering>> instead — see the <<legacy_filter_migration, mapping table below>> for how each filter type translates to the DSL.
 
 [#legacy_filter_migration]
 == Migrating to the Query DSL
