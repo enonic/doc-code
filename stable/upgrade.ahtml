@@ -514,7 +514,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-To run this upgrade automatically with an AI coding agent, use the <a href="https://github.com/enonic/ai-enonic-marketplace">Enonic AI Agents Skills</a> repository — it includes a skill that drives Claude Code (or a compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
+To run this upgrade automatically with an AI coding agent, use the <a href="https://github.com/enonic/agent-toolkit">Enonic Agents Toolkit</a> — it includes a skill that drives agents like Claude Code, Codex, Gemini and Co-pilot (or another compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
 </td>
 </tr>
 </table>
@@ -2369,7 +2369,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-30 20:31:50 UTC
+Last updated 2026-08-03 11:38:38 UTC
 </div>
 </div>
 </body>
