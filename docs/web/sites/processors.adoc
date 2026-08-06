@@ -69,7 +69,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] A processor runs after the components on 
 import {setCustomLocalAttribute} from '/lib/xp/context';
 
 export function get() {
-    setCustomLocalAttribute('needsMapLibrary', true);
+    setCustomLocalAttribute('com.example.myapp.needsMapLibrary', true);
 
     return {body: '<div id="map"></div>'};
 }
@@ -81,7 +81,7 @@ export function get() {
 import {get as getContext} from '/lib/xp/context';
 
 export function responseProcessor(req, res) {
-    if (getContext().attributes['custom.needsMapLibrary']) {
+    if (getContext().attributes['custom.com.example.myapp.needsMapLibrary']) {
         res.pageContributions.bodyEnd = ['<script src="/assets/map.js"></script>'];
     }
 
@@ -89,7 +89,9 @@ export function responseProcessor(req, res) {
 }
 ----
 
-This is the supported way for an app to load an asset only on pages that actually use it, and it works across apps on the same site — attribute names are namespaced, so two apps cannot collide.
+This is the supported way for an app to load an asset only on pages that actually use it, and it works across apps on the same site: one app's part can signal another app's processor.
+
+That reach cuts both ways — every app in the request shares one flat set of attribute names, so two apps picking the same name overwrite each other. Name attributes after your app unless the sharing is deliberate.
 
 == Execution order
 

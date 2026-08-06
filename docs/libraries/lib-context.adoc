@@ -131,7 +131,9 @@ const result = run({
 
 image:xp-810.svg[XP 8.1.0,opts=inline] Stores a value as a custom attribute in the *local scope* of the current context, where any other code running in the same execution can read it back.
 
-This is how unrelated pieces of code hand data to each other within one request without a shared module or a wrapping `run()` call. A page implementation can leave data for a <<../web/sites/processors#, response processor>>, a part can leave data for the <<../web/filters#, filter>> that wrapped the request, and — because attribute names are namespaced under `custom.` — apps on the same site can do this across application boundaries.
+This is how unrelated pieces of code hand data to each other within one request without a shared module or a wrapping `run()` call. A page implementation can leave data for a <<../web/sites/processors#, response processor>>, a part can leave data for the <<../web/filters#, filter>> that wrapped the request, and apps on the same site can do this across application boundaries — each reader gets its own copy of the value, so nothing is shared but the data itself.
+
+WARNING: All apps in a request write into *one flat namespace*. The `custom.` prefix separates your attributes from the platform's, not one app's from another's, and there is no per-app scoping underneath it: two apps that both store `settings` are writing the same attribute, and the last write wins. Unless you mean to collaborate on a value, name it after your app — `+setCustomLocalAttribute('com.example.myapp.settings', …)+`.
 
 The local scope is shared with nested `run()` calls, so a value stored inside a `run()` callback is still there after it returns. It lives for the duration of the execution: a new HTTP request starts with an empty scope, and <<../background/tasks#, tasks>>, event listeners and websocket callbacks run with their own — nothing written during a request reaches them.
 
@@ -167,7 +169,7 @@ const data = get().attributes['custom.my-data'];
 import {setCustomLocalAttribute} from '/lib/xp/context';
 
 export function get() {
-    setCustomLocalAttribute('tracking', {pageType: 'article', experiment: 'B'});
+    setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
 
     return {body: renderArticle(), contentType: 'text/html'};
 }
@@ -181,7 +183,7 @@ import {get as getContext} from '/lib/xp/context';
 type Tracking = {pageType: string; experiment: string};
 
 export function responseProcessor(req, res) {
-    const tracking = getContext().attributes['custom.tracking'] as Tracking | undefined;
+    const tracking = getContext().attributes['custom.com.example.myapp.tracking'] as Tracking | undefined;
 
     if (tracking) {
         res.pageContributions.bodyEnd = [
