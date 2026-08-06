@@ -127,6 +127,74 @@ const result = run({
 "Hello from context"
 ----
 
+=== setCustomLocalAttribute
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Stores a value as a custom attribute in the *local scope* of the current context, where any other code running in the same execution can read it back.
+
+This is how unrelated pieces of code hand data to each other within one request without a shared module or a wrapping `run()` call. A page implementation can leave data for a <<../web/sites/processors#, response processor>>, a part can leave data for the <<../web/filters#, filter>> that wrapped the request, and — because attribute names are namespaced under `custom.` — apps on the same site can do this across application boundaries.
+
+The local scope is shared with nested `run()` calls, so a value stored inside a `run()` callback is still there after it returns. It lives for the duration of the execution: a new HTTP request starts with an empty scope, and <<../background/tasks#, tasks>>, event listeners and websocket callbacks run with their own — nothing written during a request reaches them.
+
+Values are serialized on write, so the stored attribute is a snapshot: mutating the object you passed in afterwards does not change it, and each reader gets its own copy. Only JSON-like values are allowed — strings, numbers, booleans, arrays, and plain objects nesting those. Anything else, such as a function or a `Date`, is rejected.
+
+[.lead]
+Parameters
+
+Takes two positional arguments: `name` (string) — the attribute name, stored with the `custom.` prefix — and `value`, the JSON-like value to store. Passing `null`, `undefined`, or omitting the value removes the attribute.
+
+[.lead]
+Returns
+
+*void*
+
+[.lead]
+Example
+
+.Store a value, and read it back through `get()`
+[source,typescript]
+----
+import {get, setCustomLocalAttribute} from '/lib/xp/context';
+
+setCustomLocalAttribute('my-data', {values: ['one', 'two']});
+
+const data = get().attributes['custom.my-data'];
+----
+
+.Hand data from a page implementation to a response processor
+[source,typescript]
+----
+// cms/pages/article/article.ts
+import {setCustomLocalAttribute} from '/lib/xp/context';
+
+export function get() {
+    setCustomLocalAttribute('tracking', {pageType: 'article', experiment: 'B'});
+
+    return {body: renderArticle(), contentType: 'text/html'};
+}
+----
+
+[source,typescript]
+----
+// cms/processors/tracker.ts
+import {get as getContext} from '/lib/xp/context';
+
+type Tracking = {pageType: string; experiment: string};
+
+export function responseProcessor(req, res) {
+    const tracking = getContext().attributes['custom.tracking'] as Tracking | undefined;
+
+    if (tracking) {
+        res.pageContributions.bodyEnd = [
+            `<script>window.tracking = ${JSON.stringify(tracking)}</script>`
+        ];
+    }
+
+    return res;
+}
+----
+
+NOTE: A value stored during a request is *not* carried into a task submitted from it, and is not visible to another request. Direct <<../web/sites/components#, component rendering>> is a separate request, so a value left by a page implementation is absent when a part is rendered on its own.
+
 == Type Definitions
 
 [#Context]
@@ -142,7 +210,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| attributes | <<ContextAttributes, ContextAttributes>> | Custom attributes set on the context. Always present; may be empty.
+| attributes | <<ContextAttributes, ContextAttributes>> | Custom attributes set on the context. Always present; may be empty. Attributes stored with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> appear here under their `custom.` prefixed name.
 | branch | string | *Optional.* Branch context.
 | repository | string | *Optional.* Repository context.
 | authInfo | <<AuthInfo, AuthInfo>> | *Optional.* Authentication information for the current context.
@@ -205,4 +273,8 @@ Properties
 [#ContextAttributes]
 === ContextAttributes
 
-A record of custom context attributes. Keys are strings; only values of type `number`, `string`, `boolean`, or plain `object` are supported.
+A record of custom context attributes. Keys are strings. Values passed to `run()` are limited to `number`, `string` and `boolean` — a plain object is accepted, but is not returned by `get()`.
+
+Attributes written with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> are read back through this same record, keyed as `+custom.<name>+`, and may also be arrays and nested objects.
+
+The two are separate stores that `get()` merges: attributes set on the context — by `run()` or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. Unlike attributes passed to `run()`, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.

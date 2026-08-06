@@ -1,6 +1,6 @@
 = HTTP filters
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 HTTP filters enable pipelined processing of http requests.
 
@@ -26,18 +26,18 @@ exports.filter = function (req, next) {
 };
 ----
 
-.Filter manipulating the request
-[source,js]
+.Filter logging the request and the response
+[source,typescript]
 ----
-exports.filter = function (req, next) {
-  req.requestLogging = true; // Manipulate request
-  log.info("Request:" + JSON.stringify(req, null, 2));
-  var response = next(req); // Continue request pipeline
-  response.responseLogging = true; // Manipulate response
-  log.info("Response:" + JSON.stringify(response, null, 2));
+export function filter(req, next) {
+  log.info('Request:' + JSON.stringify(req, null, 2));
+  const response = next(req); // Continue request pipeline
+  log.info('Response:' + JSON.stringify(response, null, 2));
   return response;
-};
+}
 ----
+
+WARNING: Only the documented <<request-response#, request and response>> fields cross the `next()` boundary. Assigning a property of your own — `+req.myFlag = true+` — is not an error, but the field is dropped when the request is handed on, so nothing downstream ever sees it. To pass your own data along the pipeline, use image:xp-810.svg[XP 8.1.0,opts=inline] <<../libraries/lib-context#setcustomlocalattribute, `+context.setCustomLocalAttribute()+`>>: it stores the value in the current execution, where implementations, <<sites/processors#, response processors>> and the code after `next()` in this very filter can all read it back.
 
 .Filter intercepting the request
 [source,js]
