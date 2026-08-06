@@ -449,6 +449,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#attachmentUrl">attachmentUrl</a></li>
 <li><a href="#baseurl">baseUrl</a></li>
 <li><a href="#componenturl">componentUrl</a></li>
+<li><a href="#csp">csp</a></li>
+<li><a href="#cspreportonly">cspReportOnly</a></li>
 <li><a href="#getcomponent">getComponent</a></li>
 <li><a href="#getcontent">getContent</a></li>
 <li><a href="#getidproviderkey">getIdProviderKey</a></li>
@@ -476,6 +478,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#site-config">SiteConfig</a></li>
 <li><a href="#multipart-form">MultipartForm</a></li>
 <li><a href="#multipart-item">MultipartItem</a></li>
+<li><a href="#csp-type">Csp</a></li>
+<li><a href="#csp-source">CspSource</a></li>
+<li><a href="#sandbox-flag">SandboxFlag</a></li>
+<li><a href="#trusted-types-keyword">TrustedTypesKeyword</a></li>
+<li><a href="#csp-hash-source">CspHashSource</a></li>
 </ul>
 </li>
 </ul>
@@ -967,6 +974,97 @@ const url = baseUrl({
 const url = componentUrl({
   component: 'main/0'
 });</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="csp"><a class="link" href="#csp">csp</a></h3>
+<div id="csp" class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Returns the request-scoped <strong>enforced</strong> <a href="#csp-type">Content Security Policy</a> builder for the current portal request. Its directives are composed into the <code>Content-Security-Policy</code> header emitted on the response. For the report-only companion, use <a href="#cspReportOnly"><code>cspReportOnly()</code></a>. Takes no arguments.</p>
+</div>
+<div class="paragraph">
+<p>One policy is shared for the whole request, so a page with its layouts, parts and any <a href="../web/sites/processors.ahtml">response processors</a> all contribute to the same header. It is composed and emitted automatically when the response is flushed, so late contributions still land — you never set the header yourself.</p>
+</div>
+<div class="paragraph">
+<p>A <code>Content-Security-Policy</code> header set directly on the response is folded into the policy (as if passed to <code>resetTo()</code>) rather than sent verbatim, so later contributions still apply on top; a <code>Content-Security-Policy-Report-Only</code> header is folded into the report-only policy the same way.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Setting the <code>Content-Security-Policy</code> header directly is a legacy path, kept only for compatibility with existing apps. New code should declare the policy through <code>csp()</code> (and <a href="#cspReportOnly"><code>cspReportOnly()</code></a> for report-only) instead.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>object</strong> : (<a href="#csp-type"><code>Csp</code></a>) The request-scoped Content Security Policy; its directives are emitted as the response&#8217;s <code>Content-Security-Policy</code> header.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Seed a deny-all baseline, then open up only what the page needs:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {csp, CspSource} from '/lib/xp/portal';
+
+const policy = csp();
+
+// Deny-all baseline: default-src, base-uri and frame-ancestors all 'none'
+policy.strict();
+
+// Open up only the directives this page needs (calls chain)
+policy
+  .scriptSrc(CspSource.SELF, 'https://cdn.example.com')
+  .styleSrc(CspSource.SELF)
+  .imgSrc(CspSource.SELF, CspSource.DATA);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Allow one inline script with a per-request nonce:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {csp} from '/lib/xp/portal';
+
+// Wires 'nonce-&lt;value&gt;' into script-src and returns the value to stamp on the tag
+const nonce = csp().nonceScriptSrc();
+
+const view = `&lt;script nonce="${nonce}"&gt;window.app = {};&lt;/script&gt;`;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cspreportonly"><a class="link" href="#cspreportonly">cspReportOnly</a></h3>
+<div id="cspReportOnly" class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Returns the request-scoped <strong>report-only</strong> <a href="#csp-type">Content Security Policy</a> builder, emitted as the <code>Content-Security-Policy-Report-Only</code> header. Takes no arguments.</p>
+</div>
+<div class="paragraph">
+<p>It is an independent companion to the enforced policy from <a href="#csp"><code>csp()</code></a> — the same <a href="#csp-type"><code>Csp</code></a> API, sharing the request nonce — and the two headers can coexist on one response, so you can enforce a settled policy while trialling a stricter one. While the report-only policy is left empty, no header is emitted.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>object</strong> : (<a href="#csp-type"><code>Csp</code></a>) The request-scoped report-only Content Security Policy; its directives are emitted as the response&#8217;s <code>Content-Security-Policy-Report-Only</code> header.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Enforce one policy while trialling a stricter one in report-only mode:</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {csp, cspReportOnly, CspSource} from '/lib/xp/portal';
+
+// Enforced: still allow inline scripts for now
+csp().scriptSrc(CspSource.SELF, CspSource.UNSAFE_INLINE);
+
+// Report-only: trial a strict policy — violations are reported, not blocked
+cspReportOnly().scriptSrc(CspSource.SELF);</code></pre>
 </div>
 </div>
 </div>
@@ -2233,12 +2331,673 @@ const url = buildUrl({
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="csp-type"><a class="link" href="#csp-type">Csp</a></h3>
+<div class="paragraph">
+<p>A request-scoped Content Security Policy builder, obtained from <a href="#csp"><code>csp()</code></a> (enforced) or <a href="#cspReportOnly"><code>cspReportOnly()</code></a> (report-only). Within each, repeated calls to the accessor hand back a fresh handle onto the same underlying policy, so every page, layout, part and processor contributes to the one emitted header. Method calls on a handle, by contrast, all return the same <code>Csp</code> instance (except the nonce getters and <code>directive()</code>), so calls chain.</p>
+</div>
+<div class="paragraph">
+<p>Contributions merge by <strong>union</strong>: a directive&#8217;s source list is the union of every contributor&#8217;s sources, deduped and emitted in the order added. The builder does not arbitrate between sources that interact in the browser — for example <code>'unsafe-inline'</code> alongside a <code>'nonce-…'</code>, a hash, or <code>'strict-dynamic'</code>, which the browser then ignores. It emits exactly what you declare.</p>
+</div>
+<div class="paragraph">
+<p>Sources are validated: a value containing <code>;</code> or whitespace (a policy-injection attempt) throws, and a hand-supplied <code>'nonce-…'</code> source is rejected — only the <code>nonce*</code> methods generate the request nonce.</p>
+</div>
+<div class="paragraph lead">
+<p>Source-list directives</p>
+</div>
+<div class="paragraph">
+<p>Each unions the given sources — <a href="#csp-source"><code>CspSource</code></a> values or raw strings (hosts, schemes, paths, URLs) — into the named directive.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>defaultSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>default-src</code> — the fetch directive the others fall back to when omitted.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scriptSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>script-src</code> (JavaScript and WebAssembly); the fallback for <code>script-src-elem</code> and <code>script-src-attr</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>styleSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>style-src</code> (stylesheets); the fallback for <code>style-src-elem</code> and <code>style-src-attr</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imgSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>img-src</code> (images and favicons).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fontSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>font-src</code> (fonts loaded with <code>@font-face</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>connect-src</code> (<code>fetch</code>, <code>XMLHttpRequest</code>, <code>WebSocket</code>, <code>EventSource</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mediaSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>media-src</code> (<code>&lt;audio&gt;</code>, <code>&lt;video&gt;</code>, <code>&lt;track&gt;</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>objectSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>object-src</code> (<code>&lt;object&gt;</code> and <code>&lt;embed&gt;</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>frameSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>frame-src</code> (<code>&lt;frame&gt;</code>, <code>&lt;iframe&gt;</code>); falls back to <code>child-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workerSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>worker-src</code> (<code>Worker</code>, <code>SharedWorker</code>, <code>ServiceWorker</code>); falls back to <code>child-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>manifestSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>manifest-src</code> (application manifest files).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>childSrc(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>child-src</code> — the fallback for <code>frame-src</code> and <code>worker-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scriptSrcElem(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>script-src-elem</code> (governs <code>&lt;script&gt;</code> elements); falls back to <code>script-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scriptSrcAttr(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>script-src-attr</code> (governs inline event handlers such as <code>onclick</code>); falls back to <code>script-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>styleSrcElem(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>style-src-elem</code> (governs <code>&lt;style&gt;</code> and <code>&lt;link rel=stylesheet&gt;</code>); falls back to <code>style-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>styleSrcAttr(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>style-src-attr</code> (governs inline <code>style</code> attributes); falls back to <code>style-src</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Document and navigation directives</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>frameAncestors(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>frame-ancestors</code> — which parents may embed this page via <code>&lt;frame&gt;</code>/<code>&lt;iframe&gt;</code>/<code>&lt;object&gt;</code>/<code>&lt;embed&gt;</code>. Does not fall back to <code>default-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>baseUri(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>base-uri</code> — the URLs allowed in a <code>&lt;base&gt;</code> element. Does not fall back to <code>default-src</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>formAction(&#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into <code>form-action</code> — where forms may submit.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Baseline and low-level building blocks</p>
+</div>
+<div class="paragraph">
+<p>Prefer the typed methods above; reach for these for directives the typed API does not cover, to inspect the policy, or for whole-policy operations.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>strict()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Seeds a deny-all baseline — <code>default-src</code>, <code>base-uri</code> and <code>frame-ancestors</code> all set to <code>'none'</code>. Call it first, then open up only the directives you need.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>add(directive, &#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions sources into any directive by name (deduped). With no sources, registers a valueless directive such as <code>upgrade-insecure-requests</code>. A <code>'nonce-…'</code> source is rejected.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>merge(headerValue)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Parses a <code>Content-Security-Policy</code> header value and unions each directive&#8217;s sources onto the policy — existing directives are extended and absent ones added, so you can grant extra permissions on top of a policy built elsewhere without restating it. A wired nonce is kept; <code>'nonce-…'</code> sources in the value are dropped. Lenient (invalid tokens skipped); an empty or blank value adds nothing.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>directive(name)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string[] | null</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The sources currently declared for <code>name</code> (deduped, in serialized order), or <code>null</code> if no contributor has declared it. A declared valueless directive returns an empty array. Reads this policy only.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>override(directive, &#8230;&#8203;sources)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Replaces a directive&#8217;s source list with exactly these sources, overriding what other contributors set. Not frozen — a later <code>add()</code> still extends it. To remove a directive entirely, use <code>reset()</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reset(&#8230;&#8203;directives)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Removes the named directives (for example to unset a valueless directive). With no argument, removes nothing.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resetTo(headerValue)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Replaces the whole policy with the directives parsed from a raw header string; later contributions still apply on top. Parsing is lenient, mirroring the browser — invalid tokens are skipped, <code>'nonce-…'</code> sources are dropped, and of repeated directives only the first counts. A comma (which would begin a further policy) and everything after it is ignored — only the first policy is applied. An empty or blank value clears the policy.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Nonces and hashes</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceScriptSrc()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the request nonce into <code>script-src</code> and returns its value, to stamp on inline <code>&lt;script nonce="..."&gt;</code> tags. Stable for the whole request — every <code>nonce*</code> method returns this same value.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceScriptSrcElem()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the same nonce into <code>script-src-elem</code> (governs <code>&lt;script&gt;</code> elements). Use it when that directive is set with <code>'strict-dynamic'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceStyleSrc()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the same nonce into <code>style-src</code>, to stamp on inline <code>&lt;style nonce="..."&gt;</code> tags.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nonceStyleSrcElem()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Wires the same nonce into <code>style-src-elem</code> (governs <code>&lt;style&gt;</code> and <code>&lt;link rel=stylesheet&gt;</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>shaScriptSrc(source)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions a hash source into <code>script-src</code>. Takes a <a href="#csp-hash-source"><code>CspHashSource</code></a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>shaStyleSrc(source)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions a hash source into <code>style-src</code>. Takes a <a href="#csp-hash-source"><code>CspHashSource</code></a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Sandbox and Trusted Types</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sandbox(&#8230;&#8203;flags)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unions <a href="#sandbox-flag"><code>SandboxFlag</code></a> values into the <code>sandbox</code> directive. With no flags, registers an empty <code>sandbox</code> (every restriction applied).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requireTrustedTypesForScript()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Registers <code>require-trusted-types-for 'script'</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustedTypes(&#8230;&#8203;values)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Adds policy names and/or <a href="#trusted-types-keyword"><code>TrustedTypesKeyword</code></a> keywords to the <code>trusted-types</code> directive.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Reporting</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Returns</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reportTo(group)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Csp</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Adds the <code>report-to</code> directive naming a reporting group. Define the group with a companion <code>Reporting-Endpoints</code> response header (the caller&#8217;s responsibility). The older <code>report-uri</code> is deprecated; use <code>add('report-uri', &#8230;&#8203;)</code> if still needed.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="csp-source"><a class="link" href="#csp-source">CspSource</a></h3>
+<div class="paragraph">
+<p>Common source-list keywords and schemes for a CSP source expression, per W3C CSP3. Keyword values are single-quoted; scheme values end in a colon. Pass these to any source-list directive method, alongside raw strings for hosts, paths and URLs.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SELF</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'self'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The page&#8217;s own origin.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'none'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The empty set — matches nothing.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSAFE_INLINE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'unsafe-inline'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows inline scripts and styles. The browser ignores it when a nonce or hash is also present.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSAFE_EVAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'unsafe-eval'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows <code>eval()</code> and similar string-to-code APIs.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>STRICT_DYNAMIC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'strict-dynamic'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Propagates trust from a nonced/hashed script to the scripts it loads.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNSAFE_HASHES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'unsafe-hashes'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows specific inline event handlers and <code>style</code> attributes matched by hash.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WASM_UNSAFE_EVAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'wasm-unsafe-eval'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows WebAssembly compilation without allowing <code>eval()</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REPORT_SAMPLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'report-sample'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Asks the browser to include a sample of the offending content in violation reports.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data:</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The <code>data:</code> scheme.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>blob:</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The <code>blob:</code> scheme.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WILDCARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Matches any URL, except the <code>data:</code>, <code>blob:</code> and <code>filesystem:</code> schemes.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="sandbox-flag"><a class="link" href="#sandbox-flag">SandboxFlag</a></h3>
+<div class="paragraph">
+<p>Flags for the <code>sandbox</code> directive, passed to <code>sandbox()</code>. Tokens are emitted unquoted, as the CSP spec defines them. Each flag lifts one of the sandbox&#8217;s default restrictions.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_SCRIPTS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-scripts</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content run scripts.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_SAME_ORIGIN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-same-origin</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content keep its origin instead of being forced into an opaque one.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_FORMS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-forms</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content submit forms.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_POPUPS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-popups</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content open popups.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_MODALS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-modals</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content open modal dialogs.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_TOP_NAVIGATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-top-navigation</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content navigate the top-level browsing context.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_DOWNLOADS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-downloads</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content start downloads.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_POINTER_LOCK</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-pointer-lock</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content use the Pointer Lock API.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_PRESENTATION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-presentation</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content start a presentation session.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_ORIENTATION_LOCK</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allow-orientation-lock</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Lets the content lock the screen orientation.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="trusted-types-keyword"><a class="link" href="#trusted-types-keyword">TrustedTypesKeyword</a></h3>
+<div class="paragraph">
+<p>Special keywords for the <code>trusted-types</code> directive, passed to <code>trustedTypes()</code> alongside user-defined policy names.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALLOW_DUPLICATES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'allow-duplicates'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows creating more than one Trusted Types policy with the same name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'none'</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Disallows creating any Trusted Types policy.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WILDCARD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allows any policy name.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="csp-hash-source"><a class="link" href="#csp-hash-source">CspHashSource</a></h3>
+<div class="paragraph">
+<p>A hash source passed to <code>shaScriptSrc()</code> / <code>shaStyleSrc()</code>. Provide either inline <code>content</code> to digest, or a precomputed <code>hash</code> — the two are mutually exclusive.</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Inline script or style text to digest. The computed <code>'&lt;algo&gt;-&lt;base64&gt;'</code> source is added to the directive. Provide either <code>content</code> or <code>hash</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hash</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Precomputed base64 digest, emitted verbatim as <code>'&lt;algo&gt;-&lt;hash&gt;'</code>. Provide either <code>content</code> or <code>hash</code>; when used, <code>algo</code> is required.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">algo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Hash algorithm — one of <code>sha256</code>, <code>sha384</code> or <code>sha512</code>. Defaults to <code>sha256</code> when digesting <code>content</code>; required with <code>hash</code>. Any other value throws.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 09:07:45 UTC
+Last updated 2026-08-06 11:11:55 UTC
 </div>
 </div>
 </body>
