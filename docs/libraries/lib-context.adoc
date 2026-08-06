@@ -275,8 +275,10 @@ Properties
 [#ContextAttributes]
 === ContextAttributes
 
-A record of custom context attributes. Keys are strings. Values passed to `run()` are limited to `number`, `string` and `boolean` — a plain object is accepted, but is not returned by `get()`.
+Attributes are read and written through different value sets, so the two directions do not share a type.
 
-Attributes written with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> are read back through this same record, keyed as `+custom.<name>+`, and may also be arrays and nested objects.
+*Reading* — `<<Context, Context>>.attributes` — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> comes back in full, keyed as `+custom.<name>+`. In TypeScript the value type is `ContextAttributeValue`.
 
-The two are separate stores that `get()` merges: attributes set on the context — by `run()` or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. Unlike attributes passed to `run()`, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.
+*Writing* — `<<ContextParams, ContextParams>>.attributes`, passed to `run()` — takes `number`, `string` and `boolean`. An object value is accepted and is visible to Java code reading the context, but it is not part of what `get()` returns.
+
+`get()` merges every store it reads from: attributes set on the context — by `run()` or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. And unlike attributes passed to `run()`, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.
