@@ -785,8 +785,9 @@ Only analyzed properties are considered when applying the fulltext function.
 </div>
 </div>
 <div class="paragraph">
-<p>You can boost  - thus increasing or decreasing hit-score per field basis.
-By providing more than one field to the query by appending a weight-factor: <code>^N</code></p>
+<p>You can boost the relevance score on a per-field basis by appending a weight-factor <code>^N</code> to a field name (for example <code>displayName^5</code>).
+The weight is a <strong>positive multiplier</strong> on the field&#8217;s score contribution, compared to the default weight of <code>1</code>: a value above <code>1</code> makes the field contribute more, a value between <code>0</code> and <code>1</code> makes it contribute less.
+The contribution always stays positive — a match adds to the score, it is never a penalty. Negative weights are not allowed.</p>
 </div>
 <div class="listingblock">
 <div class="title">Boosting example</div>
@@ -1687,7 +1688,7 @@ myDateTime = dateTime('2015-03-19T11:25:00+03:00')</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 08:42:58 UTC
+Last updated 2026-08-06 08:46:21 UTC
 </div>
 </div>
 </body>
