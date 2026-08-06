@@ -240,7 +240,7 @@ const url = componentUrl({
 === csp
 [#csp]
 
-Returns the request-scoped *enforced* <<csp-type, Content Security Policy>> builder for the current portal request. Its directives are composed into the `Content-Security-Policy` header emitted on the response. For the report-only companion, use <<cspReportOnly, `cspReportOnly()`>>. Takes no arguments.
+image:xp-810.svg[XP 8.1.0,opts=inline] Returns the request-scoped *enforced* <<csp-type, Content Security Policy>> builder for the current portal request. Its directives are composed into the `Content-Security-Policy` header emitted on the response. For the report-only companion, use <<cspReportOnly, `cspReportOnly()`>>. Takes no arguments.
 
 One policy is shared for the whole request, so a page with its layouts, parts and any <<../web/sites/processors#, response processors>> all contribute to the same header. It is composed and emitted automatically when the response is flushed, so late contributions still land — you never set the header yourself.
 
@@ -288,7 +288,7 @@ const view = `<script nonce="${nonce}">window.app = {};</script>`;
 === cspReportOnly
 [#cspReportOnly]
 
-Returns the request-scoped *report-only* <<csp-type, Content Security Policy>> builder, emitted as the `Content-Security-Policy-Report-Only` header. Takes no arguments.
+image:xp-810.svg[XP 8.1.0,opts=inline] Returns the request-scoped *report-only* <<csp-type, Content Security Policy>> builder, emitted as the `Content-Security-Policy-Report-Only` header. Takes no arguments.
 
 It is an independent companion to the enforced policy from <<csp, `csp()`>> — the same <<csp-type, `Csp`>> API, sharing the request nonce — and the two headers can coexist on one response, so you can enforce a settled policy while trialling a stricter one. While the report-only policy is left empty, no header is emitted.
 
