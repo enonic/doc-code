@@ -1,5 +1,6 @@
 = Apps
 :toc: right
+:imagesdir: ../images
 
 An *Enonic app* is the unit of code you deploy to XP. It is a self-contained bundle that the platform installs, starts, configures, and tears down — and many apps coexist inside a single XP instance. This page covers what an app actually is at runtime, how XP runs several of them at once, and the lifecycle and configuration model around them.
 
@@ -29,7 +30,7 @@ An app's life inside XP follows a fixed sequence:
 
 Install:: The app bundle is uploaded to the cluster and registered. Installation alone does not run any of your code.
 
-Start:: XP starts the app on every cluster node. If the bundle contains <<main#, `main.ts`>> at `src/main/resources/main.ts`, it is loaded and its top-level code runs once per node. Any `__.disposer()` registrations made during start are remembered for the stop phase.
+Start:: XP starts the app on every cluster node. If the bundle contains <<main#, `main.ts`>> at `src/main/resources/main.ts`, it is loaded and its top-level code runs once per node. image:xp-810.svg[XP 8.1.0,opts=inline] Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. `+__.disposer()+` registrations made during start are remembered for the stop phase; registering one later is not dependable.
 
 Running:: The app is reachable. HTTP functions, event listeners, scheduled tasks, components, and admin tools all become live. Modules are loaded lazily on first `require()` and cached for the lifetime of the deploy.
 

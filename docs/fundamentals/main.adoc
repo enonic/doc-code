@@ -1,6 +1,6 @@
 = Main
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 Handle application lifecycle events via `main.ts`.
 
@@ -12,7 +12,9 @@ Enonic apps may contain a special `main.ts` at `src/main/resources/main.ts`.
 
 The code should complete as quickly as possible to prevent the application from stalling. Never call remote endpoints or wait in loops for events at the top level of `main.ts`.
 
-TIP: If you need to perform time-consuming work during startup, run it from a <<../background/tasks#, task>> instead.
+WARNING: image:xp-810.svg[XP 8.1.0,opts=inline] `main.ts` blocks the rest of the application. Nothing else in the same app runs until its top-level code returns — HTTP functions, component implementations, tasks and event listeners all wait. This is what makes `main.ts` a dependable place to initialize: a controller can never observe a half-initialized repository. The flip side is that slow start-up code delays the app's first responses, so keep it short. Code called from `main.ts` itself is exempt — it is part of the start-up. If start-up has not finished within five minutes, XP logs a warning and lets the waiting executions proceed anyway. Other applications are unaffected; each app waits only for its own `main.ts`.
+
+TIP: If you need to perform time-consuming work during startup, run it from a <<../background/tasks#, task>> instead. Submitting the task returns immediately; the task itself starts once `main.ts` has returned.
 
 Running code when the application starts:
 
@@ -33,3 +35,5 @@ __.disposer(() => {
     log.info(`Application ${app.name} stopped`);
 });
 ----
+
+`main.ts` is the only dependable place to register a disposer — see <<java-bridge#disposer, `+__.disposer+`>> for why, and for the one-disposer-per-module rule.

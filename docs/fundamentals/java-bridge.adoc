@@ -1,7 +1,7 @@
 = Java bridge
 include::../.variables.adoc[]
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 JavaScript developers may optionally invoke and use Java-based code, since the XP runtime builds on the JVM.
 
@@ -178,8 +178,13 @@ This is required by XP to allow returning it from an HTTP request, or add it as 
 == Functions
 
 === disposer
+[#disposer]
 
 Add a disposer that is called when the app is stopped.
+
+WARNING: image:xp-810.svg[XP 8.1.0,opts=inline] Register disposers while the application is starting — from <<main#, `main.ts`>>, or from a module it loads during start-up. A registration made later, such as from a component implementation the first time it is loaded, is ignored on the GraalJS engine and logged: only a disposer belonging to the start-up context survives to the stop phase. Nashorn is more forgiving today, but registering from anywhere else is not portable between engines.
+
+NOTE: Nashorn keeps only the most recent registration per module, so a module that calls `+__.disposer+` twice loses the first callback. Combine clean-up into a single disposer.
 
 [.lead]
 Parameters
