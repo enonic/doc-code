@@ -2044,7 +2044,7 @@ modify({
 <p><code>submitNamed</code> method is removed. Use <code>submitTask</code> instead.</p>
 </div>
 <div class="paragraph">
-<p><code>submit</code> method is removed. Use <code>executeFunction</code> instead.</p>
+<p><code>submit</code> method is removed. Its drop-in replacement <code>executeFunction</code> is deprecated in turn (not supported on the GraalJS engine) — convert the callback to a <a href="background/tasks.ahtml">named task</a> and use <code>submitTask</code> instead.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2369,7 +2369,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:11:55 UTC
+Last updated 2026-08-06 11:35:49 UTC
 </div>
 </div>
 </body>
