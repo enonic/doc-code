@@ -2552,7 +2552,7 @@ Properties
 | abstract | boolean | Whether or not content of this type may be instantiated.
 | final | boolean | Whether or not it may be used as super type of other content types.
 | allowChildContent | boolean | Whether or not to allow creating child items on content of this type.
-| modifiedTime | string | Modified time of the content type.
+| modifiedTime | string | *Deprecated.* Modified time of the content type. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.
 | icon | <<icon, Icon>> | *Optional.* Icon of the content type.
 | form | <<../fundamentals/types#form-item, FormItem>>[] | Form schema — an array of form items.
 | config | object | Custom schema configuration for the descriptor.
@@ -2571,7 +2571,7 @@ Properties
 | Name | Type | Description
 | data | <<../fundamentals/types#byte-source, ByteSource>> | Stream with the binary data for the icon. Read it with `lib-io`.
 | mimeType | string | Mime type of the icon image.
-| modifiedTime | string | Modified time of the icon. May be used for caching.
+| modifiedTime | string | *Deprecated.* Modified time of the icon. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read.
 |===
 
 [#schedule]

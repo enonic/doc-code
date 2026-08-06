@@ -64,7 +64,7 @@ Takes a single `key` argument — a string path or a <<../fundamentals/types#res
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#resource, `Resource`>>) A resource handle exposing `exists()`, `getSize()`, `getTimestamp()`, and `getStream()`.
+*object* : (<<../fundamentals/types#resource, `Resource`>>) A resource handle exposing `exists()`, `getSize()`, and `getStream()`.
 
 [.lead]
 Examples
@@ -77,7 +77,6 @@ import {getResource} from '/lib/xp/io';
 const res1 = getResource('/lib/xp/examples/io/sample.txt');
 const exists = res1.exists();
 const size = res1.getSize();
-const timestamp = res1.getTimestamp();
 const stream = res1.getStream();
 ----
 

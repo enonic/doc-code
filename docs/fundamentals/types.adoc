@@ -127,7 +127,7 @@ Methods
 | Name | Type | Description
 | exists() | boolean | Whether the resource exists.
 | getSize() | number | Size in bytes.
-| getTimestamp() | number | Last-modified time, in milliseconds since the epoch.
+| getTimestamp() | number | *Deprecated.* Last-modified time, in milliseconds since the epoch. Not a dependable measure of when the resource last changed: for a resource in an application bundle the value comes from its jar entry, which build tools normalize to a constant for reproducible builds (Gradle does so by default as of version 9) — so it reflects the build, not the file. Only a resource backed by a repository node carries a genuine modification time; for file-backed resources the value is meaningful in development mode only.
 | getStream() | <<byte-source, ByteSource>> | The resource's binary stream.
 |===
 

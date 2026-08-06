@@ -1284,7 +1284,7 @@ Properties
 | descriptionI18nKey | string | Schema description i18n key.
 | createdTime | string | Created zulu time.
 | creator | <<../fundamentals/types#user-key, UserKey>> | Principal that created the schema.
-| modifiedTime | string | Modified zulu time.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.
 | modifier | <<../fundamentals/types#user-key, UserKey>> | Principal that last modified the schema.
 | resource | string | Schema resource value (YAML).
 | type | string | Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, `MIXIN`).
@@ -1386,7 +1386,7 @@ Properties
 | description | string | Component description.
 | descriptionI18nKey | string | Component description i18n key.
 | componentPath | string | Component path.
-| modifiedTime | string | Modified zulu time.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.
 | resource | string | Component resource value (YAML).
 | type | string | Component type (`PAGE`, `PART`, `LAYOUT`).
 | form | <<../fundamentals/types#form-item, FormItem>>[] | Component form.
@@ -1471,7 +1471,7 @@ Properties
 | Name | Type | Description
 | application | string | Application key.
 | resource | string | Site CMS descriptor YAML resource value.
-| modifiedTime | string | Site zulu modified time.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit.
 | form | <<../fundamentals/types#form-item, FormItem>>[] | Site descriptor form.
 | mixinMappings | <<mixin-mapping,MixinMapping[]>> | *Optional.* Mixin mappings.
 |===
@@ -1493,7 +1493,7 @@ Properties
 |===
 | Name | Type | Description
 | application | string | Application key.
-| modifiedTime | string | Styles zulu modified time.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit.
 | resource | string | Styles YAML resource value.
 | elements | <<element,StyleElement[]>> | Style elements.
 |===
@@ -1580,7 +1580,7 @@ Properties
 | Name | Type | Description
 | data | <<../fundamentals/types#byte-source, ByteSource>> | Icon stream data.
 | mimeType | string | Icon mime type.
-| modifiedTime | string | Icon modified time.
+| modifiedTime | string | *Deprecated.* Icon modified time. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read.
 |===
 
 

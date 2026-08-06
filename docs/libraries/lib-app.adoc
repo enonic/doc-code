@@ -371,6 +371,6 @@ Properties
 | Name                      | Type       | Description
 | data                      | <<../fundamentals/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
 | mimeType                  | string     | Icon MIME type
-| modifiedTime              | string     | Icon modified time, ISO-8601 instant
+| modifiedTime              | string     | *Deprecated.* Icon modified time, ISO-8601 instant. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read
 
 |===
