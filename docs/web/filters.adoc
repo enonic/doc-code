@@ -74,16 +74,14 @@ exports.filter = function (req, next) {
 
 image:xp-810.svg[XP 8.1.0,opts=inline] A filter reached through a <<sites/mappings#, site mapping>> can change *which content is rendered*, while the address the visitor asked for stays exactly as it was. Set `contentPath` on the request before handing it on, and the site service resolves the request against that content instead:
 
-.Serve a child content under the parent's URL
+.Render a variant content at the canonical URL
 [source,typescript]
 ----
 export function filter(req, next) {
-    const municipality = req.params.municipality;
-
-    if (municipality) {
-        // Asked for /mysite/municipalities?municipality=oslo,
-        // render /mysite/municipalities/oslo instead
-        req.contentPath = `${req.contentPath}/${municipality}`;
+    if (req.cookies.experiment === 'b') {
+        // Visitors in the experiment get /mysite/campaign/variant-b,
+        // still under the /mysite/campaign address they asked for
+        req.contentPath = `${req.contentPath}/variant-b`;
     }
 
     return next(req);
@@ -99,5 +97,5 @@ A few things to keep in mind:
 * *Mappings are already chosen.* Which mappings match is decided before any filter runs, from the originally requested content. A re-route does not re-run that matching, so it neither picks up mappings that would match the new content nor cancels the ones already selected — the remaining filters and any controller mapping in the chain simply receive the re-routed request.
 * *Each filter may re-route once*, starting from whatever the previous filter passed it. Inside the filter that re-routes, both before and after `next()`, `getContent()` still reports the original content — the change applies to the request handed onwards.
 
-NOTE: `contentPath` is not yet part of the published TypeScript request type, so annotated code needs to widen the type to assign it.
+TIP: Build the new path from values you control rather than interpolating a query parameter straight into it — a content path is a lookup key, and path segments have their own validation rules.
 
