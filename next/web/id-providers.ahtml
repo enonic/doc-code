@@ -544,7 +544,7 @@ This diagram covers the ID provider&#8217;s <strong>endpoint</strong> surfaces. 
 </dl>
 </div>
 <div class="paragraph">
-<p>Rather than hardcoding these paths, generate them with the portal library helpers — <a href="../libraries/lib-portal.ahtml#_loginurl">loginUrl()</a>, <a href="../libraries/lib-portal.ahtml#_logouturl">logoutUrl()</a> and <a href="../libraries/lib-portal.ahtml#_idproviderurl">idProviderUrl()</a> — which resolve the correct contextual URL for the current request.</p>
+<p>Rather than hardcoding these paths, generate them with the portal library helpers — <a href="../libraries/lib-portal.ahtml#loginurl">loginUrl()</a>, <a href="../libraries/lib-portal.ahtml#logouturl">logoutUrl()</a> and <a href="../libraries/lib-portal.ahtml#idproviderurl">idProviderUrl()</a> — which resolve the correct contextual URL for the current request.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -661,7 +661,7 @@ hopefully giving access to the resource.</p>
 This provides a deterministic endpoint for accessing the login page of any ID provider.</p>
 </div>
 <div class="paragraph">
-<p>The URL to the endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#_loginurl">loginUrl() function in the portal library</a></p>
+<p>The URL to the endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#loginurl">loginUrl() function in the portal library</a></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -686,7 +686,7 @@ The result of this validation is then passed to the ID Provider as a request pro
 This provides a deterministic endpoint for logging out of any ID provider.</p>
 </div>
 <div class="paragraph">
-<p>The URL for this endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#_logouturl">logoutUrl() function in the portal library</a></p>
+<p>The URL for this endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#logouturl">logoutUrl() function in the portal library</a></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -736,7 +736,7 @@ This effectively blocks all unauthorised access attempts for the protected servi
 Communication with the implementation is handled via the ID provider endpoint.</p>
 </div>
 <div class="paragraph">
-<p>The URL to this endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#_idproviderurl">idProviderUrl() function in the portal library</a></p>
+<p>The URL to this endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#idproviderurl">idProviderUrl() function in the portal library</a></p>
 </div>
 </div>
 </div>
@@ -806,7 +806,7 @@ exports.logout = function (req) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 08:46:47 UTC
+Last updated 2026-08-06 09:07:45 UTC
 </div>
 </div>
 </body>

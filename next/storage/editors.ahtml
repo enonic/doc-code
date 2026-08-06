@@ -569,8 +569,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-content.ahtml#update"><code>lib-content.update</code></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Full content (incl. <code>data</code>, <code>publish</code>, <code>workflow</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Validates against the content type unless <code>requireValid: false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full content, but only <code>displayName</code>, <code>language</code>, <code>data</code>, <code>x</code> and <code>page</code> are written back</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validates against the content type unless <code>requireValid: false</code>. Other properties assigned in the editor are silently ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/lib-content.ahtml#patch"><code>lib-content.patch</code></a></p></td>
@@ -620,7 +620,6 @@ const updated = update({
     editor: (content) =&gt; {
         content.displayName = 'Launch announcement';
         content.data.summary = 'We shipped today.';
-        content.workflow.state = 'READY';
         return content;
     },
 });</code></pre>
@@ -744,13 +743,16 @@ updateWorkflow({
 <div class="ulist">
 <ul>
 <li>
-<p><strong>No-op edits still produce a new version.</strong> If you want to skip the write when nothing changed, gate the editor call upstream — the editor itself can&#8217;t suppress the version bump once it runs.</p>
+<p><strong>No-op edits are skipped.</strong> If the editor returns its input unchanged, the engine compares the result with the stored version and writes nothing — no new version, no timestamp bump. This holds for both <code>lib-node</code> and <code>lib-content</code>.</p>
+</li>
+<li>
+<p><strong>A genuine <code>lib-content.update</code> resets workflow state.</strong> Any update that actually changes the content moves it back to <code>IN_PROGRESS</code> and refreshes <code>valid</code>, <code>modifier</code> and <code>modifiedTime</code>; <code>patch</code> leaves all of these untouched. Publishing requires <code>READY</code> — mark the content ready with <a href="../libraries/lib-content.ahtml#updateworkflow"><code>updateWorkflow</code></a> after editing.</p>
 </li>
 <li>
 <p><strong><code>update</code> validates; <code>patch</code> doesn&#8217;t.</strong> Use <code>update</code> for routine content changes. Reach for <code>patch</code> when migrating content to a new schema, backporting a change across branches, or otherwise intentionally bypassing content-type validation.</p>
 </li>
 <li>
-<p><strong>Editors run as the calling principal.</strong> For changes that exceed the caller&#8217;s permissions — bulk fixes, migrations — wrap the editor block in <a href="../libraries/lib-context.ahtml#run"><code>lib-context.run</code></a> with a service principal. See <a href="permissions.ahtml#_running_as_a_different_principal">Permissions</a> for the pattern.</p>
+<p><strong>Editors run as the calling principal.</strong> For changes that exceed the caller&#8217;s permissions — bulk fixes, migrations — wrap the editor block in <a href="../libraries/lib-context.ahtml#run"><code>lib-context.run</code></a> with a service principal. See <a href="permissions.ahtml#running_as_a_different_principal">Permissions</a> for the pattern.</p>
 </li>
 </ul>
 </div>
@@ -759,7 +761,7 @@ updateWorkflow({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 08:46:47 UTC
+Last updated 2026-08-06 09:07:45 UTC
 </div>
 </div>
 </body>

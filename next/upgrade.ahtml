@@ -514,7 +514,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-To run this upgrade automatically with an AI coding agent, use the <a href="https://github.com/enonic/ai-enonic-marketplace">Enonic AI Agents Skills</a> repository — it includes a skill that drives Claude Code (or a compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
+To run this upgrade automatically with an AI coding agent, use the <a href="https://github.com/enonic/agent-toolkit">Enonic Agents Toolkit</a> — it includes a skill that drives agents like Claude Code, Codex, Gemini and Co-pilot (or another compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
 </td>
 </tr>
 </table>
@@ -1485,6 +1485,12 @@ form:
 </div>
 <div class="sect2">
 <h3 id="content_type_descriptor"><a class="link" href="#content_type_descriptor">Content type descriptor</a></h3>
+<div class="paragraph">
+<p>Note that input configuration is no longer nested: keys inside XP 7&#8217;s <code>&lt;config&gt;</code> element become flat properties of the input in YAML. There is no <code>config:</code> wrapper — a nested <code>config:</code> block is not recognized and its settings are ignored.</p>
+</div>
+<div class="paragraph">
+<p>XP 7&#8217;s <code>&lt;display-name-label&gt;</code> element is renamed to <code>displayNamePlaceholder</code>. Unknown keys in the YAML descriptor — including the literal <code>displayNameLabel</code> — fail the parse, so a mistranslated descriptor is rejected at registration rather than silently ignored.</p>
+</div>
 <div class="listingblock">
 <div class="title">XP 7 - site/content-types/article/article.xml</div>
 <div class="content">
@@ -1496,6 +1502,13 @@ form:
     &lt;input name="title" type="TextLine"&gt;
       &lt;label&gt;Title&lt;/label&gt;
       &lt;occurrences minimum="1" maximum="1"/&gt;
+    &lt;/input&gt;
+    &lt;input name="author" type="ContentSelector"&gt;
+      &lt;label&gt;Author&lt;/label&gt;
+      &lt;occurrences minimum="0" maximum="1"/&gt;
+      &lt;config&gt;
+        &lt;allowContentType&gt;com.example.app:author&lt;/allowContentType&gt;
+      &lt;/config&gt;
     &lt;/input&gt;
   &lt;/form&gt;
 &lt;/content-type&gt;</code></pre>
@@ -1513,7 +1526,15 @@ form:
   label: "Title"
   occurrences:
     min: 1
-    max: 1</code></pre>
+    max: 1
+- type: "ContentSelector"
+  name: "author"
+  label: "Author"
+  occurrences:
+    min: 0
+    max: 1
+  allowContentType:
+    - "com.example.app:author"</code></pre>
 </div>
 </div>
 </div>
@@ -1856,6 +1877,9 @@ exports.all = function(req) {
 </div>
 <div class="paragraph">
 <p>The <code>hasChildren</code> property has been removed from content.</p>
+</div>
+<div class="paragraph">
+<p><code>publish</code> no longer accepts the <code>sourceBranch</code> and <code>targetBranch</code> parameters — publishing always pushes from <code>draft</code> to <code>master</code>, and keys are resolved against <code>draft</code> regardless of the current context branch. XP 7 code passing these parameters gets no error: they are silently ignored, so a former <code>master</code> → <code>draft</code> push now runs as a normal <code>draft</code> → <code>master</code> publish. For branch-to-branch operations in custom repositories, use <code>push</code> in <code>lib-node</code>.</p>
 </div>
 <div class="paragraph">
 <p><code>setPermissions</code> method is removed. Use <code>applyPermissions</code> instead.</p>
@@ -2345,7 +2369,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 08:46:47 UTC
+Last updated 2026-08-06 09:07:45 UTC
 </div>
 </div>
 </body>

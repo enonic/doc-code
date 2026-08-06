@@ -509,7 +509,7 @@ Markup returned by a component must have a single root element.
 <p><code>HTTP request</code> &#8594; <code>/site/&lt;project&gt;/&lt;branch&gt;/path/to/content</code> &#8594; <code>resolve component</code> &#8594; <code>invoke implementation</code>.</p>
 </div>
 <div class="paragraph">
-<p>During the rendering, the specific content item will be available in the context, and API functions such as <a href="../../libraries/lib-portal.ahtml#getContent">portalLib.getContent()</a> and <a href="../../libraries/lib-portal.ahtml#getComponent">portalLib.getComponent()</a> automatically return values based on that context.</p>
+<p>During the rendering, the specific content item will be available in the context, and API functions such as <a href="../../libraries/lib-portal.ahtml#getcontent">portalLib.getContent()</a> and <a href="../../libraries/lib-portal.ahtml#getcomponent">portalLib.getComponent()</a> automatically return values based on that context.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -826,7 +826,7 @@ Bypass the built-in implementation by running your own code instead of injecting
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 08:46:47 UTC
+Last updated 2026-08-06 09:07:45 UTC
 </div>
 </div>
 </body>

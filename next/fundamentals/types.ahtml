@@ -1240,11 +1240,23 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 <td class="tableblock halign-left valign-top"><p class="tableblock">time</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Marker for whether the draft has changes to publish. Present when the draft matches the published version; absent when the draft has diverged. Only its presence is meaningful — the timestamp value itself is a hint and should not be interpreted.</p>
+<p><strong>Optional.</strong> Marker used to detect whether there is anything to publish from draft: if present, the draft matches the published version; if absent, the draft has unpublished changes. Treat the value itself as a hint only.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A content that has never been published still carries a <code>publish</code> property — as an empty object <code>{}</code>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="workflow"><a class="link" href="#workflow">Workflow</a></h3>
@@ -1842,7 +1854,7 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 08:46:47 UTC
+Last updated 2026-08-06 09:07:45 UTC
 </div>
 </div>
 </body>

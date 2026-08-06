@@ -1397,7 +1397,7 @@ Stemming is language-dependent, so <a href="indexing.ahtml#languages">language</
 <dl>
 <dt class="hdlist1">fields</dt>
 <dd>
-<p>Comma-separated list of <a href="#propertyPath">propertyPaths</a> to include in the search.
+<p>Comma-separated list of <a href="noql.ahtml#propertyPath">propertyPaths</a> to include in the search.
 Only <code>_allText</code> field is currently indexed for stemming by default.</p>
 </dd>
 <dt class="hdlist1">language</dt>
@@ -2003,7 +2003,7 @@ Locale-aware sorting is only supported for text fields that are indexed with a l
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 08:46:47 UTC
+Last updated 2026-08-06 09:07:45 UTC
 </div>
 </div>
 </body>
