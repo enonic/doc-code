@@ -37,7 +37,69 @@ image:xp-810.svg[XP 8.1.0,opts=inline] `type` only governs the third case. A bas
 
 An empty string means "not set", so passing `baseUrl: ''` behaves exactly like leaving it out. Trailing slashes are normalized, so `+https://example.com+` and `+https://example.com/+` give the same result.
 
-Media URLs have one wrinkle worth knowing. A site serves the image and attachment APIs itself, so their URLs sit under the site's endpoint segment — `+<site>/_/media:image/…+`. Where those APIs are not mounted, such as a webapp that has not declared them, URLs fall back to the installation's `+/api/+` space instead: `+/api/media:image/…+`. An operator can also point all media URLs at a separate host — a CDN, typically — with the `+media.defaultBaseUrl+` setting, and can switch off the implicit mounting on sites with `+legacy.mediaApiAutoMount.enabled+`; both live in the portal configuration described in the https://developer.enonic.com/docs/platform/xp8/config[platform configuration reference]. Generated URLs follow whatever is configured, which is the reason to generate them through these functions rather than assembling the paths yourself.
+=== Where the request-anchored base comes from
+
+The third case — no parameter, no configured Base URL — is the common one, and what it resolves to *depends on where the call was made from*. The same `imageUrl()` call returns different URLs in a page, in a webapp, in an admin tool, and in a task, because each is reached through a different mount and the URL has to stay within it.
+
+For `imageUrl({id: '123456', scale: 'max(300)'})` on content named `mycontent.png`:
+
+[%header,cols="1,3a"]
+|===
+| Called from | Generated URL
+
+| A site — page, layout, part, mapping or processor
+| `+/site/myproject/master/mysite/_/media:image/myproject:master/123456:<hash>/max-300/mycontent.png+`
+
+| A webapp
+| `+/webapp/com.example.myapp/_/media:image/myproject:master/123456:<hash>/max-300/mycontent.png+`
+
+| A site rendered inside an admin tool — Content Studio preview and edit
+| `+/admin/com.enonic.app.contentstudio/site/_/media:image/myproject:master/123456:<hash>/max-300/mycontent.png+`
+
+| A <<../web/apis#, Universal API>> mounted at `+/api/+`
+| `+/api/media:image/myproject:master/123456:<hash>/max-300/mycontent.png+`
+
+| A task, event listener, or anything else running without a request
+| `+/api/media:image/myproject:master/123456:<hash>/max-300/mycontent.png+`
+|===
+
+`attachmentUrl()` follows the same pattern under `media:attachment`, without the scale segment: `+/site/myproject/master/mysite/_/media:attachment/myproject:master/123456:<hash>/mycontent.png+`.
+
+Two things shape those results. Site, webapp and admin-tool URLs sit under the mount's own `+_+` endpoint segment, because that is where the mount serves the media APIs; a caller with no mount to sit under falls back to the installation's `+/api/+` space. And a <<../web#, virtual host>> mapping rewrites the prefix, so the site row above is what a visitor sees as `+https://example.com/_/media:image/…+` when `+/site/myproject/master/mysite+` is mapped to `+/+`.
+
+This is exactly why URLs are worth generating rather than assembling by hand — the same code keeps working in a part, in a preview inside Content Studio, and in a nightly task.
+
+An operator can also move media out of the picture entirely, pointing all media URLs at a separate host with `+media.defaultBaseUrl+` and switching off the implicit mounting on sites with `+legacy.mediaApiAutoMount.enabled+`. Both are portal settings, described under https://developer.enonic.com/docs/platform/xp8/config/cms#media_base_url[media configuration]; generated URLs follow whatever is configured.
+
+=== Overriding the base per call
+
+Passing `baseUrl` skips all of that. The value is used verbatim, and the media API is addressed under its endpoint segment beneath it:
+
+[source,typescript]
+----
+import {imageUrl} from '/lib/xp/portal';
+
+// From a page on https://example.com/mysite — request-anchored:
+imageUrl({id: '123456', scale: 'max(300)'});
+// /site/myproject/master/mysite/_/media:image/myproject:master/123456:<hash>/max-300/mycontent.png
+
+// Same call, served from a CDN instead:
+imageUrl({id: '123456', scale: 'max(300)', baseUrl: 'https://cdn.example.com'});
+// https://cdn.example.com/_/media:image/myproject:master/123456:<hash>/max-300/mycontent.png
+----
+
+[source,typescript]
+----
+import {attachmentUrl} from '/lib/xp/portal';
+
+attachmentUrl({id: '123456', download: true});
+// /site/myproject/master/mysite/_/media:attachment/myproject:master/123456:<hash>/mycontent.png?download
+
+attachmentUrl({id: '123456', download: true, baseUrl: 'https://cdn.example.com'});
+// https://cdn.example.com/_/media:attachment/myproject:master/123456:<hash>/mycontent.png?download
+----
+
+Because the value is taken as given, a `baseUrl` is also the way to produce a media URL from a context that has no request — a task generating an email, say — instead of accepting the `+/api/+` fallback.
 
 == Functions
 
@@ -59,7 +121,7 @@ Parameters
 | type | string | *Optional.* URL type. Either `server` (server-relative), `absolute`, or `websocket`. Defaults to `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | path | string \| string[] | *Optional.* Path appended after the API segment. Accepts a string or a string array.
 | params | object | *Optional.* Custom query parameters to append to the URL.
-| baseUrl | string | *Optional.* Override the resolved base URL. The API is addressed under its endpoint segment: `+<baseUrl>/_/<app>:<api>+`. An empty string counts as not set.
+| baseUrl | string | *Optional.* Generate the URL from this base instead of resolving one from the request — see <<base_urls, Base URLs>>. Used verbatim, with the API addressed beneath it: `+<baseUrl>/_/<app>:<api>+`. An empty string counts as not set.
 |===
 
 [.lead]
@@ -149,7 +211,7 @@ Parameters
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
-| baseUrl | string | *Optional.* Serve the media from this base URL instead of the one resolved from the request: `+<baseUrl>/_/media:attachment/…+`. An empty string counts as not set.
+| baseUrl | string | *Optional.* Generate the URL from this base instead of resolving one from the request — see <<base_urls, Base URLs>>. Used verbatim, with the API addressed beneath it: `+<baseUrl>/_/media:attachment/…+`. An empty string counts as not set.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
@@ -755,7 +817,7 @@ Parameters
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
-| baseUrl | string | *Optional.* Serve the media from this base URL instead of the one resolved from the request: `+<baseUrl>/_/media:image/…+`. An empty string counts as not set.
+| baseUrl | string | *Optional.* Generate the URL from this base instead of resolving one from the request — see <<base_urls, Base URLs>>. Used verbatim, with the API addressed beneath it: `+<baseUrl>/_/media:image/…+`. An empty string counts as not set.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
