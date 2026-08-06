@@ -4579,7 +4579,7 @@ const expected = [
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Modified time of the content type.</p>
+<p><strong>Deprecated.</strong> Modified time of the content type. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -4643,7 +4643,7 @@ const expected = [
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Modified time of the icon. May be used for caching.</p>
+<p><strong>Deprecated.</strong> Modified time of the icon. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -5285,7 +5285,7 @@ const expected = {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:35:49 UTC
+Last updated 2026-08-06 11:43:09 UTC
 </div>
 </div>
 </body>

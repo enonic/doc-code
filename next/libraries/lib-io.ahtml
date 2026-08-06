@@ -538,7 +538,7 @@ log.info('Mime type is %s', type);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#resource"><code>Resource</code></a>) A resource handle exposing <code>exists()</code>, <code>getSize()</code>, <code>getTimestamp()</code>, and <code>getStream()</code>.</p>
+<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#resource"><code>Resource</code></a>) A resource handle exposing <code>exists()</code>, <code>getSize()</code>, and <code>getStream()</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -551,7 +551,6 @@ log.info('Mime type is %s', type);</code></pre>
 const res1 = getResource('/lib/xp/examples/io/sample.txt');
 const exists = res1.exists();
 const size = res1.getSize();
-const timestamp = res1.getTimestamp();
 const stream = res1.getStream();</code></pre>
 </div>
 </div>
@@ -719,7 +718,7 @@ log.info('Text: %s', text);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:35:49 UTC
+Last updated 2026-08-06 11:43:09 UTC
 </div>
 </div>
 </body>

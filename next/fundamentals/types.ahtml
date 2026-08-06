@@ -834,7 +834,7 @@ These are the TypeScript shapes of the runtime objects. The conceptual models be
 <td class="tableblock halign-left valign-top"><p class="tableblock">getTimestamp()</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Last-modified time, in milliseconds since the epoch.</p>
+<p><strong>Deprecated.</strong> Last-modified time, in milliseconds since the epoch. Not a dependable measure of when the resource last changed: for a resource in an application bundle the value comes from its jar entry, which build tools normalize to a constant for reproducible builds (Gradle does so by default as of version 9) — so it reflects the build, not the file. Only a resource backed by a repository node carries a genuine modification time; for file-backed resources the value is meaningful in development mode only.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1854,7 +1854,7 @@ A content that has never been published still carries a <code>publish</code> pro
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:35:49 UTC
+Last updated 2026-08-06 11:43:09 UTC
 </div>
 </div>
 </body>
