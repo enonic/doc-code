@@ -513,7 +513,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1">Start</dt>
 <dd>
-<p>XP starts the app on every cluster node. If the bundle contains <a href="main.ahtml"><code>main.ts</code></a> at <code>src/main/resources/main.ts</code>, it is loaded and its top-level code runs once per node. Any <code>__.disposer()</code> registrations made during start are remembered for the stop phase.</p>
+<p>XP starts the app on every cluster node. If the bundle contains <a href="main.ahtml"><code>main.ts</code></a> at <code>src/main/resources/main.ts</code>, it is loaded and its top-level code runs once per node. <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. <code>__.disposer()</code> registrations made during start are remembered for the stop phase; registering one later is not dependable.</p>
 </dd>
 <dt class="hdlist1">Running</dt>
 <dd>
@@ -586,7 +586,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:43:09 UTC
+Last updated 2026-08-06 11:54:30 UTC
 </div>
 </div>
 </body>
