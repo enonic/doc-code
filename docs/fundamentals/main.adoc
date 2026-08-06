@@ -16,6 +16,8 @@ WARNING: image:xp-810.svg[XP 8.1.0,opts=inline] `main.ts` blocks the rest of the
 
 TIP: If you need to perform time-consuming work during startup, run it from a <<../background/tasks#, task>> instead. Submitting the task returns immediately; the task itself starts once `main.ts` has returned.
 
+TIP: Add a `main.ts` even when there is nothing to initialize. XP brings an app's JavaScript engine and context to life lazily, so an app without one makes its very first request pay for engine start-up, context creation and parsing every module that request touches. A `main.ts` moves that toll to application start. Requiring the libraries your entry points use is a cheap way to extend the warm-up — on the GraalJS engine compiled code is cached across contexts, so modules parsed during start-up stay warm for the contexts that later serve requests. This does not contradict keeping `main.ts` short: it is work the first request would otherwise do, paid where nobody is waiting on a response.
+
 Running code when the application starts:
 
 .main.ts
