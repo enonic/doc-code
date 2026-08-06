@@ -489,6 +489,18 @@ If you need to perform time-consuming work during startup, run it from a <a href
 </tr>
 </table>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Add a <code>main.ts</code> even when there is nothing to initialize. XP brings an app&#8217;s JavaScript engine and context to life lazily, so an app without one makes its very first request pay for engine start-up, context creation and parsing every module that request touches. A <code>main.ts</code> moves that toll to application start. Requiring the libraries your entry points use is a cheap way to extend the warm-up — on the GraalJS engine compiled code is cached across contexts, so modules parsed during start-up stay warm for the contexts that later serve requests. This does not contradict keeping <code>main.ts</code> short: it is work the first request would otherwise do, paid where nobody is waiting on a response.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Running code when the application starts:</p>
 </div>
@@ -519,7 +531,7 @@ __.disposer(() =&gt; {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:54:30 UTC
+Last updated 2026-08-06 11:57:24 UTC
 </div>
 </div>
 </body>
