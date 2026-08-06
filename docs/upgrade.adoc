@@ -4,7 +4,7 @@
 
 This section describes the steps required to upgrade an XP application from 7.x to 8.0
 
-NOTE: To run this upgrade automatically with an AI coding agent, use the https://github.com/enonic/ai-enonic-marketplace[Enonic AI Agents Skills] repository — it includes a skill that drives Claude Code (or a compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
+NOTE: To run this upgrade automatically with an AI coding agent, use the https://github.com/enonic/agent-toolkit[Enonic Agents Toolkit] — it includes a skill that drives agents like Claude Code, Codex, Gemini and Co-pilot (or another compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
 
 [#terminology]
 == Terminology and concept changes
@@ -647,6 +647,10 @@ form:
 
 === Content type descriptor
 
+Note that input configuration is no longer nested: keys inside XP 7's `<config>` element become flat properties of the input in YAML. There is no `config:` wrapper — a nested `config:` block is not recognized and its settings are ignored.
+
+XP 7's `<display-name-label>` element is renamed to `displayNamePlaceholder`. Unknown keys in the YAML descriptor — including the literal `displayNameLabel` — fail the parse, so a mistranslated descriptor is rejected at registration rather than silently ignored.
+
 .XP 7 - site/content-types/article/article.xml
 [source,xml]
 ----
@@ -658,6 +662,13 @@ form:
     <input name="title" type="TextLine">
       <label>Title</label>
       <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="author" type="ContentSelector">
+      <label>Author</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowContentType>com.example.app:author</allowContentType>
+      </config>
     </input>
   </form>
 </content-type>
@@ -676,6 +687,14 @@ form:
   occurrences:
     min: 1
     max: 1
+- type: "ContentSelector"
+  name: "author"
+  label: "Author"
+  occurrences:
+    min: 0
+    max: 1
+  allowContentType:
+    - "com.example.app:author"
 ----
 
 === Mixins renamed to Form Fragments
@@ -967,6 +986,8 @@ Reading the project's root content (path `/`) via `lib-content` (`get`, `getByPa
 `setChildOrder` and `reorderChildren` methods are merged into a single `sort` method.
 
 The `hasChildren` property has been removed from content.
+
+`publish` no longer accepts the `sourceBranch` and `targetBranch` parameters — publishing always pushes from `draft` to `master`, and keys are resolved against `draft` regardless of the current context branch. XP 7 code passing these parameters gets no error: they are silently ignored, so a former `master` → `draft` push now runs as a normal `draft` → `master` publish. For branch-to-branch operations in custom repositories, use `push` in `lib-node`.
 
 `setPermissions` method is removed. Use `applyPermissions` instead.
 

@@ -574,7 +574,7 @@ NOTE: Stemming is language-dependent, so <<indexing#languages,language>> must be
 
 .special expression fields:
 
-fields:: Comma-separated list of <<propertyPath, propertyPaths>> to include in the search.
+fields:: Comma-separated list of <<noql#propertyPath, propertyPaths>> to include in the search.
 Only `_allText` field is currently indexed for stemming by default.
 
 language:: Content language that was used for stemming.

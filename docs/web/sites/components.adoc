@@ -18,7 +18,7 @@ The implementation gets invoked when a client requests a specific content item, 
 
 `HTTP request` -> `/site/<project>/<branch>/path/to/content` -> `resolve component` -> `invoke implementation`.
 
-During the rendering, the specific content item will be available in the context, and API functions such as <<../../libraries/lib-portal#getContent, portalLib.getContent()>> and <<../../libraries/lib-portal#getComponent, portalLib.getComponent()>> automatically return values based on that context.
+During the rendering, the specific content item will be available in the context, and API functions such as <<../../libraries/lib-portal#getcontent, portalLib.getContent()>> and <<../../libraries/lib-portal#getcomponent, portalLib.getComponent()>> automatically return values based on that context.
 
 TIP: The site service uses the underlying permissions of the content, which means the current user is guaranteed to have read permissions to the contextually rendered content item. Meaning you do not need to worry about permissions when rendering components.
 

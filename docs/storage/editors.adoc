@@ -48,7 +48,7 @@ Reach for `lib-content` whenever the target is content. Use `lib-node` only for 
 [cols="2,3,3", options="header"]
 |===
 | Function | Receives | Notes
-| <<../libraries/lib-content#update, `lib-content.update`>>    | Full content (incl. `data`, `publish`, `workflow`) | Validates against the content type unless `requireValid: false`.
+| <<../libraries/lib-content#update, `lib-content.update`>>    | Full content, but only `displayName`, `language`, `data`, `x` and `page` are written back | Validates against the content type unless `requireValid: false`. Other properties assigned in the editor are silently ignored.
 | <<../libraries/lib-content#patch, `lib-content.patch`>>      | Partial content shape | The canonical tool for content upgrades and data migrations. Skips validation and accepts a `branches` list. Callback parameter is named `patcher` but follows the same editor pattern.
 | <<../libraries/lib-content#updatemetadata, `lib-content.updateMetadata`>> | `{ source, owner, variantOf }` | Scoped editor for content metadata only.
 | <<../libraries/lib-content#updateworkflow, `lib-content.updateWorkflow`>> | `{ source, state }`           | Scoped editor for the workflow state.
@@ -71,7 +71,6 @@ const updated = update({
     editor: (content) => {
         content.displayName = 'Launch announcement';
         content.data.summary = 'We shipped today.';
-        content.workflow.state = 'READY';
         return content;
     },
 });
@@ -176,6 +175,7 @@ updateWorkflow({
 
 == Notes
 
-* *No-op edits still produce a new version.* If you want to skip the write when nothing changed, gate the editor call upstream — the editor itself can't suppress the version bump once it runs.
+* *No-op edits are skipped.* If the editor returns its input unchanged, the engine compares the result with the stored version and writes nothing — no new version, no timestamp bump. This holds for both `lib-node` and `lib-content`.
+* *A genuine `lib-content.update` resets workflow state.* Any update that actually changes the content moves it back to `IN_PROGRESS` and refreshes `valid`, `modifier` and `modifiedTime`; `patch` leaves all of these untouched. Publishing requires `READY` — mark the content ready with <<../libraries/lib-content#updateworkflow, `updateWorkflow`>> after editing.
 * *`update` validates; `patch` doesn't.* Use `update` for routine content changes. Reach for `patch` when migrating content to a new schema, backporting a change across branches, or otherwise intentionally bypassing content-type validation.
-* *Editors run as the calling principal.* For changes that exceed the caller's permissions — bulk fixes, migrations — wrap the editor block in <<../libraries/lib-context#run, `lib-context.run`>> with a service principal. See <<permissions#_running_as_a_different_principal, Permissions>> for the pattern.
+* *Editors run as the calling principal.* For changes that exceed the caller's permissions — bulk fixes, migrations — wrap the editor block in <<../libraries/lib-context#run, `lib-context.run`>> with a service principal. See <<permissions#running_as_a_different_principal, Permissions>> for the pattern.

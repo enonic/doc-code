@@ -6,7 +6,7 @@ API for fetching and manipulating dynamic schemas.
 
 WARNING: In XP 8 all `resource` strings passed to and returned from this library are *YAML*. XML resources are no longer accepted — `createSchema`, `createComponent`, `createStyles`, `updateSite`, and the `update*` counterparts all parse YAML only. Examples below use the XP 8 `kind:` form.
 
-TIP: Functions of this library require the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <<lib-context#runcontext, context>> of `system.schema.admin` role.
+TIP: Functions of this library require the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <<lib-context#run, context>> of `system.schema.admin` role.
 
 == Usage
 
