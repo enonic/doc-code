@@ -27,7 +27,7 @@ include::code/function-2.ts[]
 [#request]
 == Request
 
-The ``request`` object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus two XP-specific properties, ``mode`` and ``branch``, which the site service sets to indicate the current rendering mode and repository branch.
+The ``request`` object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus a few XP-specific properties that the site service sets: ``mode`` and ``branch`` for the current rendering mode and repository branch, and ``contentPath`` for the content being rendered.
 
 [source,json]
 ----
@@ -41,19 +41,20 @@ The ``request`` object is passed to every HTTP function. It carries the request 
   "remoteAddress": "10.0.0.1",  // <7>
   "mode": "edit",  // <8>
   "branch": "master",  // <9>
-  "body": null,  // <10>
-  "params": {  // <11>
+  "contentPath": "/mysite/my/page",  // <10>
+  "body": null,  // <11>
+  "params": {  // <12>
     "debug": "true"
   },
-  "headers": {  // <12>
+  "headers": {  // <13>
     "Language": "en",
     "Cookies": "mycookie=123; other=abc;"
   },
-  "cookies": {  // <13>
+  "cookies": {  // <14>
     "mycookie": "123",
     "other": "abc"
   },
-  "locales": [  // <14>
+  "locales": [  // <15>
     "en",
     "no"
   ]
@@ -69,11 +70,12 @@ The ``request`` object is passed to every HTTP function. It carries the request 
 <7> Client IP address. If the `X-Forwarded-For` footnote:[https://en.wikipedia.org/wiki/X-Forwarded-For] header is set, its value overrides the client IP.
 <8> Site service rendering mode: `inline`, `edit`, `preview`, or `live`.
 <9> Site service repository branch: `draft` or `master`.
-<10> Request body, as a string, or `null` when absent.
-<11> Query and form parameters.
-<12> HTTP request headers.
-<13> Parsed HTTP request cookies.
-<14> Locale strings in decreasing order of preference, derived from the `Accept-Language` header. When the client sends no `Accept-Language` header, the array contains a single element with the server's default locale.
+<10> Site service path of the content being rendered. Assigning it in a <<filters#reroute, site mapping filter>> re-routes rendering to another content.
+<11> Request body, as a string, or `null` when absent.
+<12> Query and form parameters.
+<13> HTTP request headers.
+<14> Parsed HTTP request cookies.
+<15> Locale strings in decreasing order of preference, derived from the `Accept-Language` header. When the client sends no `Accept-Language` header, the array contains a single element with the server's default locale.
 
 Use ``request.getHeader(name)`` to read a header case-insensitively. Prefer it over direct access to the ``headers`` object.
 
