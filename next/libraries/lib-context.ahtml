@@ -446,6 +446,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#get">get</a></li>
 <li><a href="#run">run</a></li>
+<li><a href="#setcustomlocalattribute">setCustomLocalAttribute</a></li>
 </ul>
 </li>
 <li><a href="#type_definitions">Type Definitions</a>
@@ -610,6 +611,103 @@ const result = run({
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="setcustomlocalattribute"><a class="link" href="#setcustomlocalattribute">setCustomLocalAttribute</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Stores a value as a custom attribute in the <strong>local scope</strong> of the current context, where any other code running in the same execution can read it back.</p>
+</div>
+<div class="paragraph">
+<p>This is how unrelated pieces of code hand data to each other within one request without a shared module or a wrapping <code>run()</code> call. A page implementation can leave data for a <a href="../web/sites/processors.ahtml">response processor</a>, a part can leave data for the <a href="../web/filters.ahtml">filter</a> that wrapped the request, and apps on the same site can do this across application boundaries — each reader gets its own copy of the value, so nothing is shared but the data itself.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+All apps in a request write into <strong>one flat namespace</strong>. The <code>custom.</code> prefix separates your attributes from the platform&#8217;s, not one app&#8217;s from another&#8217;s, and there is no per-app scoping underneath it: two apps that both store <code>settings</code> are writing the same attribute, and the last write wins. Unless you mean to collaborate on a value, name it after your app — <code>setCustomLocalAttribute('com.example.myapp.settings', …)</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The local scope is shared with nested <code>run()</code> calls, so a value stored inside a <code>run()</code> callback is still there after it returns. It lives for the duration of the execution: a new HTTP request starts with an empty scope, and <a href="../background/tasks.ahtml">tasks</a>, event listeners and websocket callbacks run with their own — nothing written during a request reaches them.</p>
+</div>
+<div class="paragraph">
+<p>Values are serialized on write, so the stored attribute is a snapshot: mutating the object you passed in afterwards does not change it, and each reader gets its own copy. Only JSON-like values are allowed — strings, numbers, booleans, arrays, and plain objects nesting those. Anything else, such as a function or a <code>Date</code>, is rejected.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p>Takes two positional arguments: <code>name</code> (string) — the attribute name, stored with the <code>custom.</code> prefix — and <code>value</code>, the JSON-like value to store. Passing <code>null</code>, <code>undefined</code>, or omitting the value removes the attribute.</p>
+</div>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Store a value, and read it back through <code>get()</code></div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get, setCustomLocalAttribute} from '/lib/xp/context';
+
+setCustomLocalAttribute('my-data', {values: ['one', 'two']});
+
+const data = get().attributes['custom.my-data'];</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Hand data from a page implementation to a response processor</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/pages/article/article.ts
+import {setCustomLocalAttribute} from '/lib/xp/context';
+
+export function get() {
+    setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
+
+    return {body: renderArticle(), contentType: 'text/html'};
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/processors/tracker.ts
+import {get as getContext} from '/lib/xp/context';
+
+type Tracking = {pageType: string; experiment: string};
+
+export function responseProcessor(req, res) {
+    const tracking = getContext().attributes['custom.com.example.myapp.tracking'] as Tracking | undefined;
+
+    if (tracking) {
+        res.pageContributions.bodyEnd = [
+            `&lt;script&gt;window.tracking = ${JSON.stringify(tracking)}&lt;/script&gt;`
+        ];
+    }
+
+    return res;
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A value stored during a request is <strong>not</strong> carried into a task submitted from it, and is not visible to another request. Direct <a href="../web/sites/components.ahtml">component rendering</a> is a separate request, so a value left by a page implementation is absent when a part is rendered on its own.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -641,7 +739,7 @@ const result = run({
 <td class="tableblock halign-left valign-top"><p class="tableblock">attributes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextAttributes">ContextAttributes</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Custom attributes set on the context. Always present; may be empty.</p>
+<p>Custom attributes set on the context. Always present; may be empty. Attributes stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> appear here under their <code>custom.</code> prefixed name.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -809,7 +907,16 @@ const result = run({
 <div class="sect2">
 <h3 id="ContextAttributes"><a class="link" href="#ContextAttributes">ContextAttributes</a></h3>
 <div class="paragraph">
-<p>A record of custom context attributes. Keys are strings; only values of type <code>number</code>, <code>string</code>, <code>boolean</code>, or plain <code>object</code> are supported.</p>
+<p>Attributes are read and written through different value sets, so the two directions do not share a type.</p>
+</div>
+<div class="paragraph">
+<p><strong>Reading</strong> — <code><a href="#Context">Context</a>.attributes</code> — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> comes back in full, keyed as <code>custom.&lt;name&gt;</code>. In TypeScript the value type is <code>ContextAttributeValue</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Writing</strong> — <code><a href="#ContextParams">ContextParams</a>.attributes</code>, passed to <code>run()</code> — takes <code>number</code>, <code>string</code> and <code>boolean</code>. An object value is accepted and is visible to Java code reading the context, but it is not part of what <code>get()</code> returns.</p>
+</div>
+<div class="paragraph">
+<p><code>get()</code> merges every store it reads from: attributes set on the context — by <code>run()</code> or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. And unlike attributes passed to <code>run()</code>, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.</p>
 </div>
 </div>
 </div>
@@ -817,7 +924,7 @@ const result = run({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:57:24 UTC
+Last updated 2026-08-07 08:16:17 UTC
 </div>
 </div>
 </body>

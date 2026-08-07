@@ -444,6 +444,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#triggering">Triggering</a></li>
+<li><a href="#reading_data_from_the_rendered_components">Reading data from the rendered components</a></li>
 <li><a href="#execution_order">Execution order</a></li>
 </ul>
 </div>
@@ -552,6 +553,47 @@ It is also possible to return the response object received without any changes.<
 </div>
 </div>
 <div class="sect1">
+<h2 id="reading_data_from_the_rendered_components"><a class="link" href="#reading_data_from_the_rendered_components">Reading data from the rendered components</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> A processor runs after the components on the page, so it can act on what they produced — but that data cannot travel on the request or response object, whose shape is fixed. Instead, a page, layout or part stores it with <a href="../../libraries/lib-context.ahtml#setcustomlocalattribute"><code>context.setCustomLocalAttribute()</code></a>, and the processor reads it back from the context. Both run inside the same request, so they share one local scope.</p>
+</div>
+<div class="listingblock">
+<div class="title">A part records what it needs, and the processor turns it into a contribution</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/parts/map/map.ts
+import {setCustomLocalAttribute} from '/lib/xp/context';
+
+export function get() {
+    setCustomLocalAttribute('com.example.myapp.needsMapLibrary', true);
+
+    return {body: '&lt;div id="map"&gt;&lt;/div&gt;'};
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/processors/assets.ts
+import {get as getContext} from '/lib/xp/context';
+
+export function responseProcessor(req, res) {
+    if (getContext().attributes['custom.com.example.myapp.needsMapLibrary']) {
+        res.pageContributions.bodyEnd = ['&lt;script src="/assets/map.js"&gt;&lt;/script&gt;'];
+    }
+
+    return res;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the supported way for an app to load an asset only on pages that actually use it, and it works across apps on the same site: one app&#8217;s part can signal another app&#8217;s processor.</p>
+</div>
+<div class="paragraph">
+<p>That reach cuts both ways — every app in the request shares one flat set of attribute names, so two apps picking the same name overwrite each other. Name attributes after your app unless the sharing is deliberate.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="execution_order"><a class="link" href="#execution_order">Execution order</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -585,7 +627,7 @@ If <code>applyFilters</code> is set to <code>false</code> in the <a href="../req
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:57:24 UTC
+Last updated 2026-08-07 08:16:17 UTC
 </div>
 </div>
 </body>

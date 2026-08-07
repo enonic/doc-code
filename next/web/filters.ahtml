@@ -488,17 +488,27 @@ Similar to an <a href="request-response.ahtml">HTTP function</a>, standalone fil
 </div>
 </div>
 <div class="listingblock">
-<div class="title">Filter manipulating the request</div>
+<div class="title">Filter logging the request and the response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">exports.filter = function (req, next) {
-  req.requestLogging = true; // Manipulate request
-  log.info("Request:" + JSON.stringify(req, null, 2));
-  var response = next(req); // Continue request pipeline
-  response.responseLogging = true; // Manipulate response
-  log.info("Response:" + JSON.stringify(response, null, 2));
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function filter(req, next) {
+  log.info('Request:' + JSON.stringify(req, null, 2));
+  const response = next(req); // Continue request pipeline
+  log.info('Response:' + JSON.stringify(response, null, 2));
   return response;
-};</code></pre>
+}</code></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Only the documented <a href="request-response.ahtml">request and response</a> fields cross the <code>next()</code> boundary. Assigning a property of your own — <code>req.myFlag = true</code> — is not an error, but the field is dropped when the request is handed on, so nothing downstream ever sees it. To pass your own data along the pipeline, use <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> <a href="../libraries/lib-context.ahtml#setcustomlocalattribute"><code>context.setCustomLocalAttribute()</code></a>: it stores the value in the current execution, where implementations, <a href="sites/processors.ahtml">response processors</a> and the code after <code>next()</code> in this very filter can all read it back.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="title">Filter intercepting the request</div>
@@ -535,7 +545,7 @@ Similar to an <a href="request-response.ahtml">HTTP function</a>, standalone fil
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-06 11:57:24 UTC
+Last updated 2026-08-07 08:16:17 UTC
 </div>
 </div>
 </body>
