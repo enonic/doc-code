@@ -54,6 +54,8 @@ An application may contain multiple mappings, and multiple applications can be a
 
 If several mappings have the same `order` value, the sort order of the applications on the site determines which mapping is used.
 
+Which mappings apply is decided once, before the first filter runs, from the content originally requested. A filter that <<../filters#reroute, re-routes rendering to another content>> therefore does not change the selection — the mappings already chosen keep running, in order, against the re-routed request.
+
 == Pattern mappings
 
 Pattern-based mappings can be used to take over the request for a specific URL before content rendering. Common cases include exposing an API endpoint on a contextual URL like `/api`, or triggering a filter for every request within the site.

@@ -69,3 +69,33 @@ exports.filter = function (req, next) {
 };
 ----
 
+[#reroute]
+== Re-routing to another content
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A filter reached through a <<sites/mappings#, site mapping>> can change *which content is rendered*, while the address the visitor asked for stays exactly as it was. Set `contentPath` on the request before handing it on, and the site service resolves the request against that content instead:
+
+.Render a variant content at the canonical URL
+[source,typescript]
+----
+export function filter(req, next) {
+    if (req.cookies.experiment === 'b') {
+        // Visitors in the experiment get /mysite/campaign/variant-b,
+        // still under the /mysite/campaign address they asked for
+        req.contentPath = `${req.contentPath}/variant-b`;
+    }
+
+    return next(req);
+}
+----
+
+This is a rendering re-route, not a redirect: no `Location` header, no second request, and `path`, `url` and the client's address bar are untouched. Downstream, the request describes the new content — <<../libraries/lib-portal#getcontent, `getContent()`>> returns it, and its page or page template is resolved and rendered as though it had been requested directly. Only the target moves, so a re-route cannot leave the current project or branch: the new path is looked up in the same repository and branch, and the site is re-derived from it.
+
+A few things to keep in mind:
+
+* *Pass on the request you were given.* Mutate `req` and hand that object to `next()`. Building a fresh object instead drops the fields the site service depends on, and the re-route does not take effect.
+* *The re-routed content's permissions apply.* The lookup itself is privileged, so a filter can target content the visitor cannot read — but the response then fails with `403`, as it would have on a direct request. A path that resolves to nothing yields `404`, naming the path the filter set.
+* *Mappings are already chosen.* Which mappings match is decided before any filter runs, from the originally requested content. A re-route does not re-run that matching, so it neither picks up mappings that would match the new content nor cancels the ones already selected — the remaining filters and any controller mapping in the chain simply receive the re-routed request.
+* *Each filter may re-route once*, starting from whatever the previous filter passed it. Inside the filter that re-routes, both before and after `next()`, `getContent()` still reports the original content — the change applies to the request handed onwards.
+
+TIP: Build the new path from values you control rather than interpolating a query parameter straight into it — a content path is a lookup key, and path segments have their own validation rules.
+

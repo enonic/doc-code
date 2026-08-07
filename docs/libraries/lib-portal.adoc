@@ -366,6 +366,8 @@ const expected = {
 
 Returns the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.
 
+The content follows the request's `contentPath`, so when a <<../web/filters#reroute, site mapping filter>> has re-routed rendering, this returns the content the request was re-routed to.
+
 [.lead]
 Returns
 
