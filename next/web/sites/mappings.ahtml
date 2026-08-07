@@ -558,6 +558,9 @@ Each mapping must specify either <code>filter:</code> or <code>controller:</code
 <div class="paragraph">
 <p>If several mappings have the same <code>order</code> value, the sort order of the applications on the site determines which mapping is used.</p>
 </div>
+<div class="paragraph">
+<p>Which mappings apply is decided once, before the first filter runs, from the content originally requested. A filter that <a href="../filters.ahtml#reroute">re-routes rendering to another content</a> therefore does not change the selection — the mappings already chosen keep running, in order, against the re-routed request.</p>
+</div>
 </div>
 </div>
 </div>
@@ -741,7 +744,7 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-07 08:16:17 UTC
+Last updated 2026-08-07 08:17:28 UTC
 </div>
 </div>
 </body>

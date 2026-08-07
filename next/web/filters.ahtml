@@ -442,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#http-filter">Filters</a></li>
+<li><a href="#reroute">Re-routing to another content</a></li>
 </ul>
 </div>
 </div>
@@ -542,10 +543,66 @@ Only the documented <a href="request-response.ahtml">request and response</a> fi
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="reroute"><a class="link" href="#reroute">Re-routing to another content</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> A filter reached through a <a href="sites/mappings.ahtml">site mapping</a> can change <strong>which content is rendered</strong>, while the address the visitor asked for stays exactly as it was. Set <code>contentPath</code> on the request before handing it on, and the site service resolves the request against that content instead:</p>
+</div>
+<div class="listingblock">
+<div class="title">Render a variant content at the canonical URL</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function filter(req, next) {
+    if (req.cookies.experiment === 'b') {
+        // Visitors in the experiment get /mysite/campaign/variant-b,
+        // still under the /mysite/campaign address they asked for
+        req.contentPath = `${req.contentPath}/variant-b`;
+    }
+
+    return next(req);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is a rendering re-route, not a redirect: no <code>Location</code> header, no second request, and <code>path</code>, <code>url</code> and the client&#8217;s address bar are untouched. Downstream, the request describes the new content — <a href="../libraries/lib-portal.ahtml#getcontent"><code>getContent()</code></a> returns it, and its page or page template is resolved and rendered as though it had been requested directly. Only the target moves, so a re-route cannot leave the current project or branch: the new path is looked up in the same repository and branch, and the site is re-derived from it.</p>
+</div>
+<div class="paragraph">
+<p>A few things to keep in mind:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Pass on the request you were given.</strong> Mutate <code>req</code> and hand that object to <code>next()</code>. Building a fresh object instead drops the fields the site service depends on, and the re-route does not take effect.</p>
+</li>
+<li>
+<p><strong>The re-routed content&#8217;s permissions apply.</strong> The lookup itself is privileged, so a filter can target content the visitor cannot read — but the response then fails with <code>403</code>, as it would have on a direct request. A path that resolves to nothing yields <code>404</code>, naming the path the filter set.</p>
+</li>
+<li>
+<p><strong>Mappings are already chosen.</strong> Which mappings match is decided before any filter runs, from the originally requested content. A re-route does not re-run that matching, so it neither picks up mappings that would match the new content nor cancels the ones already selected — the remaining filters and any controller mapping in the chain simply receive the re-routed request.</p>
+</li>
+<li>
+<p><strong>Each filter may re-route once</strong>, starting from whatever the previous filter passed it. Inside the filter that re-routes, both before and after <code>next()</code>, <code>getContent()</code> still reports the original content — the change applies to the request handed onwards.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Build the new path from values you control rather than interpolating a query parameter straight into it — a content path is a lookup key, and path segments have their own validation rules.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-07 08:16:17 UTC
+Last updated 2026-08-07 08:17:28 UTC
 </div>
 </div>
 </body>

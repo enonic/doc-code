@@ -505,7 +505,7 @@ exports.all = (req) =&gt; {};</code></pre>
 <h2 id="request"><a class="link" href="#request">Request</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>request</code> object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus two XP-specific properties, <code>mode</code> and <code>branch</code>, which the site service sets to indicate the current rendering mode and repository branch.</p>
+<p>The <code>request</code> object is passed to every HTTP function. It carries the request method, URL parts, headers, cookies, and body — plus a few XP-specific properties that the site service sets: <code>mode</code> and <code>branch</code> for the current rendering mode and repository branch, and <code>contentPath</code> for the content being rendered.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -519,19 +519,20 @@ exports.all = (req) =&gt; {};</code></pre>
   "remoteAddress": "10.0.0.1",  <i class="conum" data-value="7"></i><b>(7)</b>
   "mode": "edit",  <i class="conum" data-value="8"></i><b>(8)</b>
   "branch": "master",  <i class="conum" data-value="9"></i><b>(9)</b>
-  "body": null,  <i class="conum" data-value="10"></i><b>(10)</b>
-  "params": {  <i class="conum" data-value="11"></i><b>(11)</b>
+  "contentPath": "/mysite/my/page",  <i class="conum" data-value="10"></i><b>(10)</b>
+  "body": null,  <i class="conum" data-value="11"></i><b>(11)</b>
+  "params": {  <i class="conum" data-value="12"></i><b>(12)</b>
     "debug": "true"
   },
-  "headers": {  <i class="conum" data-value="12"></i><b>(12)</b>
+  "headers": {  <i class="conum" data-value="13"></i><b>(13)</b>
     "Language": "en",
     "Cookies": "mycookie=123; other=abc;"
   },
-  "cookies": {  <i class="conum" data-value="13"></i><b>(13)</b>
+  "cookies": {  <i class="conum" data-value="14"></i><b>(14)</b>
     "mycookie": "123",
     "other": "abc"
   },
-  "locales": [  <i class="conum" data-value="14"></i><b>(14)</b>
+  "locales": [  <i class="conum" data-value="15"></i><b>(15)</b>
     "en",
     "no"
   ]
@@ -578,22 +579,26 @@ exports.all = (req) =&gt; {};</code></pre>
 </tr>
 <tr>
 <td><i class="conum" data-value="10"></i><b>10</b></td>
-<td>Request body, as a string, or <code>null</code> when absent.</td>
+<td>Site service path of the content being rendered. Assigning it in a <a href="filters.ahtml#reroute">site mapping filter</a> re-routes rendering to another content.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="11"></i><b>11</b></td>
-<td>Query and form parameters.</td>
+<td>Request body, as a string, or <code>null</code> when absent.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="12"></i><b>12</b></td>
-<td>HTTP request headers.</td>
+<td>Query and form parameters.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="13"></i><b>13</b></td>
-<td>Parsed HTTP request cookies.</td>
+<td>HTTP request headers.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="14"></i><b>14</b></td>
+<td>Parsed HTTP request cookies.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="15"></i><b>15</b></td>
 <td>Locale strings in decreasing order of preference, derived from the <code>Accept-Language</code> header. When the client sends no <code>Accept-Language</code> header, the array contains a single element with the server&#8217;s default locale.</td>
 </tr>
 </table>
@@ -762,7 +767,7 @@ Modifications to the <code>headers</code> object do not affect the result of <co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-07 08:16:17 UTC
+Last updated 2026-08-07 08:17:28 UTC
 </div>
 </div>
 </body>
