@@ -564,7 +564,7 @@ You will also need implementations of <a href="sites/mappings.ahtml">Mapping fun
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The image and attachment APIs are implicitly mounted by the site service, and are available at <code>/<em>/media:image</code> and <code>/</em>/media:attachment</code> respectively. Use portal library functions to generate URLs for these, and they will be served with the appropriate caching and optimizations.
+The image and attachment APIs are implicitly mounted by the site service, and are available at <code>/<em>/media:image</code> and <code>/</em>/media:attachment</code> respectively. Use <a href="../libraries/lib-portal.ahtml#base_urls">portal library functions</a> to generate URLs for these, and they will be served with the appropriate caching and optimizations — including when an operator has moved media to a separate host or turned the implicit mounting off, in which case the generated URLs point elsewhere.
 </td>
 </tr>
 </table>
@@ -654,7 +654,7 @@ In <code>inline</code> rendering mode the status is <code>418</code> instead of 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-07 08:17:28 UTC
+Last updated 2026-08-07 11:27:32 UTC
 </div>
 </div>
 </body>

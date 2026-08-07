@@ -442,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#usage">Usage</a></li>
+<li><a href="#base_urls">Base URLs</a></li>
 <li><a href="#functions">Functions</a>
 <ul class="sectlevel2">
 <li><a href="#apiurl">apiUrl</a></li>
@@ -523,6 +524,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
+<h2 id="base_urls"><a class="link" href="#base_urls">Base URLs</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A generated URL is anchored to the mount the call was made from — a site, a webapp, an admin tool — and falls back to the installation&#8217;s <code>/api/</code> space when there is no request to anchor to, as in a task. Content URLs use the site&#8217;s configured Base URL where there is one.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> A configured Base URL is used <strong>verbatim</strong> and decides on its own whether the URL is absolute, so <code>type</code> applies only to request-anchored URLs.</p>
+</div>
+<div class="paragraph">
+<p>To serve media from another host, configure <code>media.defaultBaseUrl</code> — see the <a href="https://developer.enonic.com/docs/platform/xp8/config/cms">portal configuration</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -561,7 +576,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative), <code>absolute</code>, or <code>websocket</code>. Defaults to <code>server</code>.</p>
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative), <code>absolute</code>, or <code>websocket</code>. Defaults to <code>server</code>. Ignored when a base URL applies — see <a href="#base_urls">Base URLs</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -582,7 +597,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Override the resolved base URL.</p>
+<p><strong>Deprecated.</strong> Expose the API location as a vhost mapping instead.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -759,7 +774,7 @@ const url = assetUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>. Ignored when a base URL applies — see <a href="#base_urls">Base URLs</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -780,7 +795,7 @@ const url = assetUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom baseUrl.</p>
+<p><strong>Deprecated.</strong> Configure <code>media.defaultBaseUrl</code>, or a Base URL on the site, instead.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -841,7 +856,7 @@ const url = attachmentUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>. Ignored when the site has a configured Base URL — see <a href="#base_urls">Base URLs</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1637,7 +1652,7 @@ const url = imagePlaceholder({
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>.</p>
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code>. Default is <code>server</code>. Ignored when a base URL applies — see <a href="#base_urls">Base URLs</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1658,7 +1673,7 @@ const url = imagePlaceholder({
 <td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom baseUrl.</p>
+<p><strong>Deprecated.</strong> Configure <code>media.defaultBaseUrl</code>, or a Base URL on the site, instead.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1852,7 +1867,7 @@ const url = imageUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>.</p>
+<p><strong>Optional.</strong> URL type. Either <code>server</code> (server-relative URL) or <code>absolute</code> or <code>websocket</code>. Default is <code>server</code>. Ignored when the site has a configured Base URL — see <a href="#base_urls">Base URLs</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3000,7 +3015,7 @@ const url = buildUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-07 08:17:28 UTC
+Last updated 2026-08-07 11:27:31 UTC
 </div>
 </div>
 </body>
