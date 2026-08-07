@@ -53,7 +53,7 @@ Parameters
 | type | string | *Optional.* URL type. Either `server` (server-relative), `absolute`, or `websocket`. Defaults to `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | path | string \| string[] | *Optional.* Path appended after the API segment. Accepts a string or a string array.
 | params | object | *Optional.* Custom query parameters to append to the URL.
-| baseUrl | string | *Deprecated.* Generate the URL from this base instead of resolving one from the request.
+| baseUrl | string | *Deprecated.* Expose the API location as a vhost mapping instead.
 |===
 
 [.lead]
@@ -143,7 +143,7 @@ Parameters
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
-| baseUrl | string | *Deprecated.* Serve the media from this base URL. Configure `+media.defaultBaseUrl+` instead.
+| baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
@@ -749,7 +749,7 @@ Parameters
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
-| baseUrl | string | *Deprecated.* Serve the media from this base URL. Configure `+media.defaultBaseUrl+` instead.
+| baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
