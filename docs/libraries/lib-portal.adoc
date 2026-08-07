@@ -24,6 +24,15 @@ import portalLib from '/lib/xp/portal';
 
 You are now ready to use the API.
 
+[#base_urls]
+== Base URLs
+
+A generated URL is anchored to the mount the call was made from — a site, a webapp, an admin tool — and falls back to the installation's `+/api/+` space when there is no request to anchor to, as in a task. Content URLs use the site's configured Base URL where there is one.
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A configured Base URL is used *verbatim* and decides on its own whether the URL is absolute, so `type` applies only to request-anchored URLs.
+
+To serve media from another host, configure `+media.defaultBaseUrl+` — see the https://developer.enonic.com/docs/platform/xp8/config/cms[portal configuration].
+
 == Functions
 
 === apiUrl
@@ -41,10 +50,10 @@ Parameters
 |===
 | Name | Type | Description
 | api | string | Descriptor key in `+<app>:<api>+` form.
-| type | string | *Optional.* URL type. Either `server` (server-relative), `absolute`, or `websocket`. Defaults to `server`.
+| type | string | *Optional.* URL type. Either `server` (server-relative), `absolute`, or `websocket`. Defaults to `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | path | string \| string[] | *Optional.* Path appended after the API segment. Accepts a string or a string array.
 | params | object | *Optional.* Custom query parameters to append to the URL.
-| baseUrl | string | *Optional.* Override the resolved base URL.
+| baseUrl | string | *Deprecated.* Expose the API location as a vhost mapping instead.
 |===
 
 [.lead]
@@ -131,10 +140,10 @@ Parameters
 | name | string | *Optional.* Unique name of the attachment.
 | label | string | *Optional.* Label of the attachment. Default is `source`.
 | download | boolean | *Optional.* Set to `true` if the disposition header should be set to attachment. Default is `false`.
-| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
-| baseUrl | string | *Optional.* Custom baseUrl.
+| baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
@@ -170,7 +179,7 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`. Ignored when the site has a configured Base URL — see <<base_urls, Base URLs>>.
 | id | string | *Optional.* ID of the content.
 | path | string | *Optional.* Path to the content.
 | project | string | *Optional.* Name of the project to use for resolving the URL.
@@ -739,10 +748,10 @@ Parameters
 | background | string | *Optional.* Background color.
 | format | string | *Optional.* Format of the image.
 | filter | string | *Optional.* A number of filters are available to alter the image appearance, for example, blur(3), grayscale(), rounded(5), etc.
-| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`. Ignored when a base URL applies — see <<base_urls, Base URLs>>.
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
-| baseUrl | string | *Optional.* Custom baseUrl.
+| baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
@@ -831,7 +840,7 @@ Parameters
 | Name | Type | Description
 | id | string | *Optional.* Id of a content. If id is set, then path is not used.
 | path | string | *Optional.* Path of a content. Relative paths are resolved based on the current context.
-| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`.
+| type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`. Ignored when the site has a configured Base URL — see <<base_urls, Base URLs>>.
 | project | string | *Optional.* Project of the context.
 | branch | string | *Optional.* Branch of the project for context.
 | params | object | *Optional.* Custom query parameters to append to the URL.

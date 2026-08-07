@@ -51,7 +51,7 @@ Render component:: If a component is matched, the matching component implementat
 
 Universal APIs:: Sites support contextual APIs mounted in the same URL space. They are are available on the `/_/<app>:<api>` path. APIs are mounted via the site descriptor.
 +
-NOTE: The image and attachment APIs are implicitly mounted by the site service, and are available at `/_/media:image` and `/_/media:attachment` respectively. Use portal library functions to generate URLs for these, and they will be served with the appropriate caching and optimizations.
+NOTE: The image and attachment APIs are implicitly mounted by the site service, and are available at `/_/media:image` and `/_/media:attachment` respectively. Use <<../libraries/lib-portal#base_urls, portal library functions>> to generate URLs for these, and they will be served with the appropriate caching and optimizations — including when an operator has moved media to a separate host or turned the implicit mounting off, in which case the generated URLs point elsewhere.
 
 Mappings:: Use path or content-based <<sites/mappings#, site mappings>>. Each mapping will trigger a function, acting as a filter or a controller (returning a response directly). Filters will iteratively execute until a controller is reached, or the mappings are exhausted. If no mapping matches, the request continues to the default page rendering step.
 
