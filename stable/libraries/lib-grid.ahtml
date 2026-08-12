@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#usage">Usage</a></li>
+<li><a href="#install">Install</a></li>
 <li><a href="#functions">Functions</a>
 <ul class="sectlevel2">
 <li><a href="#getmap">getMap</a></li>
@@ -485,10 +485,10 @@ Due to distributed nature of <code>SharedMap</code> not all value types can be u
 </div>
 </div>
 <div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<h2 id="install"><a class="link" href="#install">Install</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Add the following dependency to your <code>build.gradle</code> file:</p>
+<p>Add the library to your <code>build.gradle</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -498,15 +498,7 @@ Due to distributed nature of <code>SharedMap</code> not all value types can be u
 </div>
 </div>
 <div class="paragraph">
-<p>Add the <code>import</code> statement to your code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import gridLib from '/lib/xp/grid';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You are now ready to use the API.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-grid</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -593,9 +585,9 @@ const sharedMap = getMap('mapId');</code></pre>
 </table>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import gridLib from '/lib/xp/grid';
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap&lt;{ greeting: string }&gt;('mapId');
+const sharedMap = getMap&lt;{ greeting: string }&gt;('mapId');
 
 sharedMap.set({
   key: 'greeting',
@@ -624,9 +616,9 @@ sharedMap.set({
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import gridLib from '/lib/xp/grid';
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap('mapId');
+const sharedMap = getMap('mapId');
 
 const value = sharedMap.get('key');</code></pre>
 </div>
@@ -645,9 +637,9 @@ const value = sharedMap.get('key');</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import gridLib from '/lib/xp/grid';
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap('mapId');
+const sharedMap = getMap('mapId');
 
 sharedMap.delete('key');</code></pre>
 </div>
@@ -709,9 +701,9 @@ sharedMap.delete('key');</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import gridLib from '/lib/xp/grid';
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap&lt;{ counter: number }&gt;('mapId');
+const sharedMap = getMap&lt;{ counter: number }&gt;('mapId');
 
 const newValue = sharedMap.modify({
   key: 'counter',
@@ -761,7 +753,7 @@ const newValue = sharedMap.modify({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-07 11:26:51 UTC
+Last updated 2026-08-12 11:31:30 UTC
 </div>
 </div>
 </body>

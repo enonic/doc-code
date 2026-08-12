@@ -513,6 +513,9 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 <div class="paragraph">
 <p>To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under <a href="https://www.npmjs.com/org/enonic-types">@enonic-types</a> organisation on NPM.</p>
 </div>
+<div class="paragraph">
+<p>Install types at the major version of XP your project builds against. <code>@8</code> tracks the latest XP 8 release, which is what you want in most projects. If you target a specific XP version — the <code>xpVersion</code> in your <a href="../tooling/build.ahtml"><code>gradle.properties</code></a> — pin the types to it instead, for example <code>@8.0.3</code>. Never install types <strong>newer</strong> than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -533,7 +536,7 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/lib-auth</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/lib-auth@8</code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -543,7 +546,7 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/global</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/global@8</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -571,7 +574,7 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/core</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/core@8</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -747,7 +750,7 @@ const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-07 11:26:51 UTC
+Last updated 2026-08-12 11:31:30 UTC
 </div>
 </div>
 </body>
