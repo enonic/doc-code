@@ -514,7 +514,7 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 <p>To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under <a href="https://www.npmjs.com/org/enonic-types">@enonic-types</a> organisation on NPM.</p>
 </div>
 <div class="paragraph">
-<p>Install types at the major version of XP your project builds against. <code>@8</code> tracks the latest XP 8 release, which is what you want in most projects. If you target a specific XP version — the <code>xpVersion</code> in your <a href="../tooling/build.ahtml"><code>gradle.properties</code></a> — pin the types to it instead, for example <code>@8.0.3</code>. Never install types <strong>newer</strong> than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.</p>
+<p>Install types at the major version of XP your project builds against. <code>@8</code> tracks the latest XP 8 release, which is what you want in most projects. If you target a specific XP version — the <code>xpVersion</code> in your <a href="../tooling/build.ahtml"><code>gradle.properties</code></a> — pin the types to it instead, for example <code>@8.0.4</code>. Never install types <strong>newer</strong> than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.</p>
 </div>
 </div>
 </div>
@@ -750,7 +750,7 @@ const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-12 11:31:30 UTC
+Last updated 2026-08-12 14:03:24 UTC
 </div>
 </div>
 </body>
