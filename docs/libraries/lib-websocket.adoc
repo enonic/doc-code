@@ -4,9 +4,9 @@
 
 Websocket functions.
 
-== Usage
+== Install
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -15,14 +15,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import webSocketLib from '/lib/xp/websocket';
-----
-
-You are now ready to use the API.
+TypeScript types come from the `@enonic-types/lib-websocket` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Functions
 

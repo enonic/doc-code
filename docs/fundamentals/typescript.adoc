@@ -1,4 +1,5 @@
 = TypeScript Definitions
+include::../.variables.adoc[]
 
 == Intro
 
@@ -20,6 +21,8 @@ enonic create -r starter-typescript com.example.myapp
 
 To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under https://www.npmjs.com/org/enonic-types[@enonic-types] organisation on NPM.
 
+Install types at the major version of XP your project builds against. `@{release}` tracks the latest XP {release} release, which is what you want in most projects. If you target a specific XP version — the `xpVersion` in your <<../tooling/build#, `gradle.properties`>> — pin the types to it instead, for example `@{version}`. Never install types *newer* than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.
+
 == Enonic Libraries
 
 For example, you have a `lib-auth` gradle dependency:
@@ -32,17 +35,19 @@ dependencies {
 
 To add type definitions for the library, install dependency from NPM:
 
-```bash
-npm i --save-dev @enonic-types/lib-auth
-```
+[source,bash,subs="attributes+"]
+----
+npm i --save-dev @enonic-types/lib-auth@{release}
+----
 
 === Global
 
 Along with library types it is *highly recommended* to install definitions for global objects (`app`, `__`, `log`) and functions (`resolve`, `require`):
 
-```bash
-npm i --save-dev @enonic-types/global
-```
+[source,bash,subs="attributes+"]
+----
+npm i --save-dev @enonic-types/global@{release}
+----
 
 Since `global` types are not placed under the `node_modules/@types`, it is necessary to include them manually:
 
@@ -62,9 +67,10 @@ Since `global` types are not placed under the `node_modules/@types`, it is neces
 
 There are types that are shared between other libraries (like `Content` or `Principal`). Such types reside in the `core` package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. Content library exports `Content`` type. But if you want to use these type directly, you'll need to install them:
 
-```bash
-npm i --save-dev @enonic-types/core
-```
+[source,bash,subs="attributes+"]
+----
+npm i --save-dev @enonic-types/core@{release}
+----
 
 and then import them in your TypeScript code:
 

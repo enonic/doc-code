@@ -8,9 +8,9 @@ WARNING: In XP 8 all `resource` strings passed to and returned from this library
 
 TIP: Functions of this library require the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <<lib-context#run, context>> of `system.schema.admin` role.
 
-== Usage
+== Install
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -19,14 +19,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import schemaLib from '/lib/xp/schema';
-----
-
-You are now ready to use the API.
+TypeScript types come from the `@enonic-types/lib-schema` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Functions
 

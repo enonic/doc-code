@@ -12,9 +12,9 @@ This API provides functions to get, query and manipulate nodes.
 Use <<lib-content#, `lib-content`>> for content. Reach for `lib-node` only when working with custom (non-content) repositories. See <<../storage/editors#, Editors>> for the pattern.
 ====
 
-== Usage
+== Install
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -23,14 +23,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import nodeLib from '/lib/xp/node';
-----
-
-You are now ready to use the API.
+TypeScript types come from the `@enonic-types/lib-node` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Events
 
@@ -147,7 +140,7 @@ const searchConnection = multiRepoConnect({
     sources: [
         {
             repoId: 'my-repo',
-            branch: 'myBranch',
+            branch: 'master',
             principals: ["role:system.admin"]
         },
         {
@@ -162,6 +155,22 @@ const searchConnection = multiRepoConnect({
 == MultiRepoConnection
 
 A MultiRepoConnection makes it possible to search across multiple repositories.  The object has only one method: `query`.
+
+The example below uses a multi-repo connection to execute the function.
+The connection can be created with <<multirepoconnect, multiRepoConnect()>>:
+
+.Connecting to several repos.
+[source,typescript]
+----
+import {multiRepoConnect} from '/lib/xp/node';
+
+const multiRepoConnection = multiRepoConnect({
+    sources: [
+        {repoId: 'my-repo', branch: 'master', principals: ["role:system.admin"]},
+        {repoId: 'my-other-repo', branch: 'master', principals: ["role:system.admin"]}
+    ]
+});
+----
 
 === query
 
@@ -360,6 +369,8 @@ Parameters
 | `+_manualOrderValue+` | number | *Optional.* Value used to order the document when ordering by parent and child-order is set to manual.
 | `+_childOrder+` | string | *Optional.* Default ordering of children when calling `findChildren` if no order is given in the query.
 |===
+
+TIP: Storage determines indexing from each property's <<../storage/properties#value_types, value type>>. Complex value types — geo-points, instants, dates, node references, and binaries — have no JSON equivalent and must be built with the <<lib-value#, Value library>>; passed as plain strings they are stored and indexed as text.
 
 [.lead]
 Returns
@@ -1086,9 +1097,9 @@ const patchedNode = repo.patch({
 .Patching a node with data stream.
 [source,typescript]
 ----
-var ioLib = require('/lib/xp/io');
+import {newStream} from '/lib/xp/io';
 
-var stream = ioLib.newStream('Hello World');
+const stream = newStream('Hello World');
 
 const patchedNode = repo.patch({
     key: '/my-node',

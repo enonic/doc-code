@@ -5,11 +5,11 @@
 This API provides functionality for localization of text phrases.
 
 
-== Usage
+== Install
 
 NOTE: This API uses standard framework functionality. Please read the <<../fundamentals/i18n#, framework localization docs>> before using this API.
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -18,12 +18,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import i18nLib from '/lib/xp/i18n';
-----
+TypeScript types come from the `@enonic-types/lib-i18n` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 Then you need to create files with original phrases and their translations.  These files should normally be placed in the `src/main/resources/i18n` folder of your application.
 There must be a file named `phrases.properties` that contains all the default phrases.  
@@ -43,9 +38,6 @@ notify.process.failed=Processing failed: {0}.
 action.preview=Vista Previa
 notify.process.failed=Error al procesar: {0}.
 ----
-
-You are now ready to use the API.
-
 
 == Functions
 
@@ -69,7 +61,9 @@ Example
 .Get all phrases for a locale
 [source,typescript]
 ----
-const phrasesEs = i18nLib.getPhrases('es', ['i18n/phrases']);
+import {getPhrases} from '/lib/xp/i18n';
+
+const phrasesEs = getPhrases('es', ['i18n/phrases']);
 ----
 
 .Sample response
@@ -101,7 +95,9 @@ Example
 .Get the supported locales for a bundle
 [source,typescript]
 ----
-const locales = i18nLib.getSupportedLocales(['i18n/phrases']);
+import {getSupportedLocales} from '/lib/xp/i18n';
+
+const locales = getSupportedLocales(['i18n/phrases']);
 ----
 
 .Sample response
