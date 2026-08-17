@@ -225,6 +225,23 @@ const extendedCronJob = create({
     },
     schedule: {type: 'CRON', value: '* * * * 5', timeZone: 'GMT-2:00'}
 });
+
+// runs every five minutes, measured from the start of the previous run
+const fixedRateJob = create({
+    name: 'poll-feed',
+    descriptor: 'appKey:task',
+    enabled: true,
+    schedule: {type: 'FIXED_RATE', value: 'PT5M'}
+});
+
+// runs once, then removes itself - the name is used for this occasion only
+const ephemeralJob = create({
+    name: `publish-${uuid}`,
+    descriptor: 'appKey:publish',
+    enabled: true,
+    config: {contentId: id},
+    schedule: {type: 'ONE_TIME', value: '2038-01-01T00:00:00.00Z', deleteAfterRun: true}
+});
 ----
 
 .Return value:
@@ -433,6 +450,29 @@ Properties
 |===
 | Name | Type | Description
 | value | string | Schedule value, in the format required by `type`.
-| type | string | Schedule type: `CRON` or `ONE_TIME`.
-| timeZone | string | Time zone of the cron schedule. Required when `type` is `CRON`; not applicable to one-time jobs.
+| type | string | Schedule type: `CRON`, `ONE_TIME`, or image:xp-810.svg[XP 8.1.0,opts=inline] `FIXED_RATE`.
+| timeZone | string | Time zone of the cron schedule. Required when `type` is `CRON`; not applicable to the other types.
+| deleteAfterRun | boolean | image:xp-810.svg[XP 8.1.0,opts=inline] *Optional.* Whether the job deletes itself once its task has been submitted. Only applicable when `type` is `ONE_TIME`. Defaults to `false`.
 |===
+
+The three types take different `value` formats, and behave differently once the job has run:
+
+`CRON`:: A https://www.unix.com/man-page/linux/5/crontab[UNIX cron] expression, run repeatedly at the calendar positions it names — `+'* * * * 5'+` for every minute on Fridays. `timeZone` decides which day and hour those positions fall on.
+`ONE_TIME`:: An https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html#ISO_INSTANT[ISO instant] in UTC, run once. A time already in the past runs as soon as the job is created. The job stays afterwards, with `lastRun` recording that it is done, unless `deleteAfterRun` is set.
+`FIXED_RATE`:: image:xp-810.svg[XP 8.1.0,opts=inline] An https://en.wikipedia.org/wiki/ISO_8601#Durations[ISO-8601 duration] — `'PT5M'` for every five minutes — measured from when the previous run *started*, not from when it finished. Use it for work that should repeat at an interval rather than at a time of day, where `+'*/5 * * * *'+` would tie the job to the clock.
+
+[.lead]
+Fixed rate and long-running tasks
+
+A run still going when the next one falls due delays it rather than joining it: the held run starts as soon as its predecessor finishes. Periods missed while a run overruns are dropped rather than replayed, so a run that takes longer than its interval shifts every later run along with it — the same as a single-threaded `scheduleAtFixedRate` in Java, minus the catch-up.
+
+Nothing about a fixed-rate job's runs is persisted, so a restart, or the schedule moving to another node, shifts the next run in either direction by up to one interval. Do not use `FIXED_RATE` where a run must land at a particular time — that is what `CRON` is for.
+
+WARNING: Keeping runs from overlapping is best effort, not a guarantee. It rests on the nodes agreeing which of them schedules and on the previous task still being visible to it, neither of which holds through a network partition or the loss of a task record. A task that must not run twice at once has to defend itself.
+
+[.lead]
+Self-deleting one-time jobs
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A one-time job normally stays after it has run, so that its name cannot be reused to run it a second time. When the name is single-use — a publish request keyed by a uuid, say — that record protects nothing and only accumulates. Setting `deleteAfterRun` removes the job once a task has been submitted for it.
+
+Only the code that chose the name knows whether it is single-use, which is why this is a property of the job rather than a platform-wide cleanup. Two cases deliberately keep the job: a submission that never succeeded, since nothing else would record that it failed, and a deletion that itself fails, which falls back to recording the run — cleanup can never turn into a repeat run.

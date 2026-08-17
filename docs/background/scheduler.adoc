@@ -31,8 +31,9 @@ Properties
 ! Name ! Type ! Description
 
 ! value ! string ! schedule value according to its type
-! type ! string ! schedule type (<<cron, CRON>> to be executed repeatedly or <<one-time, ONE_TIME>> to be executed once)
-!  timezone ! string ! time zone of cron scheduling. It doesn't apply to a onetime calendar.
+! type ! string ! schedule type (<<cron, CRON>> to be executed repeatedly at calendar positions, <<one-time, ONE_TIME>> to be executed once, or <<fixed-rate, FIXED_RATE>> to be executed at a fixed interval)
+!  timezone ! string ! time zone of cron scheduling. It doesn't apply to the other types.
+! deleteAfterRun ! boolean ! image:xp-810.svg[XP 8.1.0,opts=inline] whether a one-time job removes itself once its task has been submitted. Only applies to a one-time calendar.
 !===
 
 | user | string |  Principal key of the task submitter. Format: `<idProvider>:<user>`
@@ -47,7 +48,7 @@ Properties
 |===
 
 == Calendar
-Calendar object describes when and how the task should be run. There are two possible types: one-time and cron.
+Calendar object describes when and how the task should be run. There are three possible types: one-time, cron and fixed-rate.
 
 [#one-time]
 .one-time
@@ -57,6 +58,14 @@ The task will be run only once. If the time value is passed at the moment of sch
 [source,javascript]
 ----
 {type: 'ONE_TIME', value: '2021-01-01T10:30:00.00Z'}
+----
+
+The job remains after it has run, with `lastRun` recording that it is done, so its name cannot be reused to run it again. image:xp-810.svg[XP 8.1.0,opts=inline] Where the name is used for a single occasion only - a publish request keyed by a uuid, say - that record protects nothing and only accumulates; `deleteAfterRun` makes the job remove itself once its task has been submitted.
+
+.Example of a one-time calendar that cleans up after itself
+[source,javascript]
+----
+{type: 'ONE_TIME', value: '2021-01-01T10:30:00.00Z', deleteAfterRun: true}
 ----
 
 [#cron]
@@ -70,11 +79,25 @@ Should be used for repeatable tasks. https://www.unix.com/man-page/linux/5/cront
 ,timeZone: 'GMT+5:30'}
 ----
 
+[#fixed-rate]
+.fixed-rate
+image:xp-810.svg[XP 8.1.0,opts=inline] Should be used for repeatable tasks that belong at an interval rather than at a time of day. The value is an https://en.wikipedia.org/wiki/ISO_8601#Durations[ISO-8601 duration], and the interval is measured from when the previous run *started* - not from when it finished, and not from the clock, so no timezone applies.
+
+.Example of a fixed-rate calendar
+[source,javascript]
+----
+{type: 'FIXED_RATE', value: 'PT5M'} // every five minutes
+----
+
+A run still going when the next one falls due delays it rather than joining it, and the held run starts as soon as its predecessor finishes. Periods missed during an overrun are dropped rather than replayed, so a run that takes longer than its interval shifts every later run along with it - the same as a single-threaded `scheduleAtFixedRate` in Java, minus the catch-up.
+
+Nothing about the runs is persisted, so a restart, or the schedule moving to another node, shifts the next run in either direction by up to one interval. Use <<cron, CRON>> where a run must land at a particular time.
+
 == Configuration
 There are two ways to configure custom scheduled jobs: <<../libraries/lib-scheduler#, lib>> API provides methods to manipulate jobs and https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[config] file is used to configure default permanent cron jobs.
 
 == System jobs
-XP platform provides predefined system jobs, which can be enabled and overridden by user in https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[config] file. Config modification doesn't update job nodes automatically, so make sure you've removed or changed old job nodes manually before any config change.
+XP platform provides predefined system jobs, which can be enabled and overridden by user in https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[config] file. The config file creates jobs, it does not maintain them: image:xp-810.svg[XP 8.1.0,opts=inline] a job added to the file is created within a second, but editing an entry never updates a job that already exists, so remove or change the existing job first.
 
 .Vacuum
 Deletes unused blobs and binaries from a blobstore.
@@ -113,8 +136,35 @@ Common cleanup process config can be found in https://developer.enonic.com/docs/
 IMPORTANT: `ageThreshold` property must be set to appropriate value, otherwise nothing will be removed.
 
 == Distributable
-XP platform guarantees that a scheduled job won't be executed by multiple threads concurrently for the cluster environment.
+One node of a cluster runs the scheduler and submits the tasks; the task itself then runs on any node that has the application providing it. The two are separate choices: which node schedules is set with `acceptScheduling` in the https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[scheduler config] file, and where a task may run is described under <<tasks#distributable, tasks>>.
 
-NOTE: Several jobs can describe the same task descriptor, so the same code can be run by different threads simultaneously. Also, if the execution time of the task is longer than the cron period (especially important for long-term jobs) then a new task can be started before the previous is finished.
+image:xp-810.svg[XP 8.1.0,opts=inline] A job does not start a run while its previous one is still going. What happens to the run that was due depends on the calendar: a <<cron, CRON>> occurrence is skipped, since occurrences are positions in the calendar and a missed one is missed, while a <<fixed-rate, FIXED_RATE>> run is held and starts as soon as its predecessor finishes.
 
-A scheduled job can be executed by any cluster node supporting an application, which contains the described task. See <<tasks#distributable, task>> for further explanation.
+WARNING: This is best effort, not a guarantee. It rests on the nodes agreeing which of them schedules - and a network partition leaves each side with a scheduler of its own - and on the previous task still being visible to whichever node schedules; a task record that has expired or left with its node reads as finished. A task that must never run twice at once has to defend itself, with a lock of its own.
+
+NOTE: Several jobs can name the same task descriptor. Nothing connects them, so they can run at the same time as each other - the guard above is per job, not per descriptor.
+
+[#last-task-id]
+== What a scheduled task receives
+
+A scheduled task runs with the `config` of its job as parameters, exactly as if it had been submitted through the task API.
+
+image:xp-810.svg[XP 8.1.0,opts=inline] It also learns which task ran for the job last, through the `schedule.lastTaskId` attribute of its <<../libraries/lib-context#, context>>. That is useful where each run continues from where the last one reached - fetching the previous run's result to process only what has changed since. The value is absent on a job's first run and on a job whose last run left no record.
+
+.Reading the previous run's task id
+[source,typescript]
+----
+import {get as getContext} from '/lib/xp/context';
+import {get as getTask} from '/lib/xp/task';
+
+export function run(): void {
+    const lastTaskId = getContext().attributes['schedule.lastTaskId'] as string | undefined;
+    const previous = lastTaskId ? getTask(lastTaskId) : null;
+
+    if (previous) {
+        log.info('Previous run: %s', previous.state);
+    }
+}
+----
+
+The chain only ever names tasks the scheduler let run, so an id that is there is one whose run actually happened.
