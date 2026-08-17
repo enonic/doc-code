@@ -235,11 +235,13 @@ const fixedRateJob = create({
 });
 
 // runs once, then removes itself - the name is used for this occasion only
+const requestId = '018f3c2a-6b1e-7a44-9c3d-5e2f1a0b8c71';
+
 const ephemeralJob = create({
-    name: `publish-${uuid}`,
+    name: `publish-${requestId}`,
     descriptor: 'appKey:publish',
     enabled: true,
-    config: {contentId: id},
+    config: {contentId: 'e1f2a3b4-c5d6-4789-a012-3b4c5d6e7f80'},
     schedule: {type: 'ONE_TIME', value: '2038-01-01T00:00:00.00Z', deleteAfterRun: true}
 });
 ----
