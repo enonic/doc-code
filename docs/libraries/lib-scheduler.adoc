@@ -466,15 +466,22 @@ The three types take different `value` formats, and behave differently once the 
 [.lead]
 Fixed rate and long-running tasks
 
-A run still going when the next one falls due delays it rather than joining it: the held run starts as soon as its predecessor finishes. Periods missed while a run overruns are dropped rather than replayed, so a run that takes longer than its interval shifts every later run along with it — the same as a single-threaded `scheduleAtFixedRate` in Java, minus the catch-up.
+What `FIXED_RATE` guarantees:
 
-Nothing about a fixed-rate job's runs is persisted, so a restart, or the schedule moving to another node, shifts the next run in either direction by up to one interval. Do not use `FIXED_RATE` where a run must land at a particular time — that is what `CRON` is for.
+* The interval is between the *starts* of two runs, not the gap between them.
+* A run that overruns its interval delays the next one rather than overlapping it, and the delayed run starts once its predecessor finishes.
+* Periods missed while a run overruns are not replayed, so an overrunning run shifts every later run along with it.
+* The interval is not anchored to a wall-clock position and does not survive a restart or a move to another node — the next run may shift by up to one interval. Use `CRON` where a run has to land at a particular time.
 
-WARNING: Keeping runs from overlapping is best effort, not a guarantee. It rests on the nodes agreeing which of them schedules and on the previous task still being visible to it, neither of which holds through a network partition or the loss of a task record. A task that must not run twice at once has to defend itself.
+WARNING: Not overlapping is best effort, not a guarantee: two runs of the same job can still overlap when the cluster is partitioned, or when the record of the previous task is no longer available to be checked. A task that must never run concurrently with itself needs a lock of its own.
 
 [.lead]
 Self-deleting one-time jobs
 
-image:xp-810.svg[XP 8.1.0,opts=inline] A one-time job normally stays after it has run, so that its name cannot be reused to run it a second time. When the name is single-use — a publish request keyed by a uuid, say — that record protects nothing and only accumulates. Setting `deleteAfterRun` removes the job once a task has been submitted for it.
+image:xp-810.svg[XP 8.1.0,opts=inline] A one-time job stays after it has run, so its name cannot be reused to run it a second time. Where the name is used for a single occasion — a publish request keyed by a uuid, say — that serves no purpose and the finished jobs only accumulate; `deleteAfterRun` deletes the job instead.
 
-Only the code that chose the name knows whether it is single-use, which is why this is a property of the job rather than a platform-wide cleanup. Two cases deliberately keep the job: a submission that never succeeded, since nothing else would record that it failed, and a deletion that itself fails, which falls back to recording the run — cleanup can never turn into a repeat run.
+What it guarantees:
+
+* The job is deleted once a task has been submitted for it — not when that task finishes, and not if the run never started.
+* A job whose submission failed is kept, with the failure recorded, so nothing is lost silently.
+* Deletion never causes a repeat run: a job that cannot be deleted is recorded as run instead.
