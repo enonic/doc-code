@@ -225,6 +225,25 @@ const extendedCronJob = create({
     },
     schedule: {type: 'CRON', value: '* * * * 5', timeZone: 'GMT-2:00'}
 });
+
+// runs every five minutes, measured from the start of the previous run
+const fixedRateJob = create({
+    name: 'poll-feed',
+    descriptor: 'appKey:task',
+    enabled: true,
+    schedule: {type: 'FIXED_RATE', value: 'PT5M'}
+});
+
+// runs once, then removes itself - the name is used for this occasion only
+const requestId = '018f3c2a-6b1e-7a44-9c3d-5e2f1a0b8c71';
+
+const ephemeralJob = create({
+    name: `publish-${requestId}`,
+    descriptor: 'appKey:publish',
+    enabled: true,
+    config: {contentId: 'e1f2a3b4-c5d6-4789-a012-3b4c5d6e7f80'},
+    schedule: {type: 'ONE_TIME', value: '2038-01-01T00:00:00.00Z', deleteAfterRun: true}
+});
 ----
 
 .Return value:
@@ -433,6 +452,36 @@ Properties
 |===
 | Name | Type | Description
 | value | string | Schedule value, in the format required by `type`.
-| type | string | Schedule type: `CRON` or `ONE_TIME`.
-| timeZone | string | Time zone of the cron schedule. Required when `type` is `CRON`; not applicable to one-time jobs.
+| type | string | Schedule type: `CRON`, `ONE_TIME`, or image:xp-810.svg[XP 8.1.0,opts=inline] `FIXED_RATE`.
+| timeZone | string | Time zone of the cron schedule. Required when `type` is `CRON`; not applicable to the other types.
+| deleteAfterRun | boolean | image:xp-810.svg[XP 8.1.0,opts=inline] *Optional.* Whether the job deletes itself once its task has been submitted. Only applicable when `type` is `ONE_TIME`. Defaults to `false`.
 |===
+
+The three types take different `value` formats, and behave differently once the job has run:
+
+`CRON`:: A https://www.unix.com/man-page/linux/5/crontab[UNIX cron] expression, run repeatedly at the calendar positions it names — `+'* * * * 5'+` for every minute on Fridays. `timeZone` decides which day and hour those positions fall on.
+`ONE_TIME`:: An https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html#ISO_INSTANT[ISO instant] in UTC, run once. A time already in the past runs as soon as the job is created. The job stays afterwards, with `lastRun` recording that it is done, unless `deleteAfterRun` is set.
+`FIXED_RATE`:: image:xp-810.svg[XP 8.1.0,opts=inline] An https://en.wikipedia.org/wiki/ISO_8601#Durations[ISO-8601 duration] — `'PT5M'` for every five minutes — measured from when the previous run *started*, not from when it finished. Use it for work that should repeat at an interval rather than at a time of day, where `+'*/5 * * * *'+` would tie the job to the clock.
+
+[.lead]
+Fixed rate and long-running tasks
+
+What `FIXED_RATE` guarantees:
+
+* The interval is between the *starts* of two runs, not the gap between them.
+* A run that overruns its interval delays the next one rather than overlapping it, and the delayed run starts once its predecessor finishes.
+* Periods missed while a run overruns are not replayed, so an overrunning run shifts every later run along with it.
+* The interval is not anchored to a wall-clock position and does not survive a restart or a move to another node — the next run may shift by up to one interval. Use `CRON` where a run has to land at a particular time.
+
+WARNING: Not overlapping is best effort, not a guarantee: two runs of the same job can still overlap when the cluster is partitioned, or when the record of the previous task is no longer available to be checked. A task that must never run concurrently with itself needs a lock of its own.
+
+[.lead]
+Self-deleting one-time jobs
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A one-time job stays after it has run, so its name cannot be reused to run it a second time. Where the name is used for a single occasion — a publish request keyed by a uuid, say — that serves no purpose and the finished jobs only accumulate; `deleteAfterRun` deletes the job instead.
+
+What it guarantees:
+
+* The job is deleted once a task has been submitted for it — not when that task finishes, and not if the run never started.
+* A job whose submission failed is kept, with the failure recorded, so nothing is lost silently.
+* Deletion never causes a repeat run: a job that cannot be deleted is recorded as run instead.

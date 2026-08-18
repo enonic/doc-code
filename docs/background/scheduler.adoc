@@ -31,8 +31,9 @@ Properties
 ! Name ! Type ! Description
 
 ! value ! string ! schedule value according to its type
-! type ! string ! schedule type (<<cron, CRON>> to be executed repeatedly or <<one-time, ONE_TIME>> to be executed once)
-!  timezone ! string ! time zone of cron scheduling. It doesn't apply to a onetime calendar.
+! type ! string ! schedule type (<<cron, CRON>> to be executed repeatedly at calendar positions, <<one-time, ONE_TIME>> to be executed once, or <<fixed-rate, FIXED_RATE>> to be executed at a fixed interval)
+!  timeZone ! string ! time zone of cron scheduling. It doesn't apply to the other types.
+! deleteAfterRun ! boolean ! image:xp-810.svg[XP 8.1.0,opts=inline] optional, defaults to `false`. Whether a one-time job removes itself once its task has been submitted. Only applies to a one-time calendar.
 !===
 
 | user | string |  Principal key of the task submitter. Format: `<idProvider>:<user>`
@@ -47,16 +48,24 @@ Properties
 |===
 
 == Calendar
-Calendar object describes when and how the task should be run. There are two possible types: one-time and cron.
+Calendar object describes when and how the task should be run. There are three possible types: one-time, cron and fixed-rate.
 
 [#one-time]
 .one-time
 The task will be run only once. If the time value is passed at the moment of scheduling, then the task will be run immediately. Value format is https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#ISO_INSTANT[ZULU] time, documented in ISO 8601.
 
 .Example of a one-time calendar
-[source,javascript]
+[source,typescript]
 ----
 {type: 'ONE_TIME', value: '2021-01-01T10:30:00.00Z'}
+----
+
+The job remains after it has run, with `lastRun` recording that it is done, so its name cannot be reused to run it again. image:xp-810.svg[XP 8.1.0,opts=inline] Where the name is used for a single occasion only - a publish request keyed by a uuid, say - that record protects nothing and only accumulates; `deleteAfterRun` makes the job remove itself once its task has been submitted.
+
+.Example of a one-time calendar that cleans up after itself
+[source,typescript]
+----
+{type: 'ONE_TIME', value: '2021-01-01T10:30:00.00Z', deleteAfterRun: true}
 ----
 
 [#cron]
@@ -64,17 +73,36 @@ The task will be run only once. If the time value is passed at the moment of sch
 Should be used for repeatable tasks. https://www.unix.com/man-page/linux/5/crontab[UNIX] cron lib format is expected. Also, a timezone must be specified to run the job at a particular time of the day.
 
 .Example of a cron calendar
-[source,javascript]
+[source,typescript]
 ----
 {type: 'CRON', value: '* * * * *' // every minute
 ,timeZone: 'GMT+5:30'}
 ----
 
+[#fixed-rate]
+.fixed-rate
+image:xp-810.svg[XP 8.1.0,opts=inline] Should be used for repeatable tasks that belong at an interval rather than at a time of day. The value is an https://en.wikipedia.org/wiki/ISO_8601#Durations[ISO-8601 duration], and the interval is measured from when the previous run *started* - not from when it finished, and not from the clock, so no timezone applies.
+
+.Example of a fixed-rate calendar
+[source,typescript]
+----
+{type: 'FIXED_RATE', value: 'PT5M'} // every five minutes
+----
+
+What a fixed rate promises:
+
+* The interval is between the *starts* of two runs, not the gap between them.
+* A run that overruns its interval delays the next one instead of overlapping it, and the delayed run starts once its predecessor finishes.
+* Periods missed while a run overruns are not replayed, so an overrunning run shifts every later run along with it.
+* The interval is not anchored to any wall-clock position, and is not preserved across a restart or a move to another node - the next run may shift by up to one interval.
+
+Use <<cron, CRON>> instead where a run has to land at a particular time of day.
+
 == Configuration
 There are two ways to configure custom scheduled jobs: <<../libraries/lib-scheduler#, lib>> API provides methods to manipulate jobs and https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[config] file is used to configure default permanent cron jobs.
 
 == System jobs
-XP platform provides predefined system jobs, which can be enabled and overridden by user in https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[config] file. Config modification doesn't update job nodes automatically, so make sure you've removed or changed old job nodes manually before any config change.
+XP platform provides predefined system jobs, which can be enabled and overridden by user in https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[config] file. The config file creates jobs, it does not maintain them: image:xp-810.svg[XP 8.1.0,opts=inline] a job added to the file is created within a second, but editing an entry never updates a job that already exists, so remove or change the existing job first.
 
 .Vacuum
 Deletes unused blobs and binaries from a blobstore.
@@ -113,8 +141,35 @@ Common cleanup process config can be found in https://developer.enonic.com/docs/
 IMPORTANT: `ageThreshold` property must be set to appropriate value, otherwise nothing will be removed.
 
 == Distributable
-XP platform guarantees that a scheduled job won't be executed by multiple threads concurrently for the cluster environment.
+A scheduled job is submitted once per due occurrence, from one node of the cluster, and the task it submits then runs on any node that has the application providing it - see <<tasks#distributable, task>> for where that can be. Which node submits is a deployment concern, set with `acceptScheduling` in the https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[scheduler config] file; a job behaves the same wherever it is submitted from.
 
-NOTE: Several jobs can describe the same task descriptor, so the same code can be run by different threads simultaneously. Also, if the execution time of the task is longer than the cron period (especially important for long-term jobs) then a new task can be started before the previous is finished.
+image:xp-810.svg[XP 8.1.0,opts=inline] A job does not start a run while its own previous run is still going. What becomes of the run that was due depends on the calendar: a <<cron, CRON>> occurrence is skipped, since a cron occurrence is a position in the calendar and a missed one is missed, while a <<fixed-rate, FIXED_RATE>> run is delayed and starts once its predecessor finishes.
 
-A scheduled job can be executed by any cluster node supporting an application, which contains the described task. See <<tasks#distributable, task>> for further explanation.
+WARNING: Not overlapping is best effort, not a guarantee. Two runs of the same job can still overlap when the cluster is partitioned, or when the record of the previous task is no longer available to be checked. A task that must never run concurrently with itself needs a lock of its own.
+
+NOTE: The guarantee is per job, not per task. Several jobs may name the same descriptor, and nothing relates them - they can run at the same time as each other.
+
+[#last-task-id]
+== What a scheduled task receives
+
+A scheduled task runs with the `config` of its job as parameters, exactly as if it had been submitted through the task API.
+
+image:xp-810.svg[XP 8.1.0,opts=inline] It also learns which task ran for the job last, through the `schedule.lastTaskId` attribute of its <<../libraries/lib-context#, context>>. That is useful where each run continues from where the last one reached - fetching the previous run's result to process only what has changed since. The value is absent on a job's first run and on a job whose last run left no record.
+
+.Reading the previous run's task id
+[source,typescript]
+----
+import {get as getContext} from '/lib/xp/context';
+import {get as getTask} from '/lib/xp/task';
+
+export function run(): void {
+    const lastTaskId = getContext().attributes['schedule.lastTaskId'] as string | undefined;
+    const previous = lastTaskId ? getTask(lastTaskId) : null;
+
+    if (previous) {
+        log.info('Previous run: %s', previous.state);
+    }
+}
+----
+
+The chain only ever names tasks the scheduler let run, so an id that is there is one whose run actually happened.
