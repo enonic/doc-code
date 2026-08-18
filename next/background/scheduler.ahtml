@@ -446,6 +446,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#configuration">Configuration</a></li>
 <li><a href="#system_jobs">System jobs</a></li>
 <li><a href="#distributable">Distributable</a></li>
+<li><a href="#last-task-id">What a scheduled task receives</a></li>
 </ul>
 </div>
 </div>
@@ -540,14 +541,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>schedule type (<a href="#cron">CRON</a> to be executed repeatedly or <a href="#one-time">ONE_TIME</a> to be executed once)</p>
+<p>schedule type (<a href="#cron">CRON</a> to be executed repeatedly at calendar positions, <a href="#one-time">ONE_TIME</a> to be executed once, or <a href="#fixed-rate">FIXED_RATE</a> to be executed at a fixed interval)</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">timezone</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">timeZone</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>time zone of cron scheduling. It doesn&#8217;t apply to a onetime calendar.</p>
+<p>time zone of cron scheduling. It doesn&#8217;t apply to the other types.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deleteAfterRun</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><span class="image"><span class="alt">XP 8.1.0</span></span> optional, defaults to <code>false</code>. Whether a one-time job removes itself once its task has been submitted. Only applies to a one-time calendar.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -617,7 +625,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="calendar"><a class="link" href="#calendar">Calendar</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Calendar object describes when and how the task should be run. There are two possible types: one-time and cron.</p>
+<p>Calendar object describes when and how the task should be run. There are three possible types: one-time, cron and fixed-rate.</p>
 </div>
 <div id="one-time" class="paragraph">
 <div class="title">one-time</div>
@@ -626,7 +634,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">Example of a one-time calendar</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">{type: 'ONE_TIME', value: '2021-01-01T10:30:00.00Z'}</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">{type: 'ONE_TIME', value: '2021-01-01T10:30:00.00Z'}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The job remains after it has run, with <code>lastRun</code> recording that it is done, so its name cannot be reused to run it again. <span class="image"><span class="alt">XP 8.1.0</span></span> Where the name is used for a single occasion only - a publish request keyed by a uuid, say - that record protects nothing and only accumulates; <code>deleteAfterRun</code> makes the job remove itself once its task has been submitted.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a one-time calendar that cleans up after itself</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">{type: 'ONE_TIME', value: '2021-01-01T10:30:00.00Z', deleteAfterRun: true}</code></pre>
 </div>
 </div>
 <div id="cron" class="paragraph">
@@ -636,9 +653,41 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">Example of a cron calendar</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">{type: 'CRON', value: '* * * * *' // every minute
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">{type: 'CRON', value: '* * * * *' // every minute
 ,timeZone: 'GMT+5:30'}</code></pre>
 </div>
+</div>
+<div id="fixed-rate" class="paragraph">
+<div class="title">fixed-rate</div>
+<p><span class="image"><span class="alt">XP 8.1.0</span></span> Should be used for repeatable tasks that belong at an interval rather than at a time of day. The value is an <a href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO-8601 duration</a>, and the interval is measured from when the previous run <strong>started</strong> - not from when it finished, and not from the clock, so no timezone applies.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a fixed-rate calendar</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">{type: 'FIXED_RATE', value: 'PT5M'} // every five minutes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What a fixed rate promises:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The interval is between the <strong>starts</strong> of two runs, not the gap between them.</p>
+</li>
+<li>
+<p>A run that overruns its interval delays the next one instead of overlapping it, and the delayed run starts once its predecessor finishes.</p>
+</li>
+<li>
+<p>Periods missed while a run overruns are not replayed, so an overrunning run shifts every later run along with it.</p>
+</li>
+<li>
+<p>The interval is not anchored to any wall-clock position, and is not preserved across a restart or a move to another node - the next run may shift by up to one interval.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use <a href="#cron">CRON</a> instead where a run has to land at a particular time of day.</p>
 </div>
 </div>
 </div>
@@ -654,7 +703,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="system_jobs"><a class="link" href="#system_jobs">System jobs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP platform provides predefined system jobs, which can be enabled and overridden by user in <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler">config</a> file. Config modification doesn&#8217;t update job nodes automatically, so make sure you&#8217;ve removed or changed old job nodes manually before any config change.</p>
+<p>XP platform provides predefined system jobs, which can be enabled and overridden by user in <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler">config</a> file. The config file creates jobs, it does not maintain them: <span class="image"><span class="alt">XP 8.1.0</span></span> a job added to the file is created within a second, but editing an entry never updates a job that already exists, so remove or change the existing job first.</p>
 </div>
 <div class="paragraph">
 <div class="title">Vacuum</div>
@@ -732,7 +781,22 @@ init-job.audit-log-cleanup.user=system:su</code></pre>
 <h2 id="distributable"><a class="link" href="#distributable">Distributable</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP platform guarantees that a scheduled job won&#8217;t be executed by multiple threads concurrently for the cluster environment.</p>
+<p>A scheduled job is submitted once per due occurrence, from one node of the cluster, and the task it submits then runs on any node that has the application providing it - see <a href="tasks.ahtml#distributable">task</a> for where that can be. Which node submits is a deployment concern, set with <code>acceptScheduling</code> in the <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler">scheduler config</a> file; a job behaves the same wherever it is submitted from.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><span class="alt">XP 8.1.0</span></span> A job does not start a run while its own previous run is still going. What becomes of the run that was due depends on the calendar: a <a href="#cron">CRON</a> occurrence is skipped, since a cron occurrence is a position in the calendar and a missed one is missed, while a <a href="#fixed-rate">FIXED_RATE</a> run is delayed and starts once its predecessor finishes.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Not overlapping is best effort, not a guarantee. Two runs of the same job can still overlap when the cluster is partitioned, or when the record of the previous task is no longer available to be checked. A task that must never run concurrently with itself needs a lock of its own.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -741,20 +805,47 @@ init-job.audit-log-cleanup.user=system:su</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Several jobs can describe the same task descriptor, so the same code can be run by different threads simultaneously. Also, if the execution time of the task is longer than the cron period (especially important for long-term jobs) then a new task can be started before the previous is finished.
+The guarantee is per job, not per task. Several jobs may name the same descriptor, and nothing relates them - they can run at the same time as each other.
 </td>
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="last-task-id"><a class="link" href="#last-task-id">What a scheduled task receives</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>A scheduled job can be executed by any cluster node supporting an application, which contains the described task. See <a href="tasks.ahtml#distributable">task</a> for further explanation.</p>
+<p>A scheduled task runs with the <code>config</code> of its job as parameters, exactly as if it had been submitted through the task API.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><span class="alt">XP 8.1.0</span></span> It also learns which task ran for the job last, through the <code>schedule.lastTaskId</code> attribute of its <a href="../libraries/lib-context.ahtml">context</a>. That is useful where each run continues from where the last one reached - fetching the previous run&#8217;s result to process only what has changed since. The value is absent on a job&#8217;s first run and on a job whose last run left no record.</p>
+</div>
+<div class="listingblock">
+<div class="title">Reading the previous run&#8217;s task id</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get as getContext} from '/lib/xp/context';
+import {get as getTask} from '/lib/xp/task';
+
+export function run(): void {
+    const lastTaskId = getContext().attributes['schedule.lastTaskId'] as string | undefined;
+    const previous = lastTaskId ? getTask(lastTaskId) : null;
+
+    if (previous) {
+        log.info('Previous run: %s', previous.state);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The chain only ever names tasks the scheduler let run, so an id that is there is one whose run actually happened.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-12 14:03:56 UTC
+Last updated 2026-08-18 06:52:19 UTC
 </div>
 </div>
 </body>

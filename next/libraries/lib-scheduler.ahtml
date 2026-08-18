@@ -782,6 +782,25 @@ const extendedCronJob = create({
         }
     },
     schedule: {type: 'CRON', value: '* * * * 5', timeZone: 'GMT-2:00'}
+});
+
+// runs every five minutes, measured from the start of the previous run
+const fixedRateJob = create({
+    name: 'poll-feed',
+    descriptor: 'appKey:task',
+    enabled: true,
+    schedule: {type: 'FIXED_RATE', value: 'PT5M'}
+});
+
+// runs once, then removes itself - the name is used for this occasion only
+const requestId = '018f3c2a-6b1e-7a44-9c3d-5e2f1a0b8c71';
+
+const ephemeralJob = create({
+    name: `publish-${requestId}`,
+    descriptor: 'appKey:publish',
+    enabled: true,
+    config: {contentId: 'e1f2a3b4-c5d6-4789-a012-3b4c5d6e7f80'},
+    schedule: {type: 'ONE_TIME', value: '2038-01-01T00:00:00.00Z', deleteAfterRun: true}
 });</code></pre>
 </div>
 </div>
@@ -1166,25 +1185,107 @@ if (result) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Schedule type: <code>CRON</code> or <code>ONE_TIME</code>.</p>
+<p>Schedule type: <code>CRON</code>, <code>ONE_TIME</code>, or <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> <code>FIXED_RATE</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">timeZone</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Time zone of the cron schedule. Required when <code>type</code> is <code>CRON</code>; not applicable to one-time jobs.</p>
+<p>Time zone of the cron schedule. Required when <code>type</code> is <code>CRON</code>; not applicable to the other types.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deleteAfterRun</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> <strong>Optional.</strong> Whether the job deletes itself once its task has been submitted. Only applicable when <code>type</code> is <code>ONE_TIME</code>. Defaults to <code>false</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The three types take different <code>value</code> formats, and behave differently once the job has run:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>CRON</code></dt>
+<dd>
+<p>A <a href="https://www.unix.com/man-page/linux/5/crontab">UNIX cron</a> expression, run repeatedly at the calendar positions it names — <code>'* * * * 5'</code> for every minute on Fridays. <code>timeZone</code> decides which day and hour those positions fall on.</p>
+</dd>
+<dt class="hdlist1"><code>ONE_TIME</code></dt>
+<dd>
+<p>An <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html#ISO_INSTANT">ISO instant</a> in UTC, run once. A time already in the past runs as soon as the job is created. The job stays afterwards, with <code>lastRun</code> recording that it is done, unless <code>deleteAfterRun</code> is set.</p>
+</dd>
+<dt class="hdlist1"><code>FIXED_RATE</code></dt>
+<dd>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> An <a href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO-8601 duration</a> — <code>'PT5M'</code> for every five minutes — measured from when the previous run <strong>started</strong>, not from when it finished. Use it for work that should repeat at an interval rather than at a time of day, where <code>'*/5 * * * *'</code> would tie the job to the clock.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p>Fixed rate and long-running tasks</p>
+</div>
+<div class="paragraph">
+<p>What <code>FIXED_RATE</code> guarantees:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The interval is between the <strong>starts</strong> of two runs, not the gap between them.</p>
+</li>
+<li>
+<p>A run that overruns its interval delays the next one rather than overlapping it, and the delayed run starts once its predecessor finishes.</p>
+</li>
+<li>
+<p>Periods missed while a run overruns are not replayed, so an overrunning run shifts every later run along with it.</p>
+</li>
+<li>
+<p>The interval is not anchored to a wall-clock position and does not survive a restart or a move to another node — the next run may shift by up to one interval. Use <code>CRON</code> where a run has to land at a particular time.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Not overlapping is best effort, not a guarantee: two runs of the same job can still overlap when the cluster is partitioned, or when the record of the previous task is no longer available to be checked. A task that must never run concurrently with itself needs a lock of its own.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Self-deleting one-time jobs</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> A one-time job stays after it has run, so its name cannot be reused to run it a second time. Where the name is used for a single occasion — a publish request keyed by a uuid, say — that serves no purpose and the finished jobs only accumulate; <code>deleteAfterRun</code> deletes the job instead.</p>
+</div>
+<div class="paragraph">
+<p>What it guarantees:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The job is deleted once a task has been submitted for it — not when that task finishes, and not if the run never started.</p>
+</li>
+<li>
+<p>A job whose submission failed is kept, with the failure recorded, so nothing is lost silently.</p>
+</li>
+<li>
+<p>Deletion never causes a repeat run: a job that cannot be deleted is recorded as run instead.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-12 14:03:56 UTC
+Last updated 2026-08-18 06:52:19 UTC
 </div>
 </div>
 </body>
