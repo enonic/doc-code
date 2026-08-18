@@ -193,9 +193,9 @@ to its own topics.
 
 A non-empty `allow` registers the topic, or updates the list of an already registered one, in which
 case current subscribers are re-evaluated and those no longer allowed are denied and dropped. An
-empty `allow` clears the registration: publishing then fails and new subscriptions are denied, while
-existing subscriptions and the topic's sequence numbering persist and resume if the topic is set
-again. The registration is also cleared when the application stops.
+empty `allow` array clears the registration: publishing then fails and new subscriptions are denied,
+while existing subscriptions and the topic's sequence numbering persist and resume if the topic is
+set again. The registration is also cleared when the application stops.
 
 [.lead]
 Parameters
