@@ -289,7 +289,7 @@ sendToTopic('contentChanged', {
 ----
 
 [#admin-events]
-== Admin events
+=== Admin events
 
 image:xp-810.svg[XP 8.1.0,opts=inline] A topic is of no use until an admin page subscribes to it. The `admin:events` API carries every
 subscription of a page over one websocket, and serves the browser client that speaks it.
