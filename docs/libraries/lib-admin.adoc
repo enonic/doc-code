@@ -1,6 +1,6 @@
 = Admin library
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 This API provides admin-related functions.
 
@@ -182,7 +182,7 @@ const url = extensionUrl({
 
 === setTopic
 
-Sets the state of an admin events topic owned by this application.
+image:xp-810.svg[XP 8.1.0,opts=inline] Sets the state of an admin events topic owned by this application.
 
 Admin pages subscribe to topics over the `admin:events` API, and this application publishes to them
 with <<sendtotopic, `sendToTopic`>>. See <<admin-events, Admin events>> for how a page connects.
@@ -241,7 +241,7 @@ listener({
 
 === sendToTopic
 
-Publishes a message to an admin events topic owned by this application.
+image:xp-810.svg[XP 8.1.0,opts=inline] Publishes a message to an admin events topic owned by this application.
 
 The message is delivered to the sockets on this node holding an acknowledged subscription to the
 topic, stamped with a per-topic sequence number that lets a subscriber count what it missed.
@@ -291,7 +291,7 @@ sendToTopic('contentChanged', {
 [#admin-events]
 == Admin events
 
-A topic is of no use until an admin page subscribes to it. The `admin:events` API carries every
+image:xp-810.svg[XP 8.1.0,opts=inline] A topic is of no use until an admin page subscribes to it. The `admin:events` API carries every
 subscription of a page over one websocket, and serves the browser client that speaks it.
 
 Mount the API on the admin tool that needs it, in the tool's descriptor:
