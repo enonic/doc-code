@@ -449,6 +449,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#gettoolurl">getToolUrl</a></li>
 <li><a href="#gethometoolurl">getHomeToolUrl</a></li>
 <li><a href="#extensionurl">extensionUrl</a></li>
+<li><a href="#settopic">setTopic</a></li>
+<li><a href="#sendtotopic">sendToTopic</a></li>
+<li><a href="#admin-events">Admin events</a></li>
 <li><a href="#widgeturl">widgetUrl</a></li>
 </ul>
 </li>
@@ -734,6 +737,228 @@ const url = extensionUrl({
 </div>
 </div>
 <div class="sect2">
+<h3 id="settopic"><a class="link" href="#settopic">setTopic</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Sets the state of an admin events topic owned by this application.</p>
+</div>
+<div class="paragraph">
+<p>Admin pages subscribe to topics over the <code>admin:events</code> API, and this application publishes to them
+with <a href="#sendtotopic"><code>sendToTopic</code></a>. See <a href="#admin-events">Admin events</a> for how a page connects.</p>
+</div>
+<div class="paragraph">
+<p>A topic is addressed by its canonical name, <code>&lt;application-key&gt;:&lt;name&gt;</code>, which the platform composes
+from the calling application and the local name given here. An application can only set and publish
+to its own topics.</p>
+</div>
+<div class="paragraph">
+<p>A non-empty <code>allow</code> registers the topic, or updates the list of an already registered one, in which
+case current subscribers are re-evaluated and those no longer allowed are denied and dropped. An
+empty <code>allow</code> array clears the registration: publishing then fails and new subscriptions are denied,
+while existing subscriptions and the topic&#8217;s sequence numbering persist and resume if the topic is
+set again. The registration is also cleared when the application stops.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<div class="paragraph">
+<p><code>setTopic()</code> takes a single <code>params</code> object with these properties:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Local topic name: 1-255 characters, no <code>:</code>, no whitespace.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Principal keys allowed to subscribe, in addition to <code>role:system.admin</code>, which may always subscribe. An empty array clears the topic registration.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>string</strong> : The canonical topic name, <code>&lt;application-key&gt;:&lt;name&gt;</code>, which subscribers address.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="paragraph">
+<p>Register the topic from <code>main.ts</code>, so that it exists on every node before any page subscribes:</p>
+</div>
+<div class="listingblock">
+<div class="title">main.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {setTopic, sendToTopic} from '/lib/xp/admin';
+import {listener} from '/lib/xp/event';
+
+setTopic({
+    name: 'contentChanged',
+    allow: 'role:cms.admin'
+});
+
+listener({
+    type: 'node.updated',
+    localOnly: false,
+    callback: () =&gt; sendToTopic('contentChanged')
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sendtotopic"><a class="link" href="#sendtotopic">sendToTopic</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Publishes a message to an admin events topic owned by this application.</p>
+</div>
+<div class="paragraph">
+<p>The message is delivered to the sockets on this node holding an acknowledged subscription to the
+topic, stamped with a per-topic sequence number that lets a subscriber count what it missed.
+Delivery is best effort.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The message is not distributed over the cluster. Subscribers on other nodes receive it only if the
+application publishes on those nodes too.</p>
+</div>
+<div class="paragraph">
+<p>Publishing from an event listener registered in <code>main.ts</code> does exactly that: <code>main.ts</code> runs on every
+node, so each node&#8217;s listener publishes to its own subscribers. Distribution is then the event&#8217;s
+concern - see <a href="../fundamentals/events.ahtml#local-vs-distributed">local versus distributed semantics</a> - and
+each subscriber receives one message rather than one per node.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Local topic name, as passed to <a href="#settopic"><code>setTopic</code></a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object | array | string | number | boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Message data. Must be serializable to JSON and must not contain <code>null</code> values. Defaults to an empty object.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p>Nothing.</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {sendToTopic} from '/lib/xp/admin';
+
+sendToTopic('contentChanged', {
+    project: 'intranet',
+    count: 3
+});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="admin-events"><a class="link" href="#admin-events">Admin events</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> A topic is of no use until an admin page subscribes to it. The <code>admin:events</code> API carries every
+subscription of a page over one websocket, and serves the browser client that speaks it.</p>
+</div>
+<div class="paragraph">
+<p>Mount the API on the admin tool that needs it, in the tool&#8217;s descriptor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">apis:
+  - "admin:events"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Pass the API url to the page from the tool&#8217;s implementation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {apiUrl} from '/lib/xp/portal';
+
+const eventsUrl = apiUrl({api: 'admin:events'});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the browser, import the client the API serves and subscribe by canonical topic name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const {connect} = await import(`${eventsUrl}/client.js`);
+
+connect({
+    onEvent: event =&gt; console.log('message', event.topic, event.data),
+    onLoss: loss =&gt; console.log('missed', loss.count, 'messages of', loss.topic)
+}).subscribe('com.example.myapp:contentChanged');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>connect</code> subscribes through a shared worker started from the client&#8217;s own url, so every admin page
+of the browser that loads it shares one worker, and with it one socket. Where shared workers are
+unavailable the client opens a socket of the page&#8217;s own instead. A connection receives only the
+topics it subscribed to.</p>
+</div>
+<div class="paragraph">
+<p><code>onLoss</code> reports messages that did not arrive: <code>count</code> is how many, or <code>null</code> when that cannot be
+known, such as after a reconnect to another node. A page that only refreshes its data can treat an
+event and a loss the same way.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="widgeturl"><a class="link" href="#widgeturl">widgetUrl</a></h3>
 <div class="admonitionblock warning">
 <table>
@@ -812,7 +1037,7 @@ Deprecated — use <a href="#extensionurl"><code>extensionUrl</code></a> instead
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-18 06:52:19 UTC
+Last updated 2026-08-19 07:46:10 UTC
 </div>
 </div>
 </body>
