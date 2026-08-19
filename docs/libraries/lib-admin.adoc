@@ -1,6 +1,6 @@
 = Admin library
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 This API provides admin-related functions.
 
@@ -179,6 +179,158 @@ const url = extensionUrl({
     }
 });
 ----
+
+=== setTopic
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Sets the state of an admin events topic owned by this application.
+
+Admin pages subscribe to topics over the `admin:events` API, and this application publishes to them
+with <<sendtotopic, `sendToTopic`>>. See <<admin-events, Admin events>> for how a page connects.
+
+A topic is addressed by its canonical name, `+<application-key>:<name>+`, which the platform composes
+from the calling application and the local name given here. An application can only set and publish
+to its own topics.
+
+A non-empty `allow` registers the topic, or updates the list of an already registered one, in which
+case current subscribers are re-evaluated and those no longer allowed are denied and dropped. An
+empty `allow` array clears the registration: publishing then fails and new subscriptions are denied,
+while existing subscriptions and the topic's sequence numbering persist and resume if the topic is
+set again. The registration is also cleared when the application stops.
+
+[.lead]
+Parameters
+
+`setTopic()` takes a single `params` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| name | string | Local topic name: 1-255 characters, no `:`, no whitespace.
+| allow | string \| string[] | Principal keys allowed to subscribe, in addition to `+role:system.admin+`, which may always subscribe. An empty array clears the topic registration.
+|===
+
+[.lead]
+Returns
+
+*string* : The canonical topic name, `+<application-key>:<name>+`, which subscribers address.
+
+[.lead]
+Example
+
+Register the topic from `main.ts`, so that it exists on every node before any page subscribes:
+
+.main.ts
+[source,typescript]
+----
+import {setTopic, sendToTopic} from '/lib/xp/admin';
+import {listener} from '/lib/xp/event';
+
+setTopic({
+    name: 'contentChanged',
+    allow: 'role:cms.admin'
+});
+
+listener({
+    type: 'node.updated',
+    localOnly: false,
+    callback: () => sendToTopic('contentChanged')
+});
+----
+
+=== sendToTopic
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Publishes a message to an admin events topic owned by this application.
+
+The message is delivered to the sockets on this node holding an acknowledged subscription to the
+topic, stamped with a per-topic sequence number that lets a subscriber count what it missed.
+Delivery is best effort.
+
+[IMPORTANT]
+====
+The message is not distributed over the cluster. Subscribers on other nodes receive it only if the
+application publishes on those nodes too.
+
+Publishing from an event listener registered in `main.ts` does exactly that: `main.ts` runs on every
+node, so each node's listener publishes to its own subscribers. Distribution is then the event's
+concern - see <<../fundamentals/events#local-vs-distributed, local versus distributed semantics>> - and
+each subscriber receives one message rather than one per node.
+====
+
+[.lead]
+Parameters
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| name | string | Local topic name, as passed to <<settopic, `setTopic`>>.
+| message | object \| array \| string \| number \| boolean | *Optional.* Message data. Must be serializable to JSON and must not contain `null` values. Defaults to an empty object.
+|===
+
+[.lead]
+Returns
+
+Nothing.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {sendToTopic} from '/lib/xp/admin';
+
+sendToTopic('contentChanged', {
+    project: 'intranet',
+    count: 3
+});
+----
+
+[#admin-events]
+=== Admin events
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A topic is of no use until an admin page subscribes to it. The `admin:events` API carries every
+subscription of a page over one websocket, and serves the browser client that speaks it.
+
+Mount the API on the admin tool that needs it, in the tool's descriptor:
+
+[source,yaml]
+----
+apis:
+  - "admin:events"
+----
+
+Pass the API url to the page from the tool's implementation:
+
+[source,typescript]
+----
+import {apiUrl} from '/lib/xp/portal';
+
+const eventsUrl = apiUrl({api: 'admin:events'});
+----
+
+In the browser, import the client the API serves and subscribe by canonical topic name:
+
+[source,typescript]
+----
+const {connect} = await import(`${eventsUrl}/client.js`);
+
+connect({
+    onEvent: event => console.log('message', event.topic, event.data),
+    onLoss: loss => console.log('missed', loss.count, 'messages of', loss.topic)
+}).subscribe('com.example.myapp:contentChanged');
+----
+
+`connect` subscribes through a shared worker started from the client's own url, so every admin page
+of the browser that loads it shares one worker, and with it one socket. Where shared workers are
+unavailable the client opens a socket of the page's own instead. A connection receives only the
+topics it subscribed to.
+
+`onLoss` reports messages that did not arrive: `count` is how many, or `null` when that cannot be
+known, such as after a reconnect to another node. A page that only refreshes its data can treat an
+event and a loss the same way.
 
 === widgetUrl
 
