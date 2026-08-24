@@ -23,9 +23,9 @@ image:preview.svg[Preview,opts=inline] GraalJS implements the current ECMAScript
 [#graaljs]
 === GraalJS preview
 
-image:preview.svg[Preview,opts=inline] *Not for production.* Nashorn remains the default and the supported engine; GraalJS is here to try and report on.
+image:preview.svg[Preview,opts=inline] *Not for production.* Nashorn remains the default and the supported engine; GraalJS is here to try and report on, and what follows may still change while it is in preview.
 
-The engine is chosen *per application*, from the `+X-Script-Engine+` manifest header the application bundle declares. An application that declares none runs on the installation default, set with the `xp.script-engine` https://developer.enonic.com/docs/platform/stable/config/system#script-engine[system property] (`Nashorn` unless changed). Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.
+The engine is chosen *per application*, from the `+X-Script-Engine+` manifest header the application bundle declares. An application that declares none runs on Nashorn. Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.
 
 Nothing about how you write an app changes: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the execution environment around them.
 
@@ -52,6 +52,8 @@ TypeScript is supported as the authoring language; the build step transpiles to 
 == Loading and caching
 
 XP loads each module *once per app deploy* and caches it. Subsequent `require()` calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed. Top-level code in a module therefore runs exactly once per deploy.
+
+NOTE: image:preview.svg[Preview,opts=inline] On the <<graaljs, GraalJS preview>> the unit is the script context rather than the deploy: a module is loaded once per context, so its top-level code runs once for each context the application is given. That makes top-level state less dependable, not more - everything below still holds.
 
 This makes module top-level a natural place for one-time setup (requiring libraries, computing constants), but a poor place for mutable state. Treat anything declared outside a function body as immutable after load. For state that must survive between invocations, use a repo node, the `cache` library, or another explicit persistence mechanism.
 
