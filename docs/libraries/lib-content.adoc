@@ -1989,6 +1989,8 @@ Returns
 If `sort` was specified, results will contain system meta properties `_sort` and `_score: null`, otherwise `_score`
  will have a relevant value.
 
+NOTE: image:xp-810.svg[XP 8.1.0,opts=inline] A value in `fields` comes from the document the *search index* holds, not from the content, so it can differ from what <<get, `get`>> returns for the same content. It is as fresh as the index — a write not yet refreshed into search yields the value the field had before — and it arrives as a string, given as a scalar where the field holds one value and as an array where it holds several. Casing and surrounding space survive as written. This is why the fields that may be asked for are a fixed set: they are the ones whose indexed form is the form the content exposes. Where the exact value matters, read the content.
+
 [.lead]
 Examples
 

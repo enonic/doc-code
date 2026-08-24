@@ -1304,6 +1304,8 @@ Returns
 
 *object* : (<<node-query-result, NodeQueryResult>>) Result stats, hits and, if requested, aggregations.
 
+NOTE: image:xp-810.svg[XP 8.1.0,opts=inline] A value in `fields` comes from the document the *search index* holds, not from the node, so it can differ from what a read of the node returns. It is as fresh as the index — a write not yet refreshed into search yields the value the field had before — and it arrives in the form the index keeps: a string, given as a scalar where the field holds one value and as an array where it holds several. Casing and surrounding space survive as written. The five fields above are the ones whose indexed form is the form the node exposes; any other name is passed to the index rather than refused, and may come back in a shape of its own — a number as `"42.0"`, for instance. Where the exact value matters, read the node.
+
 [.lead]
 Examples
 
