@@ -2696,9 +2696,27 @@ Properties
 | Name | Type | Description
 | total | number | Total number of contents matching the request, ignoring `start` and `count`.
 | count | number | Number of contents in `hits`.
-| hits | <<../fundamentals/types#content, Content>>[] | The contents on this page. image:xp-810.svg[XP 8.1.0,opts=inline] Where `query` was asked for another shape through `returns`, a hit is `{id, score}` instead — with `fields` alongside them when field names were requested, keyed by the names asked for. A field a content does not have is absent from `fields` rather than null.
+| hits | <<../fundamentals/types#content, Content>>[] \| <<content-hit, ContentHit>>[] | The contents on this page — or, image:xp-810.svg[XP 8.1.0,opts=inline] where `query` asked for another shape through `returns`, one <<content-hit, ContentHit>> per hit instead of the content itself.
 | aggregations | object | *Optional.* Aggregation results, keyed by the names used in the `aggregations` request. Present only when the request asked for aggregations.
 | highlight | object | *Optional.* Highlight results, keyed by content id. Present only when the request asked for highlighting.
+|===
+
+[#content-hit]
+=== ContentHit
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A hit of a <<query, `query`>> that asked for `returns: 'ids'` or a list of field names. The content itself is not read to answer such a query, so a hit carries nothing beyond what was asked for.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | Id of the content.
+| score | number | Score of the hit, as for any other query.
+| fields | object | *Optional.* The requested field values, keyed by the names asked for. Present only where `returns` named fields rather than `'ids'`. A field the content does not have is absent rather than null.
 |===
 
 [#content-versions-result]
