@@ -1,6 +1,6 @@
 = Runtime
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 What powers your Enonic app at execution time — the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free.
 
@@ -12,13 +12,32 @@ Two engines are available:
 
 Nashorn:: The default engine. Stable, production-ready, ships with every XP install. All XP releases since 7.x have shipped Nashorn.
 
-GraalVM JavaScript:: Available as an experimental alternative. Currently not recommended for production.
-
-NOTE: XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScript is also available but is currently experimental and not recommended for production use.
+GraalJS:: image:xp-810.svg[XP 8.1.0,opts=inline] A *preview* of the engine that will replace Nashorn. Implements the current ECMAScript standard. Not recommended for production yet - see <<graaljs, GraalJS preview>>.
 
 === Language level
 
 Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
+
+GraalJS implements the current ECMAScript standard, so ES2015+ syntax and built-ins are available at runtime without down-levelling. Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
+
+[#graaljs]
+=== GraalJS preview
+
+The engine is chosen *per application*, from the `+X-Script-Engine+` manifest header the application bundle declares. An application that declares none runs on the installation default, set with the `xp.script-engine` https://developer.enonic.com/docs/platform/stable/config/system#script-engine[system property] (`Nashorn` unless changed). Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.
+
+Nothing about how you write an app changes: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the execution environment around them.
+
+*Compiled code is shared, and warm-up is worth paying for.* One engine serves the whole installation, and the code it compiles is cached across every script context built from it. A module parsed while one context starts is reused by the next, so requiring your entry points' libraries from <<main#, `main.ts`>> keeps them warm for the contexts that later serve requests.
+
+*An application gets a pool of script contexts, not one.* Contexts are created lazily as concurrency demands them, and *module-level state is per context* - two requests may load the same module and see two different copies of its top-level variables. This is the same rule <<threading, threading>> already imposes, enforced more strictly: treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.
+
+*All code runs in strict mode.* GraalJS enables ECMAScript strict mode unconditionally. Code that relies on sloppy-mode behaviour - assigning to an undeclared variable, `with`, duplicate parameter names, octal literals like `+0755+` - fails at runtime rather than being tolerated.
+
+*Values cannot leave the context that created them.* A JavaScript function or object belongs to one script context and is meaningless in another. This is what makes <<../libraries/lib-task#executefunction, `executeFunction()`>> unsupported on GraalJS: it hands a function to another execution. Submit a <<../background/tasks#, named task>> with `submitTask()` instead.
+
+*Disposers must be registered during start-up.* Register `+__.disposer+` from `main.ts`, or from a module it loads while starting. A registration made later - from a component implementation the first time it is loaded, say - is ignored and logged. See <<java-bridge#disposer, `+__.disposer+`>>.
+
+TIP: Run your test suite against both engines before switching a production app. The differences above are the ones the platform imposes; a dependency written for ES5.1 sloppy mode can have its own.
 
 == Modules and bundling
 
@@ -36,6 +55,7 @@ This makes module top-level a natural place for one-time setup (requiring librar
 
 See <<functions#loading_and_caching, Functions: Loading and caching>> for the implications on each function type.
 
+[#threading]
 == Threading
 
 The runtime is multithreaded. The platform serves requests, dispatches events, and runs background tasks concurrently across multiple threads, taking advantage of multi-core CPU architectures. There is no single event loop — each request, task, or event listener runs on a worker thread from a managed pool.
