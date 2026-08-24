@@ -783,6 +783,8 @@ const stream = getAttachmentStream({
 
 Fetches children of a content
 
+WARNING: Deprecated since XP 8.1 — use <<query, `query`>> with `parent` instead. It accepts the same path or id, applies the same child order of the parent where `sort` is omitted, and additionally supports filters, content types, aggregations and highlighting.
+
 [.lead]
 *Parameters:*
 
@@ -1966,9 +1968,12 @@ Retrieves content using a query
 [grid="none"]
 |===
 | Name | Type | Description
+| query | string \| object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
+| parent | string | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Path or id of a content to whose direct children the query is restricted. Where `sort` is not specified, the children are returned in the child order of the parent. A parent that does not exist matches nothing. A path is relative to the content root of the calling context; as the same API also serves the archive, an identical path denotes a different content depending on the context.
+| recursive | boolean | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Matches every descendant of `parent` rather than its direct children only. Requires `parent`. The child order of the parent is not applied to a subtree, since it orders siblings rather than levels, so specify `sort` where the order of a recursive result is significant. Defaults to `false`.
+| returns | string \| string[] | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] What each hit carries: `'contents'` for the whole content, the default; `'ids'` for id and score alone; or a list of content field names — `+_name+`, `+_path+`, `displayName`, `type`, `creator`, `modifier`, `createdTime`, `modifiedTime`, `owner`, `language` — supplied as `fields` on the hit. Any other name is an error, as is an empty list; request `'ids'` where no fields are required. Every shape other than the default is answered without reading the contents at all, so it is the cheaper way to ask when the whole content is not needed.
 | start | number | *Optional.* Start index (used for paging). Defaults to `0`.
 | count | number | *Optional.* Number of contents to fetch. Defaults to `10`.
-| query | string \| object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
 | filters | object \| object[] | *Optional.* Filters to apply to query result.
 | sort | string \| object \| object[] | *Optional.* Sorting string or <<../storage/querying#sort, DSL>> expression.
 | aggregations | object | *Optional.* Aggregations expression.
@@ -1984,8 +1989,40 @@ Returns
 If `sort` was specified, results will contain system meta properties `_sort` and `_score: null`, otherwise `_score`
  will have a relevant value.
 
+NOTE: image:xp-810.svg[XP 8.1.0,opts=inline] A value in `fields` comes from the document the *search index* holds, not from the content, so it can differ from what <<get, `get`>> returns for the same content. It is as fresh as the index — a write not yet refreshed into search yields the value the field had before — and it arrives as a string, given as a scalar where the field holds one value and as an array where it holds several. Casing and surrounding space survive as written. This is why the fields that may be asked for are a fixed set: they are the ones whose indexed form is the form the content exposes. Where the exact value matters, read the content.
+
 [.lead]
 Examples
+
+.The children of a content, in the order the parent keeps them, as ids alone
+[source,typescript]
+----
+import {query} from '/lib/xp/content';
+
+const children = query({
+    parent: '/mysite/articles',
+    count: -1,
+    returns: 'ids'
+});
+
+// children.hits is [{id, score}, ...] - no content was read to answer this
+----
+
+.Every descendant that is an article, with a few fields of each
+[source,typescript]
+----
+import {query} from '/lib/xp/content';
+
+const result = query({
+    parent: '/mysite',
+    recursive: true,
+    contentTypes: ['com.enonic.app.mysite:article'],
+    sort: 'modifiedTime DESC',
+    returns: ['displayName', 'modifiedTime']
+});
+
+// result.hits is [{id, score, fields: {displayName, modifiedTime}}, ...]
+----
 
 [source,typescript]
 ----
@@ -2661,9 +2698,27 @@ Properties
 | Name | Type | Description
 | total | number | Total number of contents matching the request, ignoring `start` and `count`.
 | count | number | Number of contents in `hits`.
-| hits | <<../fundamentals/types#content, Content>>[] | The contents on this page.
+| hits | <<../fundamentals/types#content, Content>>[] \| <<content-hit, ContentHit>>[] | The contents on this page — or, image:xp-810.svg[XP 8.1.0,opts=inline] where `query` asked for another shape through `returns`, one <<content-hit, ContentHit>> per hit instead of the content itself.
 | aggregations | object | *Optional.* Aggregation results, keyed by the names used in the `aggregations` request. Present only when the request asked for aggregations.
 | highlight | object | *Optional.* Highlight results, keyed by content id. Present only when the request asked for highlighting.
+|===
+
+[#content-hit]
+=== ContentHit
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A hit of a <<query, `query`>> that asked for `returns: 'ids'` or a list of field names. The content itself is not read to answer such a query, so a hit carries nothing beyond what was asked for.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | Id of the content.
+| score | number | Score of the hit, as for any other query.
+| fields | object | *Optional.* The requested field values, keyed by the names asked for. Present only where `returns` named fields rather than `'ids'`. A field the content does not have is absent rather than null.
 |===
 
 [#content-versions-result]

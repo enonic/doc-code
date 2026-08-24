@@ -42,9 +42,9 @@ Parameters
 | Name | Type | Description
 | sourceNodePath | string | Source nodes path.
 | exportName | string | Export name.
-| nodeResolved | function | *Optional.* A function to be called before export starts with the number of nodes to export.
+| nodeResolved | function | *Optional.* A function to be called with the number of nodes the export has to write. image:xp-810.svg[XP 8.1.0,opts=inline] It is the export's best knowledge at the time of the call, and it may be called more than once: a subtree is scanned in bounded batches, so an export of more than 10 000 nodes states a growing total as it goes, each call replacing the previous value. Until the first call the amount is unknown.
 | nodeExported | function | *Optional.* A function to be called during export with the number of nodes exported since the last call.
-| batchSize | number | *Optional.* Controls how many nodes are loaded into memory simultaneously during export. A higher value may speed up export but also increase memory usage. Defaults to `1000`.
+| batchSize | number | *Deprecated.* image:xp-810.svg[XP 8.1.0,opts=inline] Ignored. An export reads each node by the exact version its scan observed, one at a time, so there is no read batch to size.
 |===
 
 
@@ -68,18 +68,6 @@ const result = exportNodes({
     },
     nodeResolved: (i: number) => {
     }
-});
-----
-
-[source,typescript]
-----
-import {exportNodes} from '/lib/xp/export';
-
-// Export content nodes with a custom batch size.
-const result = exportNodes({
-    sourceNodePath: '/content',
-    exportName: 'export-batch',
-    batchSize: 25
 });
 ----
 
@@ -123,7 +111,7 @@ Parameters
 | includeNodeIds | boolean | *Optional.* Set to `true` to use node IDs from the import, `false` to generate new node IDs. Defaults to `false`.
 | includePermissions | boolean | *Optional.* Set to `true` to overwrite node permissions with permissions from the import, `false` to merge permissions with new parent permissions. Defaults to `false`.
 | versionAttributes | object | *Optional.* Attributes attached to the node version of every imported node.
-| nodeResolved | function | *Optional.* A function to be called before import starts with the number of nodes to import.
+| nodeResolved | function | *Optional.* A function to be called before import starts with the number of nodes to import, counted from the export being read.
 | nodeImported | function | *Optional.* A function to be called during import with the number of nodes imported since the last call.
 | nodeSkipped | function | *Optional.* A function to be called during import with the number of nodes skipped since the last call.
 |===

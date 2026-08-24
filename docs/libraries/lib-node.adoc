@@ -178,6 +178,9 @@ Parameters
 |===
 | Name | Type | Description
 | query | string/object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
+| parent | string | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Path of a node to whose direct children the query is restricted, applied in every repository of the connection. An id cannot denote one node across several repositories, so unlike the single-repository query only a path is accepted, and no child order is inherited — specify `sort` where the order is significant.
+| recursive | boolean | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Matches every descendant of `parent` rather than its direct children only. Requires `parent`. Defaults to `false`.
+| returns | string[] | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Index fields each hit is to carry, supplied as `fields` on the hit. Same supported fields as the single-repository <<repo-query, `query`>>.
 | start | number | *Optional.* Start index used for paging. Defaults to `0`.
 | count | number | *Optional.* Number of nodes to fetch, used for paging. Defaults to `10`.
 | filters | object | *Optional.* Query filters.
@@ -670,6 +673,8 @@ if (result) {
 === findChildren
 
 Fetches children of a node.
+
+WARNING: Deprecated since XP 8.1 — use <<repo-query, `query`>> with `parent` instead. It accepts the same path or id, applies the same child order of the parent where `sort` is omitted, and additionally accepts any constraint and return shape a query supports. A count is expressed as a query with `count: 0`, read from `total`.
 
 [.lead]
 Parameters
@@ -1265,6 +1270,7 @@ const expected = {
 }
 ----
 
+[#repo-query]
 === query
 
 Queries nodes.
@@ -1280,6 +1286,9 @@ Parameters
 |===
 | Name | Type | Description
 | query | string/object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
+| parent | string | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Path or id of a node to whose direct children the query is restricted. Where `sort` is not specified, the children are returned in the child order of the parent. A parent that does not exist matches nothing.
+| recursive | boolean | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Matches every descendant of `parent` rather than its direct children only. Requires `parent`. The child order of the parent is not applied to a subtree, since it orders siblings rather than levels, so specify `sort` where the order of a recursive result is significant. Defaults to `false`.
+| returns | string[] | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Index fields each hit is to carry, supplied as `fields` on the hit. The supported fields are `+_name+`, `+_path+`, `+_nodeType+`, `+_versionKey+` and `+_ts+`, returned in the form a node exposes them. Any other name is an error, as is an empty list — omit `returns` where no fields are required.
 | start | number | *Optional.* Start index used for paging. Defaults to `0`.
 | count | number | *Optional.* Number of nodes to fetch, used for paging. Defaults to `10`.
 | filters | object | *Optional.* Query filters.
@@ -1295,6 +1304,8 @@ Returns
 
 *object* : (<<node-query-result, NodeQueryResult>>) Result stats, hits and, if requested, aggregations.
 
+NOTE: image:xp-810.svg[XP 8.1.0,opts=inline] A value in `fields` comes from the document the *search index* holds, not from the node, so it can differ from what a read of the node returns. It is as fresh as the index — a write not yet refreshed into search yields the value the field had before — and it arrives in the form the index keeps: a string, given as a scalar where the field holds one value and as an array where it holds several. Casing and surrounding space survive as written. The five fields above are the ones whose indexed form is the form the node exposes; any other name is passed to the index rather than refused, and may come back in a shape of its own — a number as `"42.0"`, for instance. Where the exact value matters, read the node.
+
 [.lead]
 Examples
 
@@ -1304,6 +1315,18 @@ Examples
 const result = repo.query({
     query: "fulltext('_name', '_name')"
 });
+----
+
+.The children of a node, in the order the parent keeps them, with their names
+[source,typescript]
+----
+const result = repo.query({
+    parent: '/content/mysite',
+    count: -1,
+    returns: ['_name']
+});
+
+// result.hits is [{id, score, fields: {_name}}, ...]
 ----
 
 .Sample response
@@ -1800,7 +1823,7 @@ Properties
 | Name | Type | Description
 | total | number | Total number of nodes matching the query.
 | count | number | Number of hits returned in this result.
-| hits | object[] | Array of hits, each with an `id` and a `score` (and optionally `explanation` and `highlight`).
+| hits | object[] | Array of hits, each with an `id` and a `score` (and optionally `explanation` and `highlight`). image:xp-810.svg[XP 8.1.0,opts=inline] Where `returns` was requested, a hit also carries `fields`: an object keyed by the requested field names. A field a node does not have is absent from `fields` rather than null.
 | aggregations | object | Aggregations result, when aggregations were requested.
 | suggestions | object | *Optional.* Suggestions result, when suggestions were requested.
 |===
