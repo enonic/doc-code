@@ -18,13 +18,26 @@ GraalJS:: image:preview.svg[Preview,opts=inline] The engine that will replace Na
 
 Both engines run every module in ECMAScript *strict mode* — Nashorn is started with `-strict`, GraalJS with `js.strict=true`. Sloppy-mode behaviour therefore fails whichever engine you are on: assigning to an undeclared variable, `with`, duplicate parameter names, legacy octal literals like `+0755+`.
 
-Nashorn is started with `--language=es6`, but that flag buys *partial* ES2015 support, not the edition. Nashorn's ES6 implementation was never finished, so the flag enables what was built rather than what the standard specifies: ES2015 is the ceiling, not a guarantee, and a given feature from it may or may not be there. Nothing from ES2016 onward is. Syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
+Nashorn is started with `--language=es6`, but that flag buys *partial* ES2015 support, not the edition — its ES6 implementation was never finished. Probed against Nashorn 15.7 with the flags and module wrapper XP uses:
+
+Available:: `let` and `const`, arrow functions, template literals, default parameters, `for`...`of`, `Symbol`, `Map`, `Set`.
+Not implemented:: classes, generators, object and array destructuring, the spread operator. Nashorn rejects each of these outright — "ES6 class declarations and expressions are not yet implemented", and so on.
+Absent:: `Promise`, `Proxy`, `Reflect`, `BigInt` and `globalThis`, along with everything from ES2016 onward — the `+**+` operator, optional chaining, nullish coalescing, `async`/`await`.
+
+Syntax and APIs beyond that are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
 
 image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard, well past what Nashorn's ES6 mode reaches: destructuring, spread, generators, optional chaining, nullish coalescing, `Proxy`, `BigInt` and the modern `Object`, `Array` and `String` methods, with no polyfill and no down-levelling.
 
 Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
 
-CAUTION: `async` and `await` are the exception to all of this, on *both* engines. They are beyond Nashorn's language level entirely. GraalJS parses them, but XP runs no event loop: there are no timers, nothing drains a promise job queue between executions, and no part of the platform unwraps a promise a module hands back. An `async` function returns a `Promise` where its caller expects a value — an HTTP function declared `async` hands the site engine a promise instead of a response — and an `await` on anything not already settled has nothing to make it progress. Write synchronous code, and move work that should not block the request into a <<../background/tasks#, task>>.
+[CAUTION]
+====
+`async` and `await` buy you no asynchrony here, and the reason differs by engine. On Nashorn they are a syntax error, and there is no `Promise` to fall back on.
+
+On GraalJS they parse and run, and promise jobs *are* drained when a call returns — a `.then` on a resolved promise does fire. What is missing is everything around them: XP runs no event loop and no timers, and nothing in the platform unwraps a promise a module hands back. So an `async` function returns a `Promise` where its caller expects a value, and an HTTP function declared `async` hands the site engine a promise instead of a response. `await` on a promise that nothing will settle yields a promise left pending rather than blocking. And top-level `await` is a syntax error, because a module body is a plain function, not an ES module.
+
+Write synchronous code, and move work that should not block the request into a <<../background/tasks#, task>>.
+====
 
 [#graaljs]
 === GraalJS preview
