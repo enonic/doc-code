@@ -18,7 +18,9 @@ GraalJS:: image:preview.svg[Preview,opts=inline] The engine that will replace Na
 
 Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
 
-image:preview.svg[Preview,opts=inline] GraalJS implements the current ECMAScript standard, so ES2015+ syntax and built-ins are available at runtime without down-levelling. Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
+image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard — a decade of language evolution past Nashorn's ES5.1, and far beyond the ES2015 the starters target. Classes, `let`/`const`, arrow functions, template literals, destructuring, spread, generators, `async`/`await`, optional chaining, nullish coalescing, `Map`, `Set`, `Symbol`, `Proxy`, `BigInt` and the modern `Object`, `Array` and `String` methods are simply there, with no polyfill and no down-levelling.
+
+Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
 
 [#graaljs]
 === GraalJS preview
@@ -29,7 +31,7 @@ The engine is chosen *per application*, from the `+X-Script-Engine+` manifest he
 
 Nothing about how you write an app changes: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the execution environment around them.
 
-*Compiled code is shared, and warm-up is worth paying for.* One engine serves the whole installation, and the code it compiles is cached across every script context built from it. A module parsed while one context starts is reused by the next, so requiring your entry points' libraries from <<main#, `main.ts`>> keeps them warm for the contexts that later serve requests.
+*Compiled code is shared across contexts.* One engine serves the whole installation, and the code it compiles is cached across every script context built from it: a module parsed while one context starts is reused by the next, rather than parsed again for each.
 
 *An application gets a pool of script contexts, not one.* Contexts are created lazily as concurrency demands them, and *module-level state is per context* - two requests may load the same module and see two different copies of its top-level variables. This is the same rule <<threading, threading>> already imposes, enforced more strictly: treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.
 
