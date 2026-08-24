@@ -12,16 +12,18 @@ Two engines are available:
 
 Nashorn:: The default engine. Stable, production-ready, ships with every XP install. All XP releases since 7.x have shipped Nashorn.
 
-GraalJS:: image:xp-810.svg[XP 8.1.0,opts=inline] A *preview* of the engine that will replace Nashorn. Implements the current ECMAScript standard. Not recommended for production yet - see <<graaljs, GraalJS preview>>.
+GraalJS:: image:preview.svg[Preview,opts=inline] The engine that will replace Nashorn, available to try since XP 8.1.0. Implements the current ECMAScript standard. *Not for production* - see <<graaljs, GraalJS preview>>.
 
 === Language level
 
 Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
 
-GraalJS implements the current ECMAScript standard, so ES2015+ syntax and built-ins are available at runtime without down-levelling. Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
+image:preview.svg[Preview,opts=inline] GraalJS implements the current ECMAScript standard, so ES2015+ syntax and built-ins are available at runtime without down-levelling. Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
 
 [#graaljs]
 === GraalJS preview
+
+image:preview.svg[Preview,opts=inline] *Not for production.* Nashorn remains the default and the supported engine; GraalJS is here to try and report on.
 
 The engine is chosen *per application*, from the `+X-Script-Engine+` manifest header the application bundle declares. An application that declares none runs on the installation default, set with the `xp.script-engine` https://developer.enonic.com/docs/platform/stable/config/system#script-engine[system property] (`Nashorn` unless changed). Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.
 
