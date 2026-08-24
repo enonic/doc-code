@@ -45,7 +45,7 @@ TIP: Run your test suite against both engines before switching a production app.
 
 == Modules and bundling
 
-Each `.ts` or `.js` file in your app is a module under the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS module specification]. Modules export values via `exports`, and consume other modules via `require()`. Paths are rooted at the app bundle, not the filesystem — `require('/lib/greet')` loads `src/main/resources/lib/greet.ts` from the same app.
+Each `.ts` or `.js` file in your app is a module under the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS module specification]. Modules export values via `exports`, and consume other modules via `require()` — `import` and `export` statements are not supported at runtime, on either engine, see <<globals#esm, ECMAScript modules>>. Paths are rooted at the app bundle, not the filesystem — `require('/lib/greet')` loads `src/main/resources/lib/greet.ts` from the same app.
 
 Platform libraries are referenced by name (for example, `require('/lib/xp/content')`). See <<functions#modules_and_the_bundle, Functions: Modules and the bundle>> for the full path-resolution rules and bundle boundaries.
 
