@@ -19,7 +19,7 @@ Server-side code in an Enonic app reaches a handful of names it never declares a
 
 Three consequences worth knowing:
 
-* *They are not on the global object.* On GraalJS, `globalThis.app` resolves while `globalThis.log`, `globalThis.require`, `globalThis.resolve`, `globalThis.exports` and `globalThis.module` are all `undefined`; Nashorn has no `globalThis` binding at all. Inside a module `typeof require` still answers `"function"` — it is the parameter answering, not a global — so a bundled npm package probing its environment through the global object will not find what it is looking for.
+* *They are not on the global object.* On GraalJS, `globalThis.app` resolves while `globalThis.log`, `globalThis.require`, `globalThis.resolve`, `globalThis.exports` and `globalThis.module` are all `undefined`; Nashorn has no `globalThis` binding at all. Inside a module `typeof require` still answers `"function"`, because the parameter is in scope. A bundled npm package that probes its environment through the global object will find nothing.
 * *They can be shadowed.* A variable or parameter named `log` declared in your module hides the binding for the rest of that scope, exactly as it would any other argument.
 * *They are per module.* Each module body gets its own `exports` and `module`, and a `require` and `resolve` bound to that module's own location — which is what makes a relative path resolve against the file that wrote it.
 
