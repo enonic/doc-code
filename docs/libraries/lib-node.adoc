@@ -180,7 +180,7 @@ Parameters
 | query | string/object | *Optional.* Query string or <<../storage/querying#, DSL>> expression.
 | parent | string | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Path of a node to whose direct children the query is restricted, applied in every repository of the connection. An id cannot denote one node across several repositories, so unlike the single-repository query only a path is accepted, and no child order is inherited — specify `sort` where the order is significant.
 | recursive | boolean | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Matches every descendant of `parent` rather than its direct children only. Requires `parent`. Defaults to `false`.
-| returns | string[] | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Index fields each hit is to carry, supplied as `fields` on the hit. Same supported fields as the single-repository <<query-2, `query`>>.
+| returns | string[] | *Optional.* image:xp-810.svg[XP 8.1.0,opts=inline] Index fields each hit is to carry, supplied as `fields` on the hit. Same supported fields as the single-repository <<repo-query, `query`>>.
 | start | number | *Optional.* Start index used for paging. Defaults to `0`.
 | count | number | *Optional.* Number of nodes to fetch, used for paging. Defaults to `10`.
 | filters | object | *Optional.* Query filters.
@@ -674,7 +674,7 @@ if (result) {
 
 Fetches children of a node.
 
-WARNING: Deprecated since XP 8.1 — use <<query-2, `query`>> with `parent` instead. It accepts the same path or id, applies the same child order of the parent where `sort` is omitted, and additionally accepts any constraint and return shape a query supports. A count is expressed as a query with `count: 0`, read from `total`.
+WARNING: Deprecated since XP 8.1 — use <<repo-query, `query`>> with `parent` instead. It accepts the same path or id, applies the same child order of the parent where `sort` is omitted, and additionally accepts any constraint and return shape a query supports. A count is expressed as a query with `count: 0`, read from `total`.
 
 [.lead]
 Parameters
@@ -1270,6 +1270,7 @@ const expected = {
 }
 ----
 
+[#repo-query]
 === query
 
 Queries nodes.
