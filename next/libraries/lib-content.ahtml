@@ -493,6 +493,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#permissions-type">Permissions</a></li>
 <li><a href="#apply-permissions-result">ApplyPermissionsResult</a></li>
 <li><a href="#contents-result">ContentsResult</a></li>
+<li><a href="#content-hit">ContentHit</a></li>
 <li><a href="#content-versions-result">ContentVersionsResult</a></li>
 <li><a href="#content-version">ContentVersion</a></li>
 <li><a href="#content-version-action">ContentVersionAction</a></li>
@@ -1800,6 +1801,18 @@ const stream = getAttachmentStream({
 <h3 id="getchildren"><a class="link" href="#getchildren">getChildren</a></h3>
 <div class="paragraph">
 <p>Fetches children of a content</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Deprecated since XP 8.1 — use <a href="#query"><code>query</code></a> with <code>parent</code> instead. It accepts the same path or id, applies the same child order of the parent where <code>sort</code> is omitted, and additionally supports filters, content types, aggregations and highlighting.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph lead">
 <p><strong>Parameters:</strong></p>
@@ -3740,6 +3753,34 @@ if (blockers.total &gt; 0) {
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string | object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Path or id of a content to whose direct children the query is restricted. Where <code>sort</code> is not specified, the children are returned in the child order of the parent. A parent that does not exist matches nothing. A path is relative to the content root of the calling context; as the same API also serves the archive, an identical path denotes a different content depending on the context.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">recursive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Matches every descendant of <code>parent</code> rather than its direct children only. Requires <code>parent</code>. The child order of the parent is not applied to a subtree, since it orders siblings rather than levels, so specify <code>sort</code> where the order of a recursive result is significant. Defaults to <code>false</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">returns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> What each hit carries: <code>'contents'</code> for the whole content, the default; <code>'ids'</code> for id and score alone; or a list of content field names — <code>_name</code>, <code>_path</code>, <code>displayName</code>, <code>type</code>, <code>creator</code>, <code>modifier</code>, <code>createdTime</code>, <code>modifiedTime</code>, <code>owner</code>, <code>language</code> — supplied as <code>fields</code> on the hit. Any other name is an error, as is an empty list; request <code>'ids'</code> where no fields are required. Every shape other than the default is answered without reading the contents at all, so it is the cheaper way to ask when the whole content is not needed.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">start</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -3751,13 +3792,6 @@ if (blockers.total &gt; 0) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Number of contents to fetch. Defaults to <code>10</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">query</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Query string or <a href="../storage/querying.ahtml">DSL</a> expression.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3807,8 +3841,50 @@ if (blockers.total &gt; 0) {
 <p>If <code>sort</code> was specified, results will contain system meta properties <code>_sort</code> and <code>_score: null</code>, otherwise <code>_score</code>
  will have a relevant value.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> A value in <code>fields</code> comes from the document the <strong>search index</strong> holds, not from the content, so it can differ from what <a href="#get"><code>get</code></a> returns for the same content. It is as fresh as the index — a write not yet refreshed into search yields the value the field had before — and it arrives as a string, given as a scalar where the field holds one value and as an array where it holds several. Casing and surrounding space survive as written. This is why the fields that may be asked for are a fixed set: they are the ones whose indexed form is the form the content exposes. Where the exact value matters, read the content.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph lead">
 <p>Examples</p>
+</div>
+<div class="listingblock">
+<div class="title">The children of a content, in the order the parent keeps them, as ids alone</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {query} from '/lib/xp/content';
+
+const children = query({
+    parent: '/mysite/articles',
+    count: -1,
+    returns: 'ids'
+});
+
+// children.hits is [{id, score}, ...] - no content was read to answer this</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Every descendant that is an article, with a few fields of each</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {query} from '/lib/xp/content';
+
+const result = query({
+    parent: '/mysite',
+    recursive: true,
+    contentTypes: ['com.enonic.app.mysite:article'],
+    sort: 'modifiedTime DESC',
+    returns: ['displayName', 'modifiedTime']
+});
+
+// result.hits is [{id, score, fields: {displayName, modifiedTime}}, ...]</code></pre>
+</div>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4826,9 +4902,9 @@ const expected = {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#content">Content</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#content">Content</a>[] | <a href="#content-hit">ContentHit</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The contents on this page.</p>
+<p>The contents on this page — or, <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> where <code>query</code> asked for another shape through <code>returns</code>, one <a href="#content-hit">ContentHit</a> per hit instead of the content itself.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -4843,6 +4919,52 @@ const expected = {
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Highlight results, keyed by content id. Present only when the request asked for highlighting.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="content-hit"><a class="link" href="#content-hit">ContentHit</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> A hit of a <a href="#query"><code>query</code></a> that asked for <code>returns: 'ids'</code> or a list of field names. The content itself is not read to answer such a query, so a hit carries nothing beyond what was asked for.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Id of the content.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">score</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Score of the hit, as for any other query.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The requested field values, keyed by the names asked for. Present only where <code>returns</code> named fields rather than <code>'ids'</code>. A field the content does not have is absent rather than null.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -5285,7 +5407,7 @@ const expected = {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-20 10:28:41 UTC
+Last updated 2026-08-24 10:47:34 UTC
 </div>
 </div>
 </body>

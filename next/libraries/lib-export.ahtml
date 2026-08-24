@@ -532,7 +532,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeResolved</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> A function to be called before export starts with the number of nodes to export.</p>
+<p><strong>Optional.</strong> A function to be called with the number of nodes the export has to write. <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> It is the export&#8217;s best knowledge at the time of the call, and it may be called more than once: a subtree is scanned in bounded batches, so an export of more than 10 000 nodes states a growing total as it goes, each call replacing the previous value. Until the first call the amount is unknown.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -546,7 +546,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">batchSize</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Controls how many nodes are loaded into memory simultaneously during export. A higher value may speed up export but also increase memory usage. Defaults to <code>1000</code>.</p>
+<p><strong>Deprecated.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Ignored. An export reads each node by the exact version its scan observed, one at a time, so there is no read batch to size.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -572,18 +572,6 @@ const result = exportNodes({
     },
     nodeResolved: (i: number) =&gt; {
     }
-});</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {exportNodes} from '/lib/xp/export';
-
-// Export content nodes with a custom batch size.
-const result = exportNodes({
-    sourceNodePath: '/content',
-    exportName: 'export-batch',
-    batchSize: 25
 });</code></pre>
 </div>
 </div>
@@ -695,7 +683,7 @@ During node export, current permissions are included in the export file. But whe
 <td class="tableblock halign-left valign-top"><p class="tableblock">nodeResolved</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> A function to be called before import starts with the number of nodes to import.</p>
+<p><strong>Optional.</strong> A function to be called before import starts with the number of nodes to import, counted from the export being read.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -814,7 +802,7 @@ const result = list();
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-20 10:28:41 UTC
+Last updated 2026-08-24 10:47:34 UTC
 </div>
 </div>
 </body>
