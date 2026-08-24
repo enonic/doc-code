@@ -16,11 +16,15 @@ GraalJS:: image:preview.svg[Preview,opts=inline] The engine that will replace Na
 
 === Language level
 
-Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
+Both engines run every module in ECMAScript *strict mode* — Nashorn is started with `-strict`, GraalJS with `js.strict=true`. Sloppy-mode behaviour therefore fails whichever engine you are on: assigning to an undeclared variable, `with`, duplicate parameter names, legacy octal literals like `+0755+`.
 
-image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard — a decade of language evolution past Nashorn's ES5.1, and far beyond the ES2015 the starters target. Classes, `let`/`const`, arrow functions, template literals, destructuring, spread, generators, `async`/`await`, optional chaining, nullish coalescing, `Map`, `Set`, `Symbol`, `Proxy`, `BigInt` and the modern `Object`, `Array` and `String` methods are simply there, with no polyfill and no down-levelling.
+Nashorn is started with `--language=es6`, so much of ES2015 is available: `let` and `const`, template literals, arrow functions, classes, `Map`, `Set`, `Symbol`. It stops there — nothing from ES2016 or later, and parts of ES2015 were never implemented either. Syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
+
+image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard, well past what Nashorn's ES6 mode reaches: destructuring, spread, generators, optional chaining, nullish coalescing, `Proxy`, `BigInt` and the modern `Object`, `Array` and `String` methods, with no polyfill and no down-levelling.
 
 Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
+
+CAUTION: `async` and `await` are the exception to all of this, on *both* engines. Nashorn does not implement them. GraalJS parses them, but XP runs no event loop: there are no timers, nothing drains a promise job queue between executions, and no part of the platform unwraps a promise a module hands back. An `async` function returns a `Promise` where its caller expects a value — an HTTP function declared `async` hands the site engine a promise instead of a response — and an `await` on anything not already settled has nothing to make it progress. Write synchronous code, and move work that should not block the request into a <<../background/tasks#, task>>.
 
 [#graaljs]
 === GraalJS preview
@@ -35,13 +39,11 @@ Nothing about how you write an app changes: the same modules, the same libraries
 
 *An application gets a pool of script contexts, not one.* Contexts are created lazily as concurrency demands them, and *module-level state is per context* - two requests may load the same module and see two different copies of its top-level variables. This is the same rule <<threading, threading>> already imposes, enforced more strictly: treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.
 
-*All code runs in strict mode.* GraalJS enables ECMAScript strict mode unconditionally. Code that relies on sloppy-mode behaviour - assigning to an undeclared variable, `with`, duplicate parameter names, octal literals like `+0755+` - fails at runtime rather than being tolerated.
-
 *Values cannot leave the context that created them.* A JavaScript function or object belongs to one script context and is meaningless in another. This is what makes <<../libraries/lib-task#executefunction, `executeFunction()`>> unsupported on GraalJS: it hands a function to another execution. Submit a <<../background/tasks#, named task>> with `submitTask()` instead.
 
 *Disposers must be registered during start-up.* Register `+__.disposer+` from `main.ts`, or from a module it loads while starting. A registration made later - from a component implementation the first time it is loaded, say - is ignored and logged. See <<java-bridge#disposer, `+__.disposer+`>>.
 
-TIP: Run your test suite against both engines before switching a production app. The differences above are the ones the platform imposes; a dependency written for ES5.1 sloppy mode can have its own.
+TIP: Run your test suite against both engines before switching a production app. The differences above are the ones the platform imposes; a dependency written against Nashorn's language level can have its own.
 
 == Modules and bundling
 
