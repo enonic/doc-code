@@ -342,7 +342,9 @@ Executes a function in the background. Returns an id representing the task of ex
 
 This function returns immediately. The callback function will be executed asynchronously.
 
-WARNING: `executeFunction()` is deprecated as of image:xp-810.svg[XP 8.1.0,opts=inline] and will be removed together with the Nashorn engine. It is not supported on the GraalJS engine (image:preview.svg[Preview,opts=inline] a preview, *not for production*) — a function value cannot leave the script context that created it, so calling it there fails immediately. Submit a <<../background/tasks#, named task>> with <<submittask, `submitTask()`>> instead.
+WARNING: `executeFunction()` is deprecated as of image:xp-810.svg[XP 8.1.0,opts=inline] and will be removed together with the Nashorn engine. Submit a <<../background/tasks#, named task>> with <<submittask, `submitTask()`>> instead.
+
+That deprecation stands on its own, on every engine. On GraalJS — a image:preview.svg[Preview,opts=inline] preview engine, *not for production* — `executeFunction()` is not merely deprecated but unsupported: a function value cannot leave the script context that created it, so the call fails immediately.
 
 [.lead]
 Parameters

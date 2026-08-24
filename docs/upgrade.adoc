@@ -1112,7 +1112,7 @@ Methods no longer use the undocumented `/site/i18n/phrases` bundle location by d
 
 `submitNamed` method is removed. Use `submitTask` instead.
 
-`submit` method is removed. Its drop-in replacement `executeFunction` is deprecated in turn (not supported on the image:preview.svg[Preview,opts=inline] GraalJS engine, a preview - *not for production*) — convert the callback to a <<background/tasks#, named task>> and use `submitTask` instead.
+`submit` method is removed. Its drop-in replacement `executeFunction` is deprecated in turn — convert the callback to a <<background/tasks#, named task>> and use `submitTask` instead. `executeFunction` is additionally unsupported on GraalJS, which is a image:preview.svg[Preview,opts=inline] preview engine and *not for production*.
 
 ==== lib-auth
 
