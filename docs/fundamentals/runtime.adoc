@@ -18,26 +18,11 @@ GraalJS:: image:preview.svg[Preview,opts=inline] The engine that will replace Na
 
 Both engines run every module in ECMAScript *strict mode* — Nashorn is started with `-strict`, GraalJS with `js.strict=true`. Sloppy-mode behaviour therefore fails whichever engine you are on: assigning to an undeclared variable, `with`, duplicate parameter names, legacy octal literals like `+0755+`.
 
-Nashorn is started with `--language=es6`, but that flag buys *partial* ES2015 support, not the edition — its ES6 implementation was never finished. Probed against Nashorn 15.7 with the flags and module wrapper XP uses:
+Nashorn is started with `--language=es6`, but that mode was never finished, so server-side code targets *ES5*. Transpile to it — that is what the official starters do, and what apps have always done. See <<typescript#, TypeScript>> for the build step.
 
-Available:: `let` and `const`, arrow functions, template literals, default parameters, `for`...`of`, `Symbol`, `Map`, `Set`.
-Not implemented:: classes, generators, object and array destructuring, the spread operator. Nashorn rejects each of these outright — "ES6 class declarations and expressions are not yet implemented", and so on.
-Absent:: `Promise`, `Proxy`, `Reflect`, `BigInt` and `globalThis`, along with everything from ES2016 onward — the `+**+` operator, optional chaining, nullish coalescing, `async`/`await`.
+image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard, so modern syntax runs without down-levelling. Transpiling to ES5 stays the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
 
-Syntax and APIs beyond that are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
-
-image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard, well past what Nashorn's ES6 mode reaches: destructuring, spread, generators, optional chaining, nullish coalescing, `Proxy`, `BigInt` and the modern `Object`, `Array` and `String` methods, with no polyfill and no down-levelling.
-
-Transpiling to the conservative target remains the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
-
-[CAUTION]
-====
-`async` and `await` buy you no asynchrony here, and the reason differs by engine. On Nashorn they are a syntax error, and there is no `Promise` to fall back on.
-
-On GraalJS they parse and run, and promise jobs *are* drained when a call returns — a `.then` on a resolved promise does fire. What is missing is everything around them: XP runs no event loop and no timers, and nothing in the platform unwraps a promise a module hands back. So an `async` function returns a `Promise` where its caller expects a value, and an HTTP function declared `async` hands the site engine a promise instead of a response. `await` on a promise that nothing will settle yields a promise left pending rather than blocking. And top-level `await` is a syntax error, because a module body is a plain function, not an ES module.
-
-Write synchronous code, and move work that should not block the request into a <<../background/tasks#, task>>.
-====
+A modern language level is not a modern *environment*, though, and that is where the expectations GraalJS raises go wrong — see <<graaljs-limits, what GraalJS does not bring with it>>.
 
 [#graaljs]
 === GraalJS preview
@@ -46,7 +31,18 @@ image:preview.svg[Preview,opts=inline] *Not for production.* Nashorn remains the
 
 The engine is chosen *per application*, from the `+X-Script-Engine+` manifest header the application bundle declares. An application that declares none runs on Nashorn. Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.
 
-Nothing about how you write an app changes: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the execution environment around them.
+[#graaljs-limits]
+==== What GraalJS does not bring with it
+
+A current-standard engine invites expectations XP does not meet. The language is modern; the environment around it is neither a browser nor Node.js.
+
+ES modules:: *Not supported.* `import` and `export` do not work at runtime: every module is loaded through the CommonJS wrapper and evaluated as a classic script, so an `import` is a syntax error. GraalJS implements ES modules perfectly well — XP never asks it to evaluate one. Use `require()` and `exports`; see <<globals#esm, ECMAScript modules>>.
+`async` / `await`:: *Not supported.* There is no event loop and there are no timers — no `setTimeout`, `setInterval` or `queueMicrotask` — and nothing in the platform unwraps a promise a module returns. That the syntax parses makes this worse rather than better: an `async` function hands its caller a `Promise` where a value is expected, so an `async` HTTP function returns a promise instead of a response, and an `await` on a promise nothing will settle leaves it pending rather than blocking. Top-level `await` is a syntax error, a module body being a plain function. Write synchronous code, and move work that should not block a request into a <<../background/tasks#, task>>.
+Node.js APIs:: *Not supported.* No `process`, `Buffer` or `global`, and no Node module resolution — `require()` is XP's own and resolves inside the app bundle, never `node_modules` at runtime. A dependency that reaches for any of these fails however well it bundles.
+Most web APIs:: *Not supported.* No `fetch`, `URL`, `URLSearchParams`, `TextEncoder`, `atob`/`btoa`, `crypto`, `structuredClone`, `AbortController`, `XMLHttpRequest` or `localStorage`. What you get is the language itself plus `console`, `JSON`, `Intl`, `Math`, `Date`, `Map`, `Set`, `Proxy`, `Reflect`, `BigInt` and `WeakRef`. For HTTP, mail, storage and the rest, use the platform <<../libraries#, libraries>>.
+Single-threaded assumptions:: *Wrong here.* The runtime is multithreaded — see <<threading, Threading>> — and an application gets a pool of script contexts rather than one. A module can be loaded more than once, and its top-level state is not a safe place to keep anything. Code written for Node's single thread, holding a cache or a counter at module level, does not behave the way its author expected.
+
+Nothing about how you *write* an app changes: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the execution environment around them.
 
 *Compiled code is shared across contexts.* One engine serves the whole installation, and the code it compiles is cached across every script context built from it: a module parsed while one context starts is reused by the next, rather than parsed again for each.
 
