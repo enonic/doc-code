@@ -4,9 +4,9 @@
 
 Functions related to management of a node repository.
 
-== Usage
+== Install
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -15,14 +15,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import repoLib from '/lib/xp/repo';
-----
-
-You are now ready to use the API.
+TypeScript types come from the `@enonic-types/lib-repo` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Events
 

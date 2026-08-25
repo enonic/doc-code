@@ -4,9 +4,9 @@
 
 Functions for execution of asynchronous tasks.
 
-== Usage
+== Install
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -15,15 +15,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import taskLib from '/lib/xp/task';
-----
-
-You are now ready to use the API.
-
+TypeScript types come from the `@enonic-types/lib-task` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Events
 

@@ -4,9 +4,9 @@
 
 This API provides functions to access and use the current context.
 
-== Usage
+== Install
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -15,15 +15,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import contextLib from '/lib/xp/context';
-----
-
-You are now ready to use the API.
-
+TypeScript types come from the `@enonic-types/lib-context` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Functions
 
@@ -47,7 +39,9 @@ Example
 .Getting the current context
 [source,typescript]
 ----
-const context = contextLib.get();
+import {get} from '/lib/xp/context';
+
+const context = get();
 ----
 
 .Sample response

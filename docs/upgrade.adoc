@@ -879,9 +879,9 @@ The XP 7 `DateTime` input type with `<timezone>true</timezone>` has been split i
   label: "Event date"
 ----
 
-=== Script Globals
+=== Global functions
 
-`resolve` function no longer uses `src/main/resources/site` as its first root folder. Only `src/main/resources` is used as the root. If your scripts relied on resolving paths relative to the `site` folder, update them to use full paths from the resources root.
+`resolve` function no longer uses `src/main/resources/site` as its first root folder. Only `src/main/resources` is used as the root. If your modules relied on resolving paths relative to the `site` folder, update them to use full paths from the resources root.
 
 === HTTP functions
 
