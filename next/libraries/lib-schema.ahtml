@@ -487,24 +487,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="91" height="20">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="66" height="20">
   <linearGradient id="s" x2="0" y2="100%">
     <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
     <stop offset="1" stop-opacity=".1"/>
   </linearGradient>
   <clipPath id="r">
-    <rect width="91" height="20" rx="3" fill="#fff"/>
+    <rect width="66" height="20" rx="3" fill="#fff"/>
   </clipPath>
   <g clip-path="url(#r)">
-    <rect width="91" height="20" fill="#fe7d37"/>
-    <rect width="91" height="20" fill="url(#s)"/>
+    <rect width="66" height="20" fill="#fe7d37"/>
+    <rect width="66" height="20" fill="url(#s)"/>
   </g>
   <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
      font-size="110">
-    <text x="455" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="710">experimental</text>
-    <text x="455" y="140" transform="scale(.1)" textLength="710">experimental</text>
+    <text x="330" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="461">unstable</text>
+    <text x="330" y="140" transform="scale(.1)" textLength="461">unstable</text>
   </g>
-</svg></span> Dynamic schemas are an <strong>experimental</strong> feature. This API may change, or be withdrawn, in a future release.</p>
+</svg></span> The dynamic schema API is <strong>not stable</strong>. It may change, or be withdrawn, in a future release.</p>
 </div>
 <div class="paragraph">
 <p>API for fetching and manipulating dynamic schemas.</p>
@@ -3068,7 +3068,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-25 10:57:04 UTC
+Last updated 2026-08-25 11:04:32 UTC
 </div>
 </div>
 </body>
