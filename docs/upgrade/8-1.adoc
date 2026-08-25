@@ -214,8 +214,6 @@ const cacheKey = `icon-${contentType.icon.modifiedTime}`;
 const cacheKey = `icon-${app.version}`;
 ----
 
-Only a dynamic schema stored in a repository node carries a genuine modification time, and it cannot be told apart from a resource-backed one here. Where an actual edit time is needed, read the node.
-
 == Export batch size
 
 `batchSize` on <<../libraries/lib-export#exportnodes, `exportNodes()`>> is ignored. An export now reads each node at the exact version its scan observed, one at a time, so a subtree that changes while the export runs is written as it was seen rather than as a mixture of old and new. There is no read batch left to size - drop the parameter.
