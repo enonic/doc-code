@@ -441,7 +441,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#usage">Usage</a></li>
+<li><a href="#install">Install</a></li>
+<li><a href="#complex_value_types">Complex value types</a></li>
 <li><a href="#functions">Functions</a>
 <ul class="sectlevel2">
 <li><a href="#binary">binary</a></li>
@@ -463,6 +464,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#local-date">LocalDate</a></li>
 <li><a href="#local-time">LocalTime</a></li>
 <li><a href="#binary-attachment">BinaryAttachment</a></li>
+<li><a href="#binary-reference">BinaryReference</a></li>
+<li><a href="#month">Month</a></li>
+<li><a href="#day-of-week">DayOfWeek</a></li>
 </ul>
 </li>
 </ul>
@@ -472,15 +476,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Helper functions for creating typed Java values from JavaScript — used when storing geo-points, instants, references, and similar typed fields in nodes and content.</p>
+<p>Helper functions for creating the complex value types that JSON cannot express on its own — geo-points, instants, dates, node references, and binary attachments.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<h2 id="install"><a class="link" href="#install">Install</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Add the following to your <code>build.gradle</code> file:</p>
+<p>Add the library to your <code>build.gradle</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -490,15 +494,73 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>Add the <code>import</code> statement to your code:</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-value</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="complex_value_types"><a class="link" href="#complex_value_types">Complex value types</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every property in the storage has a <a href="../storage/properties.ahtml#value_types">value type</a>, and storage uses it to determine both validation and <a href="../storage/indexing.ahtml">indexing</a> automatically. JSON carries some value types on its own — strings, numbers, booleans, and nested objects (a <code>Set</code>). The rest have no JSON equivalent, and nothing declares a node property&#8217;s type up front, so <code>'59.9139,10.7522'</code> is just a string unless the value says otherwise.</p>
+</div>
+<div class="paragraph">
+<p>These helpers supply that missing type. Pass the result straight into the property where the value belongs, and storage picks the index mappings from it: a <code>GeoPoint</code> gets the <code>geoPoint</code> mapping, an <code>Instant</code>, <code>LocalDate</code>, or <code>LocalDateTime</code> gets <code>datetime</code>, each alongside the default <code>text</code> mapping. Store the same value as a plain string and it is indexed as text only — geo and date-range queries will not match it.</p>
+</div>
+<div class="paragraph">
+<p>The helpers are used almost exclusively with <a href="lib-node.ahtml"><code>lib-node</code></a> against custom repositories. <a href="lib-content.ahtml"><code>lib-content</code></a> does not need them, because a content type declares its field types and the engine converts plain JSON according to that schema.</p>
 </div>
 <div class="listingblock">
+<div class="title">Storing complex value types on a node</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import valueLib from '/lib/xp/value';</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {connect} from '/lib/xp/node';
+import {geoPoint, instant, localDate, reference} from '/lib/xp/value';
+
+const repo = connect({
+    repoId: 'my-repo',
+    branch: 'master'
+});
+
+const office = repo.create({
+    _name: 'oslo-office',
+    displayName: 'Oslo office',
+    location: geoPoint(59.9139, 10.7522),
+    openedAt: instant('2016-08-01T11:22:00Z'),
+    leaseExpires: localDate('2027-06-30'),
+    manager: reference('1234-5678-91011')
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Sample response (system properties abridged)</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">{
+    _id: 'b186d24f-ac38-42ca-a6db-1c1bda6c6c26',
+    _name: 'oslo-office',
+    _path: '/oslo-office',
+    _nodeType: 'default',
+    displayName: 'Oslo office',
+    location: '59.9139,10.7522',
+    openedAt: '2016-08-01T11:22:00Z',
+    leaseExpires: '2027-06-30',
+    manager: '1234-5678-91011'
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You are now ready to use the API.</p>
+<p>Complex values are read back as strings. <code>create()</code> and <code>get()</code> serialize every property to its string form, so a <code>GeoPoint</code> returns as <code>'&lt;lat&gt;,&lt;lon&gt;'</code> and a <code>Reference</code> as the node ID. Only the JavaScript view is flattened — the stored property keeps its value type and its index mappings.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Editors are the exception. Inside the <code>editor</code> callback of <code>update</code>, <code>modify</code>, or <code>patch</code>, properties arrive as the complex values themselves rather than strings, which is what lets an untouched property round-trip without degrading to text.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -522,6 +584,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#binary-attachment"><code>BinaryAttachment</code></a>)</p>
 </div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create a binary attachment from a stream</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {binary} from '/lib/xp/value';
+import {newStream} from '/lib/xp/io';
+
+const attachment = binary('myFile.txt', newStream('Hello World'));</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="geopoint"><a class="link" href="#geopoint">geoPoint</a></h3>
@@ -539,6 +613,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#geo-point"><code>GeoPoint</code></a>)</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create a geo-point from coordinates</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {geoPoint} from '/lib/xp/value';
+
+const location = geoPoint(59.9139, 10.7522);
+
+const lat = location.getLatitude();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Coordinates keep a decimal point in their string form, so <code>geoPoint(80, -80)</code> reads back as <code>'80.0,-80.0'</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -558,6 +648,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#geo-point"><code>GeoPoint</code></a>)</p>
 </div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create a geo-point from a string</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {geoPointString} from '/lib/xp/value';
+
+const location = geoPointString('59.9139,10.7522');</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="instant"><a class="link" href="#instant">instant</a></h3>
@@ -575,6 +676,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#instant-type"><code>Instant</code></a>)</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create an instant</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {instant} from '/lib/xp/value';
+
+const openedAt = instant('2016-08-01T11:22:00Z');
+
+const millis = openedAt.toEpochMilli();</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -594,6 +708,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#local-date"><code>LocalDate</code></a>)</p>
 </div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create a local date</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {localDate} from '/lib/xp/value';
+
+const leaseExpires = localDate('2027-06-30');
+
+const year = leaseExpires.getYear();</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="localdatetime"><a class="link" href="#localdatetime">localDateTime</a></h3>
@@ -611,6 +738,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#local-date-time"><code>LocalDateTime</code></a>)</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create a local date-time</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {localDateTime} from '/lib/xp/value';
+
+const doorsOpen = localDateTime('2016-01-08T10:00:00.000');</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -630,6 +768,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#local-time"><code>LocalTime</code></a>)</p>
 </div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create a local time</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {localTime} from '/lib/xp/value';
+
+const doorsOpen = localTime('10:00:00.000');</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="reference"><a class="link" href="#reference">reference</a></h3>
@@ -647,6 +796,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#reference-type"><code>Reference</code></a>)</p>
+</div>
+<div class="paragraph lead">
+<p>Example</p>
+</div>
+<div class="listingblock">
+<div class="title">Create a node reference</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {reference} from '/lib/xp/value';
+
+const manager = reference('1234-5678-91011');
+
+const nodeId = manager.getNodeId();</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -823,9 +985,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMonth()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#month">Month</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Month as a string constant (e.g. <code>'JANUARY'</code>).</p>
+<p>Month as a string constant.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -837,9 +999,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDayOfWeek()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#day-of-week">DayOfWeek</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Day of the week as a string constant (e.g. <code>'MONDAY'</code>).</p>
+<p>Day of the week as a string constant.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -911,9 +1073,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getMonth()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#month">Month</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Month as a string constant (e.g. <code>'JANUARY'</code>).</p>
+<p>Month as a string constant.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -932,9 +1094,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDayOfWeek()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#day-of-week">DayOfWeek</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Day of the week as a string constant (e.g. <code>'MONDAY'</code>).</p>
+<p>Day of the week as a string constant.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1024,9 +1186,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getReference()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#binary-reference">BinaryReference</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A <code>BinaryReference</code> — call <code>.toString()</code> on it to get the binary name string.</p>
+<p>Reference to the stored binary.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1039,12 +1201,56 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="binary-reference"><a class="link" href="#binary-reference">BinaryReference</a></h3>
+<div class="paragraph">
+<p>A reference to a stored binary. Returned by <code>BinaryAttachment.getReference()</code>.</p>
+</div>
+<div class="paragraph lead">
+<p>Methods</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>toString()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The binary name.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="month"><a class="link" href="#month">Month</a></h3>
+<div class="paragraph">
+<p>Month name constant — one of <code>'JANUARY'</code>, <code>'FEBRUARY'</code>, <code>'MARCH'</code>, <code>'APRIL'</code>, <code>'MAY'</code>, <code>'JUNE'</code>, <code>'JULY'</code>, <code>'AUGUST'</code>, <code>'SEPTEMBER'</code>, <code>'OCTOBER'</code>, <code>'NOVEMBER'</code>, <code>'DECEMBER'</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="day-of-week"><a class="link" href="#day-of-week">DayOfWeek</a></h3>
+<div class="paragraph">
+<p>Day name constant — one of <code>'MONDAY'</code>, <code>'TUESDAY'</code>, <code>'WEDNESDAY'</code>, <code>'THURSDAY'</code>, <code>'FRIDAY'</code>, <code>'SATURDAY'</code>, <code>'SUNDAY'</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-25 10:31:40 UTC
+Last updated 2026-08-25 10:46:19 UTC
 </div>
 </div>
 </body>

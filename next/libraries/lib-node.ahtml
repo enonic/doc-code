@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#usage">Usage</a></li>
+<li><a href="#install">Install</a></li>
 <li><a href="#events">Events</a></li>
 <li><a href="#functions">Functions</a>
 <ul class="sectlevel2">
@@ -525,10 +525,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<h2 id="install"><a class="link" href="#install">Install</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Add the following to your <code>build.gradle</code> file:</p>
+<p>Add the library to your <code>build.gradle</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -538,15 +538,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>Add the <code>import</code> statement to your code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import nodeLib from '/lib/xp/node';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You are now ready to use the API.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-node</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -743,7 +735,7 @@ const searchConnection = multiRepoConnect({
     sources: [
         {
             repoId: 'my-repo',
-            branch: 'myBranch',
+            branch: 'master',
             principals: ["role:system.admin"]
         },
         {
@@ -763,6 +755,23 @@ const searchConnection = multiRepoConnect({
 <div class="sectionbody">
 <div class="paragraph">
 <p>A MultiRepoConnection makes it possible to search across multiple repositories.  The object has only one method: <code>query</code>.</p>
+</div>
+<div class="paragraph">
+<p>The example below uses a multi-repo connection to execute the function.
+The connection can be created with <a href="#multirepoconnect">multiRepoConnect()</a>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Connecting to several repos.</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {multiRepoConnect} from '/lib/xp/node';
+
+const multiRepoConnection = multiRepoConnect({
+    sources: [
+        {repoId: 'my-repo', branch: 'master', principals: ["role:system.admin"]},
+        {repoId: 'my-other-repo', branch: 'master', principals: ["role:system.admin"]}
+    ]
+});</code></pre>
+</div>
 </div>
 <div class="sect2">
 <h3 id="query"><a class="link" href="#query">query</a></h3>
@@ -1131,6 +1140,18 @@ skip the <code>_name</code> property and specify a <code>displayName</code>.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Storage determines indexing from each property&#8217;s <a href="../storage/properties.ahtml#value_types">value type</a>. Complex value types — geo-points, instants, dates, node references, and binaries — have no JSON equivalent and must be built with the <a href="lib-value.ahtml">Value library</a>; passed as plain strings they are stored and indexed as text.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -2251,9 +2272,9 @@ if (firstPage.cursor) {
 <div class="listingblock">
 <div class="title">Patching a node with data stream.</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">var ioLib = require('/lib/xp/io');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {newStream} from '/lib/xp/io';
 
-var stream = ioLib.newStream('Hello World');
+const stream = newStream('Hello World');
 
 const patchedNode = repo.patch({
     key: '/my-node',
@@ -3713,7 +3734,7 @@ const patchedNode = repo.patch({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-25 10:31:40 UTC
+Last updated 2026-08-25 10:46:19 UTC
 </div>
 </div>
 </body>

@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#usage">Usage</a></li>
+<li><a href="#install">Install</a></li>
 <li><a href="#functions">Functions</a>
 <ul class="sectlevel2">
 <li><a href="#getphrases">getPhrases</a></li>
@@ -461,7 +461,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<h2 id="install"><a class="link" href="#install">Install</a></h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -476,7 +476,7 @@ This API uses standard framework functionality. Please read the <a href="../fund
 </table>
 </div>
 <div class="paragraph">
-<p>Add the following to your <code>build.gradle</code> file:</p>
+<p>Add the library to your <code>build.gradle</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -486,12 +486,7 @@ This API uses standard framework functionality. Please read the <a href="../fund
 </div>
 </div>
 <div class="paragraph">
-<p>Add the <code>import</code> statement to your code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import i18nLib from '/lib/xp/i18n';</code></pre>
-</div>
+<p>TypeScript types come from the <code>@enonic-types/lib-i18n</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
 </div>
 <div class="paragraph">
 <p>Then you need to create files with original phrases and their translations.  These files should normally be placed in the <code>src/main/resources/i18n</code> folder of your application.
@@ -512,9 +507,6 @@ notify.process.failed=Processing failed: {0}.</code></pre>
 <pre class="highlight"><code class="language-properties" data-lang="properties">action.preview=Vista Previa
 notify.process.failed=Error al procesar: {0}.</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>You are now ready to use the API.</p>
 </div>
 </div>
 </div>
@@ -544,7 +536,9 @@ notify.process.failed=Error al procesar: {0}.</code></pre>
 <div class="listingblock">
 <div class="title">Get all phrases for a locale</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const phrasesEs = i18nLib.getPhrases('es', ['i18n/phrases']);</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getPhrases} from '/lib/xp/i18n';
+
+const phrasesEs = getPhrases('es', ['i18n/phrases']);</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -580,7 +574,9 @@ notify.process.failed=Error al procesar: {0}.</code></pre>
 <div class="listingblock">
 <div class="title">Get the supported locales for a bundle</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const locales = i18nLib.getSupportedLocales(['i18n/phrases']);</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getSupportedLocales} from '/lib/xp/i18n';
+
+const locales = getSupportedLocales(['i18n/phrases']);</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -699,7 +695,7 @@ const message = localize({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-25 10:31:40 UTC
+Last updated 2026-08-25 10:46:19 UTC
 </div>
 </div>
 </body>
