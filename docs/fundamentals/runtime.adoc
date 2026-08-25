@@ -22,7 +22,7 @@ Nashorn is *ES5* compatible, with some ES6 capabilities. Transpile to ES5 — th
 
 image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard, so modern syntax runs without down-levelling. Transpiling to ES5 stays the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
 
-A modern language level is not a modern *environment*, though, and that is where the expectations GraalJS raises go wrong — see <<graaljs-limits, what GraalJS does not bring with it>>.
+The environment around the language is its own, and differs from the browser and from Node.js — see <<graaljs-limits, what GraalJS does not bring with it>>.
 
 [#graaljs]
 === GraalJS preview
@@ -45,7 +45,7 @@ if (typeof Graal !== 'undefined') {
 [#graaljs-limits]
 ==== What GraalJS does not bring with it
 
-A current-standard engine invites expectations XP does not meet. The language is modern; the environment around it is neither a browser nor Node.js.
+A current-standard engine carries browser and Node.js expectations with it. XP is a different environment, and these are the differences that catch people out.
 
 ES modules:: *Not supported.* `import` and `export` do not work at runtime. Use `require()` and `exports`; see <<globals#esm, ECMAScript modules>>.
 `async` / `await`:: *Not supported.* There is no event loop and there are no timers — no `setTimeout`, `setInterval` or `queueMicrotask` — and nothing in the platform unwraps a promise a module returns. The syntax parses, so the failure is silent: an `async` function hands its caller a `Promise` where a value is expected, and an `async` HTTP function returns that promise to the site engine in place of a response. An `await` on a promise nothing will settle leaves it pending, and execution simply carries on. Top-level `await` is a syntax error, a module body being a plain function. Write synchronous code, and move work that should not block a request into a <<../background/tasks#, task>>.
