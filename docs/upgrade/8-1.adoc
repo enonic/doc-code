@@ -4,7 +4,7 @@
 
 XP 8.1 makes no breaking changes to application code: an app built for 8.0 runs on 8.1 as it is. The upgrade is a version bump, followed by the clean-ups below. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, so the clean-ups can be done one at a time.
 
-Coming from XP 7? Do <<../upgrade#, Upgrading Enonic apps from XP7 to XP8>> first — this page picks up where that one ends.
+Coming from XP 7? Do <<../upgrade#, Upgrading Enonic apps from XP 7 to XP 8>> first — this page picks up where that one ends.
 
 == Version bump
 
@@ -90,7 +90,7 @@ Three parameters change name or shape:
 `countOnly`:: Ask for no hits instead - `count: 0` - and read `total`.
 `recursive`:: Same name, same meaning. A subtree has no child order of its own, so pass `sort` where the order of a recursive result matters.
 
-Moving to a query also opens up everything a query can do and `getChildren()` could not: filters, content types, aggregations, highlighting, and the `returns` parameter that has each hit carry named index fields instead of the whole content.
+Moving to a query also opens up everything a query can do that `getChildren()` could not: filters, content types, aggregations, highlighting, and the `returns` parameter that has each hit carry named index fields instead of the whole content.
 
 == Inline function tasks become named tasks
 
