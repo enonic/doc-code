@@ -59,9 +59,9 @@ Nothing about how you *write* an app changes: the same modules, the same librari
 
 *An application gets a pool of script contexts.* Contexts are created lazily as concurrency demands them, and *module-level state is per context* - two requests may load the same module and see two different copies of its top-level variables. This is the same rule <<threading, threading>> already imposes, enforced more strictly: treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.
 
-*Values cannot leave the context that created them.* A JavaScript function or object belongs to one script context and is meaningless in another. This is what makes <<../libraries/lib-task#executefunction, `executeFunction()`>> unsupported on GraalJS: it hands a function to another execution. Submit a <<../background/tasks#, named task>> with `submitTask()` instead.
+*Values cannot leave the context that created them.* A JavaScript function or object belongs to the one script context. <<../libraries/lib-task#executefunction, `executeFunction()`>> is unsupported; submit a <<../background/tasks#, named task>> with `submitTask()` instead.
 
-*Disposers must be registered during start-up.* Register `+__.disposer+` from `main.ts`, or from a module it loads while starting. A registration made later - from a component implementation the first time it is loaded, say - is ignored and logged. See <<java-bridge#disposer, `+__.disposer+`>>.
+*Disposers must be registered during start-up.* Register `+__.disposer+` from `main.ts`, or from a module it loads while starting. See <<java-bridge#disposer, `+__.disposer+`>>.
 
 TIP: Run your test suite against both engines before switching a production app. The differences above are the ones the platform imposes; a dependency written against Nashorn's language level can have its own.
 
