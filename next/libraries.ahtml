@@ -489,14 +489,14 @@ const user = getUser();</code></pre>
 <h2 id="javadoc"><a class="link" href="#javadoc">JavaDoc</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Java developers or anyone interested in a Platform deep dive may check out our JavaDoc (<a href="https://repo.enonic.com/public/com/enonic/xp/docs/8.0.4/docs-8.0.4-javadoc.zip">zipfile download</a>).</p>
+<p>Java developers or anyone interested in a Platform deep dive may check out our JavaDoc (<a href="https://repo.enonic.com/public/com/enonic/xp/docs/8.1.0/docs-8.1.0-javadoc.zip">zipfile download</a>).</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-25 10:46:19 UTC
+Last updated 2026-08-25 10:57:04 UTC
 </div>
 </div>
 </body>
