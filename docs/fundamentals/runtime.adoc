@@ -31,6 +31,17 @@ image:preview.svg[Preview,opts=inline] *Not for production.* Nashorn remains the
 
 The engine is chosen *per application*, from the `+X-Script-Engine+` manifest header the application bundle declares. An application that declares none runs on Nashorn. Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.
 
+Code can tell which engine it got. GraalJS installs a `Graal` global, and Nashorn has no such name:
+
+[source,typescript]
+----
+if (typeof Graal !== 'undefined') {
+    log.info(`${Graal.language} ${Graal.versionECMAScript}`);  // JavaScript 2026
+}
+----
+
+`Graal.versionECMAScript` is the year of the ECMAScript compatibility mode in force — the concrete answer to which language level you actually have. `Graal.versionGraalVM` gives the GraalVM version, and `Graal.isGraalRuntime()` reports whether the Graal compiler is optimizing hot code; where it answers `false` the engine still runs, at lower peak performance. See the https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object[Graal object] in the GraalJS compatibility reference.
+
 [#graaljs-limits]
 ==== What GraalJS does not bring with it
 

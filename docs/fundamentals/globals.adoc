@@ -7,7 +7,7 @@ Server-side code in an Enonic app reaches a handful of names it never declares a
 [#module-scope]
 == What is actually global
 
-`app` is the only name installed on the JavaScript global object. Every other name on this page is *module-scoped*: XP wraps each module in a function and passes them in as arguments.
+`app` is the only name *XP* installs on the JavaScript global object. Every other name on this page is *module-scoped*: XP wraps each module in a function and passes them in as arguments. The engine contributes a few globals of its own on top; the <<runtime#graaljs, GraalJS preview>> adds `Graal`.
 
 [source,typescript]
 ----
