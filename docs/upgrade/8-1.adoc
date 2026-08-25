@@ -200,19 +200,14 @@ Both are read at URL generation, so the same code produces the right URL in ever
 
 `modifiedTime` is deprecated on the icons, content types, schemas and application descriptors returned by lib-content, lib-schema and lib-app, and so is <<../fundamentals/types#resource, `Resource.getTimestamp()`>>. These read from application resources, where the value comes from a jar entry timestamp - and build tools normalize those to a constant so that builds are reproducible, Gradle by default since version 9. Two different builds of the same app therefore report the same value.
 
-Code that used them as a cache key or an invalidation signal was therefore already unreliable in production. Key the cache on the version of the application the resource comes from instead - `app.version` for your own app - since that changes with every build you deploy:
+Code that used them as a cache key or an invalidation signal was therefore already unreliable:
 
-.Before
 [source,typescript]
 ----
 const cacheKey = `icon-${contentType.icon.modifiedTime}`;
 ----
 
-.After
-[source,typescript]
-----
-const cacheKey = `icon-${app.version}`;
-----
+There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.
 
 == Export batch size
 
