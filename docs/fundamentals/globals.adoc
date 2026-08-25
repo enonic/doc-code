@@ -142,7 +142,7 @@ TIP: Authoring in TypeScript, write `export` and let the build transpile it — 
 [#esm]
 == ECMAScript modules are not supported
 
-`import` and `export` statements do not work at runtime, on either engine, and neither does dynamic `import()`.
+`import`, `export` and dynamic `import()` do not work at runtime, on either engine.
 
 Use `require()` and `exports` in the code you deploy. Writing `import`/`export` in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an `import` statement surviving into the emitted JavaScript.
 
