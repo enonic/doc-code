@@ -174,7 +174,7 @@ const expected = {
 
 === createVirtualApplication
 
-image:experimental.svg[Experimental,opts=inline] Virtual applications belong to the *experimental* <<lib-schema#, dynamic schema>> feature. This API may change, or be withdrawn, in a future release.
+image:unstable.svg[Unstable,opts=inline] Virtual applications belong to the <<lib-schema#, dynamic schema>> API, which is *not stable*. It may change, or be withdrawn, in a future release.
 
 Creates a virtual application (along with its schema repository nodes) with the specified key.
 
@@ -213,7 +213,7 @@ const app = createVirtualApplication({
 
 === deleteVirtualApplication
 
-image:experimental.svg[Experimental,opts=inline] Virtual applications belong to the *experimental* <<lib-schema#, dynamic schema>> feature. This API may change, or be withdrawn, in a future release.
+image:unstable.svg[Unstable,opts=inline] Virtual applications belong to the <<lib-schema#, dynamic schema>> API, which is *not stable*. It may change, or be withdrawn, in a future release.
 
 Removes a virtual application with the specified key.
 
@@ -252,7 +252,7 @@ const result = deleteVirtualApplication({
 
 === getApplicationMode
 
-image:experimental.svg[Experimental,opts=inline] Virtual applications belong to the *experimental* <<lib-schema#, dynamic schema>> feature. This API may change, or be withdrawn, in a future release.
+image:unstable.svg[Unstable,opts=inline] Virtual applications belong to the <<lib-schema#, dynamic schema>> API, which is *not stable*. It may change, or be withdrawn, in a future release.
 
 Fetches mode of an application with the specified key.
 
