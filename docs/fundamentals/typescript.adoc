@@ -65,7 +65,7 @@ Since `global` types are not placed under the `node_modules/@types`, it is neces
 
 === Core
 
-There are types that are shared between other libraries (like `Content` or `Principal`). Such types reside in the `core` package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. Content library exports `Content`` type. But if you want to use these type directly, you'll need to install them:
+There are types that are shared between other libraries (like `Content` or `Principal`). Such types reside in the `core` package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. the Content library exports the `Content` type. But if you want to use these types directly, you'll need to install them:
 
 [source,bash,subs="attributes+"]
 ----
