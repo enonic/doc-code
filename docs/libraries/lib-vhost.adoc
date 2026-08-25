@@ -4,9 +4,9 @@
 
 This API provides functions for retrieving information about existing virtual host mappings.
 
-== Usage
+== Install
 
-Add the following dependency to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -15,14 +15,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import vhostLib from '/lib/xp/vhost';
-----
-
-You are now ready to use the API.
+TypeScript types come from the `@enonic-types/lib-vhost` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Functions
 

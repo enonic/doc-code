@@ -2,11 +2,11 @@
 :toc: right
 :imagesdir: images
 
-Helper functions for creating typed Java values from JavaScript — used when storing geo-points, instants, references, and similar typed fields in nodes and content.
+Helper functions for creating the complex value types that JSON cannot express on its own — geo-points, instants, dates, node references, and binary attachments.
 
-== Usage
+== Install
 
-Add the following to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -15,14 +15,56 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
+TypeScript types come from the `@enonic-types/lib-value` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
+== Complex value types
+
+Every property in the storage has a <<../storage/properties#value_types, value type>>, and storage uses it to determine both validation and <<../storage/indexing#, indexing>> automatically. JSON carries some value types on its own — strings, numbers, booleans, and nested objects (a `Set`). The rest have no JSON equivalent, and nothing declares a node property's type up front, so `'59.9139,10.7522'` is just a string unless the value says otherwise.
+
+These helpers supply that missing type. Pass the result straight into the property where the value belongs, and storage picks the index mappings from it: a `GeoPoint` gets the `geoPoint` mapping, an `Instant`, `LocalDate`, or `LocalDateTime` gets `datetime`, each alongside the default `text` mapping. Store the same value as a plain string and it is indexed as text only — geo and date-range queries will not match it.
+
+The helpers are used almost exclusively with <<lib-node#, `lib-node`>> against custom repositories. <<lib-content#, `lib-content`>> does not need them, because a content type declares its field types and the engine converts plain JSON according to that schema.
+
+.Storing complex value types on a node
 [source,typescript]
 ----
-import valueLib from '/lib/xp/value';
+import {connect} from '/lib/xp/node';
+import {geoPoint, instant, localDate, reference} from '/lib/xp/value';
+
+const repo = connect({
+    repoId: 'my-repo',
+    branch: 'master'
+});
+
+const office = repo.create({
+    _name: 'oslo-office',
+    displayName: 'Oslo office',
+    location: geoPoint(59.9139, 10.7522),
+    openedAt: instant('2016-08-01T11:22:00Z'),
+    leaseExpires: localDate('2027-06-30'),
+    manager: reference('1234-5678-91011')
+});
 ----
 
-You are now ready to use the API.
+.Sample response (system properties abridged)
+[source,typescript]
+----
+{
+    _id: 'b186d24f-ac38-42ca-a6db-1c1bda6c6c26',
+    _name: 'oslo-office',
+    _path: '/oslo-office',
+    _nodeType: 'default',
+    displayName: 'Oslo office',
+    location: '59.9139,10.7522',
+    openedAt: '2016-08-01T11:22:00Z',
+    leaseExpires: '2027-06-30',
+    manager: '1234-5678-91011'
+}
+----
+
+Complex values are read back as strings. `create()` and `get()` serialize every property to its string form, so a `GeoPoint` returns as `'<lat>,<lon>'` and a `Reference` as the node ID. Only the JavaScript view is flattened — the stored property keeps its value type and its index mappings.
+
+NOTE: Editors are the exception. Inside the `editor` callback of `update`, `modify`, or `patch`, properties arrive as the complex values themselves rather than strings, which is what lets an untouched property round-trip without degrading to text.
 
 == Functions
 
@@ -40,6 +82,18 @@ Returns
 
 *object* : (<<binary-attachment, `BinaryAttachment`>>)
 
+[.lead]
+Example
+
+.Create a binary attachment from a stream
+[source,typescript]
+----
+import {binary} from '/lib/xp/value';
+import {newStream} from '/lib/xp/io';
+
+const attachment = binary('myFile.txt', newStream('Hello World'));
+----
+
 === geoPoint
 
 Creates a `GeoPoint` value from numeric coordinates.
@@ -53,6 +107,21 @@ Parameters
 Returns
 
 *object* : (<<geo-point, `GeoPoint`>>)
+
+[.lead]
+Example
+
+.Create a geo-point from coordinates
+[source,typescript]
+----
+import {geoPoint} from '/lib/xp/value';
+
+const location = geoPoint(59.9139, 10.7522);
+
+const lat = location.getLatitude();
+----
+
+Coordinates keep a decimal point in their string form, so `geoPoint(80, -80)` reads back as `'80.0,-80.0'`.
 
 === geoPointString
 
@@ -68,6 +137,17 @@ Returns
 
 *object* : (<<geo-point, `GeoPoint`>>)
 
+[.lead]
+Example
+
+.Create a geo-point from a string
+[source,typescript]
+----
+import {geoPointString} from '/lib/xp/value';
+
+const location = geoPointString('59.9139,10.7522');
+----
+
 === instant
 
 Creates an `Instant` value from an ISO-8601 string or a `Date` object.
@@ -81,6 +161,19 @@ Parameters
 Returns
 
 *object* : (<<instant-type, `Instant`>>)
+
+[.lead]
+Example
+
+.Create an instant
+[source,typescript]
+----
+import {instant} from '/lib/xp/value';
+
+const openedAt = instant('2016-08-01T11:22:00Z');
+
+const millis = openedAt.toEpochMilli();
+----
 
 === localDate
 
@@ -96,6 +189,19 @@ Returns
 
 *object* : (<<local-date, `LocalDate`>>)
 
+[.lead]
+Example
+
+.Create a local date
+[source,typescript]
+----
+import {localDate} from '/lib/xp/value';
+
+const leaseExpires = localDate('2027-06-30');
+
+const year = leaseExpires.getYear();
+----
+
 === localDateTime
 
 Creates a `LocalDateTime` value from a local date-time string or a `Date` object.
@@ -109,6 +215,17 @@ Parameters
 Returns
 
 *object* : (<<local-date-time, `LocalDateTime`>>)
+
+[.lead]
+Example
+
+.Create a local date-time
+[source,typescript]
+----
+import {localDateTime} from '/lib/xp/value';
+
+const doorsOpen = localDateTime('2016-01-08T10:00:00.000');
+----
 
 === localTime
 
@@ -124,6 +241,17 @@ Returns
 
 *object* : (<<local-time, `LocalTime`>>)
 
+[.lead]
+Example
+
+.Create a local time
+[source,typescript]
+----
+import {localTime} from '/lib/xp/value';
+
+const doorsOpen = localTime('10:00:00.000');
+----
+
 === reference
 
 Creates a `Reference` value from a node ID string.
@@ -137,6 +265,19 @@ Parameters
 Returns
 
 *object* : (<<reference-type, `Reference`>>)
+
+[.lead]
+Example
+
+.Create a node reference
+[source,typescript]
+----
+import {reference} from '/lib/xp/value';
+
+const manager = reference('1234-5678-91011');
+
+const nodeId = manager.getNodeId();
+----
 
 == Type Definitions
 
@@ -208,9 +349,9 @@ Methods
 | Name | Type | Description
 | `getYear()` | number | The year.
 | `getMonthValue()` | number | Month as a number (1–12).
-| `getMonth()` | string | Month as a string constant (e.g. `'JANUARY'`).
+| `getMonth()` | <<month, Month>> | Month as a string constant.
 | `getDayOfMonth()` | number | Day of the month (1–31).
-| `getDayOfWeek()` | string | Day of the week as a string constant (e.g. `'MONDAY'`).
+| `getDayOfWeek()` | <<day-of-week, DayOfWeek>> | Day of the week as a string constant.
 | `getHour()` | number | Hour of day (0–23).
 | `getMinute()` | number | Minute of hour (0–59).
 | `getSecond()` | number | Second of minute (0–59).
@@ -232,10 +373,10 @@ Methods
 | Name | Type | Description
 | `getYear()` | number | The year.
 | `getMonthValue()` | number | Month as a number (1–12).
-| `getMonth()` | string | Month as a string constant (e.g. `'JANUARY'`).
+| `getMonth()` | <<month, Month>> | Month as a string constant.
 | `getDayOfMonth()` | number | Day of the month (1–31).
 | `getDayOfYear()` | number | Day of the year (1–366).
-| `getDayOfWeek()` | string | Day of the week as a string constant (e.g. `'MONDAY'`).
+| `getDayOfWeek()` | <<day-of-week, DayOfWeek>> | Day of the week as a string constant.
 | `isLeapYear()` | boolean | Whether the year is a leap year.
 |===
 
@@ -271,6 +412,32 @@ Methods
 [grid="none"]
 |===
 | Name | Type | Description
-| `getReference()` | object | A `BinaryReference` — call `.toString()` on it to get the binary name string.
+| `getReference()` | <<binary-reference, BinaryReference>> | Reference to the stored binary.
 | `getByteSource()` | <<../fundamentals/types#byte-source, ByteSource>> | The underlying binary stream.
 |===
+
+[#binary-reference]
+=== BinaryReference
+
+A reference to a stored binary. Returned by `BinaryAttachment.getReference()`.
+
+[.lead]
+Methods
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| `toString()` | string | The binary name.
+|===
+
+[#month]
+=== Month
+
+Month name constant — one of `'JANUARY'`, `'FEBRUARY'`, `'MARCH'`, `'APRIL'`, `'MAY'`, `'JUNE'`, `'JULY'`, `'AUGUST'`, `'SEPTEMBER'`, `'OCTOBER'`, `'NOVEMBER'`, `'DECEMBER'`.
+
+[#day-of-week]
+=== DayOfWeek
+
+Day name constant — one of `'MONDAY'`, `'TUESDAY'`, `'WEDNESDAY'`, `'THURSDAY'`, `'FRIDAY'`, `'SATURDAY'`, `'SUNDAY'`.

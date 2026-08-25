@@ -7,9 +7,9 @@ This API provides functions that enable sharing data across all applications and
 
 NOTE: Due to distributed nature of `SharedMap` not all value types can be used. Strings, numbers, booleans, and pure JSON objects are supported. There is no runtime check for type compatibility due to performance reasons. Developers are themselves responsible for NOT modifying shared objects (keys and values) in place.
 
-== Usage
+== Install
 
-Add the following dependency to your `build.gradle` file:
+Add the library to your `build.gradle` file:
 
 [source,groovy]
 ----
@@ -18,14 +18,7 @@ dependencies {
 }
 ----
 
-Add the `import` statement to your code:
-
-[source,typescript]
-----
-import gridLib from '/lib/xp/grid';
-----
-
-You are now ready to use the API.
+TypeScript types come from the `@enonic-types/lib-grid` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
 
 == Functions
 
@@ -73,9 +66,9 @@ Parameters
 
 [source,typescript]
 ----
-import gridLib from '/lib/xp/grid';
+import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap<{ greeting: string }>('mapId');
+const sharedMap = getMap<{ greeting: string }>('mapId');
 
 sharedMap.set({
   key: 'greeting',
@@ -101,9 +94,9 @@ Returns
 
 [source,typescript]
 ----
-import gridLib from '/lib/xp/grid';
+import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap('mapId');
+const sharedMap = getMap('mapId');
 
 const value = sharedMap.get('key');
 ----
@@ -119,9 +112,9 @@ Parameters
 
 [source,typescript]
 ----
-import gridLib from '/lib/xp/grid';
+import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap('mapId');
+const sharedMap = getMap('mapId');
 
 sharedMap.delete('key');
 ----
@@ -152,9 +145,9 @@ Returns
 
 [source,typescript]
 ----
-import gridLib from '/lib/xp/grid';
+import {getMap} from '/lib/xp/grid';
 
-const sharedMap = gridLib.getMap<{ counter: number }>('mapId');
+const sharedMap = getMap<{ counter: number }>('mapId');
 
 const newValue = sharedMap.modify({
   key: 'counter',
