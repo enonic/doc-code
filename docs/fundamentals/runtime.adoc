@@ -16,9 +16,9 @@ GraalJS:: image:preview.svg[Preview,opts=inline] The engine that will replace Na
 
 === Language level
 
-Both engines run every module in ECMAScript *strict mode* — Nashorn is started with `-strict`, GraalJS with `js.strict=true`. Sloppy-mode behaviour therefore fails whichever engine you are on: assigning to an undeclared variable, `with`, duplicate parameter names, legacy octal literals like `+0755+`.
+Every module runs in ECMAScript *strict mode*, on both engines.
 
-Nashorn is started with `--language=es6`, but that mode was never finished, so server-side code targets *ES5*. Transpile to it — that is what the official starters do, and what apps have always done. See <<typescript#, TypeScript>> for the build step.
+Nashorn's ES6 support was never finished, so server-side code targets *ES5*. Transpile to it — that is what the official starters do, and what apps have always done. See <<typescript#, TypeScript>> for the build step.
 
 image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard, so modern syntax runs without down-levelling. Transpiling to ES5 stays the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
 
