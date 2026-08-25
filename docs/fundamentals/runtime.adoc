@@ -50,7 +50,7 @@ A current-standard engine carries browser and Node.js expectations with it. XP i
 ES modules:: *Not supported.* `import`, `export` and dynamic `import()` do not work at runtime. Use `require()` and `exports`; see <<globals#esm, ECMAScript modules>>.
 `async` / `await`:: *Not supported.* Write synchronous code, and move work that should not block a request into a <<../background/tasks#, task>>.
 Node.js APIs:: *Not supported.* No `process`, `Buffer` or `global`, and no `node_modules` resolution.
-Most web APIs:: *Not supported.* No `setTimeout`, `setInterval`, `queueMicrotask`, `fetch`, `URL`, `URLSearchParams`, `TextEncoder`, `atob`/`btoa`, `crypto`, `structuredClone`, `AbortController`, `XMLHttpRequest` or `localStorage`. You have the JavaScript language and `console`. For HTTP, mail, storage and the rest, use the platform <<../libraries#, libraries>>.
+Most web APIs:: *Not supported.* No `setTimeout`, `setInterval`, `queueMicrotask`, `fetch`, `URL`, `URLSearchParams`, `TextEncoder`, `atob`/`btoa`, `crypto`, `structuredClone`, `AbortController`, `XMLHttpRequest` or `localStorage`. You have the JavaScript language. For HTTP, mail, storage and the rest, use the platform <<../libraries#, libraries>>.
 Single-threaded assumptions:: *Wrong here.* The runtime is multithreaded — see <<threading, Threading>> — and an application gets a pool of script contexts. Module-level state is not a safe place to keep anything.
 
 Nothing about how you *write* an app changes: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the execution environment around them.
