@@ -2,7 +2,7 @@
 :toc: right
 :imagesdir: ../images
 
-image:experimental.svg[Experimental,opts=inline] Dynamic schemas are an *experimental* feature. This API may change, or be withdrawn, in a future release.
+image:unstable.svg[Unstable,opts=inline] The dynamic schema API is *not stable*. It may change, or be withdrawn, in a future release.
 
 API for fetching and manipulating dynamic schemas.
 
