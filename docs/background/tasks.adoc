@@ -6,6 +6,8 @@ The XP framework also supports execution of asynchronous (potentially long runni
 
 Tasks may be executed as inline functions, or as named tasks. Named tasks are defined by creating a folder, e.g. `src/main/resources/tasks/<taskname>`, in your project.
 
+WARNING: Inline function tasks - <<../libraries/lib-task#executefunction, `executeFunction()`>> - are deprecated since XP 8.1 and will be removed together with the Nashorn engine. They are also unsupported on the <<../fundamentals/runtime#graaljs, GraalJS preview>>. Use named tasks; see <<../upgrade/8-1#, Upgrading from XP 8.0 to 8.1>> for how to convert one.
+
 == Descriptor
 Named tasks requires a descriptor file.
 The descriptor must be placed in task folder as follows: `src/main/resources/tasks/<taskname>/<taskname>.yaml`.
