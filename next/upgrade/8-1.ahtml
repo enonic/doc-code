@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Globals and module bindings</title>
+<title>Upgrading Enonic apps from XP 8.0 to 8.1</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,18 +437,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Globals and module bindings</h1>
+<h1>Upgrading Enonic apps from XP 8.0 to 8.1</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#module-scope">What is actually global</a></li>
-<li><a href="#app">App</a></li>
-<li><a href="#log">Log</a></li>
-<li><a href="#resolve">Resolve()</a></li>
-<li><a href="#require">Require()</a></li>
-<li><a href="#exports">Exports</a></li>
-<li><a href="#esm">ECMAScript modules are not supported</a></li>
-<li><a href="#double_underscore">Double underscore __</a></li>
+<li><a href="#version_bump">Version bump</a></li>
+<li><a href="#children_are_fetched_with_a_query">Children are fetched with a query</a></li>
+<li><a href="#inline_function_tasks_become_named_tasks">Inline function tasks become named tasks</a></li>
+<li><a href="#media_and_api_base_urls_move_to_configuration">Media and API base URLs move to configuration</a></li>
+<li><a href="#timestamps_that_describe_the_build">Timestamps that describe the build</a></li>
+<li><a href="#export_batch_size">Export batch size</a></li>
+<li><a href="#worth_adopting">Worth adopting</a></li>
 </ul>
 </div>
 </div>
@@ -456,330 +455,299 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Server-side code in an Enonic app reaches a handful of names it never declares and never requires: <code>app</code>, <code>log</code>, <code>require</code>, <code>resolve</code>, <code>__</code> and <code>exports</code>. Only one of them is a true global.</p>
+<p>XP 8.1 makes no breaking changes to application code: an app built for 8.0 runs on 8.1 as it is. The upgrade is a version bump, followed by the clean-ups below. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, so the clean-ups can be done one at a time.</p>
+</div>
+<div class="paragraph">
+<p>Coming from XP 7? Do <a href="../upgrade.ahtml">Upgrading Enonic apps from XP 7 to XP 8</a> first — this page picks up where that one ends.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="module-scope"><a class="link" href="#module-scope">What is actually global</a></h2>
+<h2 id="version_bump"><a class="link" href="#version_bump">Version bump</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>app</code> is the only name <strong>XP</strong> installs on the JavaScript global object. Every other name on this page is <strong>module-scoped</strong>: XP wraps each module in a function and passes them in as arguments. The engine contributes a few globals of its own on top; the <a href="runtime.ahtml#graaljs">GraalJS preview</a> adds <code>Graal</code>.</p>
+<p>Set the platform version in <em>gradle.properties</em>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// what XP evaluates for every module it loads
-(function (log, require, resolve, __, exports, module) {
-    // your module's code goes here
+<pre class="highlight"><code class="language-properties" data-lang="properties">xpVersion = 8.1.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TypeScript projects also need the matching type definitions, or the parameters and functions added in 8.1 will not type-check:</p>
+</div>
+<div class="listingblock">
+<div class="title">package.json</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "devDependencies": {
+    "@enonic-types/global": "^8.1.0",
+    "@enonic-types/lib-content": "^8.1.0"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then rebuild and deploy:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>enonic project deploy</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That is the whole compatibility story - the app builds and runs. What follows is work that can be done at your own pace: the deprecated APIs still function, but they are on their way out.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="children_are_fetched_with_a_query"><a class="link" href="#children_are_fetched_with_a_query">Children are fetched with a query</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../libraries/lib-content.ahtml#getchildren"><code>getChildren()</code></a> in lib-content and <a href="../libraries/lib-node.ahtml#findchildren"><code>findChildren()</code></a> in lib-node are deprecated. A query with <code>parent</code> does the same job: it takes the same path or id, and where <code>sort</code> is omitted it applies the child order stored on the parent, so the result comes back in the order it did before.</p>
+</div>
+<div class="listingblock">
+<div class="title">Content — before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getChildren} from '/lib/xp/content';
+
+const result = getChildren({
+    key: '/mysite/articles',
+    start: 0,
+    count: 20
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Content — after</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {query} from '/lib/xp/content';
+
+const result = query({
+    parent: '/mysite/articles',
+    start: 0,
+    count: 20
 });</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Three consequences worth knowing:</p>
+<p><code>hits</code> carries the same contents as before, and <code>total</code> the same count.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>They are not on the global object.</strong> On GraalJS, <code>globalThis.app</code> resolves while <code>globalThis.log</code>, <code>globalThis.require</code>, <code>globalThis.resolve</code>, <code>globalThis.exports</code> and <code>globalThis.module</code> are all <code>undefined</code>; Nashorn has no <code>globalThis</code> binding at all. Inside a module <code>typeof require</code> still answers <code>"function"</code>, because the parameter is in scope. A bundled npm package that probes its environment through the global object will find nothing.</p>
-</li>
-<li>
-<p><strong>They can be shadowed.</strong> A variable or parameter named <code>log</code> declared in your module hides the binding for the rest of that scope, exactly as it would any other argument.</p>
-</li>
-<li>
-<p><strong>They are per module.</strong> Each module body gets its own <code>exports</code>, and a <code>require</code> and <code>resolve</code> bound to that module&#8217;s own location — which is what makes a relative path resolve against the file that wrote it.</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="title">Nodes — before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.findChildren({
+    parentKey: '/content',
+    count: 100,
+    recursive: true
+});</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="title">Nodes — after</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.query({
+    parent: '/content',
+    count: 100,
+    recursive: true
+});</code></pre>
 </div>
-<div class="sect1">
-<h2 id="app"><a class="link" href="#app">App</a></h2>
-<div class="sectionbody">
+</div>
 <div class="paragraph">
-<p>The <code>app</code> object holds information about the contextual app, and is the one name here that is genuinely global. It has the following properties:</p>
+<p>Three parameters change name or shape:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">app.name</dt>
+<dt class="hdlist1"><code>childOrder</code></dt>
 <dd>
-<p>The name of the application.</p>
+<p>Use <code>sort</code>, which takes the same expression. Omit it to keep the parent&#8217;s child order.</p>
 </dd>
-<dt class="hdlist1">app.version</dt>
+<dt class="hdlist1"><code>countOnly</code></dt>
 <dd>
-<p>Version of the application.</p>
+<p>Ask for no hits instead - <code>count: 0</code> - and read <code>total</code>.</p>
 </dd>
-<dt class="hdlist1">app.config</dt>
+<dt class="hdlist1"><code>recursive</code></dt>
 <dd>
-<p>Values from the application&#8217;s configuration file. This can be set using <code>$XP_HOME/config/&lt;app.name&gt;.cfg</code>. Every time the configuration is changed the app is restarted.</p>
+<p>Same name, same meaning. A subtree has no child order of its own, so pass <code>sort</code> where the order of a recursive result matters.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Get application name
-var name = app.name;  // com.enonic.app.superhero
-
-// Get application version
-var version = app.version;  // 1.2.0
-
-// Get some config from the &lt;app.name&gt;.cfg file
-var myKey = app.config.secretkey; // Reads the string stored in the "secretkey" property</code></pre>
-</div>
+<p>Moving to a query also opens up everything a query can do that <code>getChildren()</code> could not: filters, content types, aggregations, highlighting, and the <code>returns</code> parameter that has each hit carry named index fields instead of the whole content.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="log"><a class="link" href="#log">Log</a></h2>
+<h2 id="inline_function_tasks_become_named_tasks"><a class="link" href="#inline_function_tasks_become_named_tasks">Inline function tasks become named tasks</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>log</code> object holds the logging methods. It&#8217;s one method for each log
-level and takes the same number of parameters.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.debug(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a debug-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.info(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a info-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.warning(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a warning-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.error(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a error-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
+<p><a href="../libraries/lib-task.ahtml#executefunction"><code>executeFunction()</code></a> is deprecated and will be removed together with the Nashorn engine. It is also unsupported on the <a href="../fundamentals/runtime.ahtml#graaljs">GraalJS preview</a>, where a function cannot cross from one script context to another - so this is the one clean-up to do before trying that engine.</p>
 </div>
 <div class="paragraph">
-<p>Examples:</p>
+<p>Move the body of the function into a <a href="../background/tasks.ahtml">named task</a>, and submit it by descriptor.</p>
 </div>
 <div class="listingblock">
+<div class="title">Before</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Log a simple message
-log.debug('Hello World');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {executeFunction} from '/lib/xp/task';
 
-// Log a formatting message
-log.info('Hello %s', 'World');
-
-// Log a formatting message
-log.warning('%s %s', 'Hello', 'World');
-
-// Log using the built-in JSON converter
-log.error('My JSON %s', object );
-
-// Log an exception with stack trace
-try {
-  thisWillFail();
-} catch (e) {
-  log.error('An error occurred', e);
-}
-
-// Log a formatting message with exception stack trace
-try {
-  bean.run();
-} catch (e) {
-  log.error('Error in %s', 'myFunction', e);
+const taskId = executeFunction({
+    description: 'Reindex the catalog',
+    func: () =&gt; {
+        reindexCatalog(100);
+    }
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After — src/main/resources/tasks/reindex-catalog/reindex-catalog.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Task"
+description: "Reindex the catalog"
+form:
+- type: "Long"
+  name: "batchSize"
+  label: "Items per batch"
+  occurrences:
+    min: 1
+    max: 1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After — src/main/resources/tasks/reindex-catalog/reindex-catalog.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function run(params: { batchSize: number }): void {
+    reindexCatalog(params.batchSize);
 }</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="resolve"><a class="link" href="#resolve">Resolve()</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Resolves a fully qualified path to a local resource based
-on the current location. It does not check if a resource exists at the specified path.
-This function supports both relative (with dot-references) and absolute paths.</p>
-</div>
 <div class="listingblock">
+<div class="title">After — submitting it</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  resolve(path) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {submitTask} from '/lib/xp/task';
+
+const taskId = submitTask({
+    descriptor: 'reindex-catalog',
+    config: {
+        batchSize: 100
+    }
+});</code></pre>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string path</strong> Path to resolve using current location.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>returns</strong> the fully qualified resource path of the location.</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Absolute path
-var path1 = resolve('/views/myview.html');
-
-// Relative path - in this case, the resource must be in the same folder
-var path2 = resolve('myview.html');
-
-// Relative path (same as above)
-var path3 = resolve('./myview.html');
-
-// Relative path - resource is one level up
-var path4 = resolve('../myview.html');</code></pre>
-</div>
+<p>Two differences to plan for. A named task takes its input as <code>config</code>, validated against the descriptor&#8217;s form, rather than closing over the variables around it - anything the function read from its surroundings has to become a parameter. And a named task is distributable: the cluster picks a node that accepts it, which may not be the node that submitted it, so the task must not depend on running anywhere in particular.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="require"><a class="link" href="#require">Require()</a></h2>
+<h2 id="media_and_api_base_urls_move_to_configuration"><a class="link" href="#media_and_api_base_urls_move_to_configuration">Media and API base URLs move to configuration</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Loads a JavaScript file and returns its exports.
-The function implements parts of the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS Modules Specification</a>.</p>
+<p>The <code>baseUrl</code> parameter is deprecated on <a href="../libraries/lib-portal.ahtml#imageurl"><code>imageUrl()</code></a>, <a href="../libraries/lib-portal.ahtml#attachmenturl"><code>attachmentUrl()</code></a> and <a href="../libraries/lib-portal.ahtml#apiurl"><code>apiUrl()</code></a>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.</p>
 </div>
 <div class="listingblock">
+<div class="title">Before</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  require(path) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)',
+    baseUrl: 'https://cdn.example.com'
+});</code></pre>
 </div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string path</strong> Path to the JavaScript to load.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>returns</strong> The loaded JavaScript object exports.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
 </div>
 <div class="listingblock">
+<div class="title">After</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Absolute path
-var lib1 = require('/lib/mylib.js');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
 
-// Relative path
-var lib2 = require('mylib');
-
-// Relative path (same as above)
-var lib3 = require('./mylib.js');
-
-// Relative path
-var lib4 = require('../mylib');</code></pre>
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)'
+});</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If the path is relative then it will start looking for the file from the local directory.
-The file extension .js is not required.</p>
+<p>For media, declare the host once in <em>com.enonic.xp.portal.cfg</em>. A mount that serves the media APIs itself always wins, so a site needs both keys:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">media.defaultBaseUrl = https://cdn.example.com
+legacy.mediaApiAutoMount.enabled = false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A Base URL configured on the site itself does the same for that one site. See <a href="https://developer.enonic.com/docs/platform/stable/config/cms#media_base_url">serving media from another host</a>.</p>
+</div>
+<div class="paragraph">
+<p>For APIs, the virtual host that receives the request declares where they live:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">mapping.example.context.portal.apiBaseUrl = https://apis.example.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="https://developer.enonic.com/docs/platform/stable/config/vhosts#api-locations">API locations</a>.</p>
+</div>
+<div class="paragraph">
+<p>Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="exports"><a class="link" href="#exports">Exports</a></h2>
+<h2 id="timestamps_that_describe_the_build"><a class="link" href="#timestamps_that_describe_the_build">Timestamps that describe the build</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>exports</code> is the object a module exposes to whatever requires it (implementations, libraries, and so on). This is part of the CommonJS module spec.</p>
+<p><code>modifiedTime</code> is deprecated on the icons, content types, schemas and application descriptors returned by lib-content, lib-schema and lib-app, and so is <a href="../fundamentals/types.ahtml#resource"><code>Resource.getTimestamp()</code></a>. These read from application resources, where the value comes from a jar entry timestamp - and build tools normalize those to a constant so that builds are reproducible, Gradle by default since version 9. Two different builds of the same app therefore report the same value.</p>
 </div>
 <div class="paragraph">
-<p>Assign to it from any module to publish functionality:</p>
+<p>Code that used them as a cache key or an invalidation signal was therefore already unreliable:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function get(req: Request): Response {
-    return {body: 'hello'};
-}</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const cacheKey = `icon-${contentType.icon.modifiedTime}`;</code></pre>
 </div>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Authoring in TypeScript, write <code>export</code> and let the build transpile it — the emitted JavaScript assigns to <code>exports</code>. See <a href="typescript.ahtml">TypeScript</a>.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="esm"><a class="link" href="#esm">ECMAScript modules are not supported</a></h2>
+<h2 id="export_batch_size"><a class="link" href="#export_batch_size">Export batch size</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime, on either engine.</p>
-</div>
-<div class="paragraph">
-<p>Use <code>require()</code> and <code>exports</code> in the code you deploy. Writing <code>import</code>/<code>export</code> in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an <code>import</code> statement surviving into the emitted JavaScript.</p>
+<p><code>batchSize</code> on <a href="../libraries/lib-export.ahtml#exportnodes"><code>exportNodes()</code></a> is ignored. An export now reads each node at the exact version its scan observed, one at a time, so a subtree that changes while the export runs is written as it was seen rather than as a mixture of old and new. There is no read batch left to size - drop the parameter.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="double_underscore"><a class="link" href="#double_underscore">Double underscore __</a></h2>
+<h2 id="worth_adopting"><a class="link" href="#worth_adopting">Worth adopting</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The double underscore is available in any server-side JavaScript code and is used for wrapping Java objects in a JavaScript object. Read
-more about the <a href="java-bridge.ahtml">Java bridge</a>.</p>
+<p>None of these are deprecations. They are places where 8.1 offers a supported way to do something apps have had to work around.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Content Security Policy</dt>
+<dd>
+<p>A <code>Content-Security-Policy</code> header assembled by hand and set on the response is now folded into the request&#8217;s policy rather than sent verbatim, which means it is no longer the last word - a later contribution can add to it. Declare the policy through <a href="../libraries/lib-portal.ahtml#csp"><code>csp()</code></a> instead: one policy is shared by the page, its layouts, its parts and any response processor, and the header is composed when the response is flushed.</p>
+</dd>
+<dt class="hdlist1">Data down the request pipeline</dt>
+<dd>
+<p>Properties assigned to the request object - <code>req.myFlag = true</code> - never reached anything downstream; the field is dropped when the request is handed on. <a href="../libraries/lib-context.ahtml#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> stores the value in the current execution instead, where implementations, response processors and the code after <code>next()</code> in a filter can all read it back.</p>
+</dd>
+<dt class="hdlist1">Initialization guards</dt>
+<dd>
+<p><a href="../fundamentals/main.ahtml"><code>main.ts</code></a> now runs to completion before anything else in the app on the same node, so a flag that made every request check whether start-up had finished is no longer needed. Keep a guard for work that must happen once <strong>for the cluster</strong> - a node does not wait for <code>main.ts</code> on any other node, so two nodes can still initialize the same repository at the same time.</p>
+</dd>
+<dt class="hdlist1">Disposer registration</dt>
+<dd>
+<p><code>__.disposer()</code> registrations are remembered when they are made while the application is starting - from <code>main.ts</code>, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>

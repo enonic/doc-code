@@ -507,6 +507,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>This section describes the steps required to upgrade an XP application from 7.x to 8.0</p>
 </div>
+<div class="paragraph">
+<p>Already on XP 8.0? See <a href="upgrade/8-1.ahtml">Upgrading Enonic apps from XP 8.0 to 8.1</a>.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2386,7 +2389,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-25 08:00:41 UTC
+Last updated 2026-08-25 10:31:40 UTC
 </div>
 </div>
 </body>
