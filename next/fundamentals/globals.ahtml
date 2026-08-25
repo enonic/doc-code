@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Global objects and functions</title>
+<title>Globals and module bindings</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,15 +437,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Global objects and functions</h1>
+<h1>Globals and module bindings</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#module-scope">What is actually global</a></li>
 <li><a href="#app">App</a></li>
 <li><a href="#log">Log</a></li>
 <li><a href="#resolve">Resolve()</a></li>
 <li><a href="#require">Require()</a></li>
 <li><a href="#exports">Exports</a></li>
+<li><a href="#esm">ECMAScript modules are not supported</a></li>
 <li><a href="#double_underscore">Double underscore __</a></li>
 </ul>
 </div>
@@ -454,7 +456,39 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following global functions and objects are available in the Enonic XP framework.</p>
+<p>Server-side code in an Enonic app reaches a handful of names it never declares and never requires: <code>app</code>, <code>log</code>, <code>require</code>, <code>resolve</code>, <code>__</code> and <code>exports</code>. Only one of them is a true global.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="module-scope"><a class="link" href="#module-scope">What is actually global</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>app</code> is the only name <strong>XP</strong> installs on the JavaScript global object. Every other name on this page is <strong>module-scoped</strong>: XP wraps each module in a function and passes them in as arguments. The engine contributes a few globals of its own on top; the <a href="runtime.ahtml#graaljs">GraalJS preview</a> adds <code>Graal</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// what XP evaluates for every module it loads
+(function (log, require, resolve, __, exports, module) {
+    // your module's code goes here
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three consequences worth knowing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>They are not on the global object.</strong> On GraalJS, <code>globalThis.app</code> resolves while <code>globalThis.log</code>, <code>globalThis.require</code>, <code>globalThis.resolve</code>, <code>globalThis.exports</code> and <code>globalThis.module</code> are all <code>undefined</code>; Nashorn has no <code>globalThis</code> binding at all. Inside a module <code>typeof require</code> still answers <code>"function"</code>, because the parameter is in scope. A bundled npm package that probes its environment through the global object will find nothing.</p>
+</li>
+<li>
+<p><strong>They can be shadowed.</strong> A variable or parameter named <code>log</code> declared in your module hides the binding for the rest of that scope, exactly as it would any other argument.</p>
+</li>
+<li>
+<p><strong>They are per module.</strong> Each module body gets its own <code>exports</code>, and a <code>require</code> and <code>resolve</code> bound to that module&#8217;s own location — which is what makes a relative path resolve against the file that wrote it.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -462,7 +496,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="app"><a class="link" href="#app">App</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The globally available <code>app</code> object holds information about the contextual app. It has the following properties:</p>
+<p>The <code>app</code> object holds information about the contextual app, and is the one name here that is genuinely global. It has the following properties:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -501,7 +535,7 @@ var myKey = app.config.secretkey; // Reads the string stored in the "secretkey" 
 <h2 id="log"><a class="link" href="#log">Log</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This globally available <code>log</code> object holds the logging methods. It&#8217;s one method for each log
+<p>The <code>log</code> object holds the logging methods. It&#8217;s one method for each log
 level and takes the same number of parameters.</p>
 </div>
 <div class="listingblock">
@@ -610,7 +644,7 @@ try {
 <h2 id="resolve"><a class="link" href="#resolve">Resolve()</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This globally available function resolves a fully qualified path to a local resource based
+<p>Resolves a fully qualified path to a local resource based
 on the current location. It does not check if a resource exists at the specified path.
 This function supports both relative (with dot-references) and absolute paths.</p>
 </div>
@@ -655,8 +689,8 @@ var path4 = resolve('../myview.html');</code></pre>
 <h2 id="require"><a class="link" href="#require">Require()</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This globally available function will load a JavaScript file and return the exports as objects.
-The function implements parts of the `CommonJS Modules Specification`_.</p>
+<p>Loads a JavaScript file and returns its exports.
+The function implements parts of the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS Modules Specification</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -703,10 +737,40 @@ The file extension .js is not required.</p>
 <h2 id="exports"><a class="link" href="#exports">Exports</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The globally available <code>exports</code> keyword is used to expose functionality from a given module (implementations, libraries, etc.). This is part of the CommonJS module spec.</p>
+<p><code>exports</code> is the object a module exposes to whatever requires it (implementations, libraries, and so on). This is part of the CommonJS module spec.</p>
 </div>
 <div class="paragraph">
-<p>Simply use the <code>exports</code> keyword to expose functionality from any JavaScript file.</p>
+<p>Assign to it from any module to publish functionality:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function get(req: Request): Response {
+    return {body: 'hello'};
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Authoring in TypeScript, write <code>export</code> and let the build transpile it — the emitted JavaScript assigns to <code>exports</code>. See <a href="typescript.ahtml">TypeScript</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="esm"><a class="link" href="#esm">ECMAScript modules are not supported</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime, on either engine.</p>
+</div>
+<div class="paragraph">
+<p>Use <code>require()</code> and <code>exports</code> in the code you deploy. Writing <code>import</code>/<code>export</code> in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an <code>import</code> statement surviving into the emitted JavaScript.</p>
 </div>
 </div>
 </div>
@@ -722,7 +786,7 @@ more about the <a href="java-bridge.ahtml">Java bridge</a>.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-24 10:47:34 UTC
+Last updated 2026-08-25 08:00:41 UTC
 </div>
 </div>
 </body>

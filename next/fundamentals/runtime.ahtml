@@ -444,6 +444,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#execution_model">Execution model</a>
 <ul class="sectlevel2">
 <li><a href="#language_level">Language level</a></li>
+<li><a href="#graaljs">GraalJS preview</a></li>
 </ul>
 </li>
 <li><a href="#modules_and_bundling">Modules and bundling</a></li>
@@ -477,28 +478,155 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dd>
 <p>The default engine. Stable, production-ready, ships with every XP install. All XP releases since 7.x have shipped Nashorn.</p>
 </dd>
-<dt class="hdlist1">GraalVM JavaScript</dt>
+<dt class="hdlist1">GraalJS</dt>
 <dd>
-<p>Available as an experimental alternative. Currently not recommended for production.</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> The engine that will replace Nashorn, available to try since XP 8.1.0. Implements the current ECMAScript standard. <strong>Not for production</strong> - see <a href="#graaljs">GraalJS preview</a>.</p>
 </dd>
 </dl>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScript is also available but is currently experimental and not recommended for production use.
-</td>
-</tr>
-</table>
 </div>
 <div class="sect2">
 <h3 id="language_level"><a class="link" href="#language_level">Language level</a></h3>
 <div class="paragraph">
-<p>Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <a href="typescript.ahtml">TypeScript</a> for the build step.</p>
+<p>Every module runs in ECMAScript <strong>strict mode</strong>, on both engines.</p>
+</div>
+<div class="paragraph">
+<p>Nashorn is <strong>ES5</strong> compatible, with some ES6 capabilities. Transpile to ES5 — that is what the official starters do, and what apps have always done. See <a href="typescript.ahtml">TypeScript</a> for the build step.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> GraalJS tracks the current ECMAScript standard, so modern syntax runs without down-levelling. Transpiling to ES5 stays the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.</p>
+</div>
+<div class="paragraph">
+<p>The environment around the language is its own, and differs from the browser and from Node.js — see <a href="#graaljs-limits">what GraalJS does not bring with it</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="graaljs"><a class="link" href="#graaljs">GraalJS preview</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> <strong>Not for production.</strong> Nashorn remains the default and the supported engine; GraalJS is here to try and report on, and what follows may still change while it is in preview.</p>
+</div>
+<div class="paragraph">
+<p>The engine is chosen <strong>per application</strong>, from the <code>X-Script-Engine</code> manifest header the application bundle declares. An application that declares none runs on Nashorn. Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.</p>
+</div>
+<div class="paragraph">
+<p>Code can tell which engine it got. GraalJS installs a <code>Graal</code> global, and Nashorn has no such name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">if (typeof Graal !== 'undefined') {
+    log.info(`${Graal.language} ${Graal.versionECMAScript}`);  // JavaScript 2026
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Graal.versionECMAScript</code> is the year of the ECMAScript compatibility mode in force — the concrete answer to which language level you actually have. <code>Graal.versionGraalVM</code> gives the GraalVM version. See the <a href="https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object">Graal object</a> in the GraalJS compatibility reference.</p>
+</div>
+<div class="sect3">
+<h4 id="graaljs-limits"><a class="link" href="#graaljs-limits">What GraalJS does not bring with it</a></h4>
+<div class="paragraph">
+<p>A current-standard engine carries browser and Node.js expectations with it. XP is a different environment, and these are the differences that catch people out.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">ES modules</dt>
+<dd>
+<p><strong>Not supported.</strong> <code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime. Use <code>require()</code> and <code>exports</code>; see <a href="globals.ahtml#esm">ECMAScript modules</a>.</p>
+</dd>
+<dt class="hdlist1"><code>async</code> / <code>await</code></dt>
+<dd>
+<p><strong>Not supported.</strong> Write synchronous code, and move work that should not block a request into a <a href="../background/tasks.ahtml">task</a>.</p>
+</dd>
+<dt class="hdlist1">Node.js APIs</dt>
+<dd>
+<p><strong>Not supported.</strong> No <code>process</code>, <code>Buffer</code> or <code>global</code>, and no <code>node_modules</code> resolution.</p>
+</dd>
+<dt class="hdlist1">Most web APIs</dt>
+<dd>
+<p><strong>Not supported.</strong> No <code>setTimeout</code>, <code>setInterval</code>, <code>queueMicrotask</code>, <code>fetch</code>, <code>URL</code>, <code>URLSearchParams</code>, <code>TextEncoder</code>, <code>atob</code>/<code>btoa</code>, <code>crypto</code>, <code>structuredClone</code>, <code>AbortController</code>, <code>XMLHttpRequest</code> or <code>localStorage</code>. You have the JavaScript language. For HTTP, mail, storage and the rest, use the platform <a href="../libraries.ahtml">libraries</a>.</p>
+</dd>
+<dt class="hdlist1">Single-threaded assumptions</dt>
+<dd>
+<p><strong>Wrong here.</strong> The runtime is multithreaded — see <a href="#threading">Threading</a> — and an application gets a pool of script contexts. Module-level state is not a safe place to keep anything.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Nothing about how you <strong>write</strong> an app changes: the same modules, the same libraries, the same <a href="java-bridge.ahtml">Java bridge</a>. What changes is the execution environment around them.</p>
+</div>
+<div class="paragraph">
+<p><strong>Compiled code is shared across contexts.</strong> One engine serves the whole installation, and the code it compiles is cached across every script context built from it: a module parsed while one context starts is reused by the next, rather than parsed again for each.</p>
+</div>
+<div class="paragraph">
+<p><strong>An application gets a pool of script contexts.</strong> Contexts are created lazily as concurrency demands them, and <strong>module-level state is per context</strong> - two requests may load the same module and see two different copies of its top-level variables. This is the same rule <a href="#threading">threading</a> already imposes, enforced more strictly: treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.</p>
+</div>
+<div class="paragraph">
+<p><strong>Values cannot leave the context that created them.</strong> A JavaScript function or object belongs to the one script context. <a href="../libraries/lib-task.ahtml#executefunction"><code>executeFunction()</code></a> is unsupported; submit a <a href="../background/tasks.ahtml">named task</a> with <code>submitTask()</code> instead.</p>
+</div>
+<div class="paragraph">
+<p><strong>Disposers must be registered during start-up.</strong> Register <code>__.disposer</code> from <code>main.ts</code>, or from a module it loads while starting. See <a href="java-bridge.ahtml#disposer"><code>__.disposer</code></a>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Run your test suite against both engines before switching a production app. The differences above are the ones the platform imposes; a dependency written against Nashorn&#8217;s language level can have its own.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -507,7 +635,7 @@ XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScrip
 <h2 id="modules_and_bundling"><a class="link" href="#modules_and_bundling">Modules and bundling</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Each <code>.ts</code> or <code>.js</code> file in your app is a module under the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS module specification</a>. Modules export values via <code>exports</code>, and consume other modules via <code>require()</code>. Paths are rooted at the app bundle, not the filesystem — <code>require('/lib/greet')</code> loads <code>src/main/resources/lib/greet.ts</code> from the same app.</p>
+<p>Each <code>.ts</code> or <code>.js</code> file in your app is a module under the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS module specification</a>. Modules export values via <code>exports</code>, and consume other modules via <code>require()</code> — <code>import</code> and <code>export</code> statements are not supported at runtime, on either engine, see <a href="globals.ahtml#esm">ECMAScript modules</a>. Paths are rooted at the app bundle, not the filesystem — <code>require('/lib/greet')</code> loads <code>src/main/resources/lib/greet.ts</code> from the same app.</p>
 </div>
 <div class="paragraph">
 <p>Platform libraries are referenced by name (for example, <code>require('/lib/xp/content')</code>). See <a href="functions.ahtml#modules_and_the_bundle">Functions: Modules and the bundle</a> for the full path-resolution rules and bundle boundaries.</p>
@@ -522,6 +650,35 @@ XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScrip
 <div class="sectionbody">
 <div class="paragraph">
 <p>XP loads each module <strong>once per app deploy</strong> and caches it. Subsequent <code>require()</code> calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed. Top-level code in a module therefore runs exactly once per deploy.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+On GraalJS — a <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> preview engine, <strong>not for production</strong> — the unit is the script context: a module is loaded once per context, so its top-level code runs once for each context the application is given. Everything below still holds, and applies with more force — there can now be several copies of a module&#8217;s top-level state. See <a href="#graaljs">GraalJS preview</a>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>This makes module top-level a natural place for one-time setup (requiring libraries, computing constants), but a poor place for mutable state. Treat anything declared outside a function body as immutable after load. For state that must survive between invocations, use a repo node, the <code>cache</code> library, or another explicit persistence mechanism.</p>
@@ -620,7 +777,7 @@ XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScrip
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-24 10:47:34 UTC
+Last updated 2026-08-25 08:00:41 UTC
 </div>
 </div>
 </body>
