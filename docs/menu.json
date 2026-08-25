@@ -330,7 +330,13 @@
     },
     {
       "title": "Upgrading",
-      "document": "upgrade"
+      "document": "upgrade",
+      "menuItems": [
+        {
+          "title": "XP 8.0 to 8.1",
+          "document": "upgrade/8-1"
+        }
+      ]
     }
   ]
 }

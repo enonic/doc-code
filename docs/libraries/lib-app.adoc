@@ -181,6 +181,8 @@ const expected = {
 
 === createVirtualApplication
 
+image:experimental.svg[Experimental,opts=inline] Virtual applications belong to the *experimental* <<lib-schema#, dynamic schema>> feature. This API may change, or be withdrawn, in a future release.
+
 Creates a virtual application (along with its schema repository nodes) with the specified key.
 
 TIP: This function requires the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <<lib-context#run, context>> of `system.schema.admin` role.
@@ -218,6 +220,8 @@ const app = createVirtualApplication({
 
 === deleteVirtualApplication
 
+image:experimental.svg[Experimental,opts=inline] Virtual applications belong to the *experimental* <<lib-schema#, dynamic schema>> feature. This API may change, or be withdrawn, in a future release.
+
 Removes a virtual application with the specified key.
 
 TIP: This function requires the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <<lib-context#run, context>> of `system.schema.admin` role.
@@ -254,6 +258,8 @@ const result = deleteVirtualApplication({
 ----
 
 === getApplicationMode
+
+image:experimental.svg[Experimental,opts=inline] Virtual applications belong to the *experimental* <<lib-schema#, dynamic schema>> feature. This API may change, or be withdrawn, in a future release.
 
 Fetches mode of an application with the specified key.
 

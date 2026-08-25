@@ -4,6 +4,8 @@
 
 This section describes the steps required to upgrade an XP application from 7.x to 8.0
 
+Already on XP 8.0? See <<upgrade/8-1#, Upgrading Enonic apps from XP 8.0 to 8.1>>.
+
 NOTE: To run this upgrade automatically with an AI coding agent, use the https://github.com/enonic/agent-toolkit[Enonic Agents Toolkit] — it includes a skill that drives agents like Claude Code, Codex, Gemini and Co-pilot (or another compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
 
 [#terminology]

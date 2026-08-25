@@ -2,6 +2,8 @@
 :toc: right
 :imagesdir: ../images
 
+image:experimental.svg[Experimental,opts=inline] Dynamic schemas are an *experimental* feature. This API may change, or be withdrawn, in a future release.
+
 API for fetching and manipulating dynamic schemas.
 
 WARNING: In XP 8 all `resource` strings passed to and returned from this library are *YAML*. XML resources are no longer accepted — `createSchema`, `createComponent`, `createStyles`, `updateSite`, and the `update*` counterparts all parse YAML only. Examples below use the XP 8 `kind:` form.

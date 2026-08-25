@@ -1,0 +1,230 @@
+= Upgrading Enonic apps from XP 8.0 to 8.1
+:toc: right
+:imagesdir: ../images
+
+XP 8.1 makes no breaking changes to application code: an app built for 8.0 runs on 8.1 as it is. The upgrade is a version bump, followed by the clean-ups below. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, so the clean-ups can be done one at a time.
+
+Coming from XP 7? Do <<../upgrade#, Upgrading Enonic apps from XP 7 to XP 8>> first — this page picks up where that one ends.
+
+== Version bump
+
+Set the platform version in _gradle.properties_:
+
+[source,properties]
+----
+xpVersion = 8.1.0
+----
+
+TypeScript projects also need the matching type definitions, or the parameters and functions added in 8.1 will not type-check:
+
+.package.json
+[source,json]
+----
+{
+  "devDependencies": {
+    "@enonic-types/global": "^8.1.0",
+    "@enonic-types/lib-content": "^8.1.0"
+  }
+}
+----
+
+Then rebuild and deploy:
+
+  enonic project deploy
+
+That is the whole compatibility story - the app builds and runs. What follows is work that can be done at your own pace: the deprecated APIs still function, but they are on their way out.
+
+== Children are fetched with a query
+
+<<../libraries/lib-content#getchildren, `getChildren()`>> in lib-content and <<../libraries/lib-node#findchildren, `findChildren()`>> in lib-node are deprecated. A query with `parent` does the same job: it takes the same path or id, and where `sort` is omitted it applies the child order stored on the parent, so the result comes back in the order it did before.
+
+.Content — before
+[source,typescript]
+----
+import {getChildren} from '/lib/xp/content';
+
+const result = getChildren({
+    key: '/mysite/articles',
+    start: 0,
+    count: 20
+});
+----
+
+.Content — after
+[source,typescript]
+----
+import {query} from '/lib/xp/content';
+
+const result = query({
+    parent: '/mysite/articles',
+    start: 0,
+    count: 20
+});
+----
+
+`hits` carries the same contents as before, and `total` the same count.
+
+.Nodes — before
+[source,typescript]
+----
+const result = repo.findChildren({
+    parentKey: '/content',
+    count: 100,
+    recursive: true
+});
+----
+
+.Nodes — after
+[source,typescript]
+----
+const result = repo.query({
+    parent: '/content',
+    count: 100,
+    recursive: true
+});
+----
+
+Three parameters change name or shape:
+
+`childOrder`:: Use `sort`, which takes the same expression. Omit it to keep the parent's child order.
+`countOnly`:: Ask for no hits instead - `count: 0` - and read `total`.
+`recursive`:: Same name, same meaning. A subtree has no child order of its own, so pass `sort` where the order of a recursive result matters.
+
+Moving to a query also opens up everything a query can do that `getChildren()` could not: filters, content types, aggregations, highlighting, and the `returns` parameter that has each hit carry named index fields instead of the whole content.
+
+== Inline function tasks become named tasks
+
+<<../libraries/lib-task#executefunction, `executeFunction()`>> is deprecated and will be removed together with the Nashorn engine. It is also unsupported on the <<../fundamentals/runtime#graaljs, GraalJS preview>>, where a function cannot cross from one script context to another - so this is the one clean-up to do before trying that engine.
+
+Move the body of the function into a <<../background/tasks#, named task>>, and submit it by descriptor.
+
+.Before
+[source,typescript]
+----
+import {executeFunction} from '/lib/xp/task';
+
+const taskId = executeFunction({
+    description: 'Reindex the catalog',
+    func: () => {
+        reindexCatalog(100);
+    }
+});
+----
+
+.After — src/main/resources/tasks/reindex-catalog/reindex-catalog.yaml
+[source,yaml]
+----
+kind: "Task"
+description: "Reindex the catalog"
+form:
+- type: "Long"
+  name: "batchSize"
+  label: "Items per batch"
+  occurrences:
+    min: 1
+    max: 1
+----
+
+.After — src/main/resources/tasks/reindex-catalog/reindex-catalog.ts
+[source,typescript]
+----
+export function run(params: { batchSize: number }): void {
+    reindexCatalog(params.batchSize);
+}
+----
+
+.After — submitting it
+[source,typescript]
+----
+import {submitTask} from '/lib/xp/task';
+
+const taskId = submitTask({
+    descriptor: 'reindex-catalog',
+    config: {
+        batchSize: 100
+    }
+});
+----
+
+Two differences to plan for. A named task takes its input as `config`, validated against the descriptor's form, rather than closing over the variables around it - anything the function read from its surroundings has to become a parameter. And a named task is distributable: the cluster picks a node that accepts it, which may not be the node that submitted it, so the task must not depend on running anywhere in particular.
+
+== Media and API base URLs move to configuration
+
+The `baseUrl` parameter is deprecated on <<../libraries/lib-portal#imageurl, `imageUrl()`>>, <<../libraries/lib-portal#attachmenturl, `attachmentUrl()`>> and <<../libraries/lib-portal#apiurl, `apiUrl()`>>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.
+
+.Before
+[source,typescript]
+----
+import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)',
+    baseUrl: 'https://cdn.example.com'
+});
+----
+
+.After
+[source,typescript]
+----
+import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)'
+});
+----
+
+For media, declare the host once in _com.enonic.xp.portal.cfg_. A mount that serves the media APIs itself always wins, so a site needs both keys:
+
+[source,properties]
+----
+media.defaultBaseUrl = https://cdn.example.com
+legacy.mediaApiAutoMount.enabled = false
+----
+
+A Base URL configured on the site itself does the same for that one site. See https://developer.enonic.com/docs/platform/stable/config/cms#media_base_url[serving media from another host].
+
+For APIs, the virtual host that receives the request declares where they live:
+
+[source,properties]
+----
+mapping.example.context.portal.apiBaseUrl = https://apis.example.com
+----
+
+See https://developer.enonic.com/docs/platform/stable/config/vhosts#api-locations[API locations].
+
+Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.
+
+== Timestamps that describe the build
+
+`modifiedTime` is deprecated on the icons, content types, schemas and application descriptors returned by lib-content, lib-schema and lib-app, and so is <<../fundamentals/types#resource, `Resource.getTimestamp()`>>. These read from application resources, where the value comes from a jar entry timestamp - and build tools normalize those to a constant so that builds are reproducible, Gradle by default since version 9. Two different builds of the same app therefore report the same value.
+
+Code that used them as a cache key or an invalidation signal was therefore already unreliable:
+
+[source,typescript]
+----
+const cacheKey = `icon-${contentType.icon.modifiedTime}`;
+----
+
+There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.
+
+== Export batch size
+
+`batchSize` on <<../libraries/lib-export#exportnodes, `exportNodes()`>> is ignored. An export now reads each node at the exact version its scan observed, one at a time, so a subtree that changes while the export runs is written as it was seen rather than as a mixture of old and new. There is no read batch left to size - drop the parameter.
+
+== Worth adopting
+
+None of these are deprecations. They are places where 8.1 offers a supported way to do something apps have had to work around.
+
+Content Security Policy::
+A `Content-Security-Policy` header assembled by hand and set on the response is now folded into the request's policy rather than sent verbatim, which means it is no longer the last word - a later contribution can add to it. Declare the policy through <<../libraries/lib-portal#csp, `csp()`>> instead: one policy is shared by the page, its layouts, its parts and any response processor, and the header is composed when the response is flushed.
+
+Data down the request pipeline::
+Properties assigned to the request object - `+req.myFlag = true+` - never reached anything downstream; the field is dropped when the request is handed on. <<../libraries/lib-context#setcustomlocalattribute, `+setCustomLocalAttribute()+`>> stores the value in the current execution instead, where implementations, response processors and the code after `next()` in a filter can all read it back.
+
+Initialization guards::
+<<../fundamentals/main#, `main.ts`>> now runs to completion before anything else in the app on the same node, so a flag that made every request check whether start-up had finished is no longer needed. Keep a guard for work that must happen once *for the cluster* - a node does not wait for `main.ts` on any other node, so two nodes can still initialize the same repository at the same time.
+
+Disposer registration::
+`+__.disposer()+` registrations are remembered when they are made while the application is starting - from `main.ts`, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.
