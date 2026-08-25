@@ -40,7 +40,7 @@ if (typeof Graal !== 'undefined') {
 }
 ----
 
-`Graal.versionECMAScript` is the year of the ECMAScript compatibility mode in force — the concrete answer to which language level you actually have. `Graal.versionGraalVM` gives the GraalVM version, and `Graal.isGraalRuntime()` reports whether the Graal compiler is optimizing hot code; where it answers `false` the engine still runs, at lower peak performance. See the https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object[Graal object] in the GraalJS compatibility reference.
+`Graal.versionECMAScript` is the year of the ECMAScript compatibility mode in force — the concrete answer to which language level you actually have. `Graal.versionGraalVM` gives the GraalVM version. See the https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object[Graal object] in the GraalJS compatibility reference.
 
 [#graaljs-limits]
 ==== What GraalJS does not bring with it
