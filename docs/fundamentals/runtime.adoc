@@ -1,6 +1,6 @@
 = Runtime
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 What powers your Enonic app at execution time — the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free.
 
@@ -12,17 +12,62 @@ Two engines are available:
 
 Nashorn:: The default engine. Stable, production-ready, ships with every XP install. All XP releases since 7.x have shipped Nashorn.
 
-GraalVM JavaScript:: Available as an experimental alternative. Currently not recommended for production.
-
-NOTE: XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScript is also available but is currently experimental and not recommended for production use.
+GraalJS:: image:preview.svg[Preview,opts=inline] The engine that will replace Nashorn, available to try since XP 8.1.0. Implements the current ECMAScript standard. *Not for production* - see <<graaljs, GraalJS preview>>.
 
 === Language level
 
-Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <<typescript#, TypeScript>> for the build step.
+Every module runs in ECMAScript *strict mode*, on both engines.
+
+Nashorn is *ES5* compatible, with some ES6 capabilities. Transpile to ES5 — that is what the official starters do, and what apps have always done. See <<typescript#, TypeScript>> for the build step.
+
+image:preview.svg[Preview,opts=inline] GraalJS tracks the current ECMAScript standard, so modern syntax runs without down-levelling. Transpiling to ES5 stays the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.
+
+The environment around the language is its own, and differs from the browser and from Node.js — see <<graaljs-limits, what GraalJS does not bring with it>>.
+
+[#graaljs]
+=== GraalJS preview
+
+image:preview.svg[Preview,opts=inline] *Not for production.* Nashorn remains the default and the supported engine; GraalJS is here to try and report on, and what follows may still change while it is in preview.
+
+The engine is chosen *per application*, from the `+X-Script-Engine+` manifest header the application bundle declares. An application that declares none runs on Nashorn. Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.
+
+Code can tell which engine it got. GraalJS installs a `Graal` global, and Nashorn has no such name:
+
+[source,typescript]
+----
+if (typeof Graal !== 'undefined') {
+    log.info(`${Graal.language} ${Graal.versionECMAScript}`);  // JavaScript 2026
+}
+----
+
+`Graal.versionECMAScript` is the year of the ECMAScript compatibility mode in force — the concrete answer to which language level you actually have. `Graal.versionGraalVM` gives the GraalVM version. See the https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object[Graal object] in the GraalJS compatibility reference.
+
+[#graaljs-limits]
+==== What GraalJS does not bring with it
+
+A current-standard engine carries browser and Node.js expectations with it. XP is a different environment, and these are the differences that catch people out.
+
+ES modules:: *Not supported.* `import`, `export` and dynamic `import()` do not work at runtime. Use `require()` and `exports`; see <<globals#esm, ECMAScript modules>>.
+`async` / `await`:: *Not supported.* Write synchronous code, and move work that should not block a request into a <<../background/tasks#, task>>.
+Node.js APIs:: *Not supported.* No `process`, `Buffer` or `global`, and no `node_modules` resolution.
+Most web APIs:: *Not supported.* No `setTimeout`, `setInterval`, `queueMicrotask`, `fetch`, `URL`, `URLSearchParams`, `TextEncoder`, `atob`/`btoa`, `crypto`, `structuredClone`, `AbortController`, `XMLHttpRequest` or `localStorage`. You have the JavaScript language. For HTTP, mail, storage and the rest, use the platform <<../libraries#, libraries>>.
+Single-threaded assumptions:: *Wrong here.* The runtime is multithreaded — see <<threading, Threading>> — and an application gets a pool of script contexts. Module-level state is not a safe place to keep anything.
+
+Nothing about how you *write* an app changes: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the execution environment around them.
+
+*Compiled code is shared across contexts.* One engine serves the whole installation, and the code it compiles is cached across every script context built from it: a module parsed while one context starts is reused by the next, rather than parsed again for each.
+
+*An application gets a pool of script contexts.* Contexts are created lazily as concurrency demands them, and *module-level state is per context* - two requests may load the same module and see two different copies of its top-level variables. This is the same rule <<threading, threading>> already imposes, enforced more strictly: treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.
+
+*Values cannot leave the context that created them.* A JavaScript function or object belongs to the one script context. <<../libraries/lib-task#executefunction, `executeFunction()`>> is unsupported; submit a <<../background/tasks#, named task>> with `submitTask()` instead.
+
+*Disposers must be registered during start-up.* Register `+__.disposer+` from `main.ts`, or from a module it loads while starting. See <<java-bridge#disposer, `+__.disposer+`>>.
+
+TIP: Run your test suite against both engines before switching a production app. The differences above are the ones the platform imposes; a dependency written against Nashorn's language level can have its own.
 
 == Modules and bundling
 
-Each `.ts` or `.js` file in your app is a module under the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS module specification]. Modules export values via `exports`, and consume other modules via `require()`. Paths are rooted at the app bundle, not the filesystem — `require('/lib/greet')` loads `src/main/resources/lib/greet.ts` from the same app.
+Each `.ts` or `.js` file in your app is a module under the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS module specification]. Modules export values via `exports`, and consume other modules via `require()` — `import` and `export` statements are not supported at runtime, on either engine, see <<globals#esm, ECMAScript modules>>. Paths are rooted at the app bundle, not the filesystem — `require('/lib/greet')` loads `src/main/resources/lib/greet.ts` from the same app.
 
 Platform libraries are referenced by name (for example, `require('/lib/xp/content')`). See <<functions#modules_and_the_bundle, Functions: Modules and the bundle>> for the full path-resolution rules and bundle boundaries.
 
@@ -32,10 +77,13 @@ TypeScript is supported as the authoring language; the build step transpiles to 
 
 XP loads each module *once per app deploy* and caches it. Subsequent `require()` calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed. Top-level code in a module therefore runs exactly once per deploy.
 
+NOTE: On GraalJS — a image:preview.svg[Preview,opts=inline] preview engine, *not for production* — the unit is the script context: a module is loaded once per context, so its top-level code runs once for each context the application is given. Everything below still holds, and applies with more force — there can now be several copies of a module's top-level state. See <<graaljs, GraalJS preview>>.
+
 This makes module top-level a natural place for one-time setup (requiring libraries, computing constants), but a poor place for mutable state. Treat anything declared outside a function body as immutable after load. For state that must survive between invocations, use a repo node, the `cache` library, or another explicit persistence mechanism.
 
 See <<functions#loading_and_caching, Functions: Loading and caching>> for the implications on each function type.
 
+[#threading]
 == Threading
 
 The runtime is multithreaded. The platform serves requests, dispatches events, and runs background tasks concurrently across multiple threads, taking advantage of multi-core CPU architectures. There is no single event loop — each request, task, or event listener runs on a worker thread from a managed pool.

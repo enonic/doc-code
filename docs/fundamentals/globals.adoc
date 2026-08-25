@@ -1,12 +1,31 @@
-= Global objects and functions
+= Globals and module bindings
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
-The following global functions and objects are available in the Enonic XP framework.
+Server-side code in an Enonic app reaches a handful of names it never declares and never requires: `app`, `log`, `require`, `resolve`, `+__+` and `exports`. Only one of them is a true global.
+
+[#module-scope]
+== What is actually global
+
+`app` is the only name *XP* installs on the JavaScript global object. Every other name on this page is *module-scoped*: XP wraps each module in a function and passes them in as arguments. The engine contributes a few globals of its own on top; the <<runtime#graaljs, GraalJS preview>> adds `Graal`.
+
+[source,typescript]
+----
+// what XP evaluates for every module it loads
+(function (log, require, resolve, __, exports, module) {
+    // your module's code goes here
+});
+----
+
+Three consequences worth knowing:
+
+* *They are not on the global object.* On GraalJS, `globalThis.app` resolves while `globalThis.log`, `globalThis.require`, `globalThis.resolve`, `globalThis.exports` and `globalThis.module` are all `undefined`; Nashorn has no `globalThis` binding at all. Inside a module `typeof require` still answers `"function"`, because the parameter is in scope. A bundled npm package that probes its environment through the global object will find nothing.
+* *They can be shadowed.* A variable or parameter named `log` declared in your module hides the binding for the rest of that scope, exactly as it would any other argument.
+* *They are per module.* Each module body gets its own `exports`, and a `require` and `resolve` bound to that module's own location — which is what makes a relative path resolve against the file that wrote it.
 
 == App
 
-The globally available ``app`` object holds information about the contextual app. It has the following properties:
+The `app` object holds information about the contextual app, and is the one name here that is genuinely global. It has the following properties:
 
 app.name:: The name of the application.
 
@@ -24,7 +43,7 @@ include::code/app.js[]
 
 == Log
 
-This globally available ``log`` object holds the logging methods. It's one method for each log
+The ``log`` object holds the logging methods. It's one method for each log
 level and takes the same number of parameters.
 
 [source,javascript]
@@ -61,7 +80,7 @@ include::code/log.js[]
 
 == Resolve()
 
-This globally available function resolves a fully qualified path to a local resource based
+Resolves a fully qualified path to a local resource based
 on the current location. It does not check if a resource exists at the specified path.
 This function supports both relative (with dot-references) and absolute paths.
 
@@ -82,8 +101,8 @@ include::code/resolve.js[]
 [#require]
 == Require()
 
-This globally available function will load a JavaScript file and return the exports as objects.
-The function implements parts of the `CommonJS Modules Specification`_.
+Loads a JavaScript file and returns its exports.
+The function implements parts of the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS Modules Specification].
 
 [source,javascript]
   require(path) // <1> <2>
@@ -107,9 +126,25 @@ The file extension .js is not required.
 
 == Exports
 
-The globally available ``exports`` keyword is used to expose functionality from a given module (implementations, libraries, etc.). This is part of the CommonJS module spec.
+``exports`` is the object a module exposes to whatever requires it (implementations, libraries, and so on). This is part of the CommonJS module spec.
 
-Simply use the ``exports`` keyword to expose functionality from any JavaScript file.
+Assign to it from any module to publish functionality:
+
+[source,typescript]
+----
+export function get(req: Request): Response {
+    return {body: 'hello'};
+}
+----
+
+TIP: Authoring in TypeScript, write `export` and let the build transpile it — the emitted JavaScript assigns to `exports`. See <<typescript#, TypeScript>>.
+
+[#esm]
+== ECMAScript modules are not supported
+
+`import`, `export` and dynamic `import()` do not work at runtime, on either engine.
+
+Use `require()` and `exports` in the code you deploy. Writing `import`/`export` in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an `import` statement surviving into the emitted JavaScript.
 
 == Double underscore __
 
