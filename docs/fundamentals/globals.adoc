@@ -146,9 +146,7 @@ TIP: Authoring in TypeScript, write `export` and let the build transpile it — 
 [#esm]
 == ECMAScript modules are not supported
 
-`import` and `export` statements do not work at runtime. XP loads every module through the CommonJS wrapper shown <<module-scope, above>> and evaluates it as a classic script, so an `import` statement is a syntax error rather than a module declaration.
-
-This holds on both engines, the image:preview.svg[Preview,opts=inline] <<runtime#graaljs, GraalJS preview>> included: GraalJS implements ES modules perfectly well, but XP never asks it to evaluate one.
+`import` and `export` statements do not work at runtime, on either engine.
 
 Use `require()` and `exports` in the code you deploy. Writing `import`/`export` in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an `import` statement surviving into the emitted JavaScript.
 
