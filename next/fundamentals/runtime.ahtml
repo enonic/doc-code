@@ -590,9 +590,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dd>
 <p><strong>Not supported.</strong> No <code>process</code>, <code>Buffer</code> or <code>global</code>, and no <code>node_modules</code> resolution.</p>
 </dd>
-<dt class="hdlist1">Most web APIs</dt>
+<dt class="hdlist1">Web APIs</dt>
 <dd>
-<p><strong>Not supported.</strong> No <code>setTimeout</code>, <code>setInterval</code>, <code>queueMicrotask</code>, <code>fetch</code>, <code>URL</code>, <code>URLSearchParams</code>, <code>TextEncoder</code>, <code>atob</code>/<code>btoa</code>, <code>crypto</code>, <code>structuredClone</code>, <code>AbortController</code>, <code>XMLHttpRequest</code> or <code>localStorage</code>. You have the JavaScript language. For HTTP, mail, storage and the rest, use the platform <a href="../libraries.ahtml">libraries</a>.</p>
+<p><strong>Partially supported.</strong> <code>TextEncoder</code> and <code>TextDecoder</code> are available. Further APIs may become available in future GraalJS versions, while others, such as <code>fetch</code> and <code>setTimeout</code>, might never be supported. For HTTP, mail, storage and the rest, use the platform <a href="../libraries.ahtml">libraries</a>.</p>
 </dd>
 <dt class="hdlist1">Single-threaded assumptions</dt>
 <dd>
@@ -777,7 +777,7 @@ On GraalJS — a <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xml
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-25 11:04:32 UTC
+Last updated 2026-08-26 10:25:44 UTC
 </div>
 </div>
 </body>
