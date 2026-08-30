@@ -335,6 +335,10 @@
         {
           "title": "XP 8.0 to 8.1",
           "document": "upgrade/8-1"
+        },
+        {
+          "title": "XP 8.1 to 8.2",
+          "document": "upgrade/8-2"
         }
       ]
     }
