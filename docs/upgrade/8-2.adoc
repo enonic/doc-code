@@ -37,6 +37,6 @@ Then rebuild and deploy:
 
 == Worth adopting: flow gating
 
-A vhost may now restrict the flows an ID provider serves. XP enforces `login`, `autologin` and `logout` itself, and hands the configured list to the implementation as `request.idProviderFlows` — absent when no restriction applies. An ID provider with custom `GET`/`POST` endpoints can gate additional flows of its own on it, letting administrators enable or disable those endpoints per vhost. See <<../web/id-providers#flows, Flows>>.
+A vhost may now restrict the flows an ID provider serves. XP enforces `login`, `autologin` and `logout` itself, and hands the configured list to the implementation as `request.idProviderFlows` — absent when no restriction applies. An ID provider with custom `GET`/`POST` endpoints can gate additional flows of its own on it, letting administrators enable or disable those endpoints per vhost — the Standard ID Provider gates its (deprecated) basic authentication on the additional `basic` flow this way. See <<../web/id-providers#flows, Flows>>.
 
 For code reaching the `VirtualHost` Java API through the <<../fundamentals/java-bridge#, Java bridge>>: `getIdProviderKeys()` and `getDefaultIdProviderKey()` are deprecated in favor of `getIdProviders()` — a map of the enabled ID providers to their flow lists, the default provider first.
