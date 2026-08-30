@@ -43,7 +43,7 @@ Rather than hardcoding these paths, generate them with the portal library helper
 
 [NOTE]
 ====
-The endpoint is *mounted* everywhere, but an ID provider only *activates* for a request when it is bound to the request's virtual host. The vhost mapping declares which ID provider(s) apply, and the one marked `default` is the provider whose `autoLogin` filter runs. See the https://developer.enonic.com/docs/platform/xp8/config/vhosts[vhost configuration] for the binding rules.
+The endpoint is *mounted* everywhere, but an ID provider only *activates* for a request when it is bound to the request's virtual host. The vhost mapping declares which ID provider(s) apply and, optionally, <<#flows, which flows>> each of them serves. See the https://developer.enonic.com/docs/platform/xp8/config/vhosts[vhost configuration] for the binding rules.
 ====
 
 == Descriptor
@@ -127,7 +127,7 @@ If no user already exists in the context, the autoLogin filter is executed early
 
 [NOTE]
 ====
-`autoLogin` works only for identity providers that are configured as `default` in the virtual host mapping. Visit the https://developer.enonic.com/docs/platform/xp8/config/vhosts[vhost configuration] section for more details.
+image:xp-820.svg[XP 8.2.0,opts=inline] `autoLogin` runs for every ID provider on the request's virtual host that has the `autologin` <<#flows, flow>> enabled — the `default` provider first — until one of them authenticates the request or returns a response. In earlier versions only the `default` provider's `autoLogin` ran. Visit the https://developer.enonic.com/docs/platform/xp8/config/vhosts[vhost configuration] section for more details.
 ====
 
 
@@ -137,6 +137,32 @@ Additionally, an ID provider may also act as a regular <<request-response#, HTTP
 Communication with the implementation is handled via the ID provider endpoint.
 
 The URL to this endpoint can be generated using the <<../libraries/lib-portal#idproviderurl, idProviderUrl() function in the portal library>>
+
+[#flows]
+== Flows
+
+image:xp-820.svg[XP 8.2.0,opts=inline] A vhost mapping may restrict the flows an ID provider serves, with a flow list on its `enabled` value — e.g. `+default&enabled=login,autologin+`. XP itself enforces the three flows it manages:
+
+login:: `handle401` and the `login` function.
+autologin:: the `autoLogin` filter.
+logout:: the `logout` function.
+
+Any other name in the list addresses an *additional flow* of the ID provider application itself. XP dispatches the custom `GET`/`POST` functions regardless of the list, and instead hands the list to the implementation as `request.idProviderFlows` — a sorted array of the configured flow names. The property is absent when the vhost applies no flow restriction (and on XP versions before 8.2.0), so an absent list means every flow is enabled.
+
+Use it to serve an endpoint only where its flow is listed. For example, an ID provider offering a device authorization flow can gate it on the name `device`:
+
+[source,typescript]
+----
+export function POST(request: Request) {
+    const flows = request.idProviderFlows;
+    if (flows && flows.indexOf('device') < 0) {
+        return { status: 403 };
+    }
+    // serve the device authorization endpoint
+}
+----
+
+An administrator then enables the endpoint per vhost by listing the flow — `+enabled=autologin,device+` — and disables it by leaving it out. Document the additional flows your ID provider supports, so administrators know what the names mean.
 
 == Sample
 The code below demonstrates how an ID provider may be implemented
