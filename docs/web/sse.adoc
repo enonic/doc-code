@@ -9,7 +9,7 @@ WARNING: An SSE stream keeps an HTTP connection open for its entire lifetime. Ov
 [#http-sse]
 == SSE
 
-An implementation becomes an SSE endpoint by returning an `sse` object from its `GET` function. Each connected client reuses the same module instance; per-connection state lives in `attributes`.
+An implementation becomes an SSE endpoint by returning an `sse` object from a request handler, such as `GET` or `POST`. Each connected client reuses the same module instance; per-connection state lives in `attributes`.
 
 [source,typescript]
 ----
