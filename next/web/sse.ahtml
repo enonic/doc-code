@@ -470,7 +470,7 @@ An SSE stream keeps an HTTP connection open for its entire lifetime. Over HTTP/1
 <h2 id="http-sse"><a class="link" href="#http-sse">SSE</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An implementation becomes an SSE endpoint by returning an <code>sse</code> object from its <code>GET</code> function. Each connected client reuses the same module instance; per-connection state lives in <code>attributes</code>.</p>
+<p>An implementation becomes an SSE endpoint by returning an <code>sse</code> object from a request handler, such as <code>GET</code> or <code>POST</code>. Each connected client reuses the same module instance; per-connection state lives in <code>attributes</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -620,7 +620,7 @@ sseLib.sendToGroup({ group: 'live', message: { data: 'Update' } });</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-02 08:23:37 UTC
+Last updated 2026-09-02 08:25:02 UTC
 </div>
 </div>
 </body>
