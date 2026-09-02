@@ -173,7 +173,7 @@ WARNING: The `mount: "management"` feature is experimental and subject to change
 
 NOTE: The Management endpoint is for *advanced use only*. It is intended for extending XP's management capabilities (cluster operations, internal tooling, infrastructure integrations) — not for regular application APIs.
 
-An API can also be exposed on the *Management* endpoint by adding `"management"` to its `mount` list. The Management endpoint is a separate listener on its own port, distinct from the Web endpoint — use it for internal or operational APIs that should not be reachable from the public network. There the API is served at the root of the port, `+/<app-name>:<api-name>+`, beside XP's own <<https://developer.enonic.com/docs/xp/stable/platform/endpoints/management/resources,management resources>> (`server:app`, `server:snapshot`, ...). Every request must carry an authenticated user; `allow` decides which.
+An API can also be exposed on the *Management* endpoint by adding `"management"` to its `mount` list. The Management endpoint is a separate listener on its own port, distinct from the Web endpoint — use it for internal or operational APIs that should not be reachable from the public network. There the API is served at the root of the port, `+/<app-name>:<api-name>+`, beside XP's own <<https://developer.enonic.com/docs/xp/stable/platform/endpoints/management/resources,management resources>> (`server:app`, `server:snapshot`, ...). Every request must carry an authenticated user matching `allow`.
 
 .src/main/resources/apis/<api-name>/<api-name>.yaml
 [source,yaml]
@@ -190,7 +190,7 @@ Both mounts can be combined: `mount: ["web", "management"]` makes the API reacha
 [#management-policy]
 === Honouring virtual host policy
 
-image:xp-8020.svg[XP 8.2.0,opts=inline] A <<https://developer.enonic.com/docs/xp/stable/platform/config/vhosts#management-api-policy,virtual host on the management endpoint>> can narrow what each API exposes through it. The mapping declares settings under `+context.api.<app-name>\:<api-name>.<setting>+` (the colon is escaped because the file is a Java properties file); XP copies them into the request context as attributes named `+api.<app-name>:<api-name>.<setting>+`. XP's own resources all understand `verbs`, the comma separated list of operations the mapping exposes; an API of your own reads its settings the same way and decides what they mean. An absent setting must mean "unrestricted" - a request that arrives without a matching mapping, or on the default management port, carries none.
+image:xp-8020.svg[XP 8.2.0,opts=inline] A <<https://developer.enonic.com/docs/xp/stable/platform/config/vhosts#management-api-policy,virtual host on the management endpoint>> selects what each API exposes through it. The mapping declares settings under `+context.api.<app-name>\:<api-name>.<setting>+` (the colon escaped, as in any properties file); XP copies them into the request context as attributes named `+api.<app-name>:<api-name>.<setting>+`. XP's own resources understand `verbs`, the comma separated list of operations the mapping exposes. An API of your own reads its settings from the same attributes and defines their meaning. An absent setting means unrestricted: a request without a matching mapping, or on the default management port, carries none.
 
 .src/main/resources/apis/cluster/cluster.ts
 [source,typescript]
