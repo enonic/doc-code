@@ -1,0 +1,144 @@
+= Dashboard Widget Extension for XP Admin
+:toc: right
+:imagesdir: images
+
+Dashboard widgets are admin extensions that implement the `admin.dashboard` interface.
+
+TIP: More details on what this looks like in the: https://developer.enonic.com/docs/xp/stable/admin/dashboard[XP Dashboard].
+
+== Introduction
+
+The Dashboard is a standard part of the XP admin. It is composed entirely of widgets, laid out in a responsive grid.
+Any app may contribute widgets to it — regardless of the purpose, a list of recently edited content, open issues, instance statistics, a video feed, or anything else that fits in a card.
+
+How it works:
+
+The Dashboard fetches every widget the current user is allowed to see when it opens, and renders each response inside a web component that isolates the widget's CSS and JS from the rest of the admin UI. Widgets are sized and positioned from their descriptor `config`; the Dashboard packs them into the grid by `order`, then fills remaining gaps with whatever fits.
+
+== Lifecycle
+
+. *Discovery.* The Dashboard queries for extensions declaring the `admin.dashboard` interface, filtered by the user's principals.
+. *Layout.* Widgets are sorted by `config.order` and given a grid cell sized from `config.width` and `config.height`.
+. *Render.* The Dashboard issues a `GET` to each widget URL and embeds the response in the widget's web component. A title header is added above the body unless `config.header` is `false`.
+. *Refresh.* Starting or stopping an app adds or removes its widgets without reloading the Dashboard. There is no periodic re-fetch — a widget that needs live data must update itself client-side.
+
+== Descriptor
+
+The descriptor is the same `AdminExtension` kind as any other extension; only the `interfaces:` list and the `config:` keys are specific to dashboard widgets.
+See <<../extensions#descriptor,the parent descriptor reference>> for the shared fields.
+
+.src/main/resources/admin/extensions/my-widget/my-widget.yaml
+[source,yaml]
+----
+kind: "AdminExtension"
+title: "Recently changed"
+description: "Content the current user edited most recently"
+interfaces:
+  - "admin.dashboard"                 # <1>
+allow:
+  - "role:cms.admin"                  # <2>
+config:
+  width: "medium"                     # <3>
+  height: "medium"                    # <4>
+  order: 4                            # <5>
+  header: true                        # <6>
+  style: "custom"                     # <7>
+----
+
+<1> *Interface name* — must be the exact string `admin.dashboard` for the Dashboard to discover the extension as a widget.
+<2> *allow* — the Dashboard itself is open to everyone with `role:system.admin.login`, so use `allow:` to expose the widget beyond `role:system.admin`.
+<3> *width* — `small`, `medium` (default), `large`, or `full`. See <<#sizing,Sizing>>.
+<4> *height* — `small`, `medium` (default), `large`, or `full`.
+<5> *order* — sort key for placement; lower values are placed first, starting top-left.
+Widgets without an `order` are placed after all ordered widgets, wherever they fit.
+<6> *header* — `false` hides the title bar above the widget body. Default is `true`.
+<7> *style* — `custom` removes the card (background, padding, rounded corners) the Dashboard draws around a widget by default, so the widget provides its own chrome. Omit for the default card.
+
+Config values may be written as YAML scalars (`order: 4`, `header: false`) or as strings (`"4"`, `"false"`) — both are accepted.
+
+[#sizing]
+== Sizing
+
+The grid has up to four columns and four rows; `width` and `height` state how many of them a widget spans.
+On a large desktop screen this gives the following fractions of the visible dashboard:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Value | Fraction | Description
+
+| small | 25% | One column or row.
+| medium | 50% | Two columns or rows. Default for both dimensions.
+| large | 75% | Three columns or rows.
+| full | 100% | The whole width or height of the grid.
+|===
+
+On narrower or shorter viewports the grid has fewer columns and rows, and sizes collapse to the nearest available span — on a phone every widget spans the full width.
+Widgets with equal `order`, or no `order`, are placed by size so that as many widgets as possible fit next to each other.
+
+The Dashboard follows the operating system's light/dark preference; a widget should look right in both, for instance by reacting to `prefers-color-scheme` in its own CSS.
+
+== Request
+
+The Dashboard dispatches a plain `GET` to the extension URL when it opens.
+No query parameters are sent — a dashboard widget has no context.
+
+The standard XP request fields are available: `req.user` for the active user, `req.locales` for i18n negotiation, and `req.contextPath` for building URLs to sub-paths of the widget itself.
+
+== Response
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+
+| status | integer | `2xx` on success.
+| contentType | string | Typically `text/html`.
+| body | string | HTML markup rendered inside the widget's web component (see notes below).
+|===
+
+The body is rendered into a `<dashboard-widget>` web component with its own shadow DOM, which isolates the widget's CSS and JS from the rest of the admin UI:
+
+* Selectors in your `<style>` blocks don't conflict with the Dashboard's styles.
+* The Dashboard's styles don't apply to the widget contents either — start from base CSS rather than inheriting admin-UI defaults.
+* `<link rel="stylesheet">` elements are fetched and inlined into the shadow root, with relative `url()` values resolved against the stylesheet's location. `@font-face` rules are hoisted to the document so fonts load reliably.
+* `<script>` tags in the body execute in the widget's scope, in document order; queries like `document.querySelector` and `document.getElementById` operate on the widget's own DOM.
+* Scripts with a data type (`application/json`, `text/template`, …) are kept in place rather than executed, so they can be read from the widget's own scripts.
+
+The body scrolls within its cell when it overflows; the cell itself never grows.
+
+== Sample implementation
+
+The implementation exports `GET`. The Dashboard calls it once when it opens and renders the response inside the widget's web component.
+
+.src/main/resources/admin/extensions/my-widget/my-widget.ts
+[source,typescript]
+----
+const projectLib = require('/lib/xp/project');
+
+exports.GET = (req) => {
+    const projects = projectLib.list();
+
+    return {
+        status: 200,
+        contentType: 'text/html',
+        body: `<style>
+  .widget { font-family: system-ui; font-size: 13px; }
+  .widget ul { margin: 0; padding-left: 1.2em; }
+  @media (prefers-color-scheme: dark) { .widget { color: #fff; } }
+</style>
+<div class="widget">
+  <p>Welcome, ${req.user.displayName}. You have access to ${projects.length} projects:</p>
+  <ul>${projects.map((p) => `<li>${p.displayName}</li>`).join('')}</ul>
+</div>`
+    };
+};
+----
+
+The implementation is a regular server-side XP module: `require('/lib/xp/content')`, `require('/lib/xp/project')`, and any other standard library are available, along with 3rd-party modules the app bundles.
+
+For non-trivial widgets, separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the widget URL, as described in <<../extensions#assets,Sub-paths and static assets>>.
+The response then becomes a small `<link>` + `<script>` shell, and the client-side script can poll the same widget URL for fresh data.
+Enonic's own https://github.com/enonic/app-dashboard-widgets[dashboard widgets] follow this pattern and are a good reference.

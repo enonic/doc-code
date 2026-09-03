@@ -105,5 +105,5 @@ exports.GET = (req) => {
 
 The implementation is a regular server-side XP module: `require('/lib/xp/content')`, `require('/lib/xp/project')`, and any other standard library are available, along with 3rd-party modules the app bundles.
 
-For anything beyond a single static page — the built-in *Archive* browser and *GraphQL Playground* are good reference points — separate the HTML, CSS, and JS into asset files and reference them via `portal.assetUrl()` from `lib-portal`.
+For anything beyond a single static page — the built-in *Archive* browser and *GraphQL Playground* are good reference points — separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the extension URL, as described in <<../extensions#assets,Sub-paths and static assets>>.
 The initial `GET` then becomes a thin shell that loads a bundled SPA, which drives the rest of the experience and makes its own HTTP calls back to the extension or to any mounted Universal APIs.

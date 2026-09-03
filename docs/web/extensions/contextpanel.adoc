@@ -116,4 +116,4 @@ exports.GET = (req) => {
 
 The implementation is a regular server-side XP module: `require('/lib/xp/content')` for the full Content API, plus any other standard library (`lib-portal`, `lib-i18n`, `lib-node`, ...) and 3rd-party modules the app bundles.
 
-For non-trivial panels, separate the HTML, CSS, and JS into asset files and reference them via `portal.assetUrl()` from `lib-portal` — the response then becomes a small `<link>` + `<script>` shell that pulls in the bundled assets, keeping the implementation focused on data and the bundle focused on presentation.
+For non-trivial panels, separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the extension URL, as described in <<../extensions#assets,Sub-paths and static assets>> — the response then becomes a small `<link>` + `<script>` shell that pulls in the bundled assets, keeping the implementation focused on data and the bundle focused on presentation.

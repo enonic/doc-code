@@ -253,6 +253,10 @@
               "document": "web/extensions/customselector"
             },
             {
+              "title": "Dashboard widget",
+              "document": "web/extensions/dashboard"
+            },
+            {
               "title": "Live view",
               "document": "web/extensions/liveview"
             },
