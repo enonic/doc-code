@@ -100,6 +100,38 @@ Two preconditions still apply to every invocation:
 * The host tool's descriptor must include `"admin:extension"` in its `apis:` list, so the dispatcher is mounted under that tool.
 * The interface match rule: unless the extension's `interfaces:` list contains `"generic"`, at least one of its interfaces must also be present in the host tool's `interfaces:` list — otherwise the request returns *404 Not Found*.
 
+[#assets]
+== Sub-paths and static assets
+
+Everything after the descriptor segment of the extension URL is routed to the same implementation, and `req.contextPath` holds the extension URL itself.
+This is the extension's only address space: an extension is served by the `admin:extension` Universal API, which is mounted by the *host tool*. Which APIs are mounted under a tool is decided by the tool's own descriptor, and an extension cannot add to that list. In particular, an extension cannot get its own app's `asset` API mounted under the host tool, so `assetUrl()` from `lib-asset` or `lib-portal` produces URLs that return *404 Not Found* there.
+
+Serve CSS, JS, images, and other static files from a sub-path of the extension URL instead, using https://developer.enonic.com/docs/lib-static[lib-static] together with the router library:
+
+.Sample my-extension.ts serving its own assets
+[source,typescript]
+----
+const router = require('/lib/router')();
+const staticLib = require('/lib/enonic/static');
+
+router.get('', (req) => ({
+    contentType: 'text/html',
+    body: `<link rel="stylesheet" href="${req.contextPath}/_static/styles/my-extension.css"/>
+<div class="my-extension">Hello</div>`
+}));
+
+router.get('/_static/{path:.*}', (req) => staticLib.requestHandler(req, {
+    root: '/assets',
+    relativePath: staticLib.mappedRelativePath('/_static'),
+    index: false
+}));
+
+exports.all = (req) => router.dispatch(req);
+----
+
+Files placed under `src/main/resources/assets/` are then reachable at `+<extension URL>/_static/<path>+`, behind the same access control as the extension itself.
+Client-side code in the extension can call back to the same URL space for data, or to any Universal API the host tool has mounted.
+
 == Access control
 
 Two checks are enforced:
