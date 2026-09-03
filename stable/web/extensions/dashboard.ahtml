@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Mail library</title>
+<title>Dashboard Widget Extension for XP Admin</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,22 +437,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Mail library</h1>
+<h1>Dashboard Widget Extension for XP Admin</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#install">Install</a></li>
-<li><a href="#functions">Functions</a>
-<ul class="sectlevel2">
-<li><a href="#send">send</a></li>
-<li><a href="#getdefaultfromemail">getDefaultFromEmail</a></li>
-</ul>
-</li>
-<li><a href="#type_definitions">Type Definitions</a>
-<ul class="sectlevel2">
-<li><a href="#attachment">Attachment</a></li>
-</ul>
-</li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#lifecycle">Lifecycle</a></li>
+<li><a href="#descriptor">Descriptor</a></li>
+<li><a href="#sizing">Sizing</a></li>
+<li><a href="#request">Request</a></li>
+<li><a href="#response">Response</a></li>
+<li><a href="#sample_implementation">Sample implementation</a></li>
 </ul>
 </div>
 </div>
@@ -460,36 +455,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This API provides functions that are used for sending emails.</p>
+<p>Dashboard widgets are admin extensions that implement the <code>admin.dashboard</code> interface.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="install"><a class="link" href="#install">Install</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Add the library to your <code>build.gradle</code> file:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
-  include xplibs.mail
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-mail</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
-</div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>You also need to configure your smtp-server before you can send out email. For details, see <a href="https://developer.enonic.com/docs/platform/xp8/config/system#mail">the configuration page</a></p>
-</div>
+More details on what this looks like in the: <a href="https://developer.enonic.com/docs/xp/stable/admin/dashboard">XP Dashboard</a>.
 </td>
 </tr>
 </table>
@@ -497,34 +472,179 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="send"><a class="link" href="#send">send</a></h3>
 <div class="paragraph">
-<p>Sends an email message using the mail server configured.</p>
-</div>
-<div class="paragraph">
-<p>The address values can be either a simple email address (e.g. <code>name@domain.org</code> ) or an address with a display name. In the latter case the
-email will be enclosed with angle brackets (e.g. <code>Some Name &lt;<a href="mailto:name@domain.org">name@domain.org</a>&gt;</code>).</p>
+<p>The Dashboard is a standard part of the XP admin. It is composed entirely of widgets, laid out in a responsive grid.
+Any app may contribute widgets to it — regardless of the purpose, a list of recently edited content, open issues, instance statistics, a video feed, or anything else that fits in a card.</p>
 </div>
 <div class="paragraph">
-<p>The <code>from</code> parameter supports the <a href="#getDefaultFromEmail">default <em>from</em> email</a> substitution.
-If the email address is not specified in angle brackets (e.g., <code>Some Name &lt;&gt;</code> or <code>&lt;&gt;</code>), the default <em>from</em> email address is used.
-However, an error is thrown if the default <em>from</em> email is not set.</p>
+<p>How it works:</p>
 </div>
 <div class="paragraph">
-<p>The parameters <code>from</code>, <code>to</code>, <code>cc</code>, <code>bcc</code> and <code>replyTo</code> can be passed as a single string or as an array of strings, if there are multiple addresses to specify.</p>
+<p>The Dashboard fetches every widget the current user is allowed to see when it opens, and renders each response inside a web component that isolates the widget&#8217;s CSS and JS from the rest of the admin UI. Widgets are sized and positioned from their descriptor <code>config</code>; the Dashboard packs them into the grid by <code>order</code>, then fills remaining gaps with whatever fits.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Discovery.</strong> The Dashboard queries for extensions declaring the <code>admin.dashboard</code> interface, filtered by the user&#8217;s principals.</p>
+</li>
+<li>
+<p><strong>Layout.</strong> Widgets are sorted by <code>config.order</code> and given a grid cell sized from <code>config.width</code> and <code>config.height</code>.</p>
+</li>
+<li>
+<p><strong>Render.</strong> The Dashboard issues a <code>GET</code> to each widget URL and embeds the response in the widget&#8217;s web component. A title header is added above the body unless <code>config.header</code> is <code>false</code>.</p>
+</li>
+<li>
+<p><strong>Refresh.</strong> Starting or stopping an app adds or removes its widgets without reloading the Dashboard. There is no periodic re-fetch — a widget that needs live data must update itself client-side.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The descriptor is the same <code>AdminExtension</code> kind as any other extension; only the <code>interfaces:</code> list and the <code>config:</code> keys are specific to dashboard widgets.
+See <a href="../extensions.ahtml#descriptor">the parent descriptor reference</a> for the shared fields.</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/admin/extensions/my-widget/my-widget.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminExtension"
+title: "Recently changed"
+description: "Content the current user edited most recently"
+interfaces:
+  - "admin.dashboard"                 <i class="conum" data-value="1"></i><b>(1)</b>
+allow:
+  - "role:cms.admin"                  <i class="conum" data-value="2"></i><b>(2)</b>
+config:
+  width: "medium"                     <i class="conum" data-value="3"></i><b>(3)</b>
+  height: "medium"                    <i class="conum" data-value="4"></i><b>(4)</b>
+  order: 4                            <i class="conum" data-value="5"></i><b>(5)</b>
+  header: true                        <i class="conum" data-value="6"></i><b>(6)</b>
+  style: "custom"                     <i class="conum" data-value="7"></i><b>(7)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>Interface name</strong> — must be the exact string <code>admin.dashboard</code> for the Dashboard to discover the extension as a widget.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>allow</strong> — the Dashboard itself is open to everyone with <code>role:system.admin.login</code>, so use <code>allow:</code> to expose the widget beyond <code>role:system.admin</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><strong>width</strong> — <code>small</code>, <code>medium</code> (default), <code>large</code>, or <code>full</code>. See <a href="#sizing">Sizing</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><strong>height</strong> — <code>small</code>, <code>medium</code> (default), <code>large</code>, or <code>full</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td><strong>order</strong> — sort key for placement; lower values are placed first, starting top-left.
+Widgets without an <code>order</code> are placed after all ordered widgets, wherever they fit.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td><strong>header</strong> — <code>false</code> hides the title bar above the widget body. Default is <code>true</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td><strong>style</strong> — <code>custom</code> removes the card (background, padding, rounded corners) the Dashboard draws around a widget by default, so the widget provides its own chrome. Omit for the default card.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>The content-type of the email can be specified by using the <code>contentType</code> parameter. See example below for sending a message with an HTML body.</p>
+<p>Config values may be written as YAML scalars (<code>order: 4</code>, <code>header: false</code>) or as strings (<code>"4"</code>, <code>"false"</code>) — both are accepted.</p>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sizing"><a class="link" href="#sizing">Sizing</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The grid has up to four columns and four rows; <code>width</code> and <code>height</code> state how many of them a widget spans.
+On a large desktop screen this gives the following fractions of the visible dashboard:</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Fraction</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">small</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">25%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>One column or row.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Two columns or rows. Default for both dimensions.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">large</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">75%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Three columns or rows.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">full</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The whole width or height of the grid.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>On narrower or shorter viewports the grid has fewer columns and rows, and sizes collapse to the nearest available span — on a phone every widget spans the full width.
+Widgets with equal <code>order</code>, or no <code>order</code>, are placed by size so that as many widgets as possible fit next to each other.</p>
 </div>
 <div class="paragraph">
-<p><code>send()</code> takes a single <code>SendMessageParams</code> object with these properties:</p>
+<p>The Dashboard follows the operating system&#8217;s light/dark preference; a widget should look right in both, for instance by reacting to <code>prefers-color-scheme</code> in its own CSS.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="request"><a class="link" href="#request">Request</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Dashboard dispatches a plain <code>GET</code> to the extension URL when it opens.
+No query parameters are sent — a dashboard widget has no context.</p>
+</div>
+<div class="paragraph">
+<p>The standard XP request fields are available: <code>req.user</code> for the active user, <code>req.locales</code> for i18n negotiation, and <code>req.contextPath</code> for building URLs to sub-paths of the widget itself.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="response"><a class="link" href="#response">Response</a></h2>
+<div class="sectionbody">
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -540,214 +660,92 @@ However, an error is thrown if the default <em>from</em> email is not set.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">from</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">status</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>E-mail address(es) and optionally name(s) of the message sender.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">to</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>E-mail address(es) and optionally name(s) of the message&#8217;s recipient(s).</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">subject</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Subject line of the message.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">body</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Text content of the message.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">cc</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> List of carbon copy e-mail address(es).</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">bcc</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> List of blind carbon copy e-mail address(es).</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replyTo</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string | string[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Alternative e-mail address(es) for replies.</p>
+<p><code>2xx</code> on success.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">contentType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Content type of the message body.</p>
+<p>Typically <code>text/html</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">headers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">body</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom headers in the form of name-value pairs.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">attachments</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#attachment">Attachment</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Attachments to include in the e-mail.</p>
+<p>HTML markup rendered inside the widget&#8217;s web component (see notes below).</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph lead">
-<p>Returns</p>
+<div class="paragraph">
+<p>The body is rendered into a <code>&lt;dashboard-widget&gt;</code> web component with its own shadow DOM, which isolates the widget&#8217;s CSS and JS from the rest of the admin UI:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Selectors in your <code>&lt;style&gt;</code> blocks don&#8217;t conflict with the Dashboard&#8217;s styles.</p>
+</li>
+<li>
+<p>The Dashboard&#8217;s styles don&#8217;t apply to the widget contents either — start from base CSS rather than inheriting admin-UI defaults.</p>
+</li>
+<li>
+<p><code>&lt;link rel="stylesheet"&gt;</code> elements are fetched and inlined into the shadow root, with relative <code>url()</code> values resolved against the stylesheet&#8217;s location. <code>@font-face</code> rules are hoisted to the document so fonts load reliably.</p>
+</li>
+<li>
+<p><code>&lt;script&gt;</code> tags in the body execute in the widget&#8217;s scope, in document order; queries like <code>document.querySelector</code> and <code>document.getElementById</code> operate on the widget&#8217;s own DOM.</p>
+</li>
+<li>
+<p>Scripts with a data type (<code>application/json</code>, <code>text/template</code>, …) are kept in place rather than executed, so they can be read from the widget&#8217;s own scripts.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p><strong>boolean</strong> : <code>true</code> if the message was successfully sent, <code>false</code> otherwise.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Send a simple HTML e-mail</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {send} from '/lib/xp/mail';
-
-const flag1 = send({
-    from: 'me@enonic.com',
-    to: 'user@somewhere.org',
-    subject: 'HTML email test',
-    body: '&lt;h1&gt;HTML Email!&lt;/h1&gt;&lt;p&gt;You can use the contentType parameter for HTML messages.&lt;/p&gt;',
-    contentType: 'text/html; charset="UTF-8"'
-});</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Send an e-mail with attachments</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {send} from '/lib/xp/mail';
-
-const flag2 = send({
-    from: 'Sales Department &lt;sales@enonic.com&gt;',
-    to: 'user@somewhere.org',
-    subject: 'Email Test from Enonic XP',
-    cc: 'other@example.org',
-    bcc: ['support@enonic.com', 'other@enonic.com'],
-    replyTo: 'support@enonic.com',
-    body: 'Welcome to Enonic XP!' + '\r\n\r\n' + '- The Dev Team',
-    headers: {
-        'Disposition-Notification-To': 'me@enonic.com'
-    },
-    attachments: [
-        {
-            fileName: 'logo.png',
-            mimeType: 'image/png',
-            data: stream1,
-            headers: {
-                'Content-ID': 'logo-img'
-            }
-        },
-        {
-            fileName: 'text.txt',
-            data: stream2
-        }
-    ]
-});</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="getdefaultfromemail"><a class="link" href="#getdefaultfromemail">getDefaultFromEmail</a></h3>
-<div id="getDefaultFromEmail" class="paragraph">
-<p>Returns the default <em>from</em> email address configured in the <a href="https://developer.enonic.com/docs/platform/xp8/config/system#mail">XP mail configuration</a>.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>string</strong> : The default <em>from</em> email address, or <code>null</code> if none is configured.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Get a defaultFromEmail</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getDefaultFromEmail} from '/lib/xp/mail';
-
-const defaultFromEmail = getDefaultFromEmail();</code></pre>
-</div>
-</div>
+<p>The body scrolls within its cell when it overflows; the cell itself never grows.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
+<h2 id="sample_implementation"><a class="link" href="#sample_implementation">Sample implementation</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="attachment"><a class="link" href="#attachment">Attachment</a></h3>
 <div class="paragraph">
-<p>A single attachment to include in an e-mail.</p>
+<p>The implementation exports <code>GET</code>. The Dashboard calls it once when it opens and renders the response inside the widget&#8217;s web component.</p>
 </div>
-<div class="paragraph lead">
-<p>Properties</p>
+<div class="listingblock">
+<div class="title">src/main/resources/admin/extensions/my-widget/my-widget.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const projectLib = require('/lib/xp/project');
+
+exports.GET = (req) =&gt; {
+    const projects = projectLib.list();
+
+    return {
+        status: 200,
+        contentType: 'text/html',
+        body: `&lt;style&gt;
+  .widget { font-family: system-ui; font-size: 13px; }
+  .widget ul { margin: 0; padding-left: 1.2em; }
+  @media (prefers-color-scheme: dark) { .widget { color: #fff; } }
+&lt;/style&gt;
+&lt;div class="widget"&gt;
+  &lt;p&gt;Welcome, ${req.user.displayName}. You have access to ${projects.length} projects:&lt;/p&gt;
+  &lt;ul&gt;${projects.map((p) =&gt; `&lt;li&gt;${p.displayName}&lt;/li&gt;`).join('')}&lt;/ul&gt;
+&lt;/div&gt;`
+    };
+};</code></pre>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fileName</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Attachment file name.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Attachment stream.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mimeType</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Attachment content type. If not specified, it is inferred from the filename.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">headers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Attachment headers in the form of name-value pairs.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+</div>
+<div class="paragraph">
+<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code>, <code>require('/lib/xp/project')</code>, and any other standard library are available, along with 3rd-party modules the app bundles.</p>
+</div>
+<div class="paragraph">
+<p>For non-trivial widgets, separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the widget URL, as described in <a href="../extensions.ahtml#assets">Sub-paths and static assets</a>.
+The response then becomes a small <code>&lt;link&gt;</code> + <code>&lt;script&gt;</code> shell, and the client-side script can poll the same widget URL for fresh data.
+Enonic&#8217;s own <a href="https://github.com/enonic/app-dashboard-widgets">dashboard widgets</a> follow this pattern and are a good reference.</p>
 </div>
 </div>
 </div>

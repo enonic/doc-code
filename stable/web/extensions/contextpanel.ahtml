@@ -670,14 +670,14 @@ exports.GET = (req) =&gt; {
 <p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code> for the full Content API, plus any other standard library (<code>lib-portal</code>, <code>lib-i18n</code>, <code>lib-node</code>, &#8230;&#8203;) and 3rd-party modules the app bundles.</p>
 </div>
 <div class="paragraph">
-<p>For non-trivial panels, separate the HTML, CSS, and JS into asset files and reference them via <code>portal.assetUrl()</code> from <code>lib-portal</code> — the response then becomes a small <code>&lt;link&gt;</code> + <code>&lt;script&gt;</code> shell that pulls in the bundled assets, keeping the implementation focused on data and the bundle focused on presentation.</p>
+<p>For non-trivial panels, separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the extension URL, as described in <a href="../extensions.ahtml#assets">Sub-paths and static assets</a> — the response then becomes a small <code>&lt;link&gt;</code> + <code>&lt;script&gt;</code> shell that pulls in the bundled assets, keeping the implementation focused on data and the bundle focused on presentation.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 08:24:48 UTC
+Last updated 2026-09-03 09:42:34 UTC
 </div>
 </div>
 </body>

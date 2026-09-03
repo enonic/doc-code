@@ -498,11 +498,11 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 <h2 id="typescript_starter"><a class="link" href="#typescript_starter">TypeScript starter</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TypeScript Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a>:</p>
+<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TS Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-sh" data-lang="sh">enonic create -r starter-typescript com.example.myapp</code></pre>
+<pre class="highlight"><code class="language-sh" data-lang="sh">enonic create -r starter-ts com.example.myapp</code></pre>
 </div>
 </div>
 </div>
@@ -750,7 +750,7 @@ const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 08:24:48 UTC
+Last updated 2026-09-03 09:42:34 UTC
 </div>
 </div>
 </body>
