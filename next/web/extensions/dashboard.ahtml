@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Context library</title>
+<title>Dashboard Widget Extension for XP Admin</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,27 +437,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Context library</h1>
+<h1>Dashboard Widget Extension for XP Admin</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#install">Install</a></li>
-<li><a href="#functions">Functions</a>
-<ul class="sectlevel2">
-<li><a href="#get">get</a></li>
-<li><a href="#run">run</a></li>
-<li><a href="#setcustomlocalattribute">setCustomLocalAttribute</a></li>
-</ul>
-</li>
-<li><a href="#type_definitions">Type Definitions</a>
-<ul class="sectlevel2">
-<li><a href="#Context">Context</a></li>
-<li><a href="#ContextParams">ContextParams</a></li>
-<li><a href="#AuthInfo">AuthInfo</a></li>
-<li><a href="#ContextUserParams">ContextUserParams</a></li>
-<li><a href="#ContextAttributes">ContextAttributes</a></li>
-</ul>
-</li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#lifecycle">Lifecycle</a></li>
+<li><a href="#descriptor">Descriptor</a></li>
+<li><a href="#sizing">Sizing</a></li>
+<li><a href="#request">Request</a></li>
+<li><a href="#response">Response</a></li>
+<li><a href="#sample_implementation">Sample implementation</a></li>
 </ul>
 </div>
 </div>
@@ -465,256 +455,196 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This API provides functions to access and use the current context.</p>
+<p>Dashboard widgets are admin extensions that implement the <code>admin.dashboard</code> interface.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+More details on what this looks like in the: <a href="https://developer.enonic.com/docs/xp/stable/admin/dashboard">XP Dashboard</a>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="install"><a class="link" href="#install">Install</a></h2>
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Add the library to your <code>build.gradle</code> file:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
-  include xplibs.context
-}</code></pre>
-</div>
+<p>The Dashboard is a standard part of the XP admin. It is composed entirely of widgets, laid out in a responsive grid.
+Any app may contribute widgets to it — regardless of the purpose, a list of recently edited content, open issues, instance statistics, a video feed, or anything else that fits in a card.</p>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-context</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>How it works:</p>
+</div>
+<div class="paragraph">
+<p>The Dashboard fetches every widget the current user is allowed to see when it opens, and renders each response inside a web component that isolates the widget&#8217;s CSS and JS from the rest of the admin UI. Widgets are sized and positioned from their descriptor <code>config</code>; the Dashboard packs them into the grid by <code>order</code>, then fills remaining gaps with whatever fits.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
+<h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="get"><a class="link" href="#get">get</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Discovery.</strong> The Dashboard queries for extensions declaring the <code>admin.dashboard</code> interface, filtered by the user&#8217;s principals.</p>
+</li>
+<li>
+<p><strong>Layout.</strong> Widgets are sorted by <code>config.order</code> and given a grid cell sized from <code>config.width</code> and <code>config.height</code>.</p>
+</li>
+<li>
+<p><strong>Render.</strong> The Dashboard issues a <code>GET</code> to each widget URL and embeds the response in the widget&#8217;s web component. A title header is added above the body unless <code>config.header</code> is <code>false</code>.</p>
+</li>
+<li>
+<p><strong>Refresh.</strong> Starting or stopping an app adds or removes its widgets without reloading the Dashboard. There is no periodic re-fetch — a widget that needs live data must update itself client-side.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="descriptor"><a class="link" href="#descriptor">Descriptor</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Returns the current context.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>get()</code> takes no arguments.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>object</strong> : (<a href="#Context"><code>Context</code></a>) The current context. The <code>attributes</code> field is always present (possibly empty); <code>branch</code>, <code>repository</code>, and <code>authInfo</code> are present when set on the calling context.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
+<p>The descriptor is the same <code>AdminExtension</code> kind as any other extension; only the <code>interfaces:</code> list and the <code>config:</code> keys are specific to dashboard widgets.
+See <a href="../extensions.ahtml#descriptor">the parent descriptor reference</a> for the shared fields.</p>
 </div>
 <div class="listingblock">
-<div class="title">Getting the current context</div>
+<div class="title">src/main/resources/admin/extensions/my-widget/my-widget.yaml</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get} from '/lib/xp/context';
-
-const context = get();</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Sample response</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">{
-  branch: "draft",
-  repository: "com.enonic.cms.default",
-  authInfo: {
-      user: {                            <i class="conum" data-value="1"></i><b>(1)</b>
-          type: "user",
-          key: "user:system:abc",
-          displayName: "A.B.C.",
-          disabled: false,
-          email: "abc@enonic.com",
-          login: "abc",
-          idProvider: "system",
-          hasPassword: true
-      },
-      principals: [
-          "user:system:abc",
-          "role:system.admin",
-          "role:system.admin.login",
-          "role:system.authenticated",
-          "role:system.everyone"
-      ]
-  },
-  attributes: {
-     optionalAttributes: "of any kind"
-  }
-}</code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminExtension"
+title: "Recently changed"
+description: "Content the current user edited most recently"
+interfaces:
+  - "admin.dashboard"                 <i class="conum" data-value="1"></i><b>(1)</b>
+allow:
+  - "role:cms.admin"                  <i class="conum" data-value="2"></i><b>(2)</b>
+config:
+  width: "medium"                     <i class="conum" data-value="3"></i><b>(3)</b>
+  height: "medium"                    <i class="conum" data-value="4"></i><b>(4)</b>
+  order: 4                            <i class="conum" data-value="5"></i><b>(5)</b>
+  header: true                        <i class="conum" data-value="6"></i><b>(6)</b>
+  style: "custom"                     <i class="conum" data-value="7"></i><b>(7)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The <code>user</code> field is only set when a user is logged in.</td>
+<td><strong>Interface name</strong> — must be the exact string <code>admin.dashboard</code> for the Dashboard to discover the extension as a widget.</td>
 </tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="run"><a class="link" href="#run">run</a></h3>
-<div class="paragraph">
-<p>Runs a function inside a custom context, for instance the one returned by the <code>get()</code> function call.
-Commonly used when accessing repositories, or to override the current user&#8217;s permissions.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p><code>run()</code> takes two positional arguments: a <a href="#ContextParams"><code>ContextParams</code></a> object defining the context for the scope of the callback (any field omitted is inherited from the current context), and a callback function to execute. The callback&#8217;s return value is propagated as the return value of <code>run()</code>.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>any</strong> : Whatever the callback returns.</p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Run a function in a different context</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {run} from '/lib/xp/context';
-
-const result = run({
-    repository: 'system-repo',
-    branch: 'master',
-    user: {
-        login: 'su',
-        idProvider: 'system'
-    },
-    principals: ['role:system.admin'],
-    attributes: {
-        ignorePublishTimes: true
-    }
-}, () =&gt; 'Hello from context');</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Sample response</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">"Hello from context"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="setcustomlocalattribute"><a class="link" href="#setcustomlocalattribute">setCustomLocalAttribute</a></h3>
-<div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Stores a value as a custom attribute in the <strong>local scope</strong> of the current context, where any other code running in the same execution can read it back.</p>
-</div>
-<div class="paragraph">
-<p>This is how unrelated pieces of code hand data to each other within one request without a shared module or a wrapping <code>run()</code> call. A page implementation can leave data for a <a href="../web/sites/processors.ahtml">response processor</a>, a part can leave data for the <a href="../web/filters.ahtml">filter</a> that wrapped the request, and apps on the same site can do this across application boundaries — each reader gets its own copy of the value, so nothing is shared but the data itself.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
 <tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-All apps in a request write into <strong>one flat namespace</strong>. The <code>custom.</code> prefix separates your attributes from the platform&#8217;s, not one app&#8217;s from another&#8217;s, and there is no per-app scoping underneath it: two apps that both store <code>settings</code> are writing the same attribute, and the last write wins. Unless you mean to collaborate on a value, name it after your app — <code>setCustomLocalAttribute('com.example.myapp.settings', …)</code>.
-</td>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>allow</strong> — the Dashboard itself is open to everyone with <code>role:system.admin.login</code>, so use <code>allow:</code> to expose the widget beyond <code>role:system.admin</code>.</td>
 </tr>
-</table>
-</div>
-<div class="paragraph">
-<p>The local scope is shared with nested <code>run()</code> calls, so a value stored inside a <code>run()</code> callback is still there after it returns. It lives for the duration of the execution: a new HTTP request starts with an empty scope, and <a href="../background/tasks.ahtml">tasks</a>, event listeners and websocket callbacks run with their own — nothing written during a request reaches them.</p>
-</div>
-<div class="paragraph">
-<p>Values are serialized on write, so the stored attribute is a snapshot: mutating the object you passed in afterwards does not change it, and each reader gets its own copy. Only JSON-like values are allowed — strings, numbers, booleans, arrays, and plain objects nesting those. Anything else, such as a function or a <code>Date</code>, is rejected.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<div class="paragraph">
-<p>Takes two positional arguments: <code>name</code> (string) — the attribute name, stored with the <code>custom.</code> prefix — and <code>value</code>, the JSON-like value to store. Passing <code>null</code>, <code>undefined</code>, or omitting the value removes the attribute.</p>
-</div>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
-<div class="paragraph lead">
-<p>Example</p>
-</div>
-<div class="listingblock">
-<div class="title">Store a value, and read it back through <code>get()</code></div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get, setCustomLocalAttribute} from '/lib/xp/context';
-
-setCustomLocalAttribute('my-data', {values: ['one', 'two']});
-
-const data = get().attributes['custom.my-data'];</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Hand data from a page implementation to a response processor</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/pages/article/article.ts
-import {setCustomLocalAttribute} from '/lib/xp/context';
-
-export function get() {
-    setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
-
-    return {body: renderArticle(), contentType: 'text/html'};
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/processors/tracker.ts
-import {get as getContext} from '/lib/xp/context';
-
-type Tracking = {pageType: string; experiment: string};
-
-export function responseProcessor(req, res) {
-    const tracking = getContext().attributes['custom.com.example.myapp.tracking'] as Tracking | undefined;
-
-    if (tracking) {
-        res.pageContributions.bodyEnd = [
-            `&lt;script&gt;window.tracking = ${JSON.stringify(tracking)}&lt;/script&gt;`
-        ];
-    }
-
-    return res;
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-A value stored during a request is <strong>not</strong> carried into a task submitted from it, and is not visible to another request. Direct <a href="../web/sites/components.ahtml">component rendering</a> is a separate request, so a value left by a page implementation is absent when a part is rendered on its own.
-</td>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><strong>width</strong> — <code>small</code>, <code>medium</code> (default), <code>large</code>, or <code>full</code>. See <a href="#sizing">Sizing</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><strong>height</strong> — <code>small</code>, <code>medium</code> (default), <code>large</code>, or <code>full</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td><strong>order</strong> — sort key for placement; lower values are placed first, starting top-left.
+Widgets without an <code>order</code> are placed after all ordered widgets, wherever they fit.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td><strong>header</strong> — <code>false</code> hides the title bar above the widget body. Default is <code>true</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td><strong>style</strong> — <code>custom</code> removes the card (background, padding, rounded corners) the Dashboard draws around a widget by default, so the widget provides its own chrome. Omit for the default card.</td>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Config values may be written as YAML scalars (<code>order: 4</code>, <code>header: false</code>) or as strings (<code>"4"</code>, <code>"false"</code>) — both are accepted.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
+<h2 id="sizing"><a class="link" href="#sizing">Sizing</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="Context"><a class="link" href="#Context">Context</a></h3>
 <div class="paragraph">
-<p>The shape of the object returned by <code>get()</code>.</p>
+<p>The grid has up to four columns and four rows; <code>width</code> and <code>height</code> state how many of them a widget spans.
+On a large desktop screen this gives the following fractions of the visible dashboard:</p>
 </div>
-<div class="paragraph lead">
-<p>Properties</p>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value</th>
+<th class="tableblock halign-left valign-top">Fraction</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">small</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">25%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>One column or row.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Two columns or rows. Default for both dimensions.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">large</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">75%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Three columns or rows.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">full</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100%</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The whole width or height of the grid.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>On narrower or shorter viewports the grid has fewer columns and rows, and sizes collapse to the nearest available span — on a phone every widget spans the full width.
+Widgets with equal <code>order</code>, or no <code>order</code>, are placed by size so that as many widgets as possible fit next to each other.</p>
 </div>
+<div class="paragraph">
+<p>The Dashboard follows the operating system&#8217;s light/dark preference; a widget should look right in both, for instance by reacting to <code>prefers-color-scheme</code> in its own CSS.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="request"><a class="link" href="#request">Request</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Dashboard dispatches a plain <code>GET</code> to the extension URL when it opens.
+No query parameters are sent — a dashboard widget has no context.</p>
+</div>
+<div class="paragraph">
+<p>The standard XP request fields are available: <code>req.user</code> for the active user, <code>req.locales</code> for i18n negotiation, and <code>req.contextPath</code> for building URLs to sub-paths of the widget itself.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="response"><a class="link" href="#response">Response</a></h2>
+<div class="sectionbody">
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
 <col style="width: 1%;">
@@ -730,188 +660,92 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">attributes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextAttributes">ContextAttributes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">status</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Custom attributes set on the context. Always present; may be empty. Attributes stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> appear here under their <code>custom.</code> prefixed name.</p>
+<p><code>2xx</code> on success.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">contentType</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Branch context.</p>
+<p>Typically <code>text/html</code>.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">body</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Repository context.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">authInfo</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#AuthInfo">AuthInfo</a></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Authentication information for the current context.</p>
+<p>HTML markup rendered inside the widget&#8217;s web component (see notes below).</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect2">
-<h3 id="ContextParams"><a class="link" href="#ContextParams">ContextParams</a></h3>
 <div class="paragraph">
-<p>The context object passed as the first argument to <code>run()</code>. Any field omitted is inherited from the calling context.</p>
+<p>The body is rendered into a <code>&lt;dashboard-widget&gt;</code> web component with its own shadow DOM, which isolates the widget&#8217;s CSS and JS from the rest of the admin UI:</p>
 </div>
-<div class="paragraph lead">
-<p>Properties</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">repository</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Repository to run the callback in. Defaults to the current repository.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">branch</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Branch to run the callback in. Defaults to the current branch.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextUserParams">ContextUserParams</a></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> User to run the callback as.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">attributes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextAttributes">ContextAttributes</a></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Additional context attributes.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="AuthInfo"><a class="link" href="#AuthInfo">AuthInfo</a></h3>
-<div class="paragraph">
-<p>Authentication information attached to a context.</p>
-</div>
-<div class="paragraph lead">
-<p>Properties</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user">User</a></p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> The currently authenticated user. Omitted when no user is logged in.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Principal keys (users, groups, and roles) attached to the authentication info.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="ContextUserParams"><a class="link" href="#ContextUserParams">ContextUserParams</a></h3>
-<div class="paragraph">
-<p>Identifies the user to run a callback as, passed in <code><a href="#ContextParams">ContextParams</a>.user</code>.</p>
-</div>
-<div class="paragraph lead">
-<p>Properties</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">login</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Login name of the user.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Key of the ID provider the user belongs to. Defaults to the system ID provider when omitted.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="ContextAttributes"><a class="link" href="#ContextAttributes">ContextAttributes</a></h3>
-<div class="paragraph">
-<p>Attributes are read and written through different value sets, so the two directions do not share a type.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Selectors in your <code>&lt;style&gt;</code> blocks don&#8217;t conflict with the Dashboard&#8217;s styles.</p>
+</li>
+<li>
+<p>The Dashboard&#8217;s styles don&#8217;t apply to the widget contents either — start from base CSS rather than inheriting admin-UI defaults.</p>
+</li>
+<li>
+<p><code>&lt;link rel="stylesheet"&gt;</code> elements are fetched and inlined into the shadow root, with relative <code>url()</code> values resolved against the stylesheet&#8217;s location. <code>@font-face</code> rules are hoisted to the document so fonts load reliably.</p>
+</li>
+<li>
+<p><code>&lt;script&gt;</code> tags in the body execute in the widget&#8217;s scope, in document order; queries like <code>document.querySelector</code> and <code>document.getElementById</code> operate on the widget&#8217;s own DOM.</p>
+</li>
+<li>
+<p>Scripts with a data type (<code>application/json</code>, <code>text/template</code>, …) are kept in place rather than executed, so they can be read from the widget&#8217;s own scripts.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p><strong>Reading</strong> — <code><a href="#Context">Context</a>.attributes</code> — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> comes back in full, keyed as <code>custom.&lt;name&gt;</code>. In TypeScript the value type is <code>ContextAttributeValue</code>.</p>
+<p>The body scrolls within its cell when it overflows; the cell itself never grows.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sample_implementation"><a class="link" href="#sample_implementation">Sample implementation</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The implementation exports <code>GET</code>. The Dashboard calls it once when it opens and renders the response inside the widget&#8217;s web component.</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/admin/extensions/my-widget/my-widget.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const projectLib = require('/lib/xp/project');
+
+exports.GET = (req) =&gt; {
+    const projects = projectLib.list();
+
+    return {
+        status: 200,
+        contentType: 'text/html',
+        body: `&lt;style&gt;
+  .widget { font-family: system-ui; font-size: 13px; }
+  .widget ul { margin: 0; padding-left: 1.2em; }
+  @media (prefers-color-scheme: dark) { .widget { color: #fff; } }
+&lt;/style&gt;
+&lt;div class="widget"&gt;
+  &lt;p&gt;Welcome, ${req.user.displayName}. You have access to ${projects.length} projects:&lt;/p&gt;
+  &lt;ul&gt;${projects.map((p) =&gt; `&lt;li&gt;${p.displayName}&lt;/li&gt;`).join('')}&lt;/ul&gt;
+&lt;/div&gt;`
+    };
+};</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><strong>Writing</strong> — <code><a href="#ContextParams">ContextParams</a>.attributes</code>, passed to <code>run()</code> — takes <code>number</code>, <code>string</code> and <code>boolean</code>. An object value is accepted and is visible to Java code reading the context, but it is not part of what <code>get()</code> returns.</p>
+<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code>, <code>require('/lib/xp/project')</code>, and any other standard library are available, along with 3rd-party modules the app bundles.</p>
 </div>
 <div class="paragraph">
-<p><code>get()</code> merges every store it reads from: attributes set on the context — by <code>run()</code> or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. And unlike attributes passed to <code>run()</code>, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.</p>
-</div>
+<p>For non-trivial widgets, separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the widget URL, as described in <a href="../extensions.ahtml#assets">Sub-paths and static assets</a>.
+The response then becomes a small <code>&lt;link&gt;</code> + <code>&lt;script&gt;</code> shell, and the client-side script can poll the same widget URL for fresh data.
+Enonic&#8217;s own <a href="https://github.com/enonic/app-dashboard-widgets">dashboard widgets</a> follow this pattern and are a good reference.</p>
 </div>
 </div>
 </div>

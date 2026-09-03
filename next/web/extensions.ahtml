@@ -446,6 +446,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#descriptor">Descriptor</a></li>
 <li><a href="#implementation">Implementation</a></li>
 <li><a href="#extension_url">Extension URL</a></li>
+<li><a href="#assets">Sub-paths and static assets</a></li>
 <li><a href="#access_control">Access control</a></li>
 <li><a href="#discovery">Discovery</a></li>
 <li><a href="#interfaces">Interfaces</a></li>
@@ -628,6 +629,43 @@ const url = adminLib.extensionUrl({
 </div>
 </div>
 <div class="sect1">
+<h2 id="assets"><a class="link" href="#assets">Sub-paths and static assets</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Everything after the descriptor segment of the extension URL is routed to the same implementation, and <code>req.contextPath</code> holds the extension URL itself.
+This is the extension&#8217;s only address space: an extension is served by the <code>admin:extension</code> Universal API, which is mounted by the <strong>host tool</strong>. Which APIs are mounted under a tool is decided by the tool&#8217;s own descriptor, and an extension cannot add to that list. In particular, an extension cannot get its own app&#8217;s <code>asset</code> API mounted under the host tool, so <code>assetUrl()</code> from <code>lib-asset</code> or <code>lib-portal</code> produces URLs that return <strong>404 Not Found</strong> there.</p>
+</div>
+<div class="paragraph">
+<p>Serve CSS, JS, images, and other static files from a sub-path of the extension URL instead, using <a href="https://developer.enonic.com/docs/lib-static">lib-static</a> together with the router library:</p>
+</div>
+<div class="listingblock">
+<div class="title">Sample my-extension.ts serving its own assets</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const router = require('/lib/router')();
+const staticLib = require('/lib/enonic/static');
+
+router.get('', (req) =&gt; ({
+    contentType: 'text/html',
+    body: `&lt;link rel="stylesheet" href="${req.contextPath}/_static/styles/my-extension.css"/&gt;
+&lt;div class="my-extension"&gt;Hello&lt;/div&gt;`
+}));
+
+router.get('/_static/{path:.*}', (req) =&gt; staticLib.requestHandler(req, {
+    root: '/assets',
+    relativePath: staticLib.mappedRelativePath('/_static'),
+    index: false
+}));
+
+exports.all = (req) =&gt; router.dispatch(req);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Files placed under <code>src/main/resources/assets/</code> are then reachable at <code>&lt;extension URL&gt;/_static/&lt;path&gt;</code>, behind the same access control as the extension itself.
+Client-side code in the extension can call back to the same URL space for data, or to any Universal API the host tool has mounted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="access_control"><a class="link" href="#access_control">Access control</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -685,7 +723,7 @@ const url = adminLib.extensionUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 07:21:23 UTC
+Last updated 2026-09-03 08:25:12 UTC
 </div>
 </div>
 </body>

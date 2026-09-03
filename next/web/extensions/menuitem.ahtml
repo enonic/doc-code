@@ -668,7 +668,7 @@ To restrict the menu item to specific roles or principals, use the standard <cod
 <p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code>, <code>require('/lib/xp/project')</code>, and any other standard library are available, along with 3rd-party modules the app bundles.</p>
 </div>
 <div class="paragraph">
-<p>For anything beyond a single static page — the built-in <strong>Archive</strong> browser and <strong>GraphQL Playground</strong> are good reference points — separate the HTML, CSS, and JS into asset files and reference them via <code>portal.assetUrl()</code> from <code>lib-portal</code>.
+<p>For anything beyond a single static page — the built-in <strong>Archive</strong> browser and <strong>GraphQL Playground</strong> are good reference points — separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the extension URL, as described in <a href="../extensions.ahtml#assets">Sub-paths and static assets</a>.
 The initial <code>GET</code> then becomes a thin shell that loads a bundled SPA, which drives the rest of the experience and makes its own HTTP calls back to the extension or to any mounted Universal APIs.</p>
 </div>
 </div>
@@ -676,7 +676,7 @@ The initial <code>GET</code> then becomes a thin shell that loads a bundled SPA,
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 07:21:23 UTC
+Last updated 2026-09-03 08:25:12 UTC
 </div>
 </div>
 </body>
