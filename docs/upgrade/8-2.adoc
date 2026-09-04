@@ -1,0 +1,42 @@
+= Upgrading Enonic apps from XP 8.1 to 8.2
+:toc: right
+:imagesdir: ../images
+
+XP 8.2 makes no breaking changes to application code: an app built for 8.1 runs on 8.2 as it is. The upgrade is a version bump; the rest of this page concerns ID provider implementations.
+
+Coming from XP 8.0? Do <<8-1#, Upgrading Enonic apps from XP 8.0 to 8.1>> first — this page picks up where that one ends.
+
+== Version bump
+
+Set the platform version in _gradle.properties_:
+
+[source,properties]
+----
+xpVersion = 8.2.0
+----
+
+TypeScript projects also need the matching type definitions, or the properties added in 8.2 will not type-check:
+
+.package.json
+[source,json]
+----
+{
+  "devDependencies": {
+    "@enonic-types/global": "^8.2.0"
+  }
+}
+----
+
+Then rebuild and deploy:
+
+  enonic project deploy
+
+== autoLogin may run where it did not before
+
+`autoLogin` now runs for every ID provider enabled on the request's virtual host — the `default` provider first — until one of them authenticates the request or returns a response. Previously only the `default` provider's `autoLogin` ran, so a provider configured as `enabled` will now have its `autoLogin` called on requests where it never ran before. Implementations that quietly return when they find no credentials to act on — the common shape — need no change.
+
+== Worth adopting: flow gating
+
+A vhost may now restrict the flows an ID provider serves. XP enforces `login`, `autologin` and `logout` itself, and hands the configured list to the implementation as `request.idProviderFlows` — absent when no restriction applies. An ID provider with custom `GET`/`POST` endpoints can gate additional flows of its own on it, letting administrators enable or disable those endpoints per vhost — the Standard ID Provider gates its (deprecated) basic authentication on the additional `basic` flow this way. See <<../web/id-providers#flows, Flows>>.
+
+For code reaching the `VirtualHost` Java API through the <<../fundamentals/java-bridge#, Java bridge>>: `getIdProviderKeys()` is deprecated in favor of `getIdProviders()` — a map of the enabled ID providers to their per-vhost configuration (flow lists today), the default provider first.
