@@ -1133,7 +1133,7 @@ log.info('Current component name = %s', result.name);</code></pre>
 <p>Returns the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
 </div>
 <div class="paragraph">
-<p>The content follows the request&#8217;s <code>contentPath</code>, so when a <a href="../web/filters.ahtml#reroute">site mapping filter</a> has re-routed rendering, this returns the content the request was re-routed to.</p>
+<p>The content follows the request&#8217;s <code>contentPath</code>, so when a <a href="../web/sites/mappings.ahtml#reroute">site mapping filter</a> has re-routed rendering, this returns the content the request was re-routed to.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -3007,7 +3007,7 @@ const url = buildUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 15:18:03 UTC
+Last updated 2026-09-07 19:39:00 UTC
 </div>
 </div>
 </body>

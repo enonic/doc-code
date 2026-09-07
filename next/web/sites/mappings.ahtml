@@ -454,6 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#match_mappings">Match mappings</a></li>
 <li><a href="#service_mappings">Service mappings</a></li>
+<li><a href="#reroute">Re-routing to another content</a></li>
 </ul>
 </div>
 </div>
@@ -559,7 +560,7 @@ Each mapping must specify either <code>filter:</code> or <code>controller:</code
 <p>If several mappings have the same <code>order</code> value, the sort order of the applications on the site determines which mapping is used.</p>
 </div>
 <div class="paragraph">
-<p>Which mappings apply is decided once, before the first filter runs, from the content originally requested. A filter that <a href="../filters.ahtml#reroute">re-routes rendering to another content</a> therefore does not change the selection — the mappings already chosen keep running, in order, against the re-routed request.</p>
+<p>Which mappings apply is decided once, before the first filter runs, from the content originally requested. A filter that <a href="#reroute">re-routes rendering to another content</a> therefore does not change the selection — the mappings already chosen keep running, in order, against the re-routed request.</p>
 </div>
 </div>
 </div>
@@ -741,10 +742,89 @@ Missing/unavailable content does not match any condition. Omit <code>match</code
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="reroute"><a class="link" href="#reroute">Re-routing to another content</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><span class="alt">XP 8.1.0</span></span> A filter reached through a mapping can change <strong>which content is rendered</strong> while the visitor&#8217;s URL stays the same. Set <code>contentPath</code> on the request before handing it on, and the site service resolves the request against that content instead:</p>
+</div>
+<div class="listingblock">
+<div class="title">Render a variant content at the canonical URL</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function filter(req, next) {
+    if (req.cookies.experiment === 'b') {
+        // Visitors in the experiment get /mysite/campaign/variant-b,
+        // still under the /mysite/campaign address they asked for
+        req.contentPath = `${req.contentPath}/variant-b`;
+    }
+
+    return next(req);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is a rendering re-route, not a redirect: no <code>Location</code> header, no second request, and <code>path</code>, <code>url</code> and the client&#8217;s address bar are untouched. Downstream, the request describes the new content. <a href="../../libraries/lib-portal.ahtml#getcontent"><code>getContent()</code></a> returns it, and its page or page template is resolved and rendered as though it had been requested directly. Only the target moves, so a re-route cannot leave the current project or branch: the new path is looked up in the same repository and branch, and the site is re-derived from it.</p>
+</div>
+<div class="paragraph">
+<p>Rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Only documented fields are read from the object you pass to <code>next()</code>.</strong> Mutate <code>req</code> and hand it on. A fresh object works as long as it carries <code>contentPath</code>, but anything else you put on it is lost.</p>
+</li>
+<li>
+<p><strong>The re-routed content&#8217;s permissions apply.</strong> The lookup itself is privileged, so a filter can target content the visitor cannot read, but the response then fails with <code>403</code>, as it would on a direct request. A path that resolves to nothing yields <code>404</code>, naming the path the filter set.</p>
+</li>
+<li>
+<p><strong>Mappings are already chosen.</strong> Which mappings match is decided before any filter runs, from the originally requested content. A re-route does not re-run that matching, so it neither picks up mappings that would match the new content nor cancels the ones already selected. The remaining filters and any controller mapping in the chain receive the re-routed request.</p>
+</li>
+<li>
+<p><strong>Each filter may re-route once</strong>, starting from whatever the previous filter passed it. Inside the filter that re-routes, both before and after <code>next()</code>, <code>getContent()</code> still reports the original content. The change applies to the request handed onwards.</p>
+</li>
+<li>
+<p><strong>Generated URLs follow the re-route.</strong> <a href="../../libraries/lib-portal.ahtml#pageurl"><code>pageUrl()</code></a> without <code>id</code> or <code>path</code>, relative <code>path</code> values and component URLs resolve against the re-routed content, not the address the visitor asked for. A variant rendered at <code>/mysite/campaign</code> would link to itself as <code>/mysite/campaign/variant-b</code>. Pass the canonical target explicitly; the filter can hand it down with <a href="../../libraries/lib-context.ahtml#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> before it re-routes.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Keeping links on the canonical address</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// the filter, before re-routing
+import {setCustomLocalAttribute} from '/lib/xp/context';
+
+setCustomLocalAttribute('com.example.myapp.canonicalPath', req.contentPath);
+req.contentPath = `${req.contentPath}/variant-b`;
+
+// the page, when linking to itself
+import {get as getContext} from '/lib/xp/context';
+import {pageUrl} from '/lib/xp/portal';
+
+const canonical = getContext().attributes['custom.com.example.myapp.canonicalPath'] as string | undefined;
+const selfUrl = pageUrl({path: canonical});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Re-routing only maps an incoming address to content. It does not change how URLs are generated, and Content Studio&#8217;s built-in preview still renders a content at its real path. A URL scheme of your own therefore also needs a URL function of your own in place of <code>pageUrl()</code>, a decision about whether the real path stays reachable, and, for editors to preview the scheme, a <a href="../extensions/liveview.ahtml">Live view extension</a> that points the preview at your address.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Build the new path from values you control rather than interpolating a query parameter straight into it. A content path is a lookup key, and path segments have their own validation rules.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 15:18:03 UTC
+Last updated 2026-09-07 19:39:01 UTC
 </div>
 </div>
 </body>
