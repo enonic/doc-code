@@ -70,7 +70,7 @@ The ``request`` object is passed to every HTTP function. It carries the request 
 <7> Client IP address. If the `X-Forwarded-For` footnote:[https://en.wikipedia.org/wiki/X-Forwarded-For] header is set, its value overrides the client IP.
 <8> Site service rendering mode: `inline`, `edit`, `preview`, or `live`.
 <9> Site service repository branch: `draft` or `master`.
-<10> Site service path of the content being rendered. Assigning it in a <<filters#reroute, site mapping filter>> re-routes rendering to another content.
+<10> Site service path of the content being rendered. Assigning it in a <<sites/mappings#reroute, site mapping filter>> re-routes rendering to another content.
 <11> Request body, as a string, or `null` when absent.
 <12> Query and form parameters.
 <13> HTTP request headers.
