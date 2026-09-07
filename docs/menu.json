@@ -237,11 +237,11 @@
           "document": "web/apis"
         },
         {
-          "title": "Tools",
+          "title": "Admin tools",
           "document": "web/tools"
         },
         {
-          "title": "Extensions",
+          "title": "Admin extensions",
           "document": "web/extensions",
           "menuItems": [
             {
@@ -269,10 +269,6 @@
               "document": "web/extensions/processors"
             }
           ]
-        },
-        {
-          "title": "ID providers",
-          "document": "web/id-providers"
         },
         {
           "title": "Sites",
@@ -309,11 +305,15 @@
           "document": "web/filters"
         },
         {
-          "title": "Error handler",
+          "title": "HTTP error handler",
           "document": "web/error"
         },
         {
-          "title": "Websocket",
+          "title": "ID providers",
+          "document": "web/id-providers"
+        },
+        {
+          "title": "WebSocket",
           "document": "web/websocket"
         },
         {

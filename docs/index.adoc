@@ -36,7 +36,7 @@ IMPORTANT: For a hands-on introduction to development with Enonic XP, visit the 
 
 <<web#, Web>>:: The shared request pipeline, primitives (request/response, filters, error handlers, websockets, SSE), ID providers, and the four services XP dispatches to.
 
-<<web/apis#, APIs>>, <<web/tools#, Admin Tools>> and <<web/extensions#, Extensions>>, <<web/sites#, Sites>>, <<web/webapps#, Webapps>>:: The four services exposed by XP — custom APIs, admin UIs and extensions, CMS-driven sites, and standalone web applications.
+<<web/apis#, APIs>>, <<web/tools#, Admin tools>> and <<web/extensions#, Admin extensions>>, <<web/sites#, Sites>>, <<web/webapps#, Webapps>>:: The four services exposed by XP — custom APIs, admin UIs and extensions, CMS-driven sites, and standalone web applications.
 
 <<background#, Background>>:: Tasks and scheduled jobs for asynchronous work.
 
