@@ -442,7 +442,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#error_js">error.js</a></li>
+<li><a href="#generic">error.ts</a></li>
+<li><a href="#sites">Sites</a></li>
+<li><a href="#resolution_order">Resolution order</a></li>
 <li><a href="#the_error_object">The Error object</a></li>
 </ul>
 </div>
@@ -451,7 +453,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The framework supports the definition of custom error handlers.</p>
+<p>An app may replace XP&#8217;s default error page with its own.</p>
 </div>
 </div>
 </div>
@@ -459,85 +461,107 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP ships with a default error handler that will produce a stack trace whenever an error occurs.
-Stack traces may not be the best way to greet your users.
-By implementing an error handler this will effectively replace the default error handler.</p>
+<p>When a request fails, XP responds with a default error page. In production it shows the status and a short message; in dev mode it also shows the stack trace. Neither is the best way to greet your users, so an app can supply an error handler that renders the response instead.</p>
+</div>
+<div class="paragraph">
+<p>Error handlers are looked up per request, based on which app was serving it. If no handler produces a response, XP&#8217;s default error page is used.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="error_js"><a class="link" href="#error_js">error.js</a></h2>
+<h2 id="generic"><a class="link" href="#generic">error.ts</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You may add a site-specific error handler to your application by creating the file <code>src/main/resources/cms/error/error.js</code>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-A generic error handler can be defined at <code>src/main/resources/error/error.js</code>. This handler also catches errors that are not site related (admin tools, extensions, …).
-</td>
-</tr>
-</table>
+<p>An app handles its own errors with the file <code>src/main/resources/error/error.ts</code>. It is used for every request the app serves: webapps, APIs, admin tools and extensions, and site pages, as described below.</p>
 </div>
 <div class="paragraph">
-<p>When an error occurs in the request processing pipeline, the XP framework will look for an error handler to execute.
-For sites specifically, it will (iteratively, in order) go through all applications added to the site,
-and attempt to execute the handler functions until an <a href="request-response.ahtml#response">HTTP response</a> object is returned.
-This essentially means that developers may choose not to handle particular errors explicitly.
-If the error is not properly handled, it will fallback to the default XP error handler.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Should an error occur inside an error handler, the framework will take over and fallback to the default error handler.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Rather than exporting HTTP methods like regular HTTP functions and filters, the error handler exports "error code handlers".</p>
-</div>
-<div class="paragraph">
-<p>For instance, if the current error is a 404, the framework will first attempt to execute the export <code>handle404</code>.
-If not found, it will attempt to execute the fallback export <code>handleError</code>.</p>
+<p>Rather than exporting HTTP methods like HTTP functions and filters do, an error handler exports one function per status code it wants to handle, named <code>handle&lt;status&gt;</code>, plus an optional catch-all <code>handleError</code>:</p>
 </div>
 <div class="listingblock">
-<div class="title">Basic error handler example</div>
+<div class="title">Basic error handler</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.handle404 = function (err) {
-  return {
-    contentType: 'text/html',
-    body: `
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function handle404(err) {
+    return {
+        contentType: 'text/html',
+        body: `
 &lt;html&gt;
   &lt;body&gt;
       &lt;h1&gt;No page for you!&lt;/h1&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 `
-  }
-};
+    };
+}
 
-exports.handleError = function (err) {
-  return {
-    contentType: 'text/html',
-    body: `
+export function handleError(err) {
+    return {
+        contentType: 'text/html',
+        body: `
 &lt;html&gt;
   &lt;body&gt;
-      &lt;h1&gt;Error code "${err.status}" &lt;/h1&gt;
+      &lt;h1&gt;Error code "${err.status}"&lt;/h1&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 `
-  }
-};</code></pre>
+    };
+}</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>A handler function returns an <a href="request-response.ahtml#response">HTTP response</a>, or nothing to decline. Declining hands the error on to the next candidate, so an app may choose to handle a 404 itself and leave everything else to the default page. The response keeps the error&#8217;s status code unless the handler sets <code>status</code> itself.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sites"><a class="link" href="#sites">Sites</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A site request is served by all the apps added to the site, so XP walks them in the site&#8217;s app order. For each app it looks for <code>src/main/resources/cms/error/error.ts</code> first, and then for the general <code>error/error.ts</code>. The first handler that returns a response wins.</p>
+</div>
+<div class="paragraph">
+<p><code>cms/error/error.ts</code> is therefore an optional override for site pages. An app that serves a site and an API can give site visitors a branded error page from <code>cms/error/error.ts</code>, while its API keeps returning the plain responses from <code>error/error.ts</code>. An app with only <code>error/error.ts</code> uses it for both.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resolution_order"><a class="link" href="#resolution_order">Resolution order</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For a failed request, XP tries the following in order and stops at the first response:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>handle&lt;status&gt;</code> in the candidate handlers - for a site, in every app in order, <code>cms/</code> file before general file.</p>
+</li>
+<li>
+<p>For a <code>401</code>, the <a href="id-providers.ahtml">ID provider</a> bound to the request, through its <code>handle401</code> function.</p>
+</li>
+<li>
+<p><code>handleError</code> in the candidate handlers, in the same order as step 1.</p>
+</li>
+<li>
+<p>XP&#8217;s default error page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Because step 1 covers all apps before step 3 begins, a <code>handle404</code> in the second app of a site wins over a <code>handleError</code> in the first.</p>
+</div>
+<div class="paragraph">
+<p>Custom error handlers do not run while a site is rendered in Content Studio&#8217;s edit mode, so editors see the underlying error rather than the branded page.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Should an error occur inside an error handler, it is logged and XP falls back to the default error page.
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -580,7 +604,7 @@ The object contains the status code, error message, Exception object, and the or
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 19:39:01 UTC
+Last updated 2026-09-07 20:02:46 UTC
 </div>
 </div>
 </body>
