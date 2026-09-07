@@ -492,7 +492,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <a href="schemas.ahtml">content schemas</a>, custom <a href="web/apis.ahtml">APIs</a>, <a href="web/tools.ahtml">admin tools</a> and <a href="web/extensions.ahtml">extensions</a>, <a href="web/id-providers.ahtml">ID providers</a>, <a href="web/webapps.ahtml">webapps</a>, or full <a href="web/sites.ahtml">websites</a> — all powered by the same JS/TS runtime and the same standard <a href="libraries.ahtml">libraries</a>.</p>
 </div>
 <div class="paragraph">
-<p>Code in TypeScript, build and deploy your <a href="runtime/apps.ahtml">Enonic app</a> with full access to XP&#8217;s persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <a href="runtime.ahtml">XP runtime</a>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.</p>
+<p>Code in TypeScript, build and deploy your <a href="apps.ahtml">Enonic app</a> with full access to XP&#8217;s persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <a href="runtime.ahtml">XP runtime</a>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.</p>
 </div>
 </div>
 </div>
@@ -549,7 +549,7 @@ For a hands-on introduction to development with Enonic XP, visit the <a href="ht
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 13:41:10 UTC
+Last updated 2026-09-07 14:23:04 UTC
 </div>
 </div>
 </body>

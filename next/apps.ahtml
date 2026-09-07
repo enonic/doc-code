@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Apps</title>
+<title>Applications</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,16 +437,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Apps</h1>
+<h1>Applications</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#what_is_an_app">What is an app</a></li>
-<li><a href="#bundles_and_module_isolation">Bundles and module isolation</a></li>
+<li><a href="#name">Name</a></li>
+<li><a href="#what_an_app_can_contain">What an app can contain</a></li>
 <li><a href="#lifecycle">Lifecycle</a></li>
-<li><a href="#redeploy_and_module_cache">Redeploy and module cache</a></li>
-<li><a href="#installation_methods">Installation methods</a></li>
+<li><a href="#installation">Installation</a></li>
 <li><a href="#configuration">Configuration</a></li>
+<li><a href="#packaging">Packaging</a></li>
 </ul>
 </div>
 </div>
@@ -454,48 +454,111 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>An <strong>Enonic app</strong> is the unit of code you deploy to XP. It is a self-contained bundle that the platform installs, starts, configures, and tears down — and many apps coexist inside a single XP instance. This page covers what an app actually is at runtime, how XP runs several of them at once, and the lifecycle and configuration model around them.</p>
+<p>An <strong>Enonic application</strong> is a named package of functionality that XP installs, starts and configures as one unit. The application name is unique within an installation, and everything the app ships is identified by it: schemas, endpoints, tools, extensions, jobs and configuration. Many apps run side by side in one XP instance, and most of XP&#8217;s own components are apps.</p>
+</div>
+<div class="paragraph">
+<p>An app may contain nothing but CMS schemas, or JavaScript that serves a site or an API, or Java components, or all of these. This documentation covers apps that contain code. Modelling content with schemas is covered in the <a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a>, and installing and operating apps in the <a href="https://developer.enonic.com/docs/platform/stable/apps">platform documentation</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="what_is_an_app"><a class="link" href="#what_is_an_app">What is an app</a></h2>
+<h2 id="name"><a class="link" href="#name">Name</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An app is a software package — JavaScript/TypeScript modules, descriptors, schemas, assets — bundled and deployed together. Content Studio, the Headless API, and every webapp or site extension you write are all apps built with the Enonic Development Kit. XP itself is just the runtime that hosts them.</p>
+<p>Every app has a unique name, such as <code>com.example.myapp</code>. Reverse-DNS is the convention. The name acts as the namespace for the app: it is the prefix that identifies everything the app ships, so two apps can both have an <code>article</code> content type without colliding.</p>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">What</th>
+<th class="tableblock halign-left valign-top">Identified as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schemas: content types, mixins, form fragments, macros</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:article</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APIs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:myapi</code>, served under <code>/api/com.example.myapp:myapi</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Admin tools and extensions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:mytool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tasks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:reindex</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp.cfg</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>require()</code> resolves within the app that calls it; see <a href="runtime.ahtml#modules_and_bundling">Modules</a></p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>Each app is identified by an <strong>app key</strong> (e.g. <code>com.example.myapp</code>). The key is the namespace under which the app&#8217;s services, components, schemas, and configuration are reached.</p>
+<p>Platform-provided types use the reserved names <code>base</code>, <code>portal</code> and <code>media</code>, as in <code>base:folder</code>, <code>portal:site</code> and <code>media:image</code>. No app can take these names.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="bundles_and_module_isolation"><a class="link" href="#bundles_and_module_isolation">Bundles and module isolation</a></h2>
+<h2 id="what_an_app_can_contain"><a class="link" href="#what_an_app_can_contain">What an app can contain</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every app deploys as its own bundle. The CommonJS module cache is scoped to the app: when code in app A calls <code>require('/lib/greet')</code>, it loads the <code>greet</code> module <strong>from app A&#8217;s bundle</strong>, never from app B. There is no shared global namespace and no implicit module sharing between apps.</p>
+<p>Everything below is optional. An app ships whichever parts it needs.</p>
 </div>
-<div class="paragraph">
-<p>The exception is <strong>platform libraries</strong> — modules whose path begins with <code>/lib/xp/</code> (e.g. <code>/lib/xp/content</code>, <code>/lib/xp/portal</code>). These are provided by XP itself and resolve identically from any app.</p>
-</div>
-<div class="paragraph">
-<p>Composition between apps therefore happens at the <strong>platform level</strong>, not in JavaScript:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site service merges at request time.</p>
-</li>
-<li>
-<p>Admin tools and admin extensions from any installed app are listed in the admin Launcher and may mount each other through declared interface points.</p>
-</li>
-<li>
-<p>Universal APIs from any app are reachable under <code>/api/&lt;app&gt;:&lt;api&gt;</code>, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>What apps cannot do is reach into another app&#8217;s private modules. Cross-app integration goes through the platform&#8217;s contracts (descriptors, mappings, events, APIs) — never through <code>require()</code>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Schemas</dt>
+<dd>
+<p>Content types, mixins, form fragments and macros, under <code>src/main/resources/cms/</code>. See <a href="schemas.ahtml">Schemas</a>.</p>
+</dd>
+<dt class="hdlist1">Sites</dt>
+<dd>
+<p>Page, layout and part components, mappings, filters and response processors for CMS-driven sites. See <a href="web/sites.ahtml">Sites</a>.</p>
+</dd>
+<dt class="hdlist1">APIs</dt>
+<dd>
+<p>HTTP endpoints exposed under <code>/api</code>, and mountable under sites, webapps and admin tools. See <a href="web/apis.ahtml">APIs</a>.</p>
+</dd>
+<dt class="hdlist1">Admin tools and extensions</dt>
+<dd>
+<p>Screens in the XP admin, and extensions that plug into other tools. See <a href="web/tools.ahtml">Tools</a> and <a href="web/extensions.ahtml">Extensions</a>.</p>
+</dd>
+<dt class="hdlist1">Webapps</dt>
+<dd>
+<p>Standalone web applications. See <a href="web/webapps.ahtml">Webapps</a>.</p>
+</dd>
+<dt class="hdlist1">ID providers</dt>
+<dd>
+<p>Authentication for sites, webapps and the admin. See <a href="web/id-providers.ahtml">ID providers</a>.</p>
+</dd>
+<dt class="hdlist1">Background work</dt>
+<dd>
+<p>Named tasks and scheduled jobs. See <a href="background.ahtml">Background</a>.</p>
+</dd>
+<dt class="hdlist1">Start-up code</dt>
+<dd>
+<p>A <code>main.ts</code> that runs when the app starts. See <a href="runtime/main.ahtml">Main</a>.</p>
+</dd>
+<dt class="hdlist1">Java</dt>
+<dd>
+<p>OSGi components and code reached through the Java bridge. See <a href="runtime/java-bridge.ahtml">Java bridge</a>.</p>
+</dd>
+<dt class="hdlist1">Localization</dt>
+<dd>
+<p>Phrases files for the app&#8217;s own text and its schemas. See <a href="runtime/i18n.ahtml">Localization</a>.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -509,11 +572,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dl>
 <dt class="hdlist1">Install</dt>
 <dd>
-<p>The app bundle is uploaded to the cluster and registered. Installation alone does not run any of your code.</p>
+<p>The app package is uploaded to the cluster and registered. Installation alone does not run any of your code.</p>
 </dd>
 <dt class="hdlist1">Start</dt>
 <dd>
-<p>XP starts the app on every cluster node. If the bundle contains <a href="main.ahtml"><code>main.ts</code></a> at <code>src/main/resources/main.ts</code>, it is loaded and its top-level code runs once per node. <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. <code>__.disposer()</code> registrations made during start are remembered for the stop phase; registering one later is not dependable.</p>
+<p>XP starts the app on every cluster node. If the app contains <a href="runtime/main.ahtml"><code>main.ts</code></a> at <code>src/main/resources/main.ts</code>, it is loaded and its top-level code runs once per node. <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. <code>__.disposer()</code> registrations made during start are remembered for the stop phase; registering one later is not dependable.</p>
 </dd>
 <dt class="hdlist1">Running</dt>
 <dd>
@@ -525,50 +588,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1">Uninstall</dt>
 <dd>
-<p>The bundle is removed from the cluster.</p>
+<p>The app is removed from the cluster.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>The platform calls <code>main.ts</code> exactly once per app start, per node. Top-level code in any other module runs once on first <code>require()</code> and is then cached — see <a href="../runtime.ahtml#loading_and_caching">Runtime: Loading and caching</a>.</p>
+<p>The platform calls <code>main.ts</code> exactly once per app start, per node. Top-level code in any other module runs once on first <code>require()</code> and is then cached — see <a href="runtime.ahtml#loading_and_caching">Runtime: Loading and caching</a>.</p>
+</div>
+<div class="paragraph">
+<p>Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
+</div>
+<div class="paragraph">
+<p>This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="redeploy_and_module_cache"><a class="link" href="#redeploy_and_module_cache">Redeploy and module cache</a></h2>
+<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Redeploying an app is conceptually a stop followed by a start with the new bundle. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
-</div>
-<div class="paragraph">
-<p>This makes hot iteration cheap during development (drop a new bundle on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installation_methods"><a class="link" href="#installation_methods">Installation methods</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Apps reach an XP instance through one of three channels:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Via CLI</dt>
-<dd>
-<p>Push the app via the management API using the Enonic CLI. The standard path for CI/CD pipelines and remote deploys.</p>
-</dd>
-<dt class="hdlist1">Via Admin Console</dt>
-<dd>
-<p>Install manually through the <strong>Applications</strong> admin tool. Useful for installing from Enonic Market or uploading a JAR by hand.</p>
-</dd>
-<dt class="hdlist1">Via the file system</dt>
-<dd>
-<p>Drop the JAR into the XP <code>deploy/</code> folder. Used during development and for specialized deployment scenarios. File-system deploys are local to a single node and override apps installed via the other channels.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the <a href="https://developer.enonic.com/docs/platform">XP platform documentation</a>.</p>
+<p>Apps reach an XP instance through the Enonic CLI and the management API, which is the standard path for CI/CD; through the Applications admin tool, which also installs from <a href="https://market.enonic.com">Enonic Market</a>; or by dropping the app file into the instance&#8217;s <code>deploy/</code> folder during development. Installation channels, clustering and operations are covered in the <a href="https://developer.enonic.com/docs/platform/stable/apps">platform documentation</a>. See <a href="tooling/ci-cd.ahtml">CI/CD</a> for the developer side.</p>
 </div>
 </div>
 </div>
@@ -579,14 +618,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Each app may read configuration from a <code>&lt;app-name&gt;.cfg</code> file (e.g. <code>com.example.myapp.cfg</code>) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform&#8217;s configuration APIs.</p>
 </div>
 <div class="paragraph">
-<p>The file format, location, and reload behavior are documented in the <a href="https://developer.enonic.com/docs/platform/xp8/config">XP platform documentation</a>.</p>
+<p>The file format, location, and reload behavior are documented in the <a href="https://developer.enonic.com/docs/platform/stable/config">XP platform documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="packaging"><a class="link" href="#packaging">Packaging</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://developer.enonic.com/docs/enonic-gradle-plugins">Enonic Gradle plugin</a> builds an app into a single file, today a jar, that XP installs as one unit; the name is set as <code>appName</code> in <em>gradle.properties</em>. See <a href="tooling/build.ahtml">Build system</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 13:41:10 UTC
+Last updated 2026-09-07 14:23:04 UTC
 </div>
 </div>
 </body>

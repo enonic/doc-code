@@ -446,8 +446,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#language_level">Language level</a></li>
 </ul>
 </li>
-<li><a href="#modules_and_bundling">Modules and bundling</a></li>
-<li><a href="#loading_and_caching">Loading and caching</a></li>
+<li><a href="#modules_and_bundling">Modules and bundling</a>
+<ul class="sectlevel2">
+<li><a href="#module_isolation">Module isolation</a></li>
+</ul>
+</li>
+<li><a href="#loading_and_caching">Loading and caching</a>
+<ul class="sectlevel2">
+<li><a href="#redeploy">Redeploy</a></li>
+</ul>
+</li>
 <li><a href="#threading">Threading</a></li>
 <li><a href="#clustering">Clustering</a></li>
 <li><a href="#what_you_get_for_free">What you get for free</a></li>
@@ -460,7 +468,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>What powers your Enonic app at execution time - the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free. Regardless of whether the app serves an API, a webapp or a site, this is the environment its code runs in.</p>
+<p>What powers your Enonic app at execution time - the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free. Regardless of whether the app serves an API, a webapp or a site, this is the environment its code runs in. What an app is, and what it may contain, is covered under <a href="apps.ahtml">Applications</a>.</p>
 </div>
 </div>
 </div>
@@ -531,6 +539,34 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>TypeScript is supported as the authoring language; the build step transpiles to JavaScript before deployment. See <a href="tooling/typescript.ahtml">TypeScript Definitions</a>.</p>
 </div>
+<div class="sect2">
+<h3 id="module_isolation"><a class="link" href="#module_isolation">Module isolation</a></h3>
+<div class="paragraph">
+<p>The CommonJS module cache is scoped to the app: when code in app A calls <code>require('/lib/greet')</code>, it loads the <code>greet</code> module <strong>from app A</strong>, never from app B. There is no shared global namespace and no implicit module sharing between apps.</p>
+</div>
+<div class="paragraph">
+<p>The exception is <strong>platform libraries</strong> — modules whose path begins with <code>/lib/xp/</code> (e.g. <code>/lib/xp/content</code>, <code>/lib/xp/portal</code>). These are provided by XP itself and resolve identically from any app.</p>
+</div>
+<div class="paragraph">
+<p>Composition between apps therefore happens at the <strong>platform level</strong>, not in JavaScript:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site service merges at request time.</p>
+</li>
+<li>
+<p>Admin tools and admin extensions from any installed app are listed in the admin Launcher and may mount each other through declared interface points.</p>
+</li>
+<li>
+<p>Universal APIs from any app are reachable under <code>/api/&lt;app&gt;:&lt;api&gt;</code>, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>What apps cannot do is reach into another app&#8217;s private modules. Cross-app integration goes through the platform&#8217;s contracts (descriptors, mappings, events, APIs) — never through <code>require()</code>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -556,6 +592,15 @@ On GraalJS a module is loaded once per <strong>script context</strong> rather th
 </div>
 <div class="paragraph">
 <p>See <a href="runtime/functions.ahtml#loading_and_caching">Functions: Loading and caching</a> for the implications on each function type.</p>
+</div>
+<div class="sect2">
+<h3 id="redeploy"><a class="link" href="#redeploy">Redeploy</a></h3>
+<div class="paragraph">
+<p>Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
+</div>
+<div class="paragraph">
+<p>This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).</p>
+</div>
 </div>
 </div>
 </div>
@@ -657,10 +702,6 @@ On GraalJS a module is loaded once per <strong>script context</strong> rather th
 <dd>
 <p>Nashorn and GraalJS: how an app chooses its engine, and what differs between them.</p>
 </dd>
-<dt class="hdlist1"><a href="runtime/apps.ahtml">Apps</a></dt>
-<dd>
-<p>What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.</p>
-</dd>
 <dt class="hdlist1"><a href="runtime/functions.ahtml">Functions</a></dt>
 <dd>
 <p>How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).</p>
@@ -706,7 +747,7 @@ On GraalJS a module is loaded once per <strong>script context</strong> rather th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 13:41:10 UTC
+Last updated 2026-09-07 14:23:04 UTC
 </div>
 </div>
 </body>
