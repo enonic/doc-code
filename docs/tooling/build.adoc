@@ -197,7 +197,7 @@ Windows:: `$XP_INSTALL/bin/server.sh dev`
 
 WARNING: Dev mode should never be used in production. Doing so may cause both security and performance issues.
 
-In addition to running XP in dev mode, your application may contain files that require compilation (including transpilation). This means that must build the files for every change. For instance, if you use TypeScript, these files won't be picked up by default.
+In addition to running XP in dev mode, your application may contain files that require compilation (including transpilation). This means the files must be built for every change. For instance, if you use TypeScript, these files won't be picked up by default.
 
 XP projects support this out of the box. Simply run:
 

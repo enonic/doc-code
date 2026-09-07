@@ -51,6 +51,10 @@ Start-up code:: A `main.ts` that runs when the app starts. See <<runtime/main#, 
 Java:: OSGi components and code reached through the Java bridge. See <<runtime/java-bridge#, Java bridge>>.
 Localization:: Phrases files for the app's own text and its schemas. See <<runtime/i18n#, Localization>>.
 
+== Building and deploying
+
+Create a project from a https://market.enonic.com/starters[starter] with the <<tooling/cli#, Enonic CLI>>, build it with `enonic project build`, and deploy it to a <<tooling/sandboxes#, sandbox>> with `enonic project deploy`. During development, `enonic project dev` rebuilds on every change and the sandbox picks the changes up without a redeploy. The project files, the Gradle plugin and the build and deploy steps are covered under <<tooling/build#, Building apps>>; automated builds under <<tooling/ci-cd#, CI/CD>>.
+
 == Lifecycle
 
 An app's life inside XP follows a fixed sequence:

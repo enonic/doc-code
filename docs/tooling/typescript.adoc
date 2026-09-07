@@ -21,7 +21,7 @@ enonic create -r starter-ts com.example.myapp
 
 To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under https://www.npmjs.com/org/enonic-types[@enonic-types] organisation on NPM.
 
-Install types at the major version of XP your project builds against. `@{release}` tracks the latest XP {release} release, which is what you want in most projects. If you target a specific XP version — the `xpVersion` in your <<../tooling/build#, `gradle.properties`>> — pin the types to it instead, for example `@{version}`. Never install types *newer* than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.
+Install types at the major version of XP your project builds against. `@{release}` tracks the latest XP {release} release, which is what you want in most projects. If you target a specific XP version — the `xpVersion` in your <<build#, `gradle.properties`>> — pin the types to it instead, for example `@{version}`. Never install types *newer* than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.
 
 == Enonic Libraries
 
