@@ -2,7 +2,7 @@
 :toc: right
 :imagesdir: images
 
-What powers your Enonic app at execution time - the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free. Regardless of whether the app serves an API, a webapp or a site, this is the environment its code runs in.
+What powers your Enonic app at execution time - the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free. Regardless of whether the app serves an API, a webapp or a site, this is the environment its code runs in. What an app is, and what it may contain, is covered under <<apps#, Applications>>.
 
 == Execution model
 
@@ -32,6 +32,20 @@ Platform libraries are referenced by name (for example, `require('/lib/xp/conten
 
 TypeScript is supported as the authoring language; the build step transpiles to JavaScript before deployment. See <<tooling/typescript#, TypeScript Definitions>>.
 
+=== Module isolation
+
+The CommonJS module cache is scoped to the app: when code in app A calls `require('/lib/greet')`, it loads the `greet` module *from app A*, never from app B. There is no shared global namespace and no implicit module sharing between apps.
+
+The exception is *platform libraries* — modules whose path begins with `/lib/xp/` (e.g. `/lib/xp/content`, `/lib/xp/portal`). These are provided by XP itself and resolve identically from any app.
+
+Composition between apps therefore happens at the *platform level*, not in JavaScript:
+
+* A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site service merges at request time.
+* Admin tools and admin extensions from any installed app are listed in the admin Launcher and may mount each other through declared interface points.
+* Universal APIs from any app are reachable under `/api/<app>:<api>`, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.
+
+What apps cannot do is reach into another app's private modules. Cross-app integration goes through the platform's contracts (descriptors, mappings, events, APIs) — never through `require()`.
+
 == Loading and caching
 
 XP loads each module *once per app deploy* and caches it. Subsequent `require()` calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed. Top-level code in a module therefore runs exactly once per deploy.
@@ -41,6 +55,12 @@ NOTE: On GraalJS a module is loaded once per *script context* rather than once p
 This makes module top-level a natural place for one-time setup (requiring libraries, computing constants), but a poor place for mutable state. Treat anything declared outside a function body as immutable after load. For state that must survive between invocations, use a repo node, the `cache` library, or another explicit persistence mechanism.
 
 See <<runtime/functions#loading_and_caching, Functions: Loading and caching>> for the implications on each function type.
+
+=== Redeploy
+
+Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and `main.ts` runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.
+
+This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).
 
 [#threading]
 == Threading
@@ -81,8 +101,6 @@ Compatibility:: An app built against any XP release runs unchanged on every patc
 This section documents the parts of an app that are not tied to a specific HTTP service or background mechanism. The sections above describe how your code executes; the pages below cover the building blocks in detail.
 
 <<runtime/engines#, JavaScript engines>>:: Nashorn and GraalJS: how an app chooses its engine, and what differs between them.
-
-<<runtime/apps#, Apps>>:: What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.
 
 <<runtime/functions#, Functions>>:: How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).
 

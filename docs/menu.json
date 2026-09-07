@@ -5,6 +5,10 @@
       "document": "index"
     },
     {
+      "title": "Applications",
+      "document": "apps"
+    },
+    {
       "title": "Tooling",
       "document": "tooling",
       "menuItems": [
@@ -87,10 +91,6 @@
         {
           "title": "JS engines",
           "document": "runtime/engines"
-        },
-        {
-          "title": "Apps",
-          "document": "runtime/apps"
         },
         {
           "title": "Functions",
