@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-io</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-io</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -524,13 +524,13 @@ log.info('Mime type is %s', type);</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes a single <code>key</code> argument — a string path or a <a href="../fundamentals/types.ahtml#resource-key">ResourceKey</a> identifying the resource.</p>
+<p>Takes a single <code>key</code> argument — a string path or a <a href="../libraries/types.ahtml#resource-key">ResourceKey</a> identifying the resource.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#resource"><code>Resource</code></a>) A resource handle exposing <code>exists()</code>, <code>getSize()</code>, and <code>getStream()</code>.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#resource"><code>Resource</code></a>) A resource handle exposing <code>exists()</code>, <code>getSize()</code>, and <code>getStream()</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -567,7 +567,7 @@ if (res2.exists()) {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes a single <code>stream</code> argument — a <a href="../fundamentals/types.ahtml#byte-source">ByteSource</a> to measure.</p>
+<p>Takes a single <code>stream</code> argument — a <a href="../libraries/types.ahtml#byte-source">ByteSource</a> to measure.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -603,7 +603,7 @@ log.info('Stream size is %s bytes', size);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#byte-source"><code>ByteSource</code></a>) A new stream containing the UTF-8 bytes of the input string.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#byte-source"><code>ByteSource</code></a>) A new stream containing the UTF-8 bytes of the input string.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -626,7 +626,7 @@ const stream = newStream('Hello World');</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes two positional arguments: a <code>stream</code> (<a href="../fundamentals/types.ahtml#byte-source">ByteSource</a>) to read from, and a <code>func</code> callback <code>(line: string) &#8658; void</code> called once per line.</p>
+<p>Takes two positional arguments: a <code>stream</code> (<a href="../libraries/types.ahtml#byte-source">ByteSource</a>) to read from, and a <code>func</code> callback <code>(line: string) &#8658; void</code> called once per line.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -654,7 +654,7 @@ processLines(stream, (line) =&gt; {
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes a single <code>stream</code> argument — a <a href="../fundamentals/types.ahtml#byte-source">ByteSource</a> to read from.</p>
+<p>Takes a single <code>stream</code> argument — a <a href="../libraries/types.ahtml#byte-source">ByteSource</a> to read from.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -684,7 +684,7 @@ log.info('Num lines: %s', lines.length);</code></pre>
 <p>Parameters</p>
 </div>
 <div class="paragraph">
-<p>Takes a single <code>stream</code> argument — a <a href="../fundamentals/types.ahtml#byte-source">ByteSource</a> to read from.</p>
+<p>Takes a single <code>stream</code> argument — a <a href="../libraries/types.ahtml#byte-source">ByteSource</a> to read from.</p>
 </div>
 <div class="paragraph lead">
 <p>Returns</p>
@@ -710,7 +710,7 @@ log.info('Text: %s', text);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

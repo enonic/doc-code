@@ -484,7 +484,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-app</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-app</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -1173,7 +1173,7 @@ const result = getApplicationMode({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Icon binary data, as a stream that can be read with <code>lib-io</code></p>
 </div></div></td>
@@ -1200,7 +1200,7 @@ const result = getApplicationMode({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

@@ -486,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-task</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-task</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -1152,7 +1152,7 @@ const taskId = submitTask({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Key of the user that submitted the task.</p>
 </div></div></td>
@@ -1235,7 +1235,7 @@ const taskId = submitTask({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

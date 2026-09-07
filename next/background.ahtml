@@ -491,7 +491,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Tasks and scheduled jobs share the same execution shape — both invoke a <strong>named task</strong> implementation. The scheduler is the trigger; tasks are the unit of work.</p>
 </div>
 <div class="paragraph">
-<p>For pub/sub on the cluster-wide bus, see <a href="fundamentals/events.ahtml">Events</a>.</p>
+<p>For pub/sub on the cluster-wide bus, see <a href="runtime/events.ahtml">Events</a>.</p>
 </div>
 </div>
 </div>
@@ -536,7 +536,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

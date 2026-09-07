@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Upgrading Enonic apps from XP7 to XP8</title>
+<title>Upgrading Enonic apps</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,65 +437,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Upgrading Enonic apps from XP7 to XP8</h1>
+<h1>Upgrading Enonic apps</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#terminology">Terminology and concept changes</a></li>
-<li><a href="#preparations">Preparations</a></li>
-<li><a href="#app_migrator_tool">App migrator tool</a>
+<li><a href="#version_bump">Version bump</a></li>
+<li><a href="#xp-8-1">XP 8.1</a>
 <ul class="sectlevel2">
-<li><a href="#linux_macos">Linux / macOS</a></li>
-<li><a href="#windows">Windows</a></li>
-</ul>
-</li>
-<li><a href="#build_system">Build system</a>
-<ul class="sectlevel2">
-<li><a href="#gradle_wrapper">Gradle Wrapper</a></li>
-<li><a href="#build_gradle">build.gradle</a></li>
-<li><a href="#gradle_properties">gradle.properties</a></li>
-<li><a href="#settings_gradle">settings.gradle</a></li>
-<li><a href="#library_upgrade">Library upgrade</a></li>
-<li><a href="#typescript_definitions_enonic_types_for_apps_and_libraries">TypeScript definitions (<code>@enonic-types</code>) for apps and libraries</a></li>
-<li><a href="#verify">Verify</a></li>
-</ul>
-</li>
-<li><a href="#jdk">JDK</a></li>
-<li><a href="#testing_api">Testing API</a></li>
-<li><a href="#api_deprecations_and_breaking_changes">API Deprecations and Breaking Changes</a>
-<ul class="sectlevel2">
-<li><a href="#default-context">Default context</a></li>
-<li><a href="#roles">Roles</a></li>
-<li><a href="#identity-keys">Identity keys, names, and IDs</a></li>
-<li><a href="#application_descriptor">Application Descriptor</a></li>
-<li><a href="#admin_tools">Admin Tools</a></li>
-<li><a href="#widgets_admin_extensions">Widgets / Admin Extensions</a></li>
-<li><a href="#task">Task</a></li>
-<li><a href="#id_provider">ID Provider</a></li>
-<li><a href="#authentication_scope">Authentication scope</a></li>
-<li><a href="#site_descriptor_split">Site descriptor split</a></li>
-<li><a href="#page_descriptor">Page descriptor</a></li>
-<li><a href="#layout_descriptor">Layout descriptor</a></li>
-<li><a href="#part_descriptor">Part descriptor</a></li>
-<li><a href="#content_type_descriptor">Content type descriptor</a></li>
-<li><a href="#mixins_renamed_to_form_fragments">Mixins renamed to Form Fragments</a></li>
-<li><a href="#x_data_renamed_to_mixin">X-data renamed to Mixin</a></li>
-<li><a href="#macro_descriptors">Macro descriptors</a></li>
-<li><a href="#styles">Styles</a></li>
-<li><a href="#datetime_and_instant_input_types">DateTime and Instant input types</a></li>
-<li><a href="#global_functions">Global functions</a></li>
-<li><a href="#http_functions">HTTP functions</a></li>
-<li><a href="#system_libraries">System libraries</a></li>
-<li><a href="#lib_context">lib-context</a></li>
-<li><a href="#other_libraries">Other libraries</a></li>
-<li><a href="#http_services">HTTP Services</a></li>
-<li><a href="#assets_service">Assets service</a></li>
-<li><a href="#widgets_go_web_components">Widgets go Web Components</a></li>
-<li><a href="#javax_to_jakarta">Javax to Jakarta</a></li>
-<li><a href="#fasterxml_jackson_json_api">FasterXML Jackson JSON API</a></li>
-<li><a href="#jax_rs_api">JAX-RS API</a></li>
-<li><a href="#dropwizard_metrics">Dropwizard Metrics</a></li>
+<li><a href="#deprecations">Deprecations</a></li>
 <li><a href="#java_apis">Java APIs</a></li>
+<li><a href="#worth_adopting">Worth adopting</a></li>
 </ul>
 </li>
 </ul>
@@ -505,19 +456,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section describes the steps required to upgrade an XP application from 7.x to 8.0</p>
+<p>This page covers upgrading an Enonic application between releases of XP 8. Minor releases make no breaking changes to application code: an app built for XP 8.0 runs on every later 8.x release as it is. Each release section below lists the APIs it deprecated and the replacement to move to. Every deprecated API keeps working, so the clean-ups can be done one at a time - read every section between your current and your target version.</p>
 </div>
-<div class="paragraph">
-<p>Already on XP 8.0? See <a href="upgrade/8-1.ahtml">Upgrading Enonic apps from XP 8.0 to 8.1</a>.</p>
-</div>
-<div class="admonitionblock note">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-To run this upgrade automatically with an AI coding agent, use the <a href="https://github.com/enonic/agent-toolkit">Enonic Agents Toolkit</a> — it includes a skill that drives agents like Claude Code, Codex, Gemini and Co-pilot (or another compatible agent) through the procedure below. The skill reads this page as its source, so the steps documented here are authoritative whether you upgrade by hand or via an agent.
+Coming from XP 7? Follow <a href="upgrade/xp7.ahtml">Upgrading Enonic apps from XP 7 to XP 8</a> first. This page picks up where that one ends.
 </td>
 </tr>
 </table>
@@ -525,303 +473,32 @@ To run this upgrade automatically with an AI coding agent, use the <a href="http
 </div>
 </div>
 <div class="sect1">
-<h2 id="terminology"><a class="link" href="#terminology">Terminology and concept changes</a></h2>
+<h2 id="version_bump"><a class="link" href="#version_bump">Version bump</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP 8 renames or reframes several XP 7 concepts — "engine" is retired in favour of <strong>service</strong>, controllers become plain <strong>functions</strong>, services become <strong>Universal APIs</strong>, and more. When migrating, or when reconciling older XP 7-era examples or AI-generated code with current conventions, consult the full map in the release notes: <a href="https://developer.enonic.com/docs/platform/stable/release#naming">A paradigm shift in naming</a>.</p>
-</div>
-<div class="paragraph">
-<p>The actionable directory, descriptor, and method renames are detailed in the steps below.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="preparations"><a class="link" href="#preparations">Preparations</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Before you start the upgrade procedure:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Make sure you have <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a> installed</p>
-</li>
-<li>
-<p>Check out the project source code to a local folder i.e. myapp/</p>
-</li>
-<li>
-<p>Ensure you have an XP8 sandbox for the application using Enonic CLI</p>
-<div class="literalblock">
-<div class="content">
-<pre>enonic project sandbox</pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="app_migrator_tool"><a class="link" href="#app_migrator_tool">App migrator tool</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The <a href="https://github.com/enonic/xp8migrator">xp8migrator</a> is a small CLI that converts an XP 7 project&#8217;s XML descriptors into the XP 8 YAML form. Run it from your project root.</p>
-</div>
-<div class="sect2">
-<h3 id="linux_macos"><a class="link" href="#linux_macos">Linux / macOS</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-sh" data-lang="sh">curl -fsSL https://raw.githubusercontent.com/enonic/xp8migrator/main/migrator-install.sh | sh
-./migrator</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="windows"><a class="link" href="#windows">Windows</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-powershell" data-lang="powershell">irm https://raw.githubusercontent.com/enonic/xp8migrator/main/migrator-install.ps1 | iex
-.\migrator.exe</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>migrator</code> binary can be removed after a successful migration.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="build_system"><a class="link" href="#build_system">Build system</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The standard build system must be updated.</p>
-</div>
-<div class="sect2">
-<h3 id="gradle_wrapper"><a class="link" href="#gradle_wrapper">Gradle Wrapper</a></h3>
-<div class="paragraph">
-<p>XP 8.0 standardizes on the use of Gradle 9.x.
-We recommend bundling Gradle wrapper of version 9.5.0 or later in your project.</p>
-</div>
-<div class="paragraph">
-<p>For simple installations, from your project root, run:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>./gradle wrapper --gradle-version 9.5.0</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This will install or update your project with a new Gradle wrapper.</p>
-</div>
-<div class="paragraph">
-<p>Please refer to Grade documentation for more details <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper" class="bare">https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="build_gradle"><a class="link" href="#build_gradle">build.gradle</a></h3>
-<div class="paragraph">
-<p>If you are upgrading <strong>an application</strong>, you need to use a version greater or equal to '4.0.0' of the XP Gradle plugin (<em>com.enonic.xp.app</em>).</p>
-</div>
-<div class="paragraph">
-<p>The new plugin no longer requires the <code>app {}</code> section in <em>build.gradle</em>
-Read more about it in the plugin documentation.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Syntax for adding plugins to Gradle may have changed for your project, we recommend the following updates to your build files:
-</td>
-</tr>
-</table>
+<p>Set the platform version in <em>gradle.properties</em> to the release you are targeting:</p>
 </div>
 <div class="listingblock">
-<div class="title">build.gradle sample</div>
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">plugins {
-    id 'com.enonic.xp.app'
-}
-
-repositories {
-    mavenCentral()
-    xp.enonicRepo()
-}
-
-dependencies {
-    implementation xplibs.api.script
-    include xplibs.content
-    include xplibs.portal
-}</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">xpVersion = 8.1.0</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The default <code>dev</code> task is now registered automatically by the plugin. If your project defines its own <code>dev</code> task, either remove it to use the default, or set <code>createDefaultDevTask = false</code> in the <code>app {}</code> section to keep your custom task.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Remove any <code>java.toolchain.languageVersion</code> (and <code>sourceCompatibility</code> / <code>targetCompatibility</code>) configuration from your <code>build.gradle</code>. The XP Gradle plugin sets the correct Java toolchain automatically — manual settings can conflict with what the plugin expects.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="gradle_properties"><a class="link" href="#gradle_properties">gradle.properties</a></h3>
-<div class="paragraph">
-<p>The new plugin only uses <code>appName</code> and <code>xpVersion</code> properties.</p>
 </div>
 <div class="paragraph">
-<p><code>displayName</code>, <code>url</code>, <code>vendorName</code> and <code>vendorUrl</code> must be moved to the new <em>src/main/resources/enonic.yaml</em></p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<code>displayName</code> is now called <code>title</code> in <em>enonic.yaml</em>).
-</td>
-</tr>
-</table>
+<p>TypeScript projects also need the matching type definitions, or the parameters and functions added in the release will not type-check:</p>
 </div>
 <div class="listingblock">
-<div class="title">gradle.properties sample</div>
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties"># Gradle Project settings
-projectName = myproject
-version = 1.0.0-SNAPSHOT
-
-# XP App values
-appName = com.acme.something.myproject
-xpVersion = 8.0.0</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<code>appName</code> is only used for application projects, as well as <code>app</code> config in <code>build.gradle</code>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="settings_gradle"><a class="link" href="#settings_gradle">settings.gradle</a></h3>
-<div class="paragraph">
-<p>For the plugin to work, you must add the following to your <em>settings.gradle</em>:</p>
-</div>
-<div class="listingblock">
-<div class="title">settings.gradle sample</div>
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">plugins {
-    id("com.enonic.xp.settings") version "4.0.0"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="library_upgrade"><a class="link" href="#library_upgrade">Library upgrade</a></h3>
-<div class="paragraph">
-<p>If you are upgrading <strong>a library</strong>, you don&#8217;t need to use <em>com.enonic.xp.app</em> plugin or have <code>app {}</code> section in <em>build.gradle</em>.
-Below is a sample content of <em>build.gradle</em> and <em>gradle.properties</em> files for a library:</p>
-</div>
-<div class="listingblock">
-<div class="title">build.gradle sample</div>
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">plugins {
-    id 'java'
-    id 'maven-publish'
-    id 'com.enonic.xp.base'
-}
-
-repositories {
-    mavenCentral()
-    xp.enonicRepo()
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You only need to use <em>com.enonic.xp.base</em> plugin if you are using XP dependencies and need to shortlink to Enonic repo
-via <em>xp.enonicRepo()</em> shortcut
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="title">gradle.properties sample</div>
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">group=com.mycompany.lib
-projectName=mylib
-xpVersion=8.0.0
-version=1.0.0-SNAPSHOT</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="typescript_definitions_enonic_types_for_apps_and_libraries"><a class="link" href="#typescript_definitions_enonic_types_for_apps_and_libraries">TypeScript definitions (<code>@enonic-types</code>) for apps and libraries</a></h3>
-<div class="paragraph">
-<p>If your project uses TypeScript, update all <code>@enonic-types</code> packages in <code>package.json</code> to XP 8 compatible versions.
-This applies to both applications and libraries.</p>
-</div>
-<div class="paragraph">
-<p>XP 7</p>
-</div>
-<div class="listingblock">
+<div class="title">package.json</div>
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
   "devDependencies": {
-    "@enonic-types/global": "^7.0.0",
-    "@enonic-types/lib-content": "^7.0.0"
+    "@enonic-types/global": "^8.1.0",
+    "@enonic-types/lib-content": "^8.1.0"
   }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>XP 8</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "devDependencies": {
-    "@enonic-types/global": "^8.0.0",
-    "@enonic-types/lib-content": "^8.0.0"
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="verify"><a class="link" href="#verify">Verify</a></h3>
-<div class="paragraph">
-<p>After completing the steps above, you should now be able to test that your build is working, using the Enonic CLI:</p>
+<p>Then rebuild and deploy:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -829,1559 +506,271 @@ This applies to both applications and libraries.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This command proxies the Gradle wrapper, but also connects with the project sandbox.
-You may also use <code>enonic project build</code> to build without deploying</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Projects containing Java code might get build errors at this point, otherwise the build should complete successfully.
-</td>
-</tr>
-</table>
-</div>
+<p>The app builds and runs. What follows is work that can be done at your own pace.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="jdk"><a class="link" href="#jdk">JDK</a></h2>
+<h2 id="xp-8-1"><a class="link" href="#xp-8-1">XP 8.1</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Java 25 is bundled with XP 8.0.0, and is the minimum required version for building and running XP8 applications.</p>
+<p>No breaking changes for application code. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="testing_api"><a class="link" href="#testing_api">Testing API</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="deprecations"><a class="link" href="#deprecations">Deprecations</a></h3>
+<div class="sect3">
+<h4 id="xp-8-1-lib-content"><a class="link" href="#xp-8-1-lib-content">lib-content and lib-node</a></h4>
 <div class="paragraph">
-<p>If you are using Enonic testing API (<code>com.enonic.xp:testing</code>), you&#8217;ll need to add Junit 5 dependency with the corresponding platform launcher.</p>
+<p><a href="libraries/lib-content.ahtml#getchildren"><code>getChildren()</code></a> in lib-content and <a href="libraries/lib-node.ahtml#findchildren"><code>findChildren()</code></a> in lib-node are deprecated. A query with <code>parent</code> does the same job: it takes the same path or id, and where <code>sort</code> is omitted it applies the child order stored on the parent, so the result comes back in the order it did before.</p>
 </div>
 <div class="listingblock">
+<div class="title">Content - before</div>
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
-testImplementation "com.enonic.xp:testing:${xpVersion}"
-testImplementation(platform("org.junit:junit-bom:6.0.1"))
-testImplementation 'org.junit.jupiter:junit-jupiter'
-testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getChildren} from '/lib/xp/content';
 
-test {
-    useJUnitPlatform()
-}</code></pre>
+const result = getChildren({
+    key: '/mysite/articles',
+    start: 0,
+    count: 20
+});</code></pre>
 </div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Junit 4 is not supported in XP 8.0.0
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="api_deprecations_and_breaking_changes"><a class="link" href="#api_deprecations_and_breaking_changes">API Deprecations and Breaking Changes</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="default-context"><a class="link" href="#default-context">Default context</a></h3>
-<div class="paragraph">
-<p>In XP8 the contextual repository and branch may return null if they are not set explicitly. Previously the default context was set with <code>com.enonic.cms.default</code> repository and <code>draft</code> branch.</p>
-</div>
-<div class="paragraph">
-<p><strong>Symptom.</strong> Code that previously relied on the implicit defaults — typically <code>contextLib.run({ &#8230;&#8203; }, callback)</code> without a <code>branch:</code> or <code>repository:</code> field — now throws at runtime, e.g. <code>Error: branch is required</code>. The same applies to <code>node.connect({ &#8230;&#8203; })</code> calls that don&#8217;t pass <code>branch</code> / <code>repoId</code>.</p>
-</div>
-<div class="paragraph">
-<p><strong>Fix.</strong> Set <code>branch</code> (and <code>repository</code>, where relevant) explicitly on every <code>run</code> or <code>connect</code> call that needs to operate against a known repo and branch.</p>
 </div>
 <div class="listingblock">
+<div class="title">Content - after</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Before — relied on default 'draft' branch
-import {run} from '/lib/xp/context';
-run({}, () =&gt; doStuff());
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {query} from '/lib/xp/content';
 
-// After — branch (and usually repository) set explicitly
-import {run} from '/lib/xp/context';
-run({repository: 'com.enonic.cms.default', branch: 'draft'}, () =&gt; doStuff());</code></pre>
+const result = query({
+    parent: '/mysite/articles',
+    start: 0,
+    count: 20
+});</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="roles"><a class="link" href="#roles">Roles</a></h3>
-<div class="paragraph">
-<p>The legacy role <code>role:cms.cm.app</code> (display name "Content Manager App") is deprecated. Fresh XP 8 installs no longer create this role, and it is no longer added to the default ACLs of content, issue, or archive root nodes when new projects are initialized.</p>
 </div>
 <div class="paragraph">
-<p>Existing installations upgrading from XP 7 keep the role definition and any pre-existing ACEs that reference it. Those entries are harmless but obsolete and should not be relied on going forward. Apps that previously granted <code>cms.cm.app</code> to a user or group should switch to the per-project role hierarchy that XP 8 manages per content project:</p>
+<p><code>hits</code> carries the same contents as before, and <code>total</code> the same count.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>role:cms.project.&lt;name&gt;.owner</code></p>
-</li>
-<li>
-<p><code>role:cms.project.&lt;name&gt;.editor</code></p>
-</li>
-<li>
-<p><code>role:cms.project.&lt;name&gt;.author</code></p>
-</li>
-<li>
-<p><code>role:cms.project.&lt;name&gt;.contributor</code></p>
-</li>
-<li>
-<p><code>role:cms.project.&lt;name&gt;.viewer</code></p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Legacy dumps (model 8) imported into XP 8 are upgraded to model 9 automatically. During that upgrade, <code>cms.cm.app</code> is stripped from the legacy <code>com.enonic.cms.default</code> repository ACLs and replaced with the per-project role hierarchy. No manual action is required for that case.
-</td>
-</tr>
-</table>
+<div class="listingblock">
+<div class="title">Nodes - before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.findChildren({
+    parentKey: '/content',
+    count: 100,
+    recursive: true
+});</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="identity-keys"><a class="link" href="#identity-keys">Identity keys, names, and IDs</a></h3>
-<div class="paragraph">
-<p>XP 8 tightens the validation rules for identity keys, node/content names, and IDs. Apps that programmatically generate these values (custom ID providers, importers, migration scripts, etc.) must produce values matching the rules below.</p>
+<div class="listingblock">
+<div class="title">Nodes - after</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.query({
+    parent: '/content',
+    count: 100,
+    recursive: true
+});</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>All identity keys must satisfy the following common rules:</p>
+<p>Three parameters change name or shape:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>must not be an empty string</p>
-</li>
-<li>
-<p>must not be a single underscore <code>_</code>, dot <code>.</code>, or double dot <code>..</code></p>
-</li>
-<li>
-<p>must not include <code>/</code> or <code>\</code></p>
-</li>
-<li>
-<p>must not include any whitespace characters, except the regular space <code>U+0020</code></p>
-</li>
-<li>
-<p>must not start or end with the space character <code>U+0020</code></p>
-</li>
-</ul>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>childOrder</code></dt>
+<dd>
+<p>Use <code>sort</code>, which takes the same expression. Omit it to keep the parent&#8217;s child order.</p>
+</dd>
+<dt class="hdlist1"><code>countOnly</code></dt>
+<dd>
+<p>Ask for no hits instead - <code>count: 0</code> - and read <code>total</code>.</p>
+</dd>
+<dt class="hdlist1"><code>recursive</code></dt>
+<dd>
+<p>Same name, same meaning. A subtree has no child order of its own, so pass <code>sort</code> where the order of a recursive result matters.</p>
+</dd>
+</dl>
 </div>
-<div class="sect3">
-<h4 id="node_content_and_issue_names_and_ids"><a class="link" href="#node_content_and_issue_names_and_ids">Node, Content, and Issue names and IDs</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Names follow the common rules above.</p>
-</li>
-<li>
-<p>IDs are limited to 256 bytes/characters and no longer accept uppercase letters: <code>[a-z0-9_.:-]+</code></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>Moving to a query also opens up everything a query can do that <code>getChildren()</code> could not: filters, content types, aggregations, highlighting, and the <code>returns</code> parameter that has each hit carry named index fields instead of the whole content.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="idproviderkey_and_principalkey"><a class="link" href="#idproviderkey_and_principalkey">IdProviderKey and PrincipalKey</a></h4>
+<h4 id="xp-8-1-lib-task"><a class="link" href="#xp-8-1-lib-task">lib-task</a></h4>
 <div class="paragraph">
-<p>Follow the common rules with the additional restriction of not including the space character <code>U+0020</code>, nor any of: <code>&lt;</code>, <code>&gt;</code>, <code>:</code>, <code>"</code>, <code>|</code>, <code>?</code>, <code>*</code>, <code>&amp;</code>, <code>'</code>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="descriptorkey"><a class="link" href="#descriptorkey">DescriptorKey</a></h4>
-<div class="paragraph">
-<p>Applies to:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>All CMS schema descriptor keys, including MacroKey</p>
-</li>
-<li>
-<p>Task key</p>
-</li>
-<li>
-<p>API key</p>
-</li>
-<li>
-<p>HTTP service key</p>
-</li>
-<li>
-<p>Admin Tool key</p>
-</li>
-<li>
-<p>Admin Extension key</p>
-</li>
-</ul>
+<p><a href="libraries/lib-task.ahtml#executefunction"><code>executeFunction()</code></a> is deprecated and will be removed together with the Nashorn engine. It is also unsupported on the <a href="runtime/engines.ahtml#graaljs">GraalJS</a>, where a function cannot cross from one script context to another - so this is the one clean-up to do before trying that engine.</p>
 </div>
 <div class="paragraph">
-<p>Additional restrictions:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>must not include any of: <code>&lt;</code>, <code>&gt;</code>, <code>:</code>, <code>"</code>, <code>|</code>, <code>?</code>, <code>*</code>, <code>&amp;</code>, <code>'</code></p>
-</li>
-<li>
-<p>must not include the space character <code>U+0020</code></p>
-</li>
-<li>
-<p>limited to 64 characters</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="applicationkey"><a class="link" href="#applicationkey">ApplicationKey</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p>must match the regex <code>\w(?:\.\w+)*+</code></p>
-</li>
-<li>
-<p>limited to 63 characters</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="repositoryid"><a class="link" href="#repositoryid">RepositoryId</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p>must match the regex <code>[a-z0-9][a-z0-9._-]*</code></p>
-</li>
-<li>
-<p>limited to 63 characters</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="branch"><a class="link" href="#branch">Branch</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p>must match the regex <code>[a-z0-9][a-z0-9.-]*</code></p>
-</li>
-<li>
-<p>limited to 63 characters</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="projectname"><a class="link" href="#projectname">ProjectName</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p>must match the regex <code>[a-z0-9][a-z0-9_-]*</code></p>
-</li>
-<li>
-<p>limited to 48 characters</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="application_descriptor"><a class="link" href="#application_descriptor">Application Descriptor</a></h3>
-<div class="paragraph">
-<p>The <code>application.xml</code> descriptor must be converted to <code>enonic.yaml</code>.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Use the <a href="https://github.com/enonic/xp8migrator">xp8migrator</a> tool to automate the conversion of XML descriptors to YAML.
-</td>
-</tr>
-</table>
+<p>Move the body of the function into a <a href="background/tasks.ahtml">named task</a>, and submit it by descriptor.</p>
 </div>
 <div class="listingblock">
-<div class="title">XP 7 - application.xml</div>
+<div class="title">Before</div>
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;application xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;description&gt;My app description&lt;/description&gt;
-&lt;/application&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - enonic.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Application"
-description: "My app description"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="admin_tools"><a class="link" href="#admin_tools">Admin Tools</a></h3>
-<div class="paragraph">
-<p>Admin Tool descriptors must be converted from XML to YAML.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - admin/tools/main/main.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;tool xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;display-name&gt;My Admin Tool&lt;/display-name&gt;
-  &lt;description&gt;An admin tool&lt;/description&gt;
-  &lt;allow&gt;
-    &lt;principal&gt;role:system.authenticated&lt;/principal&gt;
-  &lt;/allow&gt;
-&lt;/tool&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - admin/tools/main/main.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminTool"
-title: "My Admin Tool"
-description: "An admin tool"
-allow:
-- "role:system.authenticated"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="widgets_admin_extensions"><a class="link" href="#widgets_admin_extensions">Widgets / Admin Extensions</a></h3>
-<div class="paragraph">
-<p>Widgets are now part of the Admin Extensions API. The <code>admin/widgets</code> directory has been renamed to <code>admin/extensions</code>, and descriptors must be converted from XML to YAML.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - admin/widgets/settings/settings.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;widget xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;display-name&gt;Settings&lt;/display-name&gt;
-  &lt;description&gt;Configure Projects&lt;/description&gt;
-  &lt;interfaces&gt;
-    &lt;interface&gt;contentstudio.menuitem&lt;/interface&gt;
-  &lt;/interfaces&gt;
-&lt;/widget&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - admin/extensions/settings/settings.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminExtension"
-title: "Settings"
-description: "Configure Projects"
-interfaces:
-- "contentstudio.menuitem"</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Unlike the <code>widgets</code> API in XP 7, the <code>admin:extension</code> API is not automatically mounted on admin tools. It must be explicitly mounted in the admin tool descriptor in order for extensions to work.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-In admin extensions, use <code>lib-static</code> instead of <code>lib-asset</code>. Both <code>lib-asset</code> and admin extensions are implemented as Universal APIs, so serving assets from an extension via <code>lib-asset</code> will not work without additional configuration. <code>lib-static</code> + is designed specifically for serving static files from admin extensions and does not require any additional configuration.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="title">Example of mounting <code>admin:extension</code> API in an admin tool</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminTool"
-title: "My Admin Tool"
-allow:
-- "role:system.admin"
-apis:
-- "admin:extension"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="task"><a class="link" href="#task">Task</a></h3>
-<div class="paragraph">
-<p>Task descriptors must be converted from XML to YAML.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Task descriptor forms do not support form-fragments.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - tasks/mytask/mytask.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;task xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;description&gt;Background job&lt;/description&gt;
-  &lt;form&gt;
-    &lt;input type="Long" name="count"&gt;
-      &lt;label&gt;Number of items to process&lt;/label&gt;
-      &lt;default&gt;42&lt;/default&gt;
-      &lt;occurrences minimum="1" maximum="1"/&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/task&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - tasks/mytask/mytask.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Task"
-description: "Background job"
-form:
-- type: "Long"
-  name: "count"
-  label: "Number of items to process"
-  occurrences:
-    min: 1
-    max: 1
-  default: 42</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="id_provider"><a class="link" href="#id_provider">ID Provider</a></h3>
-<div class="paragraph">
-<p>ID Provider descriptors must be converted from XML to YAML.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - idprovider/idprovider.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;id-provider xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;mode&gt;MIXED&lt;/mode&gt;
-  &lt;form&gt;
-    &lt;input name="appClientId" type="TextLine"&gt;
-      &lt;label&gt;Client ID&lt;/label&gt;
-      &lt;occurrences minimum="1" maximum="1"/&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/id-provider&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - idprovider/idprovider.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "IdProvider"
-mode: "MIXED"
-form:
-- type: "TextLine"
-  name: "appClientId"
-  label: "Client ID"
-  occurrences:
-    min: 1
-    max: 1</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="authentication_scope"><a class="link" href="#authentication_scope">Authentication scope</a></h3>
-<div class="paragraph">
-<p>Authentication no longer searches across ID providers for the first matching user. A request resolves against the vhost&#8217;s default ID provider, or an ID provider you specify explicitly. If your app relied on cross-provider lookup, configure the relevant vhosts explicitly in your XP deployment.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="site_descriptor_split"><a class="link" href="#site_descriptor_split">Site descriptor split</a></h3>
-<div class="paragraph">
-<p>The <code>site.xml</code> descriptor has been split into two separate files in XP 8:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>site.yaml</code> - contains processors, mappings, and apis</p>
-</li>
-<li>
-<p><code>cms.yaml</code> - contains mixin references (previously x-data) and the site form configuration</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Additionally, the <code>site</code> directory has been renamed to <code>cms</code>.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - site/site.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;site xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;x-data name="myapp:my-mixin"/&gt;
-  &lt;form&gt;
-    &lt;input type="TextLine" name="some-name"&gt;
-      &lt;label&gt;Textline&lt;/label&gt;
-      &lt;occurrences minimum="0" maximum="1"/&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-  &lt;processors&gt;
-    &lt;response-processor name="filter1" order="10"/&gt;
-  &lt;/processors&gt;
-  &lt;mappings&gt;
-    &lt;mapping controller="/controllers/preview.js" order="50"&gt;
-      &lt;match&gt;type:'.*:person'&lt;/match&gt;
-    &lt;/mapping&gt;
-  &lt;/mappings&gt;
-&lt;/site&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/site.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
-processors:
-- name: "filter1"
-  order: 10
-mappings:
-- controller: "/controllers/preview.js"
-  order: 50
-  match: "type:'.*:person'"
-apis:
- - "apiname" # belongs to the current application
- - "com.enonic.app.myapp:apiname"</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/cms.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "CMS"
-mixin:
-- name: "myapp:my-mixin"
-  optional: false
-form:
-- type: "TextLine"
-  name: "some-name"
-  label: "Textline"
-  occurrences:
-    min: 0
-    max: 1</code></pre>
-</div>
-</div>
-<div class="sect3">
-<h4 id="filter_mappings_now_chain"><a class="link" href="#filter_mappings_now_chain">Filter mappings now chain</a></h4>
-<div class="paragraph">
-<p>In XP 7, when several <code>filter</code> mappings matched the same request, only the lowest-<code>order</code> filter ran and <code>next()</code> went straight to rendering; higher-order matches were silently dropped. In XP 8, all matching filters run as a chain in ascending <code>order</code>, and rendering happens after the last <code>next()</code>. A filter that does not call <code>next()</code>, or a <code>controller</code> mapping that wins on <code>order</code>, still short-circuits the chain.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="page_descriptor"><a class="link" href="#page_descriptor">Page descriptor</a></h3>
-<div class="listingblock">
-<div class="title">XP 7 - site/pages/main/main.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;page xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;display-name&gt;Main&lt;/display-name&gt;
-  &lt;description&gt;Contains a single main region&lt;/description&gt;
-  &lt;form/&gt;
-  &lt;regions&gt;
-    &lt;region name="main"/&gt;
-  &lt;/regions&gt;
-&lt;/page&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/pages/main/main.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Page"
-title: "Main"
-description: "Contains a single main region"
-form: []
-regions:
-- "main"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="layout_descriptor"><a class="link" href="#layout_descriptor">Layout descriptor</a></h3>
-<div class="listingblock">
-<div class="title">XP 7 - site/layouts/2-column/2-column.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;layout xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;display-name&gt;2 columns&lt;/display-name&gt;
-  &lt;description&gt;Provides left and right regions&lt;/description&gt;
-  &lt;form/&gt;
-  &lt;regions&gt;
-    &lt;region name="left"/&gt;
-    &lt;region name="right"/&gt;
-  &lt;/regions&gt;
-&lt;/layout&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/layouts/2-column/2-column.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Layout"
-title: "2 columns"
-description: "Provides left and right regions"
-form: []
-regions:
-- "left"
-- "right"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="part_descriptor"><a class="link" href="#part_descriptor">Part descriptor</a></h3>
-<div class="listingblock">
-<div class="title">XP 7 - site/parts/my-part/my-part.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;part xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;display-name&gt;My Part&lt;/display-name&gt;
-  &lt;description&gt;A simple part&lt;/description&gt;
-  &lt;form&gt;
-    &lt;input name="title" type="TextLine"&gt;
-      &lt;label&gt;Title&lt;/label&gt;
-      &lt;occurrences minimum="1" maximum="1"/&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/part&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/parts/my-part/my-part.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Part"
-title: "My Part"
-description: "A simple part"
-form:
-- type: "TextLine"
-  name: "title"
-  label: "Title"
-  occurrences:
-    min: 1
-    max: 1</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="content_type_descriptor"><a class="link" href="#content_type_descriptor">Content type descriptor</a></h3>
-<div class="paragraph">
-<p>Note that input configuration is no longer nested: keys inside XP 7&#8217;s <code>&lt;config&gt;</code> element become flat properties of the input in YAML. There is no <code>config:</code> wrapper — a nested <code>config:</code> block is not recognized and its settings are ignored.</p>
-</div>
-<div class="paragraph">
-<p>XP 7&#8217;s <code>&lt;display-name-label&gt;</code> element is renamed to <code>displayNamePlaceholder</code>. Unknown keys in the YAML descriptor — including the literal <code>displayNameLabel</code> — fail the parse, so a mistranslated descriptor is rejected at registration rather than silently ignored.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - site/content-types/article/article.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;content-type xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;display-name&gt;Article&lt;/display-name&gt;
-  &lt;super-type&gt;base:structured&lt;/super-type&gt;
-  &lt;form&gt;
-    &lt;input name="title" type="TextLine"&gt;
-      &lt;label&gt;Title&lt;/label&gt;
-      &lt;occurrences minimum="1" maximum="1"/&gt;
-    &lt;/input&gt;
-    &lt;input name="author" type="ContentSelector"&gt;
-      &lt;label&gt;Author&lt;/label&gt;
-      &lt;occurrences minimum="0" maximum="1"/&gt;
-      &lt;config&gt;
-        &lt;allowContentType&gt;com.example.app:author&lt;/allowContentType&gt;
-      &lt;/config&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/content-type&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/content-types/article/article.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "ContentType"
-superType: "base:structured"
-title: "Article"
-form:
-- type: "TextLine"
-  name: "title"
-  label: "Title"
-  occurrences:
-    min: 1
-    max: 1
-- type: "ContentSelector"
-  name: "author"
-  label: "Author"
-  occurrences:
-    min: 0
-    max: 1
-  allowContentType:
-    - "com.example.app:author"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="mixins_renamed_to_form_fragments"><a class="link" href="#mixins_renamed_to_form_fragments">Mixins renamed to Form Fragments</a></h3>
-<div class="paragraph">
-<p>Mixins (XP 7) have been renamed to Form Fragments in XP 8. The <code>mixins</code> directory should be renamed to <code>form-fragments</code>.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - site/mixins/address/address.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;mixin xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;display-name&gt;Address&lt;/display-name&gt;
-  &lt;form&gt;
-    &lt;input type="TextLine" name="street"&gt;
-      &lt;label&gt;Street&lt;/label&gt;
-      &lt;occurrences minimum="0" maximum="1"/&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/mixin&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/form-fragments/address/address.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "FormFragment"
-title: "Address"
-form:
-- type: "TextLine"
-  name: "street"
-  label: "Street"
-  occurrences:
-    min: 0
-    max: 1</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="x_data_renamed_to_mixin"><a class="link" href="#x_data_renamed_to_mixin">X-data renamed to Mixin</a></h3>
-<div class="paragraph">
-<p>X-data has been renamed to Mixin in XP 8. The <code>x-data</code> directory should be renamed to <code>mixins</code>, and descriptor files updated accordingly.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - site/x-data/myattachment/myattachment.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;x-data&gt;
-  &lt;display-name&gt;My Attachment&lt;/display-name&gt;
-  &lt;form&gt;
-    &lt;input name="myAttachment" type="AttachmentUploader"&gt;
-      &lt;label&gt;My Attachment&lt;/label&gt;
-      &lt;occurrences minimum="1" maximum="1"/&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/x-data&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/mixins/myattachment/myattachment.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Mixin"
-title: "My Attachment"
-form:
-- type: "AttachmentUploader"
-  name: "myAttachment"
-  label: "My Attachment"
-  occurrences:
-    min: 1
-    max: 1</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="macro_descriptors"><a class="link" href="#macro_descriptors">Macro descriptors</a></h3>
-<div class="paragraph">
-<p>Macro descriptors must be converted from XML to YAML.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - site/macros/my-macro/my-macro.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;macro&gt;
-  &lt;display-name&gt;Current user&lt;/display-name&gt;
-  &lt;description&gt;Shows currently logged user&lt;/description&gt;
-  &lt;form&gt;
-    &lt;input name="defaultText" type="TextLine"&gt;
-      &lt;label&gt;Default text&lt;/label&gt;
-    &lt;/input&gt;
-  &lt;/form&gt;
-&lt;/macro&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/macros/my-macro/my-macro.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Macro"
-title: "Current user"
-description: "Shows currently logged user"
-form:
-- type: "TextLine"
-  name: "defaultText"
-  label: "Default text"
-  occurrences:
-    min: 0
-    max: 1</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="styles"><a class="link" href="#styles">Styles</a></h3>
-<div class="paragraph">
-<p>Style descriptor must be converted from XML to YAML.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP7 - site/styles.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;styles css="styles/styles.css" xmlns="urn:enonic:xp:model:1.0"&gt;
-  &lt;image name="editor-image-skyscraper"&gt;
-    &lt;display-name&gt;Skyscraper (9:21)&lt;/display-name&gt;
-    &lt;aspect-ratio&gt;9:21&lt;/aspect-ratio&gt;
-  &lt;/image&gt;
-  &lt;image name="editor-image-sepia"&gt;
-    &lt;display-name&gt;Old photo&lt;/display-name&gt;
-    &lt;filter&gt;sepia(25)&lt;/filter&gt;
-  &lt;/image&gt;
-&lt;/styles&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - cms/style/style.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Style"
-styles:
-  - name: "editor-image-skyscraper"
-    type: "Image"
-    label: "Skyscraper (9:21)"
-    aspectRatio: "9:21"
-    editor:
-      css: |
-        &lt;Here you should specify the CSS selectors for this style from the styles/styles.css file.&gt;
-  - name: "editor-image-sepia"
-    type: "Image"
-    label: "Old photo"
-    filter: "sepia(25)"
-    editor:
-      css: |
-        &lt;Here you should specify the CSS selectors for this style from the styles/styles.css file.&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>styles/styles.css</code> file must be removed.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="datetime_and_instant_input_types"><a class="link" href="#datetime_and_instant_input_types">DateTime and Instant input types</a></h3>
-<div class="paragraph">
-<p>The XP 7 <code>DateTime</code> input type with <code>&lt;timezone&gt;true&lt;/timezone&gt;</code> has been split into a separate <code>Instant</code> type in XP 8. <code>DateTime</code> is now used exclusively for local date-time values (without timezone), while <code>Instant</code> represents a point in time.</p>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - DateTime with timezone (XML)</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;input name="publishDate" type="DateTime"&gt;
-  &lt;label&gt;Publish date&lt;/label&gt;
-  &lt;config&gt;
-    &lt;timezone&gt;true&lt;/timezone&gt;
-  &lt;/config&gt;
-&lt;/input&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - Instant (YAML)</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">- type: "Instant"
-  name: "publishDate"
-  label: "Publish date"</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 - DateTime without timezone (XML)</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;input name="eventDate" type="DateTime"&gt;
-  &lt;label&gt;Event date&lt;/label&gt;
-&lt;/input&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 - DateTime (YAML)</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">- type: "DateTime"
-  name: "eventDate"
-  label: "Event date"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="global_functions"><a class="link" href="#global_functions">Global functions</a></h3>
-<div class="paragraph">
-<p><code>resolve</code> function no longer uses <code>src/main/resources/site</code> as its first root folder. Only <code>src/main/resources</code> is used as the root. If your modules relied on resolving paths relative to the <code>site</code> folder, update them to use full paths from the resources root.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="http_functions"><a class="link" href="#http_functions">HTTP functions</a></h3>
-<div class="paragraph">
-<p>HTTP function method names were changed to uppercase to avoid conflicts with JavaScript reserved words and imported library methods.</p>
-</div>
-<div class="paragraph">
-<p>The lowercase method names (<code>get</code>, <code>post</code>, <code>delete</code>, etc&#8230;&#8203;) are deprecated but still supported for backward compatibility. It is recommended to migrate to the new uppercase names (<code>GET</code>, <code>POST</code>, <code>DELETE</code>, etc&#8230;&#8203;).</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The <code>all</code> function remains lowercase and has not been changed to uppercase.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="title">XP 7 (deprecated but still works in XP 8)</div>
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.get = function(req) {
-    return {
-        body: 'Hello World',
-        contentType: 'text/plain'
-    };
-};
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {executeFunction} from '/lib/xp/task';
 
-exports.post = function(req) {
-    // Handle POST
-};
-
-exports.delete = function(req) {
-    // Handle DELETE
-};
-
-exports.all = function(req) {
-    // Handle all other methods
-};</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">XP 8 (recommended)</div>
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.GET = function(req) {
-    return {
-        body: 'Hello World',
-        contentType: 'text/plain'
-    };
-};
-
-exports.POST = function(req) {
-    // Handle POST
-};
-
-exports.DELETE = function(req) {
-    // Handle DELETE
-};
-
-exports.all = function(req) {
-    // Handle all other methods
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="system_libraries"><a class="link" href="#system_libraries">System libraries</a></h3>
-<div class="sect3">
-<h4 id="lib_admin"><a class="link" href="#lib_admin">lib-admin</a></h4>
-<div class="paragraph">
-<p><code>getAssetsUri</code> method is removed. This method was never in use since XP 7.</p>
-</div>
-<div class="paragraph">
-<p><code>getBaseUri</code> method is removed. Use <code>getHomeToolUrl</code> instead as a drop-in replacement.</p>
-</div>
-<div class="paragraph">
-<p><code>getLocale</code> method is removed without replacement. This method was causing issues when first user preference did not match any localization files and English was chosen as default.</p>
-</div>
-<div class="paragraph">
-<p><code>getLocales</code> method is removed. Use <code>request.locales</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>getPhrases</code> method is removed. Use <code>lib-i18n</code> <code>getPhrases</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>getLauncherUrl</code> and <code>getLauncherPath</code> methods are removed. Launcher is a widget now and available via widgets API.</p>
-</div>
-<div class="paragraph">
-<p><code>lib-admin</code> no longer depends on <code>lib-portal</code>. You need to explicitly add <code>lib-portal</code> dependency to your project if you are using it.</p>
-</div>
-<div class="paragraph">
-<p>XP 7</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
-    include "com.enonic.xp:lib-admin:${xpVersion}"
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>XP 8</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
-    include xplibs.admin
-    include xplibs.portal
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_node"><a class="link" href="#lib_node">lib-node</a></h4>
-<div class="paragraph">
-<p><code>_inheritsPermissions</code> node property is removed. It can only be used as an argument in <code>create</code> method - to copy permissions from the parent node.</p>
-</div>
-<div class="paragraph">
-<p><code>setRootPermissions</code> method is removed. Use <code>applyPermissions</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>modify</code> method is deprecated. Use <code>update</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>editor</code> of deprecated <code>modify</code> method can no longer edit node permissions. Use separate call to <code>applyPermissions</code> method instead.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_content"><a class="link" href="#lib_content">lib-content</a></h4>
-<div class="paragraph">
-<p>Reading the project&#8217;s root content (path <code>/</code>) via <code>lib-content</code> (<code>get</code>, <code>getByPath</code>, etc.) now returns <code>null</code>. The root is reserved for the platform; use <code>lib-project</code> for project metadata (<code>get({id})</code>, <code>list()</code>) and create/move content under named paths only.</p>
-</div>
-<div class="paragraph">
-<p><code>move</code> and <code>rename</code> methods are merged into a single <code>move</code> method.</p>
-</div>
-<div class="paragraph">
-<p><code>setChildOrder</code> and <code>reorderChildren</code> methods are merged into a single <code>sort</code> method.</p>
-</div>
-<div class="paragraph">
-<p>The <code>hasChildren</code> property has been removed from content.</p>
-</div>
-<div class="paragraph">
-<p><code>publish</code> no longer accepts the <code>sourceBranch</code> and <code>targetBranch</code> parameters — publishing always pushes from <code>draft</code> to <code>master</code>, and keys are resolved against <code>draft</code> regardless of the current context branch. XP 7 code passing these parameters gets no error: they are silently ignored, so a former <code>master</code> → <code>draft</code> push now runs as a normal <code>draft</code> → <code>master</code> publish. For branch-to-branch operations in custom repositories, use <code>push</code> in <code>lib-node</code>.</p>
-</div>
-<div class="paragraph">
-<p><code>setPermissions</code> method is removed. Use <code>applyPermissions</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>applyPermissions</code> method applies permissions on published and draft content simply.</p>
-</div>
-<div class="paragraph">
-<p><code>editor</code> of deprecated <code>modify</code> method can no longer edit content permissions. Use separate call to <code>applyPermissions</code> method instead.</p>
-</div>
-<div class="paragraph">
-<p><code>modify</code> method is deprecated. Use <code>update</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>modifyMedia</code> method is deprecated. Use <code>updateMedia</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>delete</code> method is renamed to <code>deleteContent</code> to avoid conflicts with the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility, but it&#8217;s recommended to use the new name directly.</p>
-</div>
-<div class="paragraph">
-<p>XP 7</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {delete as deleteContent} from '/lib/xp/content';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>XP 8</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {deleteContent} from '/lib/xp/content';</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_project"><a class="link" href="#lib_project">lib-project</a></h4>
-<div class="paragraph">
-<p><code>delete</code> method is renamed to <code>deleteProject</code> to avoid conflicts with the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility, but it&#8217;s recommended to use the new name directly.</p>
-</div>
-<div class="paragraph">
-<p>XP 7</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {delete as deleteProject} from '/lib/xp/project';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>XP 8</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {deleteProject} from '/lib/xp/project';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong><code>readAccess: { public }</code> → <code>publicRead: boolean</code>.</strong> <code>create({readAccess: {public: true}})</code> is now <code>create({publicRead: true})</code>. The <code>Project</code> shape returned by <code>get</code> / <code>list</code> / <code>create</code> carries <code>publicRead</code> instead of <code>readAccess.public</code>. The nested-object form has been removed entirely; there is no backward-compat shim.</p>
-</div>
-<div class="paragraph">
-<p><strong><code>modifyReadAccess</code> → <code>setPublicRead</code>.</strong> Same flat shape:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// XP 7
-import {modifyReadAccess} from '/lib/xp/project';
-modifyReadAccess({id: 'p', readAccess: {public: true}});
-
-// XP 8
-import {setPublicRead} from '/lib/xp/project';
-setPublicRead({id: 'p', publicRead: true});</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong><code>modify</code> now takes an <code>editor</code> function</strong> instead of optional setter-style fields. Fields the editor doesn&#8217;t touch are left unchanged; setting <code>description</code>, <code>language</code>, or <code>siteConfig</code> to <code>null</code> clears them. <code>displayName</code> cannot be cleared.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// XP 7
-import {modify} from '/lib/xp/project';
-modify({id: 'p', displayName: 'New name', language: 'no'});
-
-// XP 8
-import {modify} from '/lib/xp/project';
-modify({
-    id: 'p',
-    editor: (project) =&gt; {
-        project.displayName = 'New name';
-        project.language = 'no';
-        return project;
+const taskId = executeFunction({
+    description: 'Reindex the catalog',
+    func: () =&gt; {
+        reindexCatalog(100);
     }
 });</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="title">After - src/main/resources/tasks/reindex-catalog/reindex-catalog.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Task"
+description: "Reindex the catalog"
+form:
+- type: "Long"
+  name: "batchSize"
+  label: "Items per batch"
+  occurrences:
+    min: 1
+    max: 1</code></pre>
 </div>
-<div class="sect3">
-<h4 id="lib_repo"><a class="link" href="#lib_repo">lib-repo</a></h4>
-<div class="paragraph">
-<p><code>delete</code> method is renamed to <code>deleteRepo</code> to avoid conflicts with the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility, but it&#8217;s recommended to use the new name directly.</p>
-</div>
-<div class="paragraph">
-<p>XP 7</p>
 </div>
 <div class="listingblock">
+<div class="title">After - src/main/resources/tasks/reindex-catalog/reindex-catalog.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {delete as deleteRepo} from '/lib/xp/repo';</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function run(params: { batchSize: number }): void {
+    reindexCatalog(params.batchSize);
+}</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>XP 8</p>
 </div>
 <div class="listingblock">
+<div class="title">After - submitting it</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {deleteRepo} from '/lib/xp/repo';</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {submitTask} from '/lib/xp/task';
+
+const taskId = submitTask({
+    descriptor: 'reindex-catalog',
+    config: {
+        batchSize: 100
+    }
+});</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>create</code> method <code>settings</code> param is removed. This was a direct exposure of internal implementation details.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_scheduler"><a class="link" href="#lib_scheduler">lib-scheduler</a></h4>
-<div class="paragraph">
-<p><code>delete</code> method is renamed to <code>deleteJob</code> to avoid conflicts with the JavaScript reserved word. The old <code>delete</code> export is still available for backward compatibility, but it&#8217;s recommended to use the new name directly.</p>
-</div>
-<div class="paragraph">
-<p>XP 7</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {delete as deleteJob} from '/lib/xp/scheduler';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>XP 8</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {deleteJob} from '/lib/xp/scheduler';</code></pre>
-</div>
+<p>Two differences to plan for. A named task takes its input as <code>config</code>, validated against the descriptor&#8217;s form, rather than closing over the variables around it - anything the function read from its surroundings has to become a parameter. And a named task is distributable: the cluster picks a node that accepts it, which may not be the node that submitted it, so the task must not depend on running anywhere in particular.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="lib_cluster"><a class="link" href="#lib_cluster">lib-cluster</a></h4>
+<h4 id="xp-8-1-lib-portal"><a class="link" href="#xp-8-1-lib-portal">lib-portal</a></h4>
 <div class="paragraph">
-<p><code>isMaster</code> method is deprecated. Use <code>isLeader</code> instead.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_i18n"><a class="link" href="#lib_i18n">lib-i18n</a></h4>
-<div class="paragraph">
-<p><code>localize</code> method no longer accepts <code>application</code> parameter -  because application load order is not guaranteed, trying to load foreign application localization might fail. Required localize phrases should be copied over the applications instead.</p>
-</div>
-<div class="paragraph">
-<p>Methods no longer use the undocumented <code>/site/i18n/phrases</code> bundle location by default. Only the standard <code>/i18n/phrases</code> location is used. If your application relied on <code>/site/i18n/phrases</code>, move the files to <code>/i18n/phrases</code> or use your own custom bundle location.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_task"><a class="link" href="#lib_task">lib-task</a></h4>
-<div class="paragraph">
-<p><code>submitNamed</code> method is removed. Use <code>submitTask</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><code>submit</code> method is removed. Its drop-in replacement <code>executeFunction</code> is deprecated in turn — convert the callback to a <a href="background/tasks.ahtml">named task</a> and use <code>submitTask</code> instead. <code>executeFunction</code> is additionally unsupported on GraalJS, which is a <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
-  <linearGradient id="s" x2="0" y2="100%">
-    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <clipPath id="r">
-    <rect width="63" height="20" rx="3" fill="#fff"/>
-  </clipPath>
-  <g clip-path="url(#r)">
-    <rect width="63" height="20" fill="#dfb317"/>
-    <rect width="63" height="20" fill="url(#s)"/>
-  </g>
-  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
-     font-size="110">
-    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
-    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
-  </g>
-</svg></span> preview engine and <strong>not for production</strong>.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_auth"><a class="link" href="#lib_auth">lib-auth</a></h4>
-<div class="paragraph">
-<p><code>login</code> method <code>idProvider</code> parameter now defaults to <code>system</code> if not provided, instead of trying all available id providers. It is also not possible to specify multiple values anymore.
-This change ensures consistent id provider selection during login.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="lib_context"><a class="link" href="#lib_context">lib-context</a></h3>
-<div class="paragraph">
-<p><code>run</code> method <code>context.user.idProvider</code> parameter now defaults to <code>system</code> if not provided, instead of trying all available id providers.</p>
-</div>
-<div class="sect3">
-<h4 id="lib_export"><a class="link" href="#lib_export">lib-export</a></h4>
-<div class="paragraph">
-<p><strong>exportNodes</strong></p>
-</div>
-<div class="paragraph">
-<p><code>includeNodeIds</code> and <code>includeVersions</code> parameters are removed.</p>
-</div>
-<div class="paragraph">
-<p>Exports are now stored as ZIP archives.
-The output file is named <code>{exportName}.zip</code> in the exports directory, replacing the previous folder-based structure.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Folder-based exports from XP 7 should be converted to a ZIP archive before they can be imported in XP 8.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="other_libraries"><a class="link" href="#other_libraries">Other libraries</a></h3>
-<div class="sect3">
-<h4 id="lib_util"><a class="link" href="#lib_util">lib-util</a></h4>
-<div class="paragraph">
-<p>Lib util has been deprecated. If your app dependes on any of the methods from lib-util, you should migrate to using the corresponding standard TypeScript or JavaScript code where possible, or inline the relevant logic directly in your code.</p>
-</div>
-<div class="paragraph">
-<p>Get more details at <a href="https://github.com/enonic/lib-util/issues/196" class="bare">https://github.com/enonic/lib-util/issues/196</a></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="lib_guillotine"><a class="link" href="#lib_guillotine">lib-guillotine</a></h4>
-<div class="paragraph">
-<p>Lib guillotine has been deprecated for a long time, and is not supported for XP8. If your app uses lib-guillotine you need to migrate to the standard Guillotine app available on the Enonic Market: <a href="https://market.enonic.com/vendors/enonic/guillotine" class="bare">https://market.enonic.com/vendors/enonic/guillotine</a> before upgrading to XP8.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="http_services"><a class="link" href="#http_services">HTTP Services</a></h3>
-<div class="paragraph">
-<p>HTTP Services are now deprecated, but continues to work in XP 8. We recommend upgrading to Universal API instead.</p>
-</div>
-<div class="paragraph">
-<p>Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under <code>/<em>/service/&lt;app-name&gt;/&lt;service-name&gt;</code>, while Universal APIs are contextually available directly under <code>/</em>/&lt;app-name&gt;:&lt;api-name&gt;</code> in addition to the new <code>/api</code> mount point.</p>
-</div>
-<div class="paragraph">
-<p>HTTP Services were "unsecure by default" by automatically mounting on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors where you need it.</p>
+<p>The <code>baseUrl</code> parameter is deprecated on <a href="libraries/lib-portal.ahtml#imageurl"><code>imageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#attachmenturl"><code>attachmentUrl()</code></a> and <a href="libraries/lib-portal.ahtml#apiurl"><code>apiUrl()</code></a>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.</p>
 </div>
 <div class="listingblock">
-<div class="title">Old services</div>
+<div class="title">Before</div>
 <div class="content">
-<pre class="highlight"><code class="language-files" data-lang="files">src/
-  main/
-    resources/
-      services/
-        coolservice/
-          coolservice.xml
-          coolservice.js
-      myservice/
-        myservice.js
-        myservice.xml</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)',
+    baseUrl: 'https://cdn.example.com'
+});</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">New APIs</div>
+<div class="title">After</div>
 <div class="content">
-<pre class="highlight"><code class="language-files" data-lang="files">src/
-  main/
-    resources/
-      apis/
-        coolservice/
-          coolservice.yaml
-          coolservice.js
-        myservice/
-          myservice.js
-          myservice.yaml</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Old service.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;service&gt;
-  &lt;allow&gt;
-    &lt;principal&gt;role:system.admin&lt;/principal&gt;
-  &lt;/allow&gt;
-&lt;/service&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">New api.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "API"
-allow:
-  - "role:system.admin"</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)'
+});</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Use <code>portal.apiUrl()</code> instead of <code>portal.serviceUrl()</code> to generate URLs pointing to APIs.</p>
+<p>For media, declare the host once in <em>com.enonic.xp.portal.cfg</em>. A mount that serves the media APIs itself always wins, so a site needs both keys:</p>
 </div>
 <div class="listingblock">
-<div class="title">Example of mounting "coolservice" API in an admin tool</div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminTool"
-title: "My Admin Tool"
-allow:
-  - "role:system.admin"
-apis:
-  - "coolservice"</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">media.defaultBaseUrl = https://cdn.example.com
+legacy.mediaApiAutoMount.enabled = false</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="assets_service"><a class="link" href="#assets_service">Assets service</a></h3>
 <div class="paragraph">
-<p>The built-in assets service has been deprecated since XP 7.15. Replace it with one of:</p>
+<p>A Base URL configured on the site itself does the same for that one site. See <a href="https://developer.enonic.com/docs/platform/stable/config/cms#media_base_url">serving media from another host</a>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://developer.enonic.com/docs/lib-asset/stable">lib-asset</a> — best fit for site applications, where it integrates with the site service and content context.</p>
-</li>
-<li>
-<p><a href="https://developer.enonic.com/docs/lib-static/stable">lib-static</a> — designed for serving static files from contexts where lib-asset does not fit, such as ID providers and admin extensions.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="widgets_go_web_components"><a class="link" href="#widgets_go_web_components">Widgets go Web Components</a></h3>
 <div class="paragraph">
-<p>Dashboard and Context Panel Widgets were required to wrap their HTML with the <code>&lt;widget/&gt;</code> tag. This requirement is now obsolete as widgets are now embedded as Web Components. However, this also means that each widget resides in its own Shadow DOM, so it no longer has access to styles in the main DOM of Content Studio. If your widget piggybacked on Content Studio&#8217;s styles, you&#8217;ll have to change the implementation so that the widget is using its own styles.</p>
+<p>For APIs, the virtual host that receives the request declares where they live:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">mapping.example.context.portal.apiBaseUrl = https://apis.example.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="https://developer.enonic.com/docs/platform/stable/config/vhosts#api-locations">API locations</a>.</p>
+</div>
+<div class="paragraph">
+<p>Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.</p>
+</div>
 </div>
 <div class="sect3">
-<h4 id="assets"><a class="link" href="#assets">Assets</a></h4>
+<h4 id="xp-8-1-lib-export"><a class="link" href="#xp-8-1-lib-export">lib-export</a></h4>
 <div class="paragraph">
-<p>It&#8217;s no longer allowed to use <code>lib-asset</code> for generating URLs of widget assets, due to security reasons. Use <a href="https://developer.enonic.com/docs/lib-static/stable">lib-static</a> (and <code>lib-router</code>) instead.</p>
+<p><code>batchSize</code> on <a href="libraries/lib-export.ahtml#exportnodes"><code>exportNodes()</code></a> is ignored. An export now reads each node at the exact version its scan observed, one at a time, so a subtree that changes while the export runs is written as it was seen rather than as a mixture of old and new. There is no read batch left to size - drop the parameter.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xp-8-1-timestamps"><a class="link" href="#xp-8-1-timestamps">lib-app, lib-schema and lib-io</a></h4>
+<div class="paragraph">
+<p><code>modifiedTime</code> is deprecated on the icons, content types, schemas and application descriptors returned by lib-content, lib-schema and lib-app, and so is <a href="libraries/types.ahtml#resource"><code>Resource.getTimestamp()</code></a> in lib-io. These read from application resources, where the value comes from a jar entry timestamp - and build tools normalize those to a constant so that builds are reproducible, Gradle by default since version 9. Two different builds of the same app therefore report the same value.</p>
 </div>
 <div class="paragraph">
-<p>XP 7:</p>
+<p>Code that used them as a cache key or an invalidation signal was therefore already unreliable:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
-import {assetUrl} from '/lib/enonic/asset';
-
-export function get() {
-  const view = resolve('./widget.html');
-
-  const params = {
-    jsUri: assetUrl({
-      path: 'js/extensions/widget.mjs'
-    }),
-    stylesUri: assetUrl({
-      path: 'styles/extensions/widget.css'
-    })
-  };
-
-  return {
-    contentType: 'text/html',
-    body: render(view, params)
-  };</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const cacheKey = `icon-${contentType.icon.modifiedTime}`;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>XP 8:</p>
+<p>There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/mustache';
-import {Request, Response} from '@enonic-types/core';
-import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
-import Router from '/lib/router';
-
-const STATIC_BASE_PATH = `/_static`;
-
-type WidgetRenderer = (staticBaseUrl: string, req?: Request) =&gt; Response;
-
-function createWidgetRouter(renderer: WidgetRenderer) {
-  const router = Router();
-
-  router.get('', (req: Request) =&gt; renderer(`${req.contextPath}${STATIC_BASE_PATH}`, req));
-
-  router.get(`${STATIC_BASE_PATH}/{path:.*}`, (req: Request) =&gt; requestHandler(req, {
-      index: false,
-      root: '/asset',
-      relativePath: mappedRelativePath(STATIC_BASE_PATH),
-  }));
-
-  return router;
-}
-
-const router = createWidgetRouter((staticBaseUrl: string, req: Request) =&gt; {
-  const view = resolve('./widget.html');
-
-  const params = {
-      jsUri: `${staticBaseUrl}/js/widgets/widget.mjs`,
-      stylesUri: `${staticBaseUrl}/styles/widgets/widget.css`
-  };
-
-  return {
-      contentType: 'text/html',
-      body: render(view, params)
-  };
-});
-
-export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="javax_to_jakarta"><a class="link" href="#javax_to_jakarta">Javax to Jakarta</a></h3>
-<div class="paragraph">
-<p>Most of the Java EE APIs have been migrated to Jakarta EE APIs. For instance <code>javax.servlet</code> is replaced with <code>jakarta.servlet</code>.</p>
-</div>
-<div class="paragraph">
-<p>Jetty was updated to version 12.x and now uses Jakarta EE APIs.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="fasterxml_jackson_json_api"><a class="link" href="#fasterxml_jackson_json_api">FasterXML Jackson JSON API</a></h3>
-<div class="paragraph">
-<p>Java FasterXML Jackson JSON API is no longer a transitive dependency of XP Core API.</p>
-</div>
-<div class="paragraph">
-<p>If you need to serialize or deserialize JSON in Java, you need to add the dependency to your project, preferably using a library different from XP internal one (FasterXML Jackson) to avoid conflicts.</p>
-</div>
-<div class="paragraph">
-<p>We recommend using <a href="https://github.com/FasterXML/jackson-jr" class="bare">https://github.com/FasterXML/jackson-jr</a></p>
-</div>
-<div class="paragraph">
-<p>FasterXML Jackson Annotations <code>com.fasterxml.jackson.core:jackson-annotations</code> transitive dependency is still available in JAX-RS API.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="jax_rs_api"><a class="link" href="#jax_rs_api">JAX-RS API</a></h3>
-<div class="paragraph">
-<p>Java JAX-RS API is deprecated. It was not documented and used internally to implement legacy REST APIs.</p>
-</div>
-<div class="paragraph">
-<p>If you have used JAX-RS API in your application, you need to migrate to the new XP 8 Universal API.</p>
-</div>
-<div class="paragraph">
-<p>To know if you are using JAX-RS API, check for <code>com.enonic.xp:jaxrs-api</code> dependency in the project&#8217;s Gradle file.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="dropwizard_metrics"><a class="link" href="#dropwizard_metrics">Dropwizard Metrics</a></h3>
-<div class="paragraph">
-<p>Java Dropwizard Metrics is no longer available in XP Core API. Migrate to <code>com.enonic.xp.metrics</code> Core API.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="java_apis"><a class="link" href="#java_apis">Java APIs</a></h3>
-<div class="literalblock">
-<div class="content">
-<pre>There are many changes in Java APIs, multiple classes were moved or renamed, as well as their methods. The intention was to keep the libraries as compatible as possible, while improving Java API design and removing unnecessary or confusing methods and classes.</pre>
-</div>
-</div>
+<div class="sect3">
+<h4 id="nodeservice"><a class="link" href="#nodeservice">NodeService</a></h4>
 <div class="paragraph">
-<p>The most noticeable changes are:</p>
+<p><code>NodeService</code> gains two methods for reading a subtree: <code>list</code> streams every entry beneath a parent in path order, filtered by what the caller may read, and <code>enumerate</code> returns the same entries one bounded batch at a time, with a cursor. <code>ListNodesResult</code> and its <code>recursive</code> flag are removed - the listing always covers the whole subtree, so code that collected ids through <code>ListNodesResult</code> moves to <code>list</code>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Java methods and classes marked as <code>@Deprecated</code> were removed.</p>
-</li>
-<li>
-<p>Many classes and methods that were only used for internal implementation details and not intended for public use were removed.</p>
-</li>
-<li>
-<p>Methods that had names that could cause confusion with the libraries were renamed, for instance <code>ContentService.deleteWithoutFetch</code> renamed <code>ContentService.delete</code>.</p>
-</li>
-<li>
-<p>Classes that have direct replacement in Java 25 standard library were removed.</p>
-</li>
-<li>
-<p><code>ContentService.update</code> method was split into 3 separate methods: <code>ContentService.update</code>, <code>ContentService.updateMedia</code> and <code>ContentService.updatePermissions</code>.</p>
-</li>
-<li>
-<p>Java Portal View Functions are no longer part of XP Core API. They were incorporated into lib-thymeleaf and lib-xslt libraries.</p>
-</li>
-<li>
-<p><code>com.enonic.xp.page.DescriptorKey</code> moved to <code>com.enonic.xp.descriptor.DescriptorKey</code>.</p>
-</li>
-<li>
-<p>Concrete collection types like <code>LinkedList</code>, <code>HashMap</code>, etc. were replaced with corresponding interfaces like <code>List</code>, <code>Map</code>, etc.</p>
-</li>
-<li>
-<p>Javax Mail is no longer a transitive dependency of XP Core API.</p>
-</li>
-<li>
-<p>OSGi classes are no longer part of API. OSGi is still used internally in XP.</p>
-</li>
-</ul>
+</div>
+<div class="sect3">
+<h4 id="applicationlistener"><a class="link" href="#applicationlistener">ApplicationListener</a></h4>
+<div class="paragraph">
+<p><code>ApplicationListener</code> is deprecated. It misses applications that were already active when the listener registered. Track <code>Application</code> services with a service tracker instead: <code>addingService</code> replays every active application on open and delivers future ones, and <code>removedService</code> is delivered before any replacement is registered.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="worth_adopting"><a class="link" href="#worth_adopting">Worth adopting</a></h3>
+<div class="paragraph">
+<p>None of these are deprecations. They are places where 8.1 offers a supported way to do something apps have had to work around.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Content Security Policy</dt>
+<dd>
+<p>A <code>Content-Security-Policy</code> header assembled by hand and set on the response is now folded into the request&#8217;s policy rather than sent verbatim, which means it is no longer the last word - a later contribution can add to it. Declare the policy through <a href="libraries/lib-portal.ahtml#csp"><code>csp()</code></a> instead: one policy is shared by the page, its layouts, its parts and any response processor, and the header is composed when the response is flushed.</p>
+</dd>
+<dt class="hdlist1">Data down the request pipeline</dt>
+<dd>
+<p>Properties assigned to the request object - <code>req.myFlag = true</code> - never reached anything downstream; the field is dropped when the request is handed on. <a href="libraries/lib-context.ahtml#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> stores the value in the current execution instead, where implementations, response processors and the code after <code>next()</code> in a filter can all read it back.</p>
+</dd>
+<dt class="hdlist1">Initialization guards</dt>
+<dd>
+<p><a href="runtime/main.ahtml"><code>main.ts</code></a> now runs to completion before anything else in the app on the same node, so a flag that made every request check whether start-up had finished is no longer needed. Keep a guard for work that must happen once <strong>for the cluster</strong> - a node does not wait for <code>main.ts</code> on any other node, so two nodes can still initialize the same repository at the same time.</p>
+</dd>
+<dt class="hdlist1">Disposer registration</dt>
+<dd>
+<p><code>__.disposer()</code> registrations are remembered when they are made while the application is starting - from <code>main.ts</code>, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -2389,7 +778,7 @@ export const all = (req: Request) =&gt; router.dispatch(req);</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Localization</title>
+<title>Main</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,20 +437,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Localization</h1>
+<h1>Main</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#use_cases">Use cases</a></li>
-<li><a href="#localization_files">Localization files</a></li>
-<li><a href="#locale_format">Locale format</a></li>
-<li><a href="#best_match_resolving">Best match resolving</a>
-<ul class="sectlevel2">
-<li><a href="#encoding_and_special_characters">Encoding and special characters</a></li>
-</ul>
-</li>
-<li><a href="#sample">Sample</a></li>
-<li><a href="#placeholders">Placeholders</a></li>
+<li><a href="#main_ts">main.ts</a></li>
 </ul>
 </div>
 </div>
@@ -458,284 +449,89 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Localizing strings in your XP applications.</p>
+<p>Handle application lifecycle events via <code>main.ts</code>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
+<h2 id="main_ts"><a class="link" href="#main_ts">main.ts</a></h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
+<div class="paragraph">
+<p>Enonic apps may contain a special <code>main.ts</code> at <code>src/main/resources/main.ts</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>main.ts</code> is invoked when an application lifecycle event occurs. A common use is initialization — creating repositories, registering event listeners when the application starts — and cleaning up resources when the application stops.</p>
+</div>
+<div class="paragraph">
+<p>The code should complete as quickly as possible to prevent the application from stalling. Never call remote endpoints or wait in loops for events at the top level of <code>main.ts</code>.</p>
+</div>
+<div class="admonitionblock warning">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-This section covers code-level localization, not multi-lingual content or websites.
+<span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> <code>main.ts</code> blocks the rest of the application on the node running it. Nothing else in the same app runs on that node until its top-level code returns — HTTP functions, component implementations, tasks and event listeners all wait. This is what makes <code>main.ts</code> a dependable place to initialize: a controller on that node can never observe a half-initialized repository. The flip side is that slow start-up code delays the app&#8217;s first responses, so keep it short. Code called from <code>main.ts</code> itself is exempt — it is part of the start-up. If start-up has not finished within five minutes, XP logs a warning and lets the waiting executions proceed anyway. Other applications are unaffected; each app waits only for its own <code>main.ts</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you need to perform time-consuming work during startup, run it from a <a href="../background/tasks.ahtml">task</a> instead. Submitting the task returns immediately; the task itself starts once <code>main.ts</code> has returned.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Add a <code>main.ts</code> even when there is nothing to initialize. XP brings an app&#8217;s JavaScript engine and context to life lazily, so an app without one makes its very first request pay for engine start-up, context creation and parsing every module that request touches. A <code>main.ts</code> moves that toll to application start. Requiring the libraries your entry points use extends that warm-up to cover their modules too. This does not contradict keeping <code>main.ts</code> short: it is work the first request would otherwise do, paid where nobody is waiting on a response.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>For any project targeting users in different languages, you may want to localize the interface.</p>
-</div>
-<div class="paragraph">
-<p>The XP framework provides localization for the following use cases:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">CMS/Sites</dt>
-<dd>
-<p>Use the <a href="../libraries/lib-i18n.ahtml">localization API</a> to dynamically localize any text phrases in your app. The framework will apply the locale specified in the site&#8217;s language property.</p>
-</dd>
-<dt class="hdlist1">Admin Console</dt>
-<dd>
-<p>Localize labels and texts in <a href="https://developer.enonic.com/docs/cms/xp8/schemas#schema_localization">schemas</a> such as content types. The framework will use the locale derived from the browser&#8217;s <code>Accept-Language</code> header.</p>
-</dd>
-<dt class="hdlist1">Webapps and more</dt>
-<dd>
-<p>The <a href="../libraries/lib-i18n.ahtml">localization API</a> may also be used for any other purpose. In these cases the developer controls and specifies the locale explicitly.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="localization_files"><a class="link" href="#localization_files">Localization files</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The localization files are plain text files, using the <code>properties</code> format (key = value).
-The files must be placed in a specific project folder: <code>/src/main/resources/i18n/</code>.</p>
-</div>
-<div class="paragraph">
-<p>Imagine an app that supports the following localizations:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>English (<code>en</code>)</p>
-</li>
-<li>
-<p>English (US) (<code>en-US</code>)</p>
-</li>
-<li>
-<p>Norwegian Nynorsk (<code>nn</code>)</p>
-</li>
-<li>
-<p>Norwegian Nynorsk, Norway (<code>nn-NO</code>)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Each locale needs a matching localization file, in the format:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>phrases[_LOCALE].properties</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The API&#8217;s country codes use <code>-</code> as separator but the files use <code>_</code>.
-</td>
-</tr>
-</table>
+<p>Running code when the application starts:</p>
 </div>
 <div class="listingblock">
-<div class="title">Sample localization bundle</div>
+<div class="title">main.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">i18n/phrases.properties
-i18n/phrases_en.properties
-i18n/phrases_en_US.properties
-i18n/phrases_nn.properties
-i18n/phrases_nn_NO.properties</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Log application start
+log.info(`Application ${app.name} started`);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This format and packaging is commonly known as "property bundles".</p>
-</div>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-The filenames are case sensitive!
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="locale_format"><a class="link" href="#locale_format">Locale format</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A locale is composed of codes for language, country and variant.
-Language is required; country and variant are optional.</p>
-</div>
-<div class="paragraph">
-<p>For the property files, all codes are case sensitive and separated by an underscore (<code>_</code>).</p>
-</div>
-<div class="paragraph">
-<p>The string representation of a locale is:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>la[_CO][_VA]</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>where</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>la</code> — two-letter language code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO-639</a>).</p>
-</li>
-<li>
-<p><code>CO</code> — optional two-letter country code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO-3166</a>).</p>
-</li>
-<li>
-<p><code>VA</code> — optional variant. May contain multiple subtags joined by <code>_</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>A sample locale including a vendor-specific variant:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>es_ES_Traditional_WIN</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Variants are rarely used in XP and can usually be ignored.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="best_match_resolving"><a class="link" href="#best_match_resolving">Best match resolving</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Given a requested locale, the framework selects the best matching localization file. If the requested locale is <code>en-US</code>, the framework checks files in this order:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>phrases_en_US.properties</code></p>
-</li>
-<li>
-<p><code>phrases_en.properties</code></p>
-</li>
-<li>
-<p><code>phrases.properties</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>If a request&#8217;s locale is <code>en</code>, the framework uses <code>phrases_en.properties</code>. If the locale does not match any file, <code>phrases.properties</code> is used as the fallback. If no matching key is found in any file in the bundle, the default <code>NOT_TRANSLATED</code> is returned.</p>
-</div>
-<div class="sect2">
-<h3 id="encoding_and_special_characters"><a class="link" href="#encoding_and_special_characters">Encoding and special characters</a></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Property keys</dt>
-<dd>
-<p>Must be in the ISO-8859-1 range (Latin-1). Non-Latin-1 characters must use Unicode escape sequences, e.g. <code>\u00E6</code> for the Norwegian letter <code>æ</code>.</p>
-</dd>
-<dt class="hdlist1">Property values</dt>
-<dd>
-<p>Support any Unicode characters.</p>
-</dd>
-</dl>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-We always recommend saving property files using the UTF-8 charset.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="sample"><a class="link" href="#sample">Sample</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A property file looks like this:</p>
+<p>Running code when the application stops:</p>
 </div>
 <div class="listingblock">
-<div class="title">phrases.properties</div>
+<div class="title">main.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello there!
-message = Good to see you. How are you doing?
-with_\u00e6_\u00f8_\u00e5 = This key contains norwegian characters æ, ø and å</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="placeholders"><a class="link" href="#placeholders">Placeholders</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The properties format supports parameter values that are merged into the localized strings:</p>
-</div>
-<div class="listingblock">
-<div class="title">phrases.properties</div>
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello, {0}!
-message_url = http://localhost:8080/{0}
-message_multi_placeholder = My name is {0} and I live in {1}
-message_placeholder = Hello, my name is {0}.</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Log application stop
+__.disposer(() =&gt; {
+    log.info(`Application ${app.name} stopped`);
+});</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Placeholders are marked with <code>{&lt;number&gt;}</code>. The number corresponds to the position of the value in the <code>values</code> argument passed to the API.</p>
-</div>
-<div class="paragraph">
-<p>See <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/MessageFormat.html">MessageFormat</a> for advanced placeholder syntax.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Placeholders are formatted according to the requested locale.
-</td>
-</tr>
-</table>
+<p><code>main.ts</code> is the only dependable place to register a disposer — see <a href="java-bridge.ahtml#disposer"><code>__.disposer</code></a> for why, and for the one-disposer-per-module rule.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

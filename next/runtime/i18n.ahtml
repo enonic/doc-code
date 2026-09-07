@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Events</title>
+<title>Localization</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,18 +437,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Events</h1>
+<h1>Localization</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#events">Introduction</a></li>
 <li><a href="#use_cases">Use cases</a></li>
-<li><a href="#local-vs-distributed">Local vs distributed semantics</a></li>
-<li><a href="#threading-ordering">Threading and ordering</a></li>
-<li><a href="#standard-events">Standard event catalog</a></li>
-<li><a href="#custom-naming">Custom event naming</a></li>
-<li><a href="#patterns">Common patterns</a></li>
-<li><a href="#library">Library</a></li>
+<li><a href="#localization_files">Localization files</a></li>
+<li><a href="#locale_format">Locale format</a></li>
+<li><a href="#best_match_resolving">Best match resolving</a>
+<ul class="sectlevel2">
+<li><a href="#encoding_and_special_characters">Encoding and special characters</a></li>
+</ul>
+</li>
+<li><a href="#sample">Sample</a></li>
+<li><a href="#placeholders">Placeholders</a></li>
 </ul>
 </div>
 </div>
@@ -456,232 +458,284 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Send and listen to local or cluster wide events</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="events"><a class="link" href="#events">Introduction</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The XP framework enable developers to create and/or listen to events.
-Events may be local (within a single server) or cluster wide (distributed to all servers within a cluster).
-In addition to application specific events, XP itself produces a range of standard events.</p>
+<p>Localizing strings in your XP applications.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The use cases for events are limitless, but the most common are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Cache invalidation</p>
-</li>
-<li>
-<p>Notifications (i.e. notify clients connected to any server in the cluster via Websocket)</p>
-</li>
-<li>
-<p>Job triggering</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="local-vs-distributed"><a class="link" href="#local-vs-distributed">Local vs distributed semantics</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><code>send({distributed: false})</code> (default) — fires only on the node that produced the event; use for in-process signalling like per-node cache eviction.</p>
-</li>
-<li>
-<p><code>send({distributed: true})</code> — broadcasts to every member of the cluster; use for cross-node cache invalidation, multi-node WebSocket fanout, or any side effect that has to run on every node.</p>
-</li>
-<li>
-<p><code>listener({localOnly: true})</code> — filters out events that originated on a remote node; use when a side effect should run exactly once on the originating node.</p>
-</li>
-<li>
-<p>The event object&#8217;s <code>localOrigin</code> and <code>distributed</code> flags let a listener branch on origin without <code>localOnly</code>.</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock important">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>Event delivery is best-effort and fire-and-forget — no persistence, no replay, no acknowledgement. A node that is down or partitioned at broadcast time misses the event entirely.</p>
-</div>
+This section covers code-level localization, not multi-lingual content or websites.
 </td>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>For any project targeting users in different languages, you may want to localize the interface.</p>
+</div>
+<div class="paragraph">
+<p>The XP framework provides localization for the following use cases:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">CMS/Sites</dt>
+<dd>
+<p>Use the <a href="../libraries/lib-i18n.ahtml">localization API</a> to dynamically localize any text phrases in your app. The framework will apply the locale specified in the site&#8217;s language property.</p>
+</dd>
+<dt class="hdlist1">Admin Console</dt>
+<dd>
+<p>Localize labels and texts in <a href="https://developer.enonic.com/docs/cms/xp8/schemas#schema_localization">schemas</a> such as content types. The framework will use the locale derived from the browser&#8217;s <code>Accept-Language</code> header.</p>
+</dd>
+<dt class="hdlist1">Webapps and more</dt>
+<dd>
+<p>The <a href="../libraries/lib-i18n.ahtml">localization API</a> may also be used for any other purpose. In these cases the developer controls and specifies the locale explicitly.</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="threading-ordering"><a class="link" href="#threading-ordering">Threading and ordering</a></h2>
+<h2 id="localization_files"><a class="link" href="#localization_files">Localization files</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>`Each event is handed to a single event worker thred before walking the listener list, so the publishing thread returns as soon as the event is queued.</p>
+<p>The localization files are plain text files, using the <code>properties</code> format (key = value).
+The files must be placed in a specific project folder: <code>/src/main/resources/i18n/</code>.</p>
+</div>
+<div class="paragraph">
+<p>Imagine an app that supports the following localizations:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Listeners must not block — the dispatch thread is shared, and a slow listener backs up every other listener on the node.</p>
+<p>English (<code>en</code>)</p>
 </li>
 <li>
-<p>On a single node, FIFO holds — events published in sequence on the same node are delivered in that order to a listener that matches both.</p>
+<p>English (US) (<code>en-US</code>)</p>
 </li>
 <li>
-<p>Across cluster nodes events from the same nodes are ordered but from different nodes can arrive in either order on any third node.</p>
+<p>Norwegian Nynorsk (<code>nn</code>)</p>
 </li>
 <li>
-<p>Order between listeners is unspecified.</p>
+<p>Norwegian Nynorsk, Norway (<code>nn-NO</code>)</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Each locale needs a matching localization file, in the format:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>phrases[_LOCALE].properties</pre>
 </div>
 </div>
-<div class="sect1">
-<h2 id="standard-events"><a class="link" href="#standard-events">Standard event catalog</a></h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 60%;">
-</colgroup>
-<thead>
+<div class="admonitionblock note">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">Type pattern</th>
-<th class="tableblock halign-left valign-top">Origin</th>
-<th class="tableblock halign-left valign-top">What it signals</th>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The API&#8217;s country codes use <code>-</code> as separator but the files use <code>_</code>.
+</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Node lifecycle: <code>node.created</code>, <code>node.updated</code>, <code>node.deleted</code>, <code>node.pushed</code>, <code>node.duplicated</code>, <code>node.moved</code>, <code>node.sorted</code>, <code>node.permissionsUpdated</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repository.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Repository lifecycle: <code>repository.created</code>, <code>repository.updated</code>, <code>repository.deleted</code>, <code>repository.restored</code>, <code>repository.restoreInitialized</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>task.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-task</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Task lifecycle: <code>task.submitted</code>, <code>task.updated</code>, <code>task.finished</code>, <code>task.failed</code>, <code>task.removed</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application</code>, <code>application.cluster</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-app</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Application install / start / stop and cluster install events; the action — <code>INSTALLED</code>, <code>STARTED</code>, <code>STOPPED</code>, <code>UNINSTALLED</code>, <code>state</code>, … — is carried in the payload&#8217;s <code>eventType</code> field, not the type string.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>custom.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">user code</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Anything published through lib-event&#8217;s <code>send()</code>. The <code>custom.</code> prefix is added automatically.</p>
-</div></div></td>
-</tr>
-</tbody>
 </table>
+</div>
+<div class="listingblock">
+<div class="title">Sample localization bundle</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">i18n/phrases.properties
+i18n/phrases_en.properties
+i18n/phrases_en_US.properties
+i18n/phrases_nn.properties
+i18n/phrases_nn_NO.properties</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>Per-type payload details belong on the corresponding library page (<a href="../libraries/lib-node.ahtml#events">Node</a>, <a href="../libraries/lib-repo.ahtml#events">Repo</a>, <a href="../libraries/lib-task.ahtml#events">Task</a>).</p>
+<p>This format and packaging is commonly known as "property bundles".</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The filenames are case sensitive!
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="custom-naming"><a class="link" href="#custom-naming">Custom event naming</a></h2>
+<h2 id="locale_format"><a class="link" href="#locale_format">Locale format</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Custom events go through <code>eventLib.send(&#8230;&#8203;)</code>, which prepends <code>custom.</code> automatically — <code>send({type: 'foo'})</code> is delivered as <code>custom.foo</code>. Namespace by application key to avoid collisions when multiple apps share a cluster.</p>
+<p>A locale is composed of codes for language, country and variant.
+Language is required; country and variant are optional.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>For the property files, all codes are case sensitive and separated by an underscore (<code>_</code>).</p>
+</div>
+<div class="paragraph">
+<p>The string representation of a locale is:</p>
+</div>
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import eventLib from '/lib/xp/event';
-
-eventLib.send({
-    type: 'com.example.app.somethingHappened',
-    distributed: true,
-    data: { id: 'abc-123' }
-});
-// delivered as 'custom.com.example.app.somethingHappened'</code></pre>
+<pre>la[_CO][_VA]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>la</code> — two-letter language code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO-639</a>).</p>
+</li>
+<li>
+<p><code>CO</code> — optional two-letter country code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO-3166</a>).</p>
+</li>
+<li>
+<p><code>VA</code> — optional variant. May contain multiple subtags joined by <code>_</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A sample locale including a vendor-specific variant:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>es_ES_Traditional_WIN</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Variants are rarely used in XP and can usually be ignored.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="best_match_resolving"><a class="link" href="#best_match_resolving">Best match resolving</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Given a requested locale, the framework selects the best matching localization file. If the requested locale is <code>en-US</code>, the framework checks files in this order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>phrases_en_US.properties</code></p>
+</li>
+<li>
+<p><code>phrases_en.properties</code></p>
+</li>
+<li>
+<p><code>phrases.properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a request&#8217;s locale is <code>en</code>, the framework uses <code>phrases_en.properties</code>. If the locale does not match any file, <code>phrases.properties</code> is used as the fallback. If no matching key is found in any file in the bundle, the default <code>NOT_TRANSLATED</code> is returned.</p>
+</div>
+<div class="sect2">
+<h3 id="encoding_and_special_characters"><a class="link" href="#encoding_and_special_characters">Encoding and special characters</a></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Property keys</dt>
+<dd>
+<p>Must be in the ISO-8859-1 range (Latin-1). Non-Latin-1 characters must use Unicode escape sequences, e.g. <code>\u00E6</code> for the Norwegian letter <code>æ</code>.</p>
+</dd>
+<dt class="hdlist1">Property values</dt>
+<dd>
+<p>Support any Unicode characters.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+We always recommend saving property files using the UTF-8 charset.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="patterns"><a class="link" href="#patterns">Common patterns</a></h2>
+<h2 id="sample"><a class="link" href="#sample">Sample</a></h2>
 <div class="sectionbody">
-<h3 id="cluster_wide_cache_invalidation" class="discrete">Cluster-wide cache invalidation</h3>
 <div class="paragraph">
-<p>A write on any node evicts the affected key on every node.</p>
+<p>A property file looks like this:</p>
 </div>
 <div class="listingblock">
+<div class="title">phrases.properties</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
-    type: 'custom.com.example.app.cache.invalidate',
-    callback: (event) =&gt; cache.delete(event.data.key as string)
-});
-
-eventLib.send({
-    type: 'com.example.app.cache.invalidate',
-    distributed: true,
-    data: { key }
-});</code></pre>
-</div>
-</div>
-<h3 id="websocket_fanout_across_the_cluster" class="discrete">WebSocket fanout across the cluster</h3>
-<div class="paragraph">
-<p>A producer on any node can push to clients connected to whichever node terminated their socket.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
-    type: 'custom.com.example.app.feed.message',
-    callback: (event) =&gt; websocketLib.sendToGroup('live-feed', JSON.stringify(event.data))
-});
-
-eventLib.send({
-    type: 'com.example.app.feed.message',
-    distributed: true,
-    data: { message }
-});</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello there!
+message = Good to see you. How are you doing?
+with_\u00e6_\u00f8_\u00e5 = This key contains norwegian characters æ, ø and å</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="library"><a class="link" href="#library">Library</a></h2>
+<h2 id="placeholders"><a class="link" href="#placeholders">Placeholders</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For implementation details, please visit the <a href="../libraries/lib-event.ahtml">event library</a> documentation.</p>
+<p>The properties format supports parameter values that are merged into the localized strings:</p>
+</div>
+<div class="listingblock">
+<div class="title">phrases.properties</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello, {0}!
+message_url = http://localhost:8080/{0}
+message_multi_placeholder = My name is {0} and I live in {1}
+message_placeholder = Hello, my name is {0}.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Placeholders are marked with <code>{&lt;number&gt;}</code>. The number corresponds to the position of the value in the <code>values</code> argument passed to the API.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/MessageFormat.html">MessageFormat</a> for advanced placeholder syntax.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Placeholders are formatted according to the requested locale.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

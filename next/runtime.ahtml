@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Apps</title>
+<title>Runtime</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,16 +437,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Apps</h1>
+<h1>Runtime</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#what_is_an_app">What is an app</a></li>
-<li><a href="#bundles_and_module_isolation">Bundles and module isolation</a></li>
-<li><a href="#lifecycle">Lifecycle</a></li>
-<li><a href="#redeploy_and_module_cache">Redeploy and module cache</a></li>
-<li><a href="#installation_methods">Installation methods</a></li>
-<li><a href="#configuration">Configuration</a></li>
+<li><a href="#execution_model">Execution model</a>
+<ul class="sectlevel2">
+<li><a href="#language_level">Language level</a></li>
+</ul>
+</li>
+<li><a href="#modules_and_bundling">Modules and bundling</a></li>
+<li><a href="#loading_and_caching">Loading and caching</a></li>
+<li><a href="#threading">Threading</a></li>
+<li><a href="#clustering">Clustering</a></li>
+<li><a href="#what_you_get_for_free">What you get for free</a></li>
+<li><a href="#whats_in_this_section">What&#8217;s in this section</a></li>
+<li><a href="#how_the_parts_relate">How the parts relate</a></li>
 </ul>
 </div>
 </div>
@@ -454,139 +460,253 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>An <strong>Enonic app</strong> is the unit of code you deploy to XP. It is a self-contained bundle that the platform installs, starts, configures, and tears down — and many apps coexist inside a single XP instance. This page covers what an app actually is at runtime, how XP runs several of them at once, and the lifecycle and configuration model around them.</p>
+<p>What powers your Enonic app at execution time - the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free. Regardless of whether the app serves an API, a webapp or a site, this is the environment its code runs in.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="what_is_an_app"><a class="link" href="#what_is_an_app">What is an app</a></h2>
+<h2 id="execution_model"><a class="link" href="#execution_model">Execution model</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An app is a software package — JavaScript/TypeScript modules, descriptors, schemas, assets — bundled and deployed together. Content Studio, the Headless API, and every webapp or site extension you write are all apps built with the Enonic Development Kit. XP itself is just the runtime that hosts them.</p>
+<p>Enonic XP runs on top of the Java Virtual Machine. Your app&#8217;s TypeScript and JavaScript files are executed by an embedded JavaScript engine, with full access to the JVM through the <a href="runtime/java-bridge.ahtml">Java bridge</a>. There is no Node.js, no separate JS process, and no inter-process bridge — server-side JS runs inside the same JVM as the platform itself.</p>
 </div>
 <div class="paragraph">
-<p>Each app is identified by an <strong>app key</strong> (e.g. <code>com.example.myapp</code>). The key is the namespace under which the app&#8217;s services, components, schemas, and configuration are reached.</p>
+<p>Two engines are available:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Nashorn</dt>
+<dd>
+<p>The default engine. Stable, production-ready, ships with every XP install. All XP releases since 7.x have shipped Nashorn.</p>
+</dd>
+<dt class="hdlist1">GraalJS</dt>
+<dd>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> The engine that will replace Nashorn, available as a preview since XP 8.1.0. Not for production. See <a href="runtime/engines.ahtml#graaljs">GraalJS</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>An app declares its engine in <em>build.gradle</em>; see <a href="runtime/engines.ahtml#choosing">Choosing an engine</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="language_level"><a class="link" href="#language_level">Language level</a></h3>
+<div class="paragraph">
+<p>Every module runs in ECMAScript <strong>strict mode</strong>, on both engines.</p>
+</div>
+<div class="paragraph">
+<p>Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Transpile to ES5 - that is what the official starters do. See <a href="tooling/typescript.ahtml">TypeScript</a> for the build step.</p>
+</div>
+<div class="paragraph">
+<p>GraalJS implements the current ECMAScript standard. Code transpiled to ES5 runs on either engine, which makes it the portable choice while GraalJS is in preview.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="bundles_and_module_isolation"><a class="link" href="#bundles_and_module_isolation">Bundles and module isolation</a></h2>
+<h2 id="modules_and_bundling"><a class="link" href="#modules_and_bundling">Modules and bundling</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every app deploys as its own bundle. The CommonJS module cache is scoped to the app: when code in app A calls <code>require('/lib/greet')</code>, it loads the <code>greet</code> module <strong>from app A&#8217;s bundle</strong>, never from app B. There is no shared global namespace and no implicit module sharing between apps.</p>
+<p>Each <code>.ts</code> or <code>.js</code> file in your app is a module under the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS module specification</a>. Modules export values via <code>exports</code>, and consume other modules via <code>require()</code> — <code>import</code> and <code>export</code> statements are not supported at runtime, on either engine, see <a href="runtime/globals.ahtml#esm">ECMAScript modules</a>. Paths are rooted at the app bundle, not the filesystem — <code>require('/lib/greet')</code> loads <code>src/main/resources/lib/greet.ts</code> from the same app.</p>
 </div>
 <div class="paragraph">
-<p>The exception is <strong>platform libraries</strong> — modules whose path begins with <code>/lib/xp/</code> (e.g. <code>/lib/xp/content</code>, <code>/lib/xp/portal</code>). These are provided by XP itself and resolve identically from any app.</p>
+<p>Platform libraries are referenced by name (for example, <code>require('/lib/xp/content')</code>). See <a href="runtime/functions.ahtml#modules_and_the_bundle">Functions: Modules and the bundle</a> for the full path-resolution rules and bundle boundaries.</p>
 </div>
 <div class="paragraph">
-<p>Composition between apps therefore happens at the <strong>platform level</strong>, not in JavaScript:</p>
+<p>TypeScript is supported as the authoring language; the build step transpiles to JavaScript before deployment. See <a href="tooling/typescript.ahtml">TypeScript Definitions</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="loading_and_caching"><a class="link" href="#loading_and_caching">Loading and caching</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XP loads each module <strong>once per app deploy</strong> and caches it. Subsequent <code>require()</code> calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed. Top-level code in a module therefore runs exactly once per deploy.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+On GraalJS a module is loaded once per <strong>script context</strong> rather than once per deploy, so its top-level code may run several times. See <a href="runtime/engines.ahtml#contexts">Script contexts</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This makes module top-level a natural place for one-time setup (requiring libraries, computing constants), but a poor place for mutable state. Treat anything declared outside a function body as immutable after load. For state that must survive between invocations, use a repo node, the <code>cache</code> library, or another explicit persistence mechanism.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="runtime/functions.ahtml#loading_and_caching">Functions: Loading and caching</a> for the implications on each function type.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="threading"><a class="link" href="#threading">Threading</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The runtime is multithreaded. The platform serves requests, dispatches events, and runs background tasks concurrently across multiple threads, taking advantage of multi-core CPU architectures. There is no single event loop — each request, task, or event listener runs on a worker thread from a managed pool.</p>
+</div>
+<div class="paragraph">
+<p>Two consequences for your code:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site service merges at request time.</p>
+<p><strong>Module-level state is shared across threads.</strong> Cached modules are visible to every thread executing within the app. If two requests both call <code>require('/lib/cache')</code>, they receive the same module instance. Treat top-level state as read-only.</p>
 </li>
 <li>
-<p>Admin tools and admin extensions from any installed app are listed in the admin Launcher and may mount each other through declared interface points.</p>
+<p><strong>Implementations are reentrant.</strong> A function may be invoked concurrently with itself. Don&#8217;t accumulate state in module-level variables across invocations.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="clustering"><a class="link" href="#clustering">Clustering</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XP can run as a single node or as a cluster of nodes sharing the same data. The runtime is cluster-aware out of the box:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Events</strong> fire across the cluster. A listener registered on any node receives events published from any other node. See <a href="runtime/events.ahtml">Events</a>.</p>
 </li>
 <li>
-<p>Universal APIs from any app are reachable under <code>/api/&lt;app&gt;:&lt;api&gt;</code>, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.</p>
+<p><strong>Scheduled jobs</strong> are distributed. A scheduled job runs on one cluster node per fire — XP coordinates so the same job doesn&#8217;t execute twice. See <a href="background/scheduler.ahtml">Scheduler</a>.</p>
+</li>
+<li>
+<p><strong>Repositories</strong> are replicated. Content writes propagate to all nodes; reads can target any node.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>What apps cannot do is reach into another app&#8217;s private modules. Cross-app integration goes through the platform&#8217;s contracts (descriptors, mappings, events, APIs) — never through <code>require()</code>.</p>
+<p>Apps deployed to a cluster are installed and started on every node. The runtime guarantees the same module-loading and caching semantics on each node — your app sees a consistent execution environment regardless of which node serves a given request.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
+<h2 id="what_you_get_for_free"><a class="link" href="#what_you_get_for_free">What you get for free</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An app&#8217;s life inside XP follows a fixed sequence:</p>
+<p>Apps run inside a fully equipped platform. The runtime gives you, without extra setup:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Persistence</strong> — content, nodes, repositories, blobs, all queryable and clusterable.</p>
+</li>
+<li>
+<p><strong>HTTP routing</strong> — the <a href="web/request-response.ahtml">Portal</a> dispatches incoming requests to four services (<code>/api</code>, <code>/admin</code>, <code>/site</code>, <code>/webapp</code>); you provide the implementations.</p>
+</li>
+<li>
+<p><strong>Identity &amp; access management</strong> — pluggable <a href="web/id-providers.ahtml">ID providers</a>, role-based permissions, audit logging.</p>
+</li>
+<li>
+<p><strong>Cluster-wide events</strong> — see <a href="runtime/events.ahtml">Events</a>.</p>
+</li>
+<li>
+<p><strong>Background work</strong> — <a href="background/tasks.ahtml">tasks</a> and <a href="background/scheduler.ahtml">scheduled jobs</a>.</p>
+</li>
+<li>
+<p><strong>Localization</strong> — see <a href="runtime/i18n.ahtml">Localization</a>.</p>
+</li>
+<li>
+<p><strong>Java interop</strong> — see <a href="runtime/java-bridge.ahtml">Java bridge</a>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Compatibility</dt>
+<dd>
+<p>An app built against any XP release runs unchanged on every patch and minor release within the same major version. Major version upgrades are documented separately — see <a href="upgrade/xp7.ahtml">Upgrading</a>.</p>
+</dd>
+</dl>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="whats_in_this_section"><a class="link" href="#whats_in_this_section">What&#8217;s in this section</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section documents the parts of an app that are not tied to a specific HTTP service or background mechanism. The sections above describe how your code executes; the pages below cover the building blocks in detail.</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Install</dt>
+<dt class="hdlist1"><a href="runtime/engines.ahtml">JavaScript engines</a></dt>
 <dd>
-<p>The app bundle is uploaded to the cluster and registered. Installation alone does not run any of your code.</p>
+<p>Nashorn and GraalJS: how an app chooses its engine, and what differs between them.</p>
 </dd>
-<dt class="hdlist1">Start</dt>
+<dt class="hdlist1"><a href="runtime/apps.ahtml">Apps</a></dt>
 <dd>
-<p>XP starts the app on every cluster node. If the bundle contains <a href="main.ahtml"><code>main.ts</code></a> at <code>src/main/resources/main.ts</code>, it is loaded and its top-level code runs once per node. <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. <code>__.disposer()</code> registrations made during start are remembered for the stop phase; registering one later is not dependable.</p>
+<p>What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.</p>
 </dd>
-<dt class="hdlist1">Running</dt>
+<dt class="hdlist1"><a href="runtime/functions.ahtml">Functions</a></dt>
 <dd>
-<p>The app is reachable. HTTP functions, event listeners, scheduled tasks, components, and admin tools all become live. Modules are loaded lazily on first <code>require()</code> and cached for the lifetime of the deploy.</p>
+<p>How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).</p>
 </dd>
-<dt class="hdlist1">Stop</dt>
+<dt class="hdlist1"><a href="runtime/main.ahtml">Main</a></dt>
 <dd>
-<p>Before uninstall (or before a redeploy of a new version), XP stops the app on every node. Registered disposers are invoked. After stop, no further requests reach the app&#8217;s code.</p>
+<p>The <code>main.ts</code> lifecycle hook — code that runs when your app starts and stops.</p>
 </dd>
-<dt class="hdlist1">Uninstall</dt>
+<dt class="hdlist1"><a href="runtime/globals.ahtml">Globals</a></dt>
 <dd>
-<p>The bundle is removed from the cluster.</p>
+<p>Global objects and functions available in every module — <code>app</code>, <code>log</code>, <code>require</code>, <code>resolve</code>, and friends.</p>
+</dd>
+<dt class="hdlist1"><a href="runtime/events.ahtml">Events</a></dt>
+<dd>
+<p>The cluster-wide pub/sub bus. Publish from anywhere — request handlers, tasks, <code>main.ts</code> — and subscribe to platform events (content writes, repo updates) or your own custom domain events.</p>
+</dd>
+<dt class="hdlist1"><a href="runtime/i18n.ahtml">Localization</a></dt>
+<dd>
+<p>Localizing text in your app and the schemas it deploys, using <code>phrases</code> files and the localization API.</p>
+</dd>
+<dt class="hdlist1"><a href="runtime/java-bridge.ahtml">Java bridge</a></dt>
+<dd>
+<p>Calling JVM code from JavaScript via the <code>__</code> global. Required reading for library authors and anyone integrating with existing Java codebases.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>The platform calls <code>main.ts</code> exactly once per app start, per node. Top-level code in any other module runs once on first <code>require()</code> and is then cached — see <a href="runtime.ahtml#loading_and_caching">Runtime: Loading and caching</a>.</p>
+<p>Setting up TypeScript for the build is covered under <a href="tooling/typescript.ahtml">Tooling</a>, and the shared types every library uses under <a href="libraries/types.ahtml">Types</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="redeploy_and_module_cache"><a class="link" href="#redeploy_and_module_cache">Redeploy and module cache</a></h2>
+<h2 id="how_the_parts_relate"><a class="link" href="#how_the_parts_relate">How the parts relate</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Redeploying an app is conceptually a stop followed by a start with the new bundle. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
+<p>The runtime is the foundation: a JVM-based execution environment with a CommonJS module system, multithreading, clustering, and a platform&#8217;s worth of services attached. Functions are the units of code the runtime invokes — most of what you write is regular module code, with a smaller subset bound to framework contracts. <code>main.ts</code> is the lifecycle contract. Events are the cluster-wide pub/sub primitive, available from any function. Globals, TypeScript, the Java bridge, and localization are tools you reach for inside any function, regardless of which contract called it.</p>
 </div>
 <div class="paragraph">
-<p>This makes hot iteration cheap during development (drop a new bundle on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installation_methods"><a class="link" href="#installation_methods">Installation methods</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Apps reach an XP instance through one of three channels:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Via CLI</dt>
-<dd>
-<p>Push the app via the management API using the Enonic CLI. The standard path for CI/CD pipelines and remote deploys.</p>
-</dd>
-<dt class="hdlist1">Via Admin Console</dt>
-<dd>
-<p>Install manually through the <strong>Applications</strong> admin tool. Useful for installing from Enonic Market or uploading a JAR by hand.</p>
-</dd>
-<dt class="hdlist1">Via the file system</dt>
-<dd>
-<p>Drop the JAR into the XP <code>deploy/</code> folder. Used during development and for specialized deployment scenarios. File-system deploys are local to a single node and override apps installed via the other channels.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the <a href="https://developer.enonic.com/docs/platform">XP platform documentation</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Each app may read configuration from a <code>&lt;app-name&gt;.cfg</code> file (e.g. <code>com.example.myapp.cfg</code>) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform&#8217;s configuration APIs.</p>
-</div>
-<div class="paragraph">
-<p>The file format, location, and reload behavior are documented in the <a href="https://developer.enonic.com/docs/platform/xp8/config">XP platform documentation</a>.</p>
+<p>For HTTP-bound contracts (request handlers, filters, error handlers, websockets, SSE, ID providers), see <a href="web.ahtml">Web</a>. For asynchronous background execution (tasks, scheduled jobs), see <a href="background.ahtml">Background</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

@@ -464,7 +464,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="module-scope"><a class="link" href="#module-scope">What is actually global</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>app</code> is the only name <strong>XP</strong> installs on the JavaScript global object. Every other name on this page is <strong>module-scoped</strong>: XP wraps each module in a function and passes them in as arguments. The engine contributes a few globals of its own on top; the <a href="runtime.ahtml#graaljs">GraalJS preview</a> adds <code>Graal</code>.</p>
+<p><code>app</code> is the only name <strong>XP</strong> installs on the JavaScript global object. Every other name on this page is <strong>module-scoped</strong>: XP wraps each module in a function and passes them in as arguments. The engine contributes a few globals of its own on top; the <a href="engines.ahtml#graaljs">GraalJS</a> adds <code>Graal</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -756,7 +756,7 @@ The file extension .js is not required.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Authoring in TypeScript, write <code>export</code> and let the build transpile it — the emitted JavaScript assigns to <code>exports</code>. See <a href="typescript.ahtml">TypeScript</a>.
+Authoring in TypeScript, write <code>export</code> and let the build transpile it — the emitted JavaScript assigns to <code>exports</code>. See <a href="../tooling/typescript.ahtml">TypeScript</a>.
 </td>
 </tr>
 </table>
@@ -786,7 +786,7 @@ more about the <a href="java-bridge.ahtml">Java bridge</a>.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

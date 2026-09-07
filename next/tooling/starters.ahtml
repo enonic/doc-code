@@ -478,7 +478,7 @@ Get started running. Use one of our <a href="https://market.enonic.com/starters"
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. However, thanks to the <a href="../fundamentals/runtime.ahtml">XP runtime</a> being a polyglot, applications may contain Java, Kotlin, Scala, or any other language that compiles to Java bytecode.
+Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. However, thanks to the <a href="../runtime.ahtml">XP runtime</a> being a polyglot, applications may contain Java, Kotlin, Scala, or any other language that compiles to Java bytecode.
 </td>
 </tr>
 </table>
@@ -601,7 +601,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">main.ts</dt>
 <dd>
-<p>The application&#8217;s <a href="../fundamentals/main.ahtml">main lifecycle</a>. Runs when the application starts and stops.</p>
+<p>The application&#8217;s <a href="../runtime/main.ahtml">main lifecycle</a>. Runs when the application starts and stops.</p>
 </dd>
 <dt class="hdlist1">i18n/</dt>
 <dd>
@@ -715,7 +715,7 @@ Check out <a href="https://market.enonic.com/starters/library-starter">the libra
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

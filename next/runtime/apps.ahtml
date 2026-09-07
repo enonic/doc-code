@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Upgrading Enonic apps from XP 8.0 to 8.1</title>
+<title>Apps</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,17 +437,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Upgrading Enonic apps from XP 8.0 to 8.1</h1>
+<h1>Apps</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#version_bump">Version bump</a></li>
-<li><a href="#children_are_fetched_with_a_query">Children are fetched with a query</a></li>
-<li><a href="#inline_function_tasks_become_named_tasks">Inline function tasks become named tasks</a></li>
-<li><a href="#media_and_api_base_urls_move_to_configuration">Media and API base URLs move to configuration</a></li>
-<li><a href="#timestamps_that_describe_the_build">Timestamps that describe the build</a></li>
-<li><a href="#export_batch_size">Export batch size</a></li>
-<li><a href="#worth_adopting">Worth adopting</a></li>
+<li><a href="#what_is_an_app">What is an app</a></li>
+<li><a href="#bundles_and_module_isolation">Bundles and module isolation</a></li>
+<li><a href="#lifecycle">Lifecycle</a></li>
+<li><a href="#redeploy_and_module_cache">Redeploy and module cache</a></li>
+<li><a href="#installation_methods">Installation methods</a></li>
+<li><a href="#configuration">Configuration</a></li>
 </ul>
 </div>
 </div>
@@ -455,306 +454,139 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP 8.1 makes no breaking changes to application code: an app built for 8.0 runs on 8.1 as it is. The upgrade is a version bump, followed by the clean-ups below. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, so the clean-ups can be done one at a time.</p>
-</div>
-<div class="paragraph">
-<p>Coming from XP 7? Do <a href="../upgrade.ahtml">Upgrading Enonic apps from XP 7 to XP 8</a> first — this page picks up where that one ends.</p>
+<p>An <strong>Enonic app</strong> is the unit of code you deploy to XP. It is a self-contained bundle that the platform installs, starts, configures, and tears down — and many apps coexist inside a single XP instance. This page covers what an app actually is at runtime, how XP runs several of them at once, and the lifecycle and configuration model around them.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="version_bump"><a class="link" href="#version_bump">Version bump</a></h2>
+<h2 id="what_is_an_app"><a class="link" href="#what_is_an_app">What is an app</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Set the platform version in <em>gradle.properties</em>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">xpVersion = 8.1.0</code></pre>
-</div>
+<p>An app is a software package — JavaScript/TypeScript modules, descriptors, schemas, assets — bundled and deployed together. Content Studio, the Headless API, and every webapp or site extension you write are all apps built with the Enonic Development Kit. XP itself is just the runtime that hosts them.</p>
 </div>
 <div class="paragraph">
-<p>TypeScript projects also need the matching type definitions, or the parameters and functions added in 8.1 will not type-check:</p>
-</div>
-<div class="listingblock">
-<div class="title">package.json</div>
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "devDependencies": {
-    "@enonic-types/global": "^8.1.0",
-    "@enonic-types/lib-content": "^8.1.0"
-  }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then rebuild and deploy:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>enonic project deploy</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>That is the whole compatibility story - the app builds and runs. What follows is work that can be done at your own pace: the deprecated APIs still function, but they are on their way out.</p>
+<p>Each app is identified by an <strong>app key</strong> (e.g. <code>com.example.myapp</code>). The key is the namespace under which the app&#8217;s services, components, schemas, and configuration are reached.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="children_are_fetched_with_a_query"><a class="link" href="#children_are_fetched_with_a_query">Children are fetched with a query</a></h2>
+<h2 id="bundles_and_module_isolation"><a class="link" href="#bundles_and_module_isolation">Bundles and module isolation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="../libraries/lib-content.ahtml#getchildren"><code>getChildren()</code></a> in lib-content and <a href="../libraries/lib-node.ahtml#findchildren"><code>findChildren()</code></a> in lib-node are deprecated. A query with <code>parent</code> does the same job: it takes the same path or id, and where <code>sort</code> is omitted it applies the child order stored on the parent, so the result comes back in the order it did before.</p>
-</div>
-<div class="listingblock">
-<div class="title">Content — before</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getChildren} from '/lib/xp/content';
-
-const result = getChildren({
-    key: '/mysite/articles',
-    start: 0,
-    count: 20
-});</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Content — after</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {query} from '/lib/xp/content';
-
-const result = query({
-    parent: '/mysite/articles',
-    start: 0,
-    count: 20
-});</code></pre>
-</div>
+<p>Every app deploys as its own bundle. The CommonJS module cache is scoped to the app: when code in app A calls <code>require('/lib/greet')</code>, it loads the <code>greet</code> module <strong>from app A&#8217;s bundle</strong>, never from app B. There is no shared global namespace and no implicit module sharing between apps.</p>
 </div>
 <div class="paragraph">
-<p><code>hits</code> carries the same contents as before, and <code>total</code> the same count.</p>
-</div>
-<div class="listingblock">
-<div class="title">Nodes — before</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.findChildren({
-    parentKey: '/content',
-    count: 100,
-    recursive: true
-});</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Nodes — after</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.query({
-    parent: '/content',
-    count: 100,
-    recursive: true
-});</code></pre>
-</div>
+<p>The exception is <strong>platform libraries</strong> — modules whose path begins with <code>/lib/xp/</code> (e.g. <code>/lib/xp/content</code>, <code>/lib/xp/portal</code>). These are provided by XP itself and resolve identically from any app.</p>
 </div>
 <div class="paragraph">
-<p>Three parameters change name or shape:</p>
+<p>Composition between apps therefore happens at the <strong>platform level</strong>, not in JavaScript:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A site can list multiple apps in its descriptor; each contributes components, mappings, processors, and contributions that the site service merges at request time.</p>
+</li>
+<li>
+<p>Admin tools and admin extensions from any installed app are listed in the admin Launcher and may mount each other through declared interface points.</p>
+</li>
+<li>
+<p>Universal APIs from any app are reachable under <code>/api/&lt;app&gt;:&lt;api&gt;</code>, and can be mounted as service points beneath sites, webapps, and admin tools belonging to other apps.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>What apps cannot do is reach into another app&#8217;s private modules. Cross-app integration goes through the platform&#8217;s contracts (descriptors, mappings, events, APIs) — never through <code>require()</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An app&#8217;s life inside XP follows a fixed sequence:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>childOrder</code></dt>
+<dt class="hdlist1">Install</dt>
 <dd>
-<p>Use <code>sort</code>, which takes the same expression. Omit it to keep the parent&#8217;s child order.</p>
+<p>The app bundle is uploaded to the cluster and registered. Installation alone does not run any of your code.</p>
 </dd>
-<dt class="hdlist1"><code>countOnly</code></dt>
+<dt class="hdlist1">Start</dt>
 <dd>
-<p>Ask for no hits instead - <code>count: 0</code> - and read <code>total</code>.</p>
+<p>XP starts the app on every cluster node. If the bundle contains <a href="main.ahtml"><code>main.ts</code></a> at <code>src/main/resources/main.ts</code>, it is loaded and its top-level code runs once per node. <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. <code>__.disposer()</code> registrations made during start are remembered for the stop phase; registering one later is not dependable.</p>
 </dd>
-<dt class="hdlist1"><code>recursive</code></dt>
+<dt class="hdlist1">Running</dt>
 <dd>
-<p>Same name, same meaning. A subtree has no child order of its own, so pass <code>sort</code> where the order of a recursive result matters.</p>
+<p>The app is reachable. HTTP functions, event listeners, scheduled tasks, components, and admin tools all become live. Modules are loaded lazily on first <code>require()</code> and cached for the lifetime of the deploy.</p>
+</dd>
+<dt class="hdlist1">Stop</dt>
+<dd>
+<p>Before uninstall (or before a redeploy of a new version), XP stops the app on every node. Registered disposers are invoked. After stop, no further requests reach the app&#8217;s code.</p>
+</dd>
+<dt class="hdlist1">Uninstall</dt>
+<dd>
+<p>The bundle is removed from the cluster.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Moving to a query also opens up everything a query can do that <code>getChildren()</code> could not: filters, content types, aggregations, highlighting, and the <code>returns</code> parameter that has each hit carry named index fields instead of the whole content.</p>
+<p>The platform calls <code>main.ts</code> exactly once per app start, per node. Top-level code in any other module runs once on first <code>require()</code> and is then cached — see <a href="../runtime.ahtml#loading_and_caching">Runtime: Loading and caching</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="inline_function_tasks_become_named_tasks"><a class="link" href="#inline_function_tasks_become_named_tasks">Inline function tasks become named tasks</a></h2>
+<h2 id="redeploy_and_module_cache"><a class="link" href="#redeploy_and_module_cache">Redeploy and module cache</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="../libraries/lib-task.ahtml#executefunction"><code>executeFunction()</code></a> is deprecated and will be removed together with the Nashorn engine. It is also unsupported on the <a href="../fundamentals/runtime.ahtml#graaljs">GraalJS preview</a>, where a function cannot cross from one script context to another - so this is the one clean-up to do before trying that engine.</p>
+<p>Redeploying an app is conceptually a stop followed by a start with the new bundle. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
 </div>
 <div class="paragraph">
-<p>Move the body of the function into a <a href="../background/tasks.ahtml">named task</a>, and submit it by descriptor.</p>
-</div>
-<div class="listingblock">
-<div class="title">Before</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {executeFunction} from '/lib/xp/task';
-
-const taskId = executeFunction({
-    description: 'Reindex the catalog',
-    func: () =&gt; {
-        reindexCatalog(100);
-    }
-});</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">After — src/main/resources/tasks/reindex-catalog/reindex-catalog.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Task"
-description: "Reindex the catalog"
-form:
-- type: "Long"
-  name: "batchSize"
-  label: "Items per batch"
-  occurrences:
-    min: 1
-    max: 1</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">After — src/main/resources/tasks/reindex-catalog/reindex-catalog.ts</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function run(params: { batchSize: number }): void {
-    reindexCatalog(params.batchSize);
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">After — submitting it</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {submitTask} from '/lib/xp/task';
-
-const taskId = submitTask({
-    descriptor: 'reindex-catalog',
-    config: {
-        batchSize: 100
-    }
-});</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Two differences to plan for. A named task takes its input as <code>config</code>, validated against the descriptor&#8217;s form, rather than closing over the variables around it - anything the function read from its surroundings has to become a parameter. And a named task is distributable: the cluster picks a node that accepts it, which may not be the node that submitted it, so the task must not depend on running anywhere in particular.</p>
+<p>This makes hot iteration cheap during development (drop a new bundle on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="media_and_api_base_urls_move_to_configuration"><a class="link" href="#media_and_api_base_urls_move_to_configuration">Media and API base URLs move to configuration</a></h2>
+<h2 id="installation_methods"><a class="link" href="#installation_methods">Installation methods</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>baseUrl</code> parameter is deprecated on <a href="../libraries/lib-portal.ahtml#imageurl"><code>imageUrl()</code></a>, <a href="../libraries/lib-portal.ahtml#attachmenturl"><code>attachmentUrl()</code></a> and <a href="../libraries/lib-portal.ahtml#apiurl"><code>apiUrl()</code></a>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.</p>
-</div>
-<div class="listingblock">
-<div class="title">Before</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
-
-const url = imageUrl({
-    id: content._id,
-    scale: 'width(800)',
-    baseUrl: 'https://cdn.example.com'
-});</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">After</div>
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
-
-const url = imageUrl({
-    id: content._id,
-    scale: 'width(800)'
-});</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For media, declare the host once in <em>com.enonic.xp.portal.cfg</em>. A mount that serves the media APIs itself always wins, so a site needs both keys:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">media.defaultBaseUrl = https://cdn.example.com
-legacy.mediaApiAutoMount.enabled = false</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>A Base URL configured on the site itself does the same for that one site. See <a href="https://developer.enonic.com/docs/platform/stable/config/cms#media_base_url">serving media from another host</a>.</p>
-</div>
-<div class="paragraph">
-<p>For APIs, the virtual host that receives the request declares where they live:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">mapping.example.context.portal.apiBaseUrl = https://apis.example.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See <a href="https://developer.enonic.com/docs/platform/stable/config/vhosts#api-locations">API locations</a>.</p>
-</div>
-<div class="paragraph">
-<p>Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="timestamps_that_describe_the_build"><a class="link" href="#timestamps_that_describe_the_build">Timestamps that describe the build</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>modifiedTime</code> is deprecated on the icons, content types, schemas and application descriptors returned by lib-content, lib-schema and lib-app, and so is <a href="../fundamentals/types.ahtml#resource"><code>Resource.getTimestamp()</code></a>. These read from application resources, where the value comes from a jar entry timestamp - and build tools normalize those to a constant so that builds are reproducible, Gradle by default since version 9. Two different builds of the same app therefore report the same value.</p>
-</div>
-<div class="paragraph">
-<p>Code that used them as a cache key or an invalidation signal was therefore already unreliable:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const cacheKey = `icon-${contentType.icon.modifiedTime}`;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="export_batch_size"><a class="link" href="#export_batch_size">Export batch size</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>batchSize</code> on <a href="../libraries/lib-export.ahtml#exportnodes"><code>exportNodes()</code></a> is ignored. An export now reads each node at the exact version its scan observed, one at a time, so a subtree that changes while the export runs is written as it was seen rather than as a mixture of old and new. There is no read batch left to size - drop the parameter.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="worth_adopting"><a class="link" href="#worth_adopting">Worth adopting</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>None of these are deprecations. They are places where 8.1 offers a supported way to do something apps have had to work around.</p>
+<p>Apps reach an XP instance through one of three channels:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Content Security Policy</dt>
+<dt class="hdlist1">Via CLI</dt>
 <dd>
-<p>A <code>Content-Security-Policy</code> header assembled by hand and set on the response is now folded into the request&#8217;s policy rather than sent verbatim, which means it is no longer the last word - a later contribution can add to it. Declare the policy through <a href="../libraries/lib-portal.ahtml#csp"><code>csp()</code></a> instead: one policy is shared by the page, its layouts, its parts and any response processor, and the header is composed when the response is flushed.</p>
+<p>Push the app via the management API using the Enonic CLI. The standard path for CI/CD pipelines and remote deploys.</p>
 </dd>
-<dt class="hdlist1">Data down the request pipeline</dt>
+<dt class="hdlist1">Via Admin Console</dt>
 <dd>
-<p>Properties assigned to the request object - <code>req.myFlag = true</code> - never reached anything downstream; the field is dropped when the request is handed on. <a href="../libraries/lib-context.ahtml#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> stores the value in the current execution instead, where implementations, response processors and the code after <code>next()</code> in a filter can all read it back.</p>
+<p>Install manually through the <strong>Applications</strong> admin tool. Useful for installing from Enonic Market or uploading a JAR by hand.</p>
 </dd>
-<dt class="hdlist1">Initialization guards</dt>
+<dt class="hdlist1">Via the file system</dt>
 <dd>
-<p><a href="../fundamentals/main.ahtml"><code>main.ts</code></a> now runs to completion before anything else in the app on the same node, so a flag that made every request check whether start-up had finished is no longer needed. Keep a guard for work that must happen once <strong>for the cluster</strong> - a node does not wait for <code>main.ts</code> on any other node, so two nodes can still initialize the same repository at the same time.</p>
-</dd>
-<dt class="hdlist1">Disposer registration</dt>
-<dd>
-<p><code>__.disposer()</code> registrations are remembered when they are made while the application is starting - from <code>main.ts</code>, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.</p>
+<p>Drop the JAR into the XP <code>deploy/</code> folder. Used during development and for specialized deployment scenarios. File-system deploys are local to a single node and override apps installed via the other channels.</p>
 </dd>
 </dl>
+</div>
+<div class="paragraph">
+<p>For deployment, scaling, and isolation details that are platform-level rather than developer-level, see the <a href="https://developer.enonic.com/docs/platform">XP platform documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each app may read configuration from a <code>&lt;app-name&gt;.cfg</code> file (e.g. <code>com.example.myapp.cfg</code>) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform&#8217;s configuration APIs.</p>
+</div>
+<div class="paragraph">
+<p>The file format, location, and reload behavior are documented in the <a href="https://developer.enonic.com/docs/platform/xp8/config">XP platform documentation</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

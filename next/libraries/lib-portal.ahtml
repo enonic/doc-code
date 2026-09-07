@@ -511,7 +511,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-portal</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-portal</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -1084,7 +1084,7 @@ cspReportOnly().scriptSrc(CspSource.SELF);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;../fundamentals/types#component, `Component`&gt;&gt;) The current component, or `null` if there is no component in the current context.</p>
+<p>*object* : (&lt;&lt;../libraries/types#component, `Component`&gt;&gt;) The current component, or `null` if there is no component in the current context.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1139,7 +1139,7 @@ log.info('Current component name = %s', result.name);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;../fundamentals/types#content, `Content`&gt;&gt;) The current content, or `null` if there is no content in the current context.</p>
+<p>*object* : (&lt;&lt;../libraries/types#content, `Content`&gt;&gt;) The current content, or `null` if there is no content in the current context.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1320,7 +1320,7 @@ log.info('Multipart item %s', result);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p>*object* : (&lt;&lt;../fundamentals/types#byte-source, `ByteSource`&gt;&gt;) Stream of multipart item data, or `null` if the item does not exist.</p>
+<p>*object* : (&lt;&lt;../libraries/types#byte-source, `ByteSource`&gt;&gt;) Stream of multipart item data, or `null` if the item does not exist.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2219,7 +2219,7 @@ const url = buildUrl({
 <div class="sect2">
 <h3 id="site"><a class="link" href="#site">Site</a></h3>
 <div class="paragraph">
-<p>A site is a specialized <a href="../fundamentals/types.ahtml#content"><code>Content</code></a> of type <code>portal:site</code>. In addition to the standard content properties, its <code>data</code> carries the site&#8217;s app configurations.</p>
+<p>A site is a specialized <a href="../libraries/types.ahtml#content"><code>Content</code></a> of type <code>portal:site</code>. In addition to the standard content properties, its <code>data</code> carries the site&#8217;s app configurations.</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -3007,7 +3007,7 @@ const url = buildUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

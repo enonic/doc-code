@@ -25,6 +25,10 @@
           "document": "tooling/build"
         },
         {
+          "title": "TypeScript",
+          "document": "tooling/typescript"
+        },
+        {
           "title": "CI/CD",
           "document": "tooling/ci-cd"
         }
@@ -77,48 +81,40 @@
       ]
     },
     {
-      "title": "Fundamentals",
-      "document": "fundamentals",
+      "title": "Runtime",
+      "document": "runtime",
       "menuItems": [
         {
-          "title": "Runtime",
-          "document": "fundamentals/runtime"
-        },
-        {
-          "title": "TypeScript",
-          "document": "fundamentals/typescript"
-        },
-        {
-          "title": "Types",
-          "document": "fundamentals/types"
+          "title": "JavaScript engines",
+          "document": "runtime/engines"
         },
         {
           "title": "Apps",
-          "document": "fundamentals/apps"
+          "document": "runtime/apps"
         },
         {
           "title": "Functions",
-          "document": "fundamentals/functions"
+          "document": "runtime/functions"
         },
         {
           "title": "Main",
-          "document": "fundamentals/main"
+          "document": "runtime/main"
         },
         {
           "title": "Globals",
-          "document": "fundamentals/globals"
+          "document": "runtime/globals"
         },
         {
           "title": "Events",
-          "document": "fundamentals/events"
+          "document": "runtime/events"
         },
         {
           "title": "Localization",
-          "document": "fundamentals/i18n"
+          "document": "runtime/i18n"
         },
         {
           "title": "Java bridge",
-          "document": "fundamentals/java-bridge"
+          "document": "runtime/java-bridge"
         }
       ]
     },
@@ -126,6 +122,10 @@
       "title": "Libraries",
       "document": "libraries",
       "menuItems": [
+        {
+          "title": "Types",
+          "document": "libraries/types"
+        },
         {
           "title": "Admin",
           "document": "libraries/lib-admin"
@@ -337,8 +337,8 @@
       "document": "upgrade",
       "menuItems": [
         {
-          "title": "XP 8.0 to 8.1",
-          "document": "upgrade/8-1"
+          "title": "From XP 7",
+          "document": "upgrade/xp7"
         }
       ]
     }

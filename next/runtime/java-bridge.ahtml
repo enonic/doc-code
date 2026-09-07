@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>TypeScript Definitions</title>
+<title>Java bridge</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,48 +437,119 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>TypeScript Definitions</h1>
+<h1>Java bridge</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#intro">Intro</a></li>
-<li><a href="#typescript_starter">TypeScript starter</a></li>
-<li><a href="#install_types">Install types</a></li>
-<li><a href="#enonic_libraries">Enonic Libraries</a>
+<li><a href="#the_object">The <code>__</code> object</a>
 <ul class="sectlevel2">
-<li><a href="#global">Global</a></li>
-<li><a href="#core">Core</a></li>
-<li><a href="#content">Content</a></li>
-<li><a href="#additional_types">Additional types</a></li>
+<li><a href="#passing_parameters_to_java">Passing parameters to Java</a></li>
+<li><a href="#parameter_conversions">Parameter conversions</a></li>
+<li><a href="#returning_results_from_java">Returning results from Java</a></li>
 </ul>
 </li>
-<li><a href="#usage">Usage</a>
+<li><a href="#functions">Functions</a>
 <ul class="sectlevel2">
-<li><a href="#require">require</a></li>
-<li><a href="#es6_style_import">ES6-style import</a></li>
-</ul>
-</li>
-<li><a href="#configuration">Configuration</a>
-<ul class="sectlevel2">
-<li><a href="#require_2">Require</a></li>
-<li><a href="#other_imports">Other imports</a></li>
-</ul>
-</li>
-<li><a href="#beans">Beans</a>
-<ul class="sectlevel2">
-<li><a href="#option_1">Option 1</a></li>
-<li><a href="#option_2">Option 2</a></li>
+<li><a href="#disposer">disposer</a></li>
+<li><a href="#newbean">newBean</a></li>
+<li><a href="#nullorvalue">nullOrValue</a></li>
+<li><a href="#registermock">registerMock</a></li>
+<li><a href="#tonativeobject">toNativeObject</a></li>
+<li><a href="#toscriptvalue">toScriptValue</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="intro"><a class="link" href="#intro">Intro</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <a href="../libraries.ahtml">standard libraries</a>.</p>
+<p>JavaScript developers may optionally invoke and use Java-based code, since the XP runtime builds on the JVM.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the_object"><a class="link" href="#the_object">The <code>__</code> object</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Enonic XP, there is a global object named <code>__</code> (double underscore), accessible from any serverside JavaScript code, which provides
+a way to wrap Java objects in a JavaScript object. The <code>__</code> object has functions that allow JavaScript to communicate with Java
+classes. The <code>newBean</code> function will wrap the Java object named in the parameter, for instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var bean = __.newBean('com.enonic.xp.lib.io.IOHandlerBean');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This line is from the <code>lib-io</code> library, which is a good example of how this is used. In the Java <code>IOHandlerBean</code> class, there are several
+methods, like the <code>readLines</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public List&lt;String&gt; readLines( final Object value )
+  throws Exception
+    {
+      final CharSource source = toCharSource( value );
+      return source.readLines();
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is now accessible as a function on the JavaScript <code>bean</code> and may be invoked from JavaScript, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.readLines = function (stream) {
+  return __.toNativeObject(bean.readLines(stream));
+  };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a global JavaScript function <code>readLines</code>. This example also shows the use of the <code>toNativeObject</code> method, which in
+this case, converts a Java String array to a JSON object.</p>
+</div>
+<div class="paragraph">
+<p>Java objects constructed by <code>newBean</code> may, but not required to, implement <code>com.enonic.xp.script.bean.ScriptBean</code> interface.
+<code>ScriptBean::initialize</code> is used to inject <code>com.enonic.xp.script.bean.BeanContext</code> object, which can be used to access the application and resource keys, as well as current Request, Context and XP Java API Services.</p>
+</div>
+<div class="sect2">
+<h3 id="passing_parameters_to_java"><a class="link" href="#passing_parameters_to_java">Passing parameters to Java</a></h3>
+<div class="paragraph">
+<p>There are 2 ways to pass parameters to a Java method, from JavaScript:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Passing the parameters in the method call</p>
+</li>
+<li>
+<p>Setting the parameters as properties in the Java object, and then calling the method without parameters</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The first one is recommended when there are few parameters (1 or 2) and of simple types.
+The second one is better when there are multiple parameters, or some of them are optional.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.doSomething = function (param1, param2) {
+    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
+
+    return bean.execute(param1, param2);
+};
+
+exports.doSomethingElse = function (params) {
+    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
+
+    bean.text = __.nullOrValue(params.text) || '';
+    bean.size = __.nullOrValue(params.size) || 250;
+
+    return bean.execute();
+};</code></pre>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -487,262 +558,422 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <a href="runtime.ahtml">Runtime</a> for the execution model.
+When passing values that might be <code>null</code> or <code>undefined</code> it is recommended to filter them using the <code>__.nullOrValue</code> built-in function.
+This function converts any value that is <code>null</code> or <code>undefined</code> in JavaScript to <code>null</code> in Java. Otherwise returns the input value without changes.
 </td>
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="typescript_starter"><a class="link" href="#typescript_starter">TypeScript starter</a></h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TS Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a>:</p>
+<p>To be able to set property values as in the 2nd example above, the Java object must implement a setter method for each field.</p>
+</div>
+<div class="paragraph">
+<p>The Java class used in the example above looks like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-sh" data-lang="sh">enonic create -r starter-ts com.example.myapp</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="install_types"><a class="link" href="#install_types">Install types</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under <a href="https://www.npmjs.com/org/enonic-types">@enonic-types</a> organisation on NPM.</p>
-</div>
-<div class="paragraph">
-<p>Install types at the major version of XP your project builds against. <code>@8</code> tracks the latest XP 8 release, which is what you want in most projects. If you target a specific XP version — the <code>xpVersion</code> in your <a href="../tooling/build.ahtml"><code>gradle.properties</code></a> — pin the types to it instead, for example <code>@8.1.0</code>. Never install types <strong>newer</strong> than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="enonic_libraries"><a class="link" href="#enonic_libraries">Enonic Libraries</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>For example, you have a <code>lib-auth</code> gradle dependency:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-gradle" data-lang="gradle">dependencies {
-  include xplibs.auth
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To add type definitions for the library, install dependency from NPM:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/lib-auth@8</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="global"><a class="link" href="#global">Global</a></h3>
-<div class="paragraph">
-<p>Along with library types it is <strong>highly recommended</strong> to install definitions for global objects (<code>app</code>, <code>__</code>, <code>log</code>) and functions (<code>resolve</code>, <code>require</code>):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/global@8</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Since <code>global</code> types are not placed under the <code>node_modules/@types</code>, it is necessary to include them manually:</p>
-</div>
-<div class="paragraph">
-<p><code>tsconfig.json</code></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "compilerOptions": {
-    "types": [
-      "@enonic-types/global"
-    ]
-  }
+<pre class="highlight"><code class="language-java" data-lang="java">package com.enonic.lib.mylib;
+
+public final class MyClass {
+    private String text;
+    private Long size;
+
+    public String something( String param1, Long param2 ) {
+        return "Parameters: " + param1 + " " + param2;
+    }
+
+    public String somethingElse() {
+        return "Parameters: " + this.text + " " + this.size;
+    }
+
+    public void setText( String text ) {
+        this.text = text;
+    }
+
+    public void setSize( Long size ) {
+        this.size = size;
+    }
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="core"><a class="link" href="#core">Core</a></h3>
+<h3 id="parameter_conversions"><a class="link" href="#parameter_conversions">Parameter conversions</a></h3>
 <div class="paragraph">
-<p>There are types that are shared between other libraries (like <code>Content</code> or <code>Principal</code>). Such types reside in the <code>core</code> package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. the Content library exports the <code>Content</code> type. But if you want to use these types directly, you&#8217;ll need to install them:</p>
+<p>There are some type conversions that are made when calling from JavaScript to Java:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/core@8</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and then import them in your TypeScript code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">import type {Content} from '@enonic-types/core';</code></pre>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p>when passing a JavaScript <code>string</code>, the Java method should expect a Java <code>String</code></p>
+</li>
+<li>
+<p>when passing a JavaScript <code>boolean</code>, the Java method should expect a Java <code>Boolean</code></p>
+</li>
+<li>
+<p>when passing a JavaScript <code>number</code>, the Java method should expect a Java <code>Long</code>, <code>Integer</code> or <code>Double</code></p>
+</li>
+<li>
+<p>when passing a JavaScript <code>array</code>, the Java method should expect a Java <code>List</code></p>
+</li>
+<li>
+<p>when passing a JavaScript <code>object</code>, the Java method should expect a Java <code>Map&lt;String, Object&gt;</code></p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="content"><a class="link" href="#content">Content</a></h3>
+<h3 id="returning_results_from_java"><a class="link" href="#returning_results_from_java">Returning results from Java</a></h3>
 <div class="paragraph">
-<p><code>Content</code> contains the <code>x</code> property that has a very special <code>XpXData</code> type.</p>
+<p>When returning simple values from Java to a JavaScript caller, the same type conversions applies.</p>
 </div>
 <div class="paragraph">
-<p><code>XpXData</code> is an interface that is added to the global scope, so it can be modified using the <a href="https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces">declaration merging</a>. This allows you to set the shape of the XData in your project, simply by declaring the <code>XpXData</code> like this:</p>
+<p>To return complex object values, you should create a specific Java class to make the mapping. This class should implement the <code>MapSerializable</code> interface.
+It will implement the <code>serialize</code> method, which allows generating a JSON object.</p>
 </div>
 <div class="listingblock">
+<div class="title">Serialization example</div>
 <div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
-    interface XpXData {
-        'com-mysite-app': {
-            metadata: {
-                metaTagTitle: string;
-                metaTagImageId: string;
-            }
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">package com.enonic.lib.mylib;
+
+import java.util.Map;
+
+import com.enonic.xp.script.serializer.MapGenerator;
+import com.enonic.xp.script.serializer.MapSerializable;
+
+public final class ExampleObjectMapper
+    implements MapSerializable
+{
+    private final String text;
+
+    private final Object[] array;
+
+    private final Map&lt;String, Object&gt; object;
+
+    public ExampleObjectMapper( String text, Object[] array, Map&lt;String, Object&gt; object )
+    {
+        this.text = text;
+        this.array = array;
+        this.object = object;
+    }
+
+    @Override
+    public void serialize( MapGenerator gen )
+    {
+        gen.value( "text", text );
+        gen.array( "arrayValues" );
+        for ( Object value : array )
+        {
+            gen.value( value );
         }
+        gen.end();
+
+        gen.map( "objectValues" );
+        for ( String key : object.keySet() )
+        {
+            gen.value( key, object.get( key ) );
+        }
+        gen.end();
     }
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="additional_types"><a class="link" href="#additional_types">Additional types</a></h3>
 <div class="paragraph">
-<p><code>Content</code> is a complex type that contains unions and maps that are not exported but may be needed during the development. Actually, these types can easily be retrieved from the <code>Content</code> itself:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">import type {Content} from '@enonic-types/core';
-
-type Attachments = Content['attachments'];
-
-type ContentInheritType = Content['inherit'];
-
-type Workflow = Content['workflow'];</code></pre>
-</div>
+<p>Finally, for returning values of type binary stream from Java, it should be wrapped on a <a href="https://google.github.io/guava/releases/19.0/api/docs/com/google/common/io/ByteSource.html">ByteSource</a> object.
+This is required by XP to allow returning it from an HTTP request, or add it as a content attachment.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="require"><a class="link" href="#require">require</a></h3>
+<h3 id="disposer"><a class="link" href="#disposer">disposer</a></h3>
+<div id="disposer" class="paragraph">
+<p>Add a disposer that is called when the app is stopped.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Register disposers while the application is starting — from <a href="main.ahtml"><code>main.ts</code></a>, or from a module it loads during start-up. Registering from anywhere else is not supported.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+GraalJS is a <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> preview engine and <strong>not for production</strong> — see <a href="engines.ahtml#graaljs">GraalJS</a>. Follow the start-up rule above regardless: it is the portable one.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Nashorn keeps only the most recent registration per module, so a module that calls <code>__.disposer</code> twice loses the first callback. Combine clean-up into a single disposer.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">func</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Function to call</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
 <div class="paragraph">
-<p>After <code>global</code> and library types are installed and configured in <code>tsconfig.json</code>, libraries can be imported just like they would be in JS code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">const libAuth = require('/lib/xp/auth');</code></pre>
-</div>
+<p><strong>void</strong></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="es6_style_import"><a class="link" href="#es6_style_import">ES6-style import</a></h3>
+<h3 id="newbean"><a class="link" href="#newbean">newBean</a></h3>
 <div class="paragraph">
-<p>If you are planning to use <code>import</code> in your code and transpile it with the default <code>tsc</code> TypeScript compiler, you&#8217;ll need to add proper types mapping to your configuration via <code>baseUrl</code> and <code>paths</code> properties in <code>tsconfig.json</code>:</p>
+<p>Creates a new JavaScript bean that wraps the given Java class and makes it&#8217;s methods available to be called from JavaScript.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "/lib/xp/auth": ["node_modules/@enonic-types/lib-auth"],
-    }
-  }
-}</code></pre>
+<div class="paragraph lead">
+<p>Parameters</p>
 </div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Classname for bean to create</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
 </div>
 <div class="paragraph">
-<p>Then in your code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">import {login, logout, getUser, generatePassword} from '/lib/xp/auth';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Configuring <code>baseUrl</code> and <code>paths</code> will allow the TypeScript compiler to keep the valid paths in the resulting JavaScript files.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="require_2"><a class="link" href="#require_2">Require</a></h3>
-<div class="paragraph">
-<p>To add support for type resolution for custom libraries via <code>require</code>, you can redeclare the <code>XpLibraries</code> interface in global scope, which will lead to declaration merging:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
-    interface XpLibraries {
-        '/lib/custom/mylib': typeof import('./mylib');
-    }
-}</code></pre>
-</div>
+<p><strong>void</strong></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="other_imports"><a class="link" href="#other_imports">Other imports</a></h3>
+<h3 id="nullorvalue"><a class="link" href="#nullorvalue">nullOrValue</a></h3>
 <div class="paragraph">
-<p>If you want to use custom import functions, like <code>__non_webpack_require__</code> with Webpack, just use <code>XpRequire</code> from <code>global</code> types for this:</p>
+<p>Converts a JavaScript variable that is undefined to a Java null object. If the JavaScript variable is defined, it is returned as is.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare const __non_webpack_require__: XpRequire;</code></pre>
+<div class="paragraph lead">
+<p>Parameters</p>
 </div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to convert</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="beans"><a class="link" href="#beans">Beans</a></h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>To create a new Java bean, the <code>__.newBean()</code> function must be used. Making it return a proper type can be done in two ways. Let&#8217;s say, you have created an interface for that bean somewhere in your project:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">interface SomeHelper {
-  help(text: string): void;
-}</code></pre>
+<p><strong>void</strong></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="option_1"><a class="link" href="#option_1">Option 1</a></h3>
+<h3 id="registermock"><a class="link" href="#registermock">registerMock</a></h3>
 <div class="paragraph">
-<p>You can pass the type argument explicitly. This option is a bit cleaner.</p>
+<p>Registers a mock</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">const helper = __.newBean&lt;SomeHelper&gt;('com.me.project.SomeHelper');</code></pre>
+<div class="paragraph lead">
+<p>Parameters</p>
 </div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of mock</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to register</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="option_2"><a class="link" href="#option_2">Option 2</a></h3>
+<h3 id="tonativeobject"><a class="link" href="#tonativeobject">toNativeObject</a></h3>
 <div class="paragraph">
-<p>Or you can map the bean name to bean interface. It may be a preferable way to do it, if the bean is used across multiple files:</p>
+<p>Converts arrays or complex Java objects to JSON.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
-    interface XpBeans {
-        'com.me.project.SomeHelper': SomeHelper;
-    }
-}
-
-const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
+<div class="paragraph lead">
+<p>Parameters</p>
 </div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to convert</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="toscriptvalue"><a class="link" href="#toscriptvalue">toScriptValue</a></h3>
+<div class="paragraph">
+<p>Converts JSON to a Java Map structure that can be used as parameters to a Java method on a bean created with <a href="#newbean">newBean</a>.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to convert</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
 </div>
 </div>
 </div>
@@ -750,7 +981,7 @@ const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

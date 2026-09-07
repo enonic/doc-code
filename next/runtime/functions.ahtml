@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Fundamentals</title>
+<title>Functions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,12 +437,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Fundamentals</h1>
+<h1>Functions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#whats_in_this_section">What&#8217;s in this section</a></li>
-<li><a href="#how_the_parts_relate">How the parts relate</a></li>
+<li><a href="#modules_and_the_bundle">Modules and the bundle</a></li>
+<li><a href="#loading_and_caching">Loading and caching</a></li>
+<li><a href="#framework_contracts">Framework contracts</a></li>
+<li><a href="#types_of_contracts">Types of contracts</a></li>
 </ul>
 </div>
 </div>
@@ -450,77 +452,154 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The execution model and the core building blocks every Enonic app uses — regardless of whether it serves an API, a webapp or a site.</p>
+<p>Every <code>.ts</code> or <code>.js</code> file in an Enonic app is a <strong>module</strong> whose exported functions are callable from anywhere else in the bundle. On top of this module system, the framework defines <strong>contracts</strong> that bind specific files — or specific exports within them — to triggers such as an HTTP request, an event, a scheduled time, or the app&#8217;s own lifecycle.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Code examples throughout the documentation use TypeScript. Strip the type annotations for plain JavaScript.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="whats_in_this_section"><a class="link" href="#whats_in_this_section">What&#8217;s in this section</a></h2>
+<h2 id="modules_and_the_bundle"><a class="link" href="#modules_and_the_bundle">Modules and the bundle</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This section documents the parts of an app that are not tied to a specific HTTP service or background mechanism. Read the runtime overview first to understand what powers your code, then dip into the rest as needed.</p>
+<p>Each source file is a CommonJS module. Declare the functions and values the module exposes on <code>exports</code>:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// /lib/greet.ts
+exports.hello = (name: string): string =&gt; `Hello, ${name}`;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Require the module from any other file in the app by its absolute path within the bundle:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// /webapp/webapp.ts
+const greet = require('/lib/greet');
+
+exports.GET = () =&gt; ({
+  body: greet.hello('World')
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Paths are rooted at the app bundle — not the filesystem and not the running server. Platform libraries are required by name (for example, <code>require('/lib/xp/content')</code>). See <a href="globals.ahtml#require">the <code>require</code> global</a> for the full resolution rules.</p>
+</div>
+<div class="paragraph">
+<p>The bundle is also the boundary: modules in one app cannot require modules in another app directly. Cross-app integration goes through XP&#8217;s explicit mechanisms — events, services, or shared content.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="loading_and_caching"><a class="link" href="#loading_and_caching">Loading and caching</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XP loads each module once per app deploy and caches it. Subsequent <code>require</code> / <code>import</code> calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed.</p>
+</div>
+<div class="paragraph">
+<p>Two consequences worth knowing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Top-level code runs exactly once per app deploy.</strong> Use it for one-time setup — requiring libraries, building lookup tables, computing constants. Code outside a function body will not execute again until the app is redeployed.</p>
+</li>
+<li>
+<p><strong>Top-level state is immutable once cached.</strong> Assigning to a top-level variable from inside a function is <strong>not supported</strong>. XP makes no guarantees about consistency across requests, threads, or cluster nodes — treat anything declared outside a function as read-only after load.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This applies to every module in the app, but it surfaces most visibly in implementation files: their top-level runs lazily at first trigger, so any setup work happens then. For state that must survive between invocations, use a repo node, the <code>cache</code> library, or another explicit persistence mechanism — never the module&#8217;s own top-level.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="framework_contracts"><a class="link" href="#framework_contracts">Framework contracts</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most of what you write is regular module code your own files require and orchestrate. A smaller subset of files follow a <strong>contract</strong> the framework enforces: the file sits at a conventional location (or is pointed to by a descriptor), and the framework looks for specific named exports and invokes them when its trigger fires.</p>
+</div>
+<div class="paragraph">
+<p>The pattern is the same across every contract:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The file is placed at a conventional location, or registered via a descriptor.</p>
+</li>
+<li>
+<p>The file exports one or more named functions whose names match the contract.</p>
+</li>
+<li>
+<p>The framework resolves the file, calls the appropriate export when its trigger fires, passes the arguments defined by the contract, and handles the return value.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The <a href="globals.ahtml">framework globals</a> (<code>app</code>, <code>log</code>, <code>require</code>, etc.) are available inside every function — contract-bound or not. Context propagation, error handling, and the module system work identically across all function types.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="types_of_contracts"><a class="link" href="#types_of_contracts">Types of contracts</a></h2>
+<div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><a href="fundamentals/runtime.ahtml">Runtime</a></dt>
+<dt class="hdlist1"><a href="../web/request-response.ahtml">HTTP functions</a></dt>
 <dd>
-<p>How XP executes server-side JavaScript — the JVM-hosted engine, threading model, clustering, and the platform features your code inherits for free.</p>
+<p>Respond to HTTP requests. Exports match HTTP methods (<code>GET</code>, <code>POST</code>, <code>DELETE</code>, <code>PATCH</code>, …) plus an <code>all</code> fallback. Receive a Request, return a Response.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/typescript.ahtml">TypeScript</a></dt>
+<dt class="hdlist1"><a href="../web/filters.ahtml">Filters</a></dt>
 <dd>
-<p>TypeScript is the authoring language for Enonic apps — set it up first. How to install and use the official <code>@enonic-types</code> packages so your editor and build understand the platform APIs.</p>
+<p>Wrap downstream HTTP functions with pre- and post-processing in the site or webapp pipeline.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/types.ahtml">Types</a></dt>
+<dt class="hdlist1"><a href="../web/error.ahtml">Error handlers</a></dt>
 <dd>
-<p>The shared types that flow across the libraries — principals, binary streams, the content object, page components — defined once in <code>@enonic-types/core</code> and referenced from every library page.</p>
+<p>Invoked when an exception bubbles out of an HTTP function. Receive the error plus the original request, return a Response.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/apps.ahtml">Apps</a></dt>
+<dt class="hdlist1"><a href="events.ahtml">Event listeners</a></dt>
 <dd>
-<p>What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.</p>
+<p>Subscribe to the cluster-wide event bus. Receive the event payload; return value is ignored.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/functions.ahtml">Functions</a></dt>
+<dt class="hdlist1"><a href="../background/tasks.ahtml">Tasks</a></dt>
 <dd>
-<p>How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).</p>
+<p>Fire-and-forget background jobs. Receive a <code>params</code> object, report progress.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/main.ahtml">Main</a></dt>
+<dt class="hdlist1"><a href="../background/scheduler.ahtml">Scheduled jobs</a></dt>
 <dd>
-<p>The <code>main.ts</code> lifecycle hook — code that runs when your app starts and stops.</p>
+<p>Run on a cron or interval schedule. Same shape as tasks.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/globals.ahtml">Globals</a></dt>
+<dt class="hdlist1"><a href="../web/websocket.ahtml">Websocket handlers</a></dt>
 <dd>
-<p>Global objects and functions available in every module — <code>app</code>, <code>log</code>, <code>require</code>, <code>resolve</code>, and friends.</p>
+<p>React to websocket lifecycle events (open, message, close, error).</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/events.ahtml">Events</a></dt>
+<dt class="hdlist1"><a href="main.ahtml">Main lifecycle</a></dt>
 <dd>
-<p>The cluster-wide pub/sub bus. Publish from anywhere — request handlers, tasks, <code>main.ts</code> — and subscribe to platform events (content writes, repo updates) or your own custom domain events.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/i18n.ahtml">Localization</a></dt>
-<dd>
-<p>Localizing text in your app and the schemas it deploys, using <code>phrases</code> files and the localization API.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/java-bridge.ahtml">Java bridge</a></dt>
-<dd>
-<p>Calling JVM code from JavaScript via the <code>__</code> global. Required reading for library authors and anyone integrating with existing Java codebases.</p>
+<p><code>main.js</code> hooks that run when your app starts and stops.</p>
 </dd>
 </dl>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="how_the_parts_relate"><a class="link" href="#how_the_parts_relate">How the parts relate</a></h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>The runtime is the foundation: a JVM-based execution environment with a CommonJS module system, multithreading, clustering, and a platform&#8217;s worth of services attached. Functions are the units of code the runtime invokes — most of what you write is regular module code, with a smaller subset bound to framework contracts. <code>main.ts</code> is the lifecycle contract. Events are the cluster-wide pub/sub primitive, available from any function. Globals, TypeScript, the Java bridge, and localization are tools you reach for inside any function, regardless of which contract called it.</p>
-</div>
-<div class="paragraph">
-<p>For HTTP-bound contracts (request handlers, filters, error handlers, websockets, SSE, ID providers), see <a href="web.ahtml">Web</a>. For asynchronous background execution (tasks, scheduled jobs), see <a href="background.ahtml">Background</a>.</p>
+<p>Page, part, and layout implementations export HTTP functions invoked by the site service when rendering content — see <a href="../web/sites/components.ahtml">components</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

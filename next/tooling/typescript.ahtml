@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Runtime</title>
+<title>TypeScript Definitions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,219 +437,48 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Runtime</h1>
+<h1>TypeScript Definitions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#execution_model">Execution model</a>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#typescript_starter">TypeScript starter</a></li>
+<li><a href="#install_types">Install types</a></li>
+<li><a href="#enonic_libraries">Enonic Libraries</a>
 <ul class="sectlevel2">
-<li><a href="#language_level">Language level</a></li>
-<li><a href="#graaljs">GraalJS preview</a></li>
+<li><a href="#global">Global</a></li>
+<li><a href="#core">Core</a></li>
+<li><a href="#content">Content</a></li>
+<li><a href="#additional_types">Additional types</a></li>
 </ul>
 </li>
-<li><a href="#modules_and_bundling">Modules and bundling</a></li>
-<li><a href="#loading_and_caching">Loading and caching</a></li>
-<li><a href="#threading">Threading</a></li>
-<li><a href="#clustering">Clustering</a></li>
-<li><a href="#what_you_get_for_free">What you get for free</a></li>
+<li><a href="#usage">Usage</a>
+<ul class="sectlevel2">
+<li><a href="#require">require</a></li>
+<li><a href="#es6_style_import">ES6-style import</a></li>
+</ul>
+</li>
+<li><a href="#configuration">Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#require_2">Require</a></li>
+<li><a href="#other_imports">Other imports</a></li>
+</ul>
+</li>
+<li><a href="#beans">Beans</a>
+<ul class="sectlevel2">
+<li><a href="#option_1">Option 1</a></li>
+<li><a href="#option_2">Option 2</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>What powers your Enonic app at execution time — the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free.</p>
-</div>
-</div>
-</div>
 <div class="sect1">
-<h2 id="execution_model"><a class="link" href="#execution_model">Execution model</a></h2>
+<h2 id="intro"><a class="link" href="#intro">Intro</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP runs on top of the Java Virtual Machine. Your app&#8217;s TypeScript and JavaScript files are executed by an embedded JavaScript engine, with full access to the JVM through the <a href="java-bridge.ahtml">Java bridge</a>. There is no Node.js, no separate JS process, and no inter-process bridge — server-side JS runs inside the same JVM as the platform itself.</p>
-</div>
-<div class="paragraph">
-<p>Two engines are available:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Nashorn</dt>
-<dd>
-<p>The default engine. Stable, production-ready, ships with every XP install. All XP releases since 7.x have shipped Nashorn.</p>
-</dd>
-<dt class="hdlist1">GraalJS</dt>
-<dd>
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
-  <linearGradient id="s" x2="0" y2="100%">
-    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <clipPath id="r">
-    <rect width="63" height="20" rx="3" fill="#fff"/>
-  </clipPath>
-  <g clip-path="url(#r)">
-    <rect width="63" height="20" fill="#dfb317"/>
-    <rect width="63" height="20" fill="url(#s)"/>
-  </g>
-  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
-     font-size="110">
-    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
-    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
-  </g>
-</svg></span> The engine that will replace Nashorn, available to try since XP 8.1.0. Implements the current ECMAScript standard. <strong>Not for production</strong> - see <a href="#graaljs">GraalJS preview</a>.</p>
-</dd>
-</dl>
-</div>
-<div class="sect2">
-<h3 id="language_level"><a class="link" href="#language_level">Language level</a></h3>
-<div class="paragraph">
-<p>Every module runs in ECMAScript <strong>strict mode</strong>, on both engines.</p>
-</div>
-<div class="paragraph">
-<p>Nashorn is <strong>ES5</strong> compatible, with some ES6 capabilities. Transpile to ES5 — that is what the official starters do, and what apps have always done. See <a href="typescript.ahtml">TypeScript</a> for the build step.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
-  <linearGradient id="s" x2="0" y2="100%">
-    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <clipPath id="r">
-    <rect width="63" height="20" rx="3" fill="#fff"/>
-  </clipPath>
-  <g clip-path="url(#r)">
-    <rect width="63" height="20" fill="#dfb317"/>
-    <rect width="63" height="20" fill="url(#s)"/>
-  </g>
-  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
-     font-size="110">
-    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
-    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
-  </g>
-</svg></span> GraalJS tracks the current ECMAScript standard, so modern syntax runs without down-levelling. Transpiling to ES5 stays the portable choice for now: an app built that way runs on either engine, which is what makes the preview something you can try and back out of.</p>
-</div>
-<div class="paragraph">
-<p>The environment around the language is its own, and differs from the browser and from Node.js — see <a href="#graaljs-limits">what GraalJS does not bring with it</a>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="graaljs"><a class="link" href="#graaljs">GraalJS preview</a></h3>
-<div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
-  <linearGradient id="s" x2="0" y2="100%">
-    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <clipPath id="r">
-    <rect width="63" height="20" rx="3" fill="#fff"/>
-  </clipPath>
-  <g clip-path="url(#r)">
-    <rect width="63" height="20" fill="#dfb317"/>
-    <rect width="63" height="20" fill="url(#s)"/>
-  </g>
-  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
-     font-size="110">
-    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
-    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
-  </g>
-</svg></span> <strong>Not for production.</strong> Nashorn remains the default and the supported engine; GraalJS is here to try and report on, and what follows may still change while it is in preview.</p>
-</div>
-<div class="paragraph">
-<p>The engine is chosen <strong>per application</strong>, from the <code>X-Script-Engine</code> manifest header the application bundle declares. An application that declares none runs on Nashorn. Applications on different engines coexist in the same installation, so a single app can be moved across without touching the rest.</p>
-</div>
-<div class="paragraph">
-<p>Code can tell which engine it got. GraalJS installs a <code>Graal</code> global, and Nashorn has no such name:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">if (typeof Graal !== 'undefined') {
-    log.info(`${Graal.language} ${Graal.versionECMAScript}`);  // JavaScript 2026
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>Graal.versionECMAScript</code> is the year of the ECMAScript compatibility mode in force — the concrete answer to which language level you actually have. <code>Graal.versionGraalVM</code> gives the GraalVM version. See the <a href="https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object">Graal object</a> in the GraalJS compatibility reference.</p>
-</div>
-<div class="sect3">
-<h4 id="graaljs-limits"><a class="link" href="#graaljs-limits">What GraalJS does not bring with it</a></h4>
-<div class="paragraph">
-<p>A current-standard engine carries browser and Node.js expectations with it. XP is a different environment, and these are the differences that catch people out.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">ES modules</dt>
-<dd>
-<p><strong>Not supported.</strong> <code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime. Use <code>require()</code> and <code>exports</code>; see <a href="globals.ahtml#esm">ECMAScript modules</a>.</p>
-</dd>
-<dt class="hdlist1"><code>async</code> / <code>await</code></dt>
-<dd>
-<p><strong>Not supported.</strong> Write synchronous code, and move work that should not block a request into a <a href="../background/tasks.ahtml">task</a>.</p>
-</dd>
-<dt class="hdlist1">Node.js APIs</dt>
-<dd>
-<p><strong>Not supported.</strong> No <code>process</code>, <code>Buffer</code> or <code>global</code>, and no <code>node_modules</code> resolution.</p>
-</dd>
-<dt class="hdlist1">Web APIs</dt>
-<dd>
-<p><strong>Partially supported.</strong> <code>TextEncoder</code> and <code>TextDecoder</code> are available. Further APIs may become available in future GraalJS versions, while others, such as <code>fetch</code> and <code>setTimeout</code>, might never be supported. For HTTP, mail, storage and the rest, use the platform <a href="../libraries.ahtml">libraries</a>.</p>
-</dd>
-<dt class="hdlist1">Single-threaded assumptions</dt>
-<dd>
-<p><strong>Wrong here.</strong> The runtime is multithreaded — see <a href="#threading">Threading</a> — and an application gets a pool of script contexts. Module-level state is not a safe place to keep anything.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Nothing about how you <strong>write</strong> an app changes: the same modules, the same libraries, the same <a href="java-bridge.ahtml">Java bridge</a>. What changes is the execution environment around them.</p>
-</div>
-<div class="paragraph">
-<p><strong>Compiled code is shared across contexts.</strong> One engine serves the whole installation, and the code it compiles is cached across every script context built from it: a module parsed while one context starts is reused by the next, rather than parsed again for each.</p>
-</div>
-<div class="paragraph">
-<p><strong>An application gets a pool of script contexts.</strong> Contexts are created lazily as concurrency demands them, and <strong>module-level state is per context</strong> - two requests may load the same module and see two different copies of its top-level variables. This is the same rule <a href="#threading">threading</a> already imposes, enforced more strictly: treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.</p>
-</div>
-<div class="paragraph">
-<p><strong>Values cannot leave the context that created them.</strong> A JavaScript function or object belongs to the one script context. <a href="../libraries/lib-task.ahtml#executefunction"><code>executeFunction()</code></a> is unsupported; submit a <a href="../background/tasks.ahtml">named task</a> with <code>submitTask()</code> instead.</p>
-</div>
-<div class="paragraph">
-<p><strong>Disposers must be registered during start-up.</strong> Register <code>__.disposer</code> from <code>main.ts</code>, or from a module it loads while starting. See <a href="java-bridge.ahtml#disposer"><code>__.disposer</code></a>.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Run your test suite against both engines before switching a production app. The differences above are the ones the platform imposes; a dependency written against Nashorn&#8217;s language level can have its own.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="modules_and_bundling"><a class="link" href="#modules_and_bundling">Modules and bundling</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Each <code>.ts</code> or <code>.js</code> file in your app is a module under the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS module specification</a>. Modules export values via <code>exports</code>, and consume other modules via <code>require()</code> — <code>import</code> and <code>export</code> statements are not supported at runtime, on either engine, see <a href="globals.ahtml#esm">ECMAScript modules</a>. Paths are rooted at the app bundle, not the filesystem — <code>require('/lib/greet')</code> loads <code>src/main/resources/lib/greet.ts</code> from the same app.</p>
-</div>
-<div class="paragraph">
-<p>Platform libraries are referenced by name (for example, <code>require('/lib/xp/content')</code>). See <a href="functions.ahtml#modules_and_the_bundle">Functions: Modules and the bundle</a> for the full path-resolution rules and bundle boundaries.</p>
-</div>
-<div class="paragraph">
-<p>TypeScript is supported as the authoring language; the build step transpiles to JavaScript before deployment. See <a href="typescript.ahtml">TypeScript Definitions</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="loading_and_caching"><a class="link" href="#loading_and_caching">Loading and caching</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>XP loads each module <strong>once per app deploy</strong> and caches it. Subsequent <code>require()</code> calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed. Top-level code in a module therefore runs exactly once per deploy.</p>
+<p>We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <a href="../libraries.ahtml">standard libraries</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -658,126 +487,270 @@ Run your test suite against both engines before switching a production app. The 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-On GraalJS — a <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
-  <linearGradient id="s" x2="0" y2="100%">
-    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
-    <stop offset="1" stop-opacity=".1"/>
-  </linearGradient>
-  <clipPath id="r">
-    <rect width="63" height="20" rx="3" fill="#fff"/>
-  </clipPath>
-  <g clip-path="url(#r)">
-    <rect width="63" height="20" fill="#dfb317"/>
-    <rect width="63" height="20" fill="url(#s)"/>
-  </g>
-  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
-     font-size="110">
-    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
-    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
-  </g>
-</svg></span> preview engine, <strong>not for production</strong> — the unit is the script context: a module is loaded once per context, so its top-level code runs once for each context the application is given. Everything below still holds, and applies with more force — there can now be several copies of a module&#8217;s top-level state. See <a href="#graaljs">GraalJS preview</a>.
+XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <a href="../runtime.ahtml">Runtime</a> for the execution model.
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>This makes module top-level a natural place for one-time setup (requiring libraries, computing constants), but a poor place for mutable state. Treat anything declared outside a function body as immutable after load. For state that must survive between invocations, use a repo node, the <code>cache</code> library, or another explicit persistence mechanism.</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="typescript_starter"><a class="link" href="#typescript_starter">TypeScript starter</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>See <a href="functions.ahtml#loading_and_caching">Functions: Loading and caching</a> for the implications on each function type.</p>
+<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TS Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sh" data-lang="sh">enonic create -r starter-ts com.example.myapp</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="threading"><a class="link" href="#threading">Threading</a></h2>
+<h2 id="install_types"><a class="link" href="#install_types">Install types</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The runtime is multithreaded. The platform serves requests, dispatches events, and runs background tasks concurrently across multiple threads, taking advantage of multi-core CPU architectures. There is no single event loop — each request, task, or event listener runs on a worker thread from a managed pool.</p>
+<p>To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under <a href="https://www.npmjs.com/org/enonic-types">@enonic-types</a> organisation on NPM.</p>
 </div>
 <div class="paragraph">
-<p>Two consequences for your code:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Module-level state is shared across threads.</strong> Cached modules are visible to every thread executing within the app. If two requests both call <code>require('/lib/cache')</code>, they receive the same module instance. Treat top-level state as read-only.</p>
-</li>
-<li>
-<p><strong>Implementations are reentrant.</strong> A function may be invoked concurrently with itself. Don&#8217;t accumulate state in module-level variables across invocations.</p>
-</li>
-</ul>
+<p>Install types at the major version of XP your project builds against. <code>@8</code> tracks the latest XP 8 release, which is what you want in most projects. If you target a specific XP version — the <code>xpVersion</code> in your <a href="../tooling/build.ahtml"><code>gradle.properties</code></a> — pin the types to it instead, for example <code>@8.1.0</code>. Never install types <strong>newer</strong> than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="clustering"><a class="link" href="#clustering">Clustering</a></h2>
+<h2 id="enonic_libraries"><a class="link" href="#enonic_libraries">Enonic Libraries</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XP can run as a single node or as a cluster of nodes sharing the same data. The runtime is cluster-aware out of the box:</p>
+<p>For example, you have a <code>lib-auth</code> gradle dependency:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Events</strong> fire across the cluster. A listener registered on any node receives events published from any other node. See <a href="events.ahtml">Events</a>.</p>
-</li>
-<li>
-<p><strong>Scheduled jobs</strong> are distributed. A scheduled job runs on one cluster node per fire — XP coordinates so the same job doesn&#8217;t execute twice. See <a href="../background/scheduler.ahtml">Scheduler</a>.</p>
-</li>
-<li>
-<p><strong>Repositories</strong> are replicated. Content writes propagate to all nodes; reads can target any node.</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-gradle" data-lang="gradle">dependencies {
+  include xplibs.auth
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Apps deployed to a cluster are installed and started on every node. The runtime guarantees the same module-loading and caching semantics on each node — your app sees a consistent execution environment regardless of which node serves a given request.</p>
+<p>To add type definitions for the library, install dependency from NPM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/lib-auth@8</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="global"><a class="link" href="#global">Global</a></h3>
+<div class="paragraph">
+<p>Along with library types it is <strong>highly recommended</strong> to install definitions for global objects (<code>app</code>, <code>__</code>, <code>log</code>) and functions (<code>resolve</code>, <code>require</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/global@8</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since <code>global</code> types are not placed under the <code>node_modules/@types</code>, it is necessary to include them manually:</p>
+</div>
+<div class="paragraph">
+<p><code>tsconfig.json</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "compilerOptions": {
+    "types": [
+      "@enonic-types/global"
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="core"><a class="link" href="#core">Core</a></h3>
+<div class="paragraph">
+<p>There are types that are shared between other libraries (like <code>Content</code> or <code>Principal</code>). Such types reside in the <code>core</code> package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. the Content library exports the <code>Content</code> type. But if you want to use these types directly, you&#8217;ll need to install them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/core@8</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and then import them in your TypeScript code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">import type {Content} from '@enonic-types/core';</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="content"><a class="link" href="#content">Content</a></h3>
+<div class="paragraph">
+<p><code>Content</code> contains the <code>x</code> property that has a very special <code>XpXData</code> type.</p>
+</div>
+<div class="paragraph">
+<p><code>XpXData</code> is an interface that is added to the global scope, so it can be modified using the <a href="https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces">declaration merging</a>. This allows you to set the shape of the XData in your project, simply by declaring the <code>XpXData</code> like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpXData {
+        'com-mysite-app': {
+            metadata: {
+                metaTagTitle: string;
+                metaTagImageId: string;
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="additional_types"><a class="link" href="#additional_types">Additional types</a></h3>
+<div class="paragraph">
+<p><code>Content</code> is a complex type that contains unions and maps that are not exported but may be needed during the development. Actually, these types can easily be retrieved from the <code>Content</code> itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">import type {Content} from '@enonic-types/core';
+
+type Attachments = Content['attachments'];
+
+type ContentInheritType = Content['inherit'];
+
+type Workflow = Content['workflow'];</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="what_you_get_for_free"><a class="link" href="#what_you_get_for_free">What you get for free</a></h2>
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="require"><a class="link" href="#require">require</a></h3>
+<div class="paragraph">
+<p>After <code>global</code> and library types are installed and configured in <code>tsconfig.json</code>, libraries can be imported just like they would be in JS code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">const libAuth = require('/lib/xp/auth');</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="es6_style_import"><a class="link" href="#es6_style_import">ES6-style import</a></h3>
+<div class="paragraph">
+<p>If you are planning to use <code>import</code> in your code and transpile it with the default <code>tsc</code> TypeScript compiler, you&#8217;ll need to add proper types mapping to your configuration via <code>baseUrl</code> and <code>paths</code> properties in <code>tsconfig.json</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "/lib/xp/auth": ["node_modules/@enonic-types/lib-auth"],
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then in your code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">import {login, logout, getUser, generatePassword} from '/lib/xp/auth';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuring <code>baseUrl</code> and <code>paths</code> will allow the TypeScript compiler to keep the valid paths in the resulting JavaScript files.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="require_2"><a class="link" href="#require_2">Require</a></h3>
+<div class="paragraph">
+<p>To add support for type resolution for custom libraries via <code>require</code>, you can redeclare the <code>XpLibraries</code> interface in global scope, which will lead to declaration merging:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpLibraries {
+        '/lib/custom/mylib': typeof import('./mylib');
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="other_imports"><a class="link" href="#other_imports">Other imports</a></h3>
+<div class="paragraph">
+<p>If you want to use custom import functions, like <code>__non_webpack_require__</code> with Webpack, just use <code>XpRequire</code> from <code>global</code> types for this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare const __non_webpack_require__: XpRequire;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="beans"><a class="link" href="#beans">Beans</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Apps run inside a fully equipped platform. The runtime gives you, without extra setup:</p>
+<p>To create a new Java bean, the <code>__.newBean()</code> function must be used. Making it return a proper type can be done in two ways. Let&#8217;s say, you have created an interface for that bean somewhere in your project:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Persistence</strong> — content, nodes, repositories, blobs, all queryable and clusterable.</p>
-</li>
-<li>
-<p><strong>HTTP routing</strong> — the <a href="../web/request-response.ahtml">Portal</a> dispatches incoming requests to four services (<code>/api</code>, <code>/admin</code>, <code>/site</code>, <code>/webapp</code>); you provide the implementations.</p>
-</li>
-<li>
-<p><strong>Identity &amp; access management</strong> — pluggable <a href="../web/id-providers.ahtml">ID providers</a>, role-based permissions, audit logging.</p>
-</li>
-<li>
-<p><strong>Cluster-wide events</strong> — see <a href="events.ahtml">Events</a>.</p>
-</li>
-<li>
-<p><strong>Background work</strong> — <a href="../background/tasks.ahtml">tasks</a> and <a href="../background/scheduler.ahtml">scheduled jobs</a>.</p>
-</li>
-<li>
-<p><strong>Localization</strong> — see <a href="i18n.ahtml">Localization</a>.</p>
-</li>
-<li>
-<p><strong>Java interop</strong> — see <a href="java-bridge.ahtml">Java bridge</a>.</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Compatibility</dt>
-<dd>
-<p>An app built against any XP release runs unchanged on every patch and minor release within the same major version. Major version upgrades are documented separately — see <a href="../upgrade.ahtml">Upgrading</a>.</p>
-</dd>
-</dl>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">interface SomeHelper {
+  help(text: string): void;
+}</code></pre>
 </div>
-</li>
-</ul>
+</div>
+<div class="sect2">
+<h3 id="option_1"><a class="link" href="#option_1">Option 1</a></h3>
+<div class="paragraph">
+<p>You can pass the type argument explicitly. This option is a bit cleaner.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">const helper = __.newBean&lt;SomeHelper&gt;('com.me.project.SomeHelper');</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="option_2"><a class="link" href="#option_2">Option 2</a></h3>
+<div class="paragraph">
+<p>Or you can map the bean name to bean interface. It may be a preferable way to do it, if the bean is used across multiple files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpBeans {
+        'com.me.project.SomeHelper': SomeHelper;
+    }
+}
+
+const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

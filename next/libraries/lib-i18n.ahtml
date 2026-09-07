@@ -470,7 +470,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This API uses standard framework functionality. Please read the <a href="../fundamentals/i18n.ahtml">framework localization docs</a> before using this API.
+This API uses standard framework functionality. Please read the <a href="../runtime/i18n.ahtml">framework localization docs</a> before using this API.
 </td>
 </tr>
 </table>
@@ -486,7 +486,7 @@ This API uses standard framework functionality. Please read the <a href="../fund
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-i18n</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-i18n</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 <div class="paragraph">
 <p>Then you need to create files with original phrases and their translations.  These files should normally be placed in the <code>src/main/resources/i18n</code> folder of your application.
@@ -695,7 +695,7 @@ const message = localize({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

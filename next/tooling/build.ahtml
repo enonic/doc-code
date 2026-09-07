@@ -470,7 +470,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Upgrading from XP 7? See <a href="../upgrade.ahtml">the Upgrading guide</a>.
+Upgrading from XP 7? See <a href="../upgrade/xp7.ahtml">Upgrading Enonic apps from XP 7 to XP 8</a>.
 </td>
 </tr>
 </table>
@@ -898,7 +898,7 @@ Development mode also disables some of XP&#8217;s caching mechanisms. To make th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

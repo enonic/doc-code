@@ -538,7 +538,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-node</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-node</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -648,7 +648,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Additional principals to execute the connection with.</p>
 </div></div></td>
@@ -1156,7 +1156,7 @@ Storage determines indexing from each property&#8217;s <a href="../storage/prope
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The created node.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#node"><code>Node</code></a>) The created node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1495,7 +1495,7 @@ Norwegian indices will be created for strings inside <code>norwegian_set</code> 
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The duplicated node.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#node"><code>Node</code></a>) The duplicated node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1824,7 +1824,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a> or <code>Node[]</code>) The node, or array of nodes, fetched from the repository. Returns <code>null</code> when a single requested node is not found.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#node"><code>Node</code></a> or <code>Node[]</code>) The node, or array of nodes, fetched from the repository. Returns <code>null</code> when a single requested node is not found.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -1967,7 +1967,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#byte-source">ByteSource</a>) Stream of the binary.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#byte-source">ByteSource</a>) Stream of the binary.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2090,7 +2090,7 @@ if (firstPage.cursor) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The modified node.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#node"><code>Node</code></a>) The modified node.</p>
 </div>
 <div class="paragraph lead">
 <p>Example</p>
@@ -2333,7 +2333,7 @@ const patchedNode = repo.patch({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The moved or renamed node.</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#node"><code>Node</code></a>) The moved or renamed node.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -3179,7 +3179,7 @@ const patchedNode = repo.patch({
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principals</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#principal-key">PrincipalKey</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Additional principals to execute the connection with.</p>
 </div></div></td>
@@ -3358,7 +3358,7 @@ const patchedNode = repo.patch({
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal key (for example <code>role:system.everyone</code> or <code>user:system:my-user</code>).</p>
 </div></div></td>
@@ -3678,7 +3678,7 @@ const patchedNode = repo.patch({
 <td class="tableblock halign-left valign-top"><p class="tableblock">node</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>(<a href="../fundamentals/types.ahtml#node"><code>Node</code></a>) The parent node after the new child order was applied.</p>
+<p>(<a href="../libraries/types.ahtml#node"><code>Node</code></a>) The parent node after the new child order was applied.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3734,7 +3734,7 @@ const patchedNode = repo.patch({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

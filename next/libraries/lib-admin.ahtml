@@ -480,7 +480,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-admin</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-admin</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -840,7 +840,7 @@ application publishes on those nodes too.</p>
 <div class="paragraph">
 <p>Publishing from an event listener registered in <code>main.ts</code> does exactly that: <code>main.ts</code> runs on every
 node, so each node&#8217;s listener publishes to its own subscribers. Distribution is then the event&#8217;s
-concern - see <a href="../fundamentals/events.ahtml#local-vs-distributed">local versus distributed semantics</a> - and
+concern - see <a href="../runtime/events.ahtml#local-vs-distributed">local versus distributed semantics</a> - and
 each subscriber receives one message rather than one per node.</p>
 </div>
 </td>
@@ -1029,7 +1029,7 @@ Deprecated — use <a href="#extensionurl"><code>extensionUrl</code></a> instead
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

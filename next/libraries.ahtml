@@ -459,7 +459,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>When building Enonic apps you may access a broad set of platform capabilities by requiring these libraries. Each library is pulled into your app as a <code>build.gradle</code> dependency and loaded at runtime via <code>require('/lib/xp/&lt;library&gt;')</code>.</p>
 </div>
 <div class="paragraph">
-<p>A library can be loaded two ways — both fully typed once the <code>@enonic-types</code> packages are installed (see <a href="fundamentals/typescript.ahtml">TypeScript</a>):</p>
+<p>A library can be loaded two ways — both fully typed once the <code>@enonic-types</code> packages are installed (see <a href="tooling/typescript.ahtml">TypeScript</a>):</p>
 </div>
 <div class="listingblock">
 <div class="title">require — CommonJS, the standard form</div>
@@ -496,7 +496,7 @@ const user = getUser();</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

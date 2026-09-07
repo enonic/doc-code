@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Main</title>
+<title>Events</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,11 +437,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Main</h1>
+<h1>Events</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#main_ts">main.ts</a></li>
+<li><a href="#events">Introduction</a></li>
+<li><a href="#use_cases">Use cases</a></li>
+<li><a href="#local-vs-distributed">Local vs distributed semantics</a></li>
+<li><a href="#threading-ordering">Threading and ordering</a></li>
+<li><a href="#standard-events">Standard event catalog</a></li>
+<li><a href="#custom-naming">Custom event naming</a></li>
+<li><a href="#patterns">Common patterns</a></li>
+<li><a href="#library">Library</a></li>
 </ul>
 </div>
 </div>
@@ -449,89 +456,232 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Handle application lifecycle events via <code>main.ts</code>.</p>
+<p>Send and listen to local or cluster wide events</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="main_ts"><a class="link" href="#main_ts">main.ts</a></h2>
+<h2 id="events"><a class="link" href="#events">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps may contain a special <code>main.ts</code> at <code>src/main/resources/main.ts</code>.</p>
+<p>The XP framework enable developers to create and/or listen to events.
+Events may be local (within a single server) or cluster wide (distributed to all servers within a cluster).
+In addition to application specific events, XP itself produces a range of standard events.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><code>main.ts</code> is invoked when an application lifecycle event occurs. A common use is initialization — creating repositories, registering event listeners when the application starts — and cleaning up resources when the application stops.</p>
+<p>The use cases for events are limitless, but the most common are:</p>
 </div>
-<div class="paragraph">
-<p>The code should complete as quickly as possible to prevent the application from stalling. Never call remote endpoints or wait in loops for events at the top level of <code>main.ts</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Cache invalidation</p>
+</li>
+<li>
+<p>Notifications (i.e. notify clients connected to any server in the cluster via Websocket)</p>
+</li>
+<li>
+<p>Job triggering</p>
+</li>
+</ul>
 </div>
-<div class="admonitionblock warning">
+</div>
+</div>
+<div class="sect1">
+<h2 id="local-vs-distributed"><a class="link" href="#local-vs-distributed">Local vs distributed semantics</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>send({distributed: false})</code> (default) — fires only on the node that produced the event; use for in-process signalling like per-node cache eviction.</p>
+</li>
+<li>
+<p><code>send({distributed: true})</code> — broadcasts to every member of the cluster; use for cross-node cache invalidation, multi-node WebSocket fanout, or any side effect that has to run on every node.</p>
+</li>
+<li>
+<p><code>listener({localOnly: true})</code> — filters out events that originated on a remote node; use when a side effect should run exactly once on the originating node.</p>
+</li>
+<li>
+<p>The event object&#8217;s <code>localOrigin</code> and <code>distributed</code> flags let a listener branch on origin without <code>localOnly</code>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-<span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> <code>main.ts</code> blocks the rest of the application on the node running it. Nothing else in the same app runs on that node until its top-level code returns — HTTP functions, component implementations, tasks and event listeners all wait. This is what makes <code>main.ts</code> a dependable place to initialize: a controller on that node can never observe a half-initialized repository. The flip side is that slow start-up code delays the app&#8217;s first responses, so keep it short. Code called from <code>main.ts</code> itself is exempt — it is part of the start-up. If start-up has not finished within five minutes, XP logs a warning and lets the waiting executions proceed anyway. Other applications are unaffected; each app waits only for its own <code>main.ts</code>.
+<div class="paragraph">
+<p>Event delivery is best-effort and fire-and-forget — no persistence, no replay, no acknowledgement. A node that is down or partitioned at broadcast time misses the event entirely.</p>
+</div>
 </td>
 </tr>
 </table>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-If you need to perform time-consuming work during startup, run it from a <a href="../background/tasks.ahtml">task</a> instead. Submitting the task returns immediately; the task itself starts once <code>main.ts</code> has returned.
-</td>
-</tr>
-</table>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Add a <code>main.ts</code> even when there is nothing to initialize. XP brings an app&#8217;s JavaScript engine and context to life lazily, so an app without one makes its very first request pay for engine start-up, context creation and parsing every module that request touches. A <code>main.ts</code> moves that toll to application start. Requiring the libraries your entry points use extends that warm-up to cover their modules too. This does not contradict keeping <code>main.ts</code> short: it is work the first request would otherwise do, paid where nobody is waiting on a response.
-</td>
-</tr>
-</table>
 </div>
+<div class="sect1">
+<h2 id="threading-ordering"><a class="link" href="#threading-ordering">Threading and ordering</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Running code when the application starts:</p>
+<p>`Each event is handed to a single event worker thred before walking the listener list, so the publishing thread returns as soon as the event is queued.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Listeners must not block — the dispatch thread is shared, and a slow listener backs up every other listener on the node.</p>
+</li>
+<li>
+<p>On a single node, FIFO holds — events published in sequence on the same node are delivered in that order to a listener that matches both.</p>
+</li>
+<li>
+<p>Across cluster nodes events from the same nodes are ordered but from different nodes can arrive in either order on any third node.</p>
+</li>
+<li>
+<p>Order between listeners is unspecified.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="standard-events"><a class="link" href="#standard-events">Standard event catalog</a></h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type pattern</th>
+<th class="tableblock halign-left valign-top">Origin</th>
+<th class="tableblock halign-left valign-top">What it signals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Node lifecycle: <code>node.created</code>, <code>node.updated</code>, <code>node.deleted</code>, <code>node.pushed</code>, <code>node.duplicated</code>, <code>node.moved</code>, <code>node.sorted</code>, <code>node.permissionsUpdated</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repository.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Repository lifecycle: <code>repository.created</code>, <code>repository.updated</code>, <code>repository.deleted</code>, <code>repository.restored</code>, <code>repository.restoreInitialized</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>task.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-task</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Task lifecycle: <code>task.submitted</code>, <code>task.updated</code>, <code>task.finished</code>, <code>task.failed</code>, <code>task.removed</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application</code>, <code>application.cluster</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-app</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Application install / start / stop and cluster install events; the action — <code>INSTALLED</code>, <code>STARTED</code>, <code>STOPPED</code>, <code>UNINSTALLED</code>, <code>state</code>, … — is carried in the payload&#8217;s <code>eventType</code> field, not the type string.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>custom.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user code</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Anything published through lib-event&#8217;s <code>send()</code>. The <code>custom.</code> prefix is added automatically.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Per-type payload details belong on the corresponding library page (<a href="../libraries/lib-node.ahtml#events">Node</a>, <a href="../libraries/lib-repo.ahtml#events">Repo</a>, <a href="../libraries/lib-task.ahtml#events">Task</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="custom-naming"><a class="link" href="#custom-naming">Custom event naming</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Custom events go through <code>eventLib.send(&#8230;&#8203;)</code>, which prepends <code>custom.</code> automatically — <code>send({type: 'foo'})</code> is delivered as <code>custom.foo</code>. Namespace by application key to avoid collisions when multiple apps share a cluster.</p>
 </div>
 <div class="listingblock">
-<div class="title">main.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Log application start
-log.info(`Application ${app.name} started`);</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import eventLib from '/lib/xp/event';
+
+eventLib.send({
+    type: 'com.example.app.somethingHappened',
+    distributed: true,
+    data: { id: 'abc-123' }
+});
+// delivered as 'custom.com.example.app.somethingHappened'</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="patterns"><a class="link" href="#patterns">Common patterns</a></h2>
+<div class="sectionbody">
+<h3 id="cluster_wide_cache_invalidation" class="discrete">Cluster-wide cache invalidation</h3>
 <div class="paragraph">
-<p>Running code when the application stops:</p>
+<p>A write on any node evicts the affected key on every node.</p>
 </div>
 <div class="listingblock">
-<div class="title">main.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Log application stop
-__.disposer(() =&gt; {
-    log.info(`Application ${app.name} stopped`);
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
+    type: 'custom.com.example.app.cache.invalidate',
+    callback: (event) =&gt; cache.delete(event.data.key as string)
+});
+
+eventLib.send({
+    type: 'com.example.app.cache.invalidate',
+    distributed: true,
+    data: { key }
 });</code></pre>
 </div>
 </div>
+<h3 id="websocket_fanout_across_the_cluster" class="discrete">WebSocket fanout across the cluster</h3>
 <div class="paragraph">
-<p><code>main.ts</code> is the only dependable place to register a disposer — see <a href="java-bridge.ahtml#disposer"><code>__.disposer</code></a> for why, and for the one-disposer-per-module rule.</p>
+<p>A producer on any node can push to clients connected to whichever node terminated their socket.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
+    type: 'custom.com.example.app.feed.message',
+    callback: (event) =&gt; websocketLib.sendToGroup('live-feed', JSON.stringify(event.data))
+});
+
+eventLib.send({
+    type: 'com.example.app.feed.message',
+    distributed: true,
+    data: { message }
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="library"><a class="link" href="#library">Library</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For implementation details, please visit the <a href="../libraries/lib-event.ahtml">event library</a> documentation.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>

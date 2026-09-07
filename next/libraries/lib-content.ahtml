@@ -531,7 +531,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-content</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-content</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -630,7 +630,7 @@ const myRoot = ARCHIVE_ROOT_PATH; // "/archive"</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Stream with the binary data for the attachment.</p>
 </div></div></td>
@@ -816,7 +816,7 @@ log.info('Archived content ids: %s', result2.join(','));</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Content <a href="../fundamentals/types.ahtml#page-component">page</a>.</p>
+<p><strong>Optional.</strong> Content <a href="../libraries/types.ahtml#page-component">page</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -835,7 +835,7 @@ log.info('Archived content ids: %s', result2.join(','));</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#workflow">Workflow</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#workflow">Workflow</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Workflow information to use. Defaults to <code>{ state: "READY" }</code>.</p>
 </div></div></td>
@@ -846,7 +846,7 @@ log.info('Archived content ids: %s', result2.join(','));</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#content">Content</a>) The content that was created</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#content">Content</a>) The content that was created</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -1063,7 +1063,7 @@ const expected = {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#content">Content</a>) The media content that was created</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#content">Content</a>) The media content that was created</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -1207,7 +1207,7 @@ const expected = {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#content">Content</a>) The media content that was updated, or <code>null</code> if it was not found</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#content">Content</a>) The media content that was updated, or <code>null</code> if it was not found</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -1366,7 +1366,7 @@ if (result) {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#workflow">Workflow</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#workflow">Workflow</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Workflow information to use. Defaults to <code>{ state: "READY" }</code>.</p>
 </div></div></td>
@@ -1562,7 +1562,7 @@ if (result) {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#content">Content</a>) The content fetched from the repository, or <code>null</code> if it was not found</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#content">Content</a>) The content fetched from the repository, or <code>null</code> if it was not found</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -1703,7 +1703,7 @@ log.info('Master version: %s', result.master.versionId);</code></pre>
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : A map of <a href="../fundamentals/types.ahtml#attachment">Attachment</a> objects keyed by attachment name, or <code>null</code> if the content was not found</p>
+<p><strong>object</strong> : A map of <a href="../libraries/types.ahtml#attachment">Attachment</a> objects keyed by attachment name, or <code>null</code> if the content was not found</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -1772,7 +1772,7 @@ const expected = {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#byte-source">ByteSource</a>) Stream of the attachment data, or <code>null</code> if the content or attachment was not found</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#byte-source">ByteSource</a>) Stream of the attachment data, or <code>null</code> if the content or attachment was not found</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -2108,7 +2108,7 @@ const expected = {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#content">Content</a>) The parent site, or <code>null</code> if the content has none</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#content">Content</a>) The parent site, or <code>null</code> if the content has none</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -2607,7 +2607,7 @@ Properties starting with <code>_</code> may not be modified using this function.
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <a href="../fundamentals/types.ahtml#page-component">page</a> configuration, including regions and components.</p>
+<p>The <a href="../libraries/types.ahtml#page-component">page</a> configuration, including regions and components.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2667,7 +2667,7 @@ Any other property assigned inside the editor is <strong>silently ignored</stron
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#content">Content</a>) The updated content, or <code>null</code> if it was not found</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#content">Content</a>) The updated content, or <code>null</code> if it was not found</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -3046,7 +3046,7 @@ Unlike <a href="#update">update()</a>, <code>patch</code> does no bookkeeping of
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object describing the <a href="../fundamentals/types.ahtml#page-component">page</a> configuration including regions and components.</p>
+<p>A JSON object describing the <a href="../libraries/types.ahtml#page-component">page</a> configuration including regions and components.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3116,7 +3116,7 @@ Unlike <a href="#update">update()</a>, <code>patch</code> does no bookkeeping of
 <td class="tableblock halign-left valign-top"><p class="tableblock">workflow</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object containing <a href="../fundamentals/types.ahtml#workflow">workflow</a> state information.</p>
+<p>A JSON object containing <a href="../libraries/types.ahtml#workflow">workflow</a> state information.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3142,7 +3142,7 @@ Unlike <a href="#update">update()</a>, <code>patch</code> does no bookkeeping of
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">validationErrors</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#validation-error">ValidationError</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#validation-error">ValidationError</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>An array of objects describing validation errors.</p>
 </div></div></td>
@@ -3218,7 +3218,7 @@ Each entry is an object with these properties:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a> | string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#byte-source">ByteSource</a> | string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Data to use. A string is stored as its UTF-8 bytes.</p>
 </div></div></td>
@@ -3432,7 +3432,7 @@ const expected = {
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>object</strong> : (<a href="../fundamentals/types.ahtml#content">Content</a>) The content that was moved or renamed</p>
+<p><strong>object</strong> : (<a href="../libraries/types.ahtml#content">Content</a>) The content that was moved or renamed</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -4659,7 +4659,7 @@ const expected = [
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Form schema — an array of form items.</p>
 </div></div></td>
@@ -4695,7 +4695,7 @@ const expected = [
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Stream with the binary data for the icon. Read it with <code>lib-io</code>.</p>
 </div></div></td>
@@ -4720,7 +4720,7 @@ const expected = [
 <div class="sect2">
 <h3 id="schedule"><a class="link" href="#schedule">Schedule</a></h3>
 <div class="paragraph">
-<p>A publish schedule. Same shape as <a href="../fundamentals/types.ahtml#publish-info">PublishInfo</a> without the <code>first</code> field.</p>
+<p>A publish schedule. Same shape as <a href="../libraries/types.ahtml#publish-info">PublishInfo</a> without the <code>first</code> field.</p>
 </div>
 <div class="paragraph lead">
 <p>Properties</p>
@@ -4780,7 +4780,7 @@ const expected = [
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">principal</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal the entry applies to (for example, <code>role:system.admin</code>, <code>user:system:su</code>).</p>
 </div></div></td>
@@ -4894,7 +4894,7 @@ const expected = {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">hits</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#content">Content</a>[] | <a href="#content-hit">ContentHit</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#content">Content</a>[] | <a href="#content-hit">ContentHit</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The contents on this page — or, <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> where <code>query</code> asked for another shape through <code>returns</code>, one <a href="#content-hit">ContentHit</a> per hit instead of the content itself.</p>
 </div></div></td>
@@ -5113,7 +5113,7 @@ const expected = {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#principal-key">PrincipalKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal that performed the operation.</p>
 </div></div></td>
@@ -5283,7 +5283,7 @@ const expected = {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#content">Content</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#content">Content</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The patched content in that branch, or <code>null</code> if the content does not exist there.</p>
 </div></div></td>
@@ -5354,7 +5354,7 @@ const expected = {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#content">Content</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#content">Content</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The content with its updated metadata.</p>
 </div></div></td>
@@ -5386,7 +5386,7 @@ const expected = {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#content">Content</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#content">Content</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>The content with its updated workflow state.</p>
 </div></div></td>
@@ -5399,7 +5399,7 @@ const expected = {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-03 09:43:00 UTC
+Last updated 2026-09-07 10:15:52 UTC
 </div>
 </div>
 </body>
