@@ -3,6 +3,7 @@
 :imagesdir: ../images
 
 Functions for execution of asynchronous tasks.
+If the code is executed in a cluster, an ansynchronous task will only run on one node, but the answer from these functions will be the same, anywhere in the cluster.
 
 == Install
 
