@@ -447,7 +447,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#implementation">Implementation</a></li>
 <li><a href="#extension_url">Extension URL</a></li>
 <li><a href="#assets">Sub-paths and static assets</a></li>
-<li><a href="#access_control">Access control</a></li>
+<li><a href="#response_processors">Response processors</a></li>
+<li><a href="#access-control">Access control</a></li>
 <li><a href="#discovery">Discovery</a></li>
 <li><a href="#interfaces">Interfaces</a></li>
 </ul>
@@ -666,7 +667,15 @@ Client-side code in the extension can call back to the same URL space for data, 
 </div>
 </div>
 <div class="sect1">
-<h2 id="access_control"><a class="link" href="#access_control">Access control</a></h2>
+<h2 id="response_processors"><a class="link" href="#response_processors">Response processors</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><span class="alt">XP 8.1.0</span></span> An extension that needs the host tool page to allow external resources, or to load a script of its own, registers a Java response processor for its key. It runs after the tool controller and may adjust the page&#8217;s Content Security Policy or add page contributions. See <a href="extensions/processors.ahtml">Extension response processors</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="access-control"><a class="link" href="#access-control">Access control</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Two checks are enforced:</p>
@@ -723,7 +732,7 @@ Client-side code in the extension can call back to the same URL space for data, 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 13:06:04 UTC
+Last updated 2026-09-07 13:24:18 UTC
 </div>
 </div>
 </body>

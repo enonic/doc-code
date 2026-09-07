@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Sites</title>
+<title>Extension response processors</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,17 +437,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Sites</h1>
+<h1>Extension response processors</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a>
-<ul class="sectlevel2">
-<li><a href="#usage">Usage</a></li>
-</ul>
-</li>
-<li><a href="#site_request_pipeline">Site Request pipeline</a></li>
-<li><a href="#one_site_multiple_apps">One site, multiple apps</a></li>
+<li><a href="#when_you_need_one">When you need one</a></li>
+<li><a href="#implementing">Implementing</a></li>
+<li><a href="#what_a_processor_can_do">What a processor can do</a></li>
+<li><a href="#when_it_runs">When it runs</a></li>
 </ul>
 </div>
 </div>
@@ -455,206 +452,121 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Serving content driven sites using XP apps. The service responds at <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-content&gt;</code>. Combine with Vhosts for custom domains and paths.</p>
+<p><span class="image"><span class="alt">XP 8.1.0</span></span> An extension is rendered inside an admin tool page, and that page&#8217;s response is final before the browser ever fetches the extension. Its <code>Content-Security-Policy</code> header in particular is set by the tool, which cannot know what its extensions need. A response processor lets an extension take part in the tool page&#8217;s response: it runs after the tool&#8217;s controller, on every tool page the extension is mounted to, and may adjust the policy or add page contributions.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-For hands on tutorials on building native Enonic XP sites, visit <a href="https://developer.enonic.com/learn/react4xp/stable">React4XP tutorial</a> or the <a href="https://developer.enonic.com/docs/my-first-site">My first site tutorial</a>.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>This is the admin counterpart of <a href="../sites/processors.ahtml">site response processors</a>. Unlike those, it is a Java SPI: there is no descriptor and no JavaScript function to export.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<h2 id="when_you_need_one"><a class="link" href="#when_you_need_one">When you need one</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As an alternative to using 3rd party front-end frameworks like Next.js, the site service is purpose-built for delivering content-driven websites, and is closesly linked to the CMS features of the platform.</p>
+<p>A widget whose client-side script loads a chart library from a CDN, calls an external API, or embeds a frame is blocked by the host tool&#8217;s policy. A processor adds exactly the sources the extension needs, on top of the tool&#8217;s own policy, only on pages where the extension is present, and only for users allowed to see it.</p>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Visit the <a href="https://developer.enonic.com/docs/cms/xp8">CMS documentation</a> for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="usage"><a class="link" href="#usage">Usage</a></h3>
 <div class="paragraph">
-<p>To activate the site service, you will need a site descriptor in your app.</p>
+<p>Loosening the tool&#8217;s policy through configuration instead applies to every page and every user. Prefer a processor.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing"><a class="link" href="#implementing">Implementing</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Implement <code>com.enonic.xp.admin.extension.AdminExtensionResponseProcessor</code> and register it as an OSGi service with a <code>key</code> property naming the extension&#8217;s descriptor key:</p>
 </div>
 <div class="listingblock">
-<div class="title">src/main/resources/cms/site.yaml</div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
-mappings: <i class="conum" data-value="1"></i><b>(1)</b>
-  - controller: "/lib/preview.js"
-    order: 50
-    match: "type:'(?!media:).*'"
-apis:
-  - "ws"  <i class="conum" data-value="3"></i><b>(3)</b>
-  - "app:graphql" <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">package com.example.myapp;
+
+import org.osgi.service.component.annotations.Component;
+
+import com.enonic.xp.admin.extension.AdminExtensionResponseProcessor;
+import com.enonic.xp.portal.PortalRequest;
+import com.enonic.xp.portal.PortalResponse;
+
+@Component(immediate = true, property = "key=com.example.myapp:analytics-widget")
+public class AnalyticsWidgetResponseProcessor
+    implements AdminExtensionResponseProcessor
+{
+    @Override
+    public PortalResponse process( final PortalRequest request, final PortalResponse response )
+    {
+        request.getContentSecurityPolicy()
+            .scriptSrc( "https://www.gstatic.com" )
+            .connectSrc( "https://www.googleapis.com" );
+
+        return response;
+    }
+}</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>A mapping to take over the request for all non-media content items, and render a preview.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Contextually mounts an API in the same application on the site&#8217;s underscore endpoint.</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>The <code>key</code> must match the extension&#8217;s <code>&lt;application&gt;:&lt;name&gt;</code> key exactly. The method must return a response, never <code>null</code>. Return the one you were given when only the policy changes.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You will also need implementations of <a href="sites/mappings.ahtml">Mapping function</a> or <a href="sites/components.ahtml">component functions</a> to start rendering.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>The interface lives in <code>admin-api</code>, and the request and response types in <code>portal-api</code>. Declare both in <em>build.gradle</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+    implementation xplibs.api.admin
+    implementation xplibs.api.portal
+}</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="site_request_pipeline"><a class="link" href="#site_request_pipeline">Site Request pipeline</a></h2>
+<h2 id="what_a_processor_can_do"><a class="link" href="#what_a_processor_can_do">What a processor can do</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The site pipeline is executed as a subset of the <a href="../web.ahtml#common_request_pipeline">common pipeline</a>:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="images/site-pipeline.svg" alt="Site rendering pipeline" width="500px">
-</div>
-</div>
-<div class="paragraph">
-<p>This section describes the standard pipeline involved in processing a page request, e.g. <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-page&gt;</code>.</p>
-</div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Render component</dt>
+<dt class="hdlist1">Content Security Policy</dt>
 <dd>
-<p>If a component is matched, the matching component implementation is invoked to render it — also directly addressable via the <a href="sites/components.ahtml#direct-rendering">component endpoint</a>. The result may include nested components, which are resolved and rendered iteratively (via component placeholders) until all placeholders are resolved and rendered.</p>
+<p><code>request.getContentSecurityPolicy()</code> is the request-scoped policy the tool controller contributes to, and the same one <a href="../../libraries/lib-portal.ahtml#csp"><code>csp()</code></a> exposes to JavaScript. Contributions are additive: a directive&#8217;s sources are the union of everything declared for it, so a processor can open a directive but not close one the tool has opened. The header is composed when the response is flushed, so contributions made here are included. <code>reportOnly()</code> on the same object gives the report-only companion.</p>
 </dd>
-<dt class="hdlist1">Universal APIs</dt>
+<dt class="hdlist1">Page contributions</dt>
 <dd>
-<p>Sites support contextual APIs mounted in the same URL space. They are are available on the <code>/_/&lt;app&gt;:&lt;api&gt;</code> path. APIs are mounted via the site descriptor.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The image and attachment APIs are implicitly mounted by the site service, and are available at <code>/<em>/media:image</code> and <code>/</em>/media:attachment</code> respectively. Use portal library functions to generate URLs for these, and they will be served with the appropriate caching and optimizations.
-</td>
-</tr>
-</table>
-</div>
+<p>Build a new response to add markup to the tool page: <code>PortalResponse.create( response ).contribution( HtmlTag.HEAD_END, "&lt;script src=\"&#8230;&#8203;\"&gt;&lt;/script&gt;" ).build()</code>, with <code>HtmlTag</code> from <code>com.enonic.xp.portal.postprocess</code>. This is how an extension gets a script onto the host page. <code>pageContributions</code> in the extension&#8217;s own response cannot do it, since they are dropped on the admin rendering path.</p>
 </dd>
-<dt class="hdlist1">Mappings</dt>
+<dt class="hdlist1">The rest of the response</dt>
 <dd>
-<p>Use path or content-based <a href="sites/mappings.ahtml">site mappings</a>. Each mapping will trigger a function, acting as a filter or a controller (returning a response directly). Filters will iteratively execute until a controller is reached, or the mappings are exhausted. If no mapping matches, the request continues to the default page rendering step.</p>
-</dd>
-<dt class="hdlist1">Render page</dt>
-<dd>
-<p>Looks up the content at the path and resolves the page implementation and config (optionally via a page template) or returns a matching 404 if not found. 401 if protected, and 403 if user lacks permissions.</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The content types <code>base:shortcut</code> is automatically handled with a <code>307 Temporary Redirect</code>, and <code>portal:fragment</code> is only rendered when referend from another page.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><strong>Implementation resolution:</strong></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Implementation set directly on the content.</p>
-</li>
-<li>
-<p>Implementation set on a page template for the content. If the page template is unavailable (e.g. deleted), the page resolver treats it as if no page template was set.</p>
-</li>
-<li>
-<p>Implementation set on the first page template found in <code>{site}/_templates</code> that supports the content&#8217;s type.</p>
-<div class="paragraph">
-<p>If no implementation is found, the response status is <code>404 Not Found</code>.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-In <code>inline</code> rendering mode the status is <code>418</code> instead of <code>404</code>, so Content Studio can switch to alternative rendering. In <code>edit</code> rendering mode the status is <code>200</code> instead of <code>404</code>, to allow Content Studio to render the in-place component selector.
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p><strong>Component rendering:</strong></p>
-</div>
-<div class="paragraph">
-<p>Once the page component is rendered, the rendering iteratively continues until all nested components placeholders are resolved and rendered.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Text/html processors</dt>
-<dd>
-<p>For <code>text/html</code> responses, any <a href="sites/processors.ahtml">response processors</a> defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding <a href="sites/contributions.ahtml">page contributions</a>. Once all processors are done, available <code>pageContributions</code> in the response object are merged into the html response body.</p>
-</dd>
-<dt class="hdlist1">Response filters</dt>
-<dd>
-<p>Finally, any filters registered via through a mapping iteratively execute their response processing step before the response is returned from the pipeline.</p>
+<p>The processor receives the full <code>PortalResponse</code> and returns the one to continue with, so headers and cookies are available too. Changing the body of a page you do not own is rarely wise.</p>
 </dd>
 </dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="one_site_multiple_apps"><a class="link" href="#one_site_multiple_apps">One site, multiple apps</a></h2>
+<h2 id="when_it_runs"><a class="link" href="#when_it_runs">When it runs</a></h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>After the admin tool controller has rendered the page, before the response is serialized.</p>
+</li>
+<li>
+<p>For every tool that shares an <a href="../extensions.ahtml#interfaces">interface</a> with the extension, or for every tool if the extension declares the <code>generic</code> interface. This is the same rule that decides where the extension is mounted.</p>
+</li>
+<li>
+<p>Only when the current user passes the extension&#8217;s <a href="../extensions.ahtml#access-control">access control</a>.</p>
+</li>
+<li>
+<p>When several extensions register processors, they run in order of extension key, each receiving the previous one&#8217;s response.</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. I.e. via filters APIs and response processors. This allows you to modularize functionality across multiple apps, and reuse apps across sites. Visit Enonic Market for existing apps and inspiration: <a href="https://market.enonic.com/apps" class="bare">https://market.enonic.com/apps</a></p>
+<p>A processor that throws fails the tool page. Keep it small and free of I/O.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 13:23:52 UTC
+Last updated 2026-09-07 13:24:18 UTC
 </div>
 </div>
 </body>
