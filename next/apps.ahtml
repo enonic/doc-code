@@ -443,6 +443,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#name">Name</a></li>
 <li><a href="#what_an_app_can_contain">What an app can contain</a></li>
+<li><a href="#building_and_deploying">Building and deploying</a></li>
 <li><a href="#lifecycle">Lifecycle</a></li>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#configuration">Configuration</a></li>
@@ -563,6 +564,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
+<h2 id="building_and_deploying"><a class="link" href="#building_and_deploying">Building and deploying</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create a project from a <a href="https://market.enonic.com/starters">starter</a> with the <a href="tooling/cli.ahtml">Enonic CLI</a>, build it with <code>enonic project build</code>, and deploy it to a <a href="tooling/sandboxes.ahtml">sandbox</a> with <code>enonic project deploy</code>. During development, <code>enonic project dev</code> rebuilds on every change and the sandbox picks the changes up without a redeploy. The project files, the Gradle plugin and the build and deploy steps are covered under <a href="tooling/build.ahtml">Building apps</a>; automated builds under <a href="tooling/ci-cd.ahtml">CI/CD</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -633,7 +642,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 14:23:04 UTC
+Last updated 2026-09-07 15:00:34 UTC
 </div>
 </div>
 </body>
