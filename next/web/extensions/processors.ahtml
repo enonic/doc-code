@@ -452,7 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image"><span class="alt">XP 8.1.0</span></span> An extension is rendered inside an admin tool page, and that page&#8217;s response is final before the browser ever fetches the extension. Its <code>Content-Security-Policy</code> header in particular is set by the tool, which cannot know what its extensions need. A response processor lets an extension take part in the tool page&#8217;s response: it runs after the tool&#8217;s controller, on every tool page the extension is mounted to, and may adjust the policy or add page contributions.</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> An extension is rendered inside an admin tool page, and that page&#8217;s response is final before the browser ever fetches the extension. Its <code>Content-Security-Policy</code> header in particular is set by the tool, which cannot know what its extensions need. A response processor lets an extension take part in the tool page&#8217;s response: it runs after the tool&#8217;s controller, on every tool page the extension is mounted to, and may adjust the policy or add page contributions.</p>
 </div>
 <div class="paragraph">
 <p>This is the admin counterpart of <a href="../sites/processors.ahtml">site response processors</a>. Unlike those, it is a Java SPI: there is no descriptor and no JavaScript function to export.</p>
@@ -566,7 +566,7 @@ public class AnalyticsWidgetResponseProcessor
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 20:25:00 UTC
+Last updated 2026-09-07 20:33:17 UTC
 </div>
 </div>
 </body>
