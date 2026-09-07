@@ -1,0 +1,70 @@
+= Extension response processors
+:toc: right
+:imagesdir: ../images
+
+image:xp-810.svg[XP 8.1.0,opts=inline] An extension is rendered inside an admin tool page, and that page's response is final before the browser ever fetches the extension. Its `Content-Security-Policy` header in particular is set by the tool, which cannot know what its extensions need. A response processor lets an extension take part in the tool page's response: it runs after the tool's controller, on every tool page the extension is mounted to, and may adjust the policy or add page contributions.
+
+This is the admin counterpart of <<../sites/processors#, site response processors>>. Unlike those, it is a Java SPI: there is no descriptor and no JavaScript function to export.
+
+== When you need one
+
+A widget whose client-side script loads a chart library from a CDN, calls an external API, or embeds a frame is blocked by the host tool's policy. A processor adds exactly the sources the extension needs, on top of the tool's own policy, only on pages where the extension is present, and only for users allowed to see it.
+
+Loosening the tool's policy through configuration instead applies to every page and every user. Prefer a processor.
+
+== Implementing
+
+Implement `com.enonic.xp.admin.extension.AdminExtensionResponseProcessor` and register it as an OSGi service with a `key` property naming the extension's descriptor key:
+
+[source,java]
+----
+package com.example.myapp;
+
+import org.osgi.service.component.annotations.Component;
+
+import com.enonic.xp.admin.extension.AdminExtensionResponseProcessor;
+import com.enonic.xp.portal.PortalRequest;
+import com.enonic.xp.portal.PortalResponse;
+
+@Component(immediate = true, property = "key=com.example.myapp:analytics-widget")
+public class AnalyticsWidgetResponseProcessor
+    implements AdminExtensionResponseProcessor
+{
+    @Override
+    public PortalResponse process( final PortalRequest request, final PortalResponse response )
+    {
+        request.getContentSecurityPolicy()
+            .scriptSrc( "https://www.gstatic.com" )
+            .connectSrc( "https://www.googleapis.com" );
+
+        return response;
+    }
+}
+----
+
+The `key` must match the extension's `+<application>:<name>+` key exactly. The method must return a response, never `null`. Return the one you were given when only the policy changes.
+
+The interface lives in `admin-api`, and the request and response types in `portal-api`. Declare both in _build.gradle_:
+
+[source,groovy]
+----
+dependencies {
+    implementation xplibs.api.admin
+    implementation xplibs.api.portal
+}
+----
+
+== What a processor can do
+
+Content Security Policy:: `request.getContentSecurityPolicy()` is the request-scoped policy the tool controller contributes to, and the same one <<../../libraries/lib-portal#csp, `csp()`>> exposes to JavaScript. Contributions are additive: a directive's sources are the union of everything declared for it, so a processor can open a directive but not close one the tool has opened. The header is composed when the response is flushed, so contributions made here are included. `reportOnly()` on the same object gives the report-only companion.
+Page contributions:: Build a new response to add markup to the tool page: `PortalResponse.create( response ).contribution( HtmlTag.HEAD_END, "<script src=\"...\"></script>" ).build()`, with `HtmlTag` from `com.enonic.xp.portal.postprocess`. This is how an extension gets a script onto the host page. `pageContributions` in the extension's own response cannot do it, since they are dropped on the admin rendering path.
+The rest of the response:: The processor receives the full `PortalResponse` and returns the one to continue with, so headers and cookies are available too. Changing the body of a page you do not own is rarely wise.
+
+== When it runs
+
+* After the admin tool controller has rendered the page, before the response is serialized.
+* For every tool that shares an <<../extensions#interfaces, interface>> with the extension, or for every tool if the extension declares the `generic` interface. This is the same rule that decides where the extension is mounted.
+* Only when the current user passes the extension's <<../extensions#access-control, access control>>.
+* When several extensions register processors, they run in order of extension key, each receiving the previous one's response.
+
+A processor that throws fails the tool page. Keep it small and free of I/O.

@@ -263,6 +263,10 @@
             {
               "title": "Menu item",
               "document": "web/extensions/menuitem"
+            },
+            {
+              "title": "Response processors",
+              "document": "web/extensions/processors"
             }
           ]
         },

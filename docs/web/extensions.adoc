@@ -132,6 +132,11 @@ exports.all = (req) => router.dispatch(req);
 Files placed under `src/main/resources/assets/` are then reachable at `+<extension URL>/_static/<path>+`, behind the same access control as the extension itself.
 Client-side code in the extension can call back to the same URL space for data, or to any Universal API the host tool has mounted.
 
+== Response processors
+
+image:xp-810.svg[XP 8.1.0,opts=inline] An extension that needs the host tool page to allow external resources, or to load a script of its own, registers a Java response processor for its key. It runs after the tool controller and may adjust the page's Content Security Policy or add page contributions. See <<extensions/processors#, Extension response processors>>.
+
+[#access-control]
 == Access control
 
 Two checks are enforced:
@@ -160,6 +165,7 @@ The host tool typically queries `+?interface=<name>+` to find which extensions a
 
 The listing is filtered by the caller's principals — extensions the caller cannot access are omitted.
 
+[#interfaces]
 == Interfaces
 
 Interface names are free-form strings, not a closed enum. The contract is purely a string match between the extension's `interfaces:` and the host tool's `interfaces:`. To define a new interface point in your own admin tool, declare a stable name (e.g. `<app-key>.<purpose>`) in the tool's descriptor and document the request/response shape your tool expects from extensions.

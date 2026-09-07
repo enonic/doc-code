@@ -242,7 +242,7 @@ const url = componentUrl({
 === csp
 [#csp]
 
-image:xp-810.svg[XP 8.1.0,opts=inline] Returns the request-scoped *enforced* <<csp-type, Content Security Policy>> builder for the current portal request. Its directives are composed into the `Content-Security-Policy` header emitted on the response. For the report-only companion, use <<cspReportOnly, `cspReportOnly()`>>. Takes no arguments.
+image:xp-810.svg[XP 8.1.0,opts=inline] Returns the request-scoped *enforced* <<csp-type, Content Security Policy>> builder for the current portal request. A portal request exists in site pages and components, webapps, admin tools and APIs alike, so the policy can be declared from any of them, and a Java <<../web/extensions/processors#, extension response processor>> contributes to the same policy. Its directives are composed into the `Content-Security-Policy` header emitted on the response. For the report-only companion, use <<cspReportOnly, `cspReportOnly()`>>. Takes no arguments.
 
 One policy is shared for the whole request, so a page with its layouts, parts and any <<../web/sites/processors#, response processors>> all contribute to the same header. It is composed and emitted automatically when the response is flushed, so late contributions still land — you never set the header yourself.
 
