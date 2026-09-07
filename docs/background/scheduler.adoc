@@ -143,6 +143,7 @@ IMPORTANT: `ageThreshold` property must be set to appropriate value, otherwise n
 == Distributable
 A scheduled job is submitted once per due occurrence, from one node of the cluster, and the task it submits then runs on any node that has the application providing it - see <<tasks#distributable, task>> for where that can be. Which node submits is a deployment concern, set with `acceptScheduling` in the https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler[scheduler config] file; a job behaves the same wherever it is submitted from.
 
+[#non-overlap]
 image:xp-810.svg[XP 8.1.0,opts=inline] A job does not start a run while its own previous run is still going. What becomes of the run that was due depends on the calendar: a <<cron, CRON>> occurrence is skipped, since a cron occurrence is a position in the calendar and a missed one is missed, while a <<fixed-rate, FIXED_RATE>> run is delayed and starts once its predecessor finishes.
 
 WARNING: Not overlapping is best effort, not a guarantee. Two runs of the same job can still overlap when the cluster is partitioned, or when the record of the previous task is no longer available to be checked. A task that must never run concurrently with itself needs a lock of its own.

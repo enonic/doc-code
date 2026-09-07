@@ -225,6 +225,7 @@ const cacheKey = `icon-${contentType.icon.modifiedTime}`;
 
 There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.
 
+[#xp-8-1-java]
 === Java APIs
 
 ==== NodeService

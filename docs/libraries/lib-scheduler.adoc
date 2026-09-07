@@ -430,7 +430,7 @@ Properties
 | createdTime | string | Time of the task creation.
 | modifiedTime | string | Time of the last task modification.
 | lastRun | string | Time of the last job run.
-| lastTaskId | string | Task id of the last job run.
+| lastTaskId | string | Task id of the last job run. image:xp-810.svg[XP 8.1.0,opts=inline] The task started for the next run receives the same id in its context, see <<../background/scheduler#last-task-id, What a scheduled task receives>>.
 |===
 
 [#schedule-type]
