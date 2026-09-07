@@ -468,8 +468,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Functions for execution of asynchronous tasks.
-If the code is executed in a cluster, an ansynchronous task will only run on one node, but the answer from these functions will be the same, anywhere in the cluster.</p>
+<p>Functions for execution of asynchronous tasks.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the code is executed in a cluster, an ansynchronous task will only run on one node, but the answer from these functions will be the same, anywhere in the cluster.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1207,7 +1218,7 @@ const taskId = submitTask({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 13:29:10 UTC
+Last updated 2026-09-07 13:40:44 UTC
 </div>
 </div>
 </body>
