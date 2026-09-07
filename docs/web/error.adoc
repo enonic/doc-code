@@ -2,36 +2,50 @@
 :toc: right
 :imagesdir: images
 
-The framework supports the definition of custom error handlers.
+An app may replace XP's default error page with its own.
 
 == Introduction
-Enonic XP ships with a default error handler that will produce a stack trace whenever an error occurs.
-Stack traces may not be the best way to greet your users.
-By implementing an error handler this will effectively replace the default error handler.
 
-== error.js
-You may add a site-specific error handler to your application by creating the file `src/main/resources/cms/error/error.js`.
+When a request fails, XP responds with a default error page. In production it shows the status and a short message; in dev mode it also shows the stack trace. Neither is the best way to greet your users, so an app can supply an error handler that renders the response instead.
 
-NOTE: A generic error handler can be defined at `src/main/resources/error/error.js`. This handler also catches errors that are not site related (admin tools, extensions, …).
+Error handlers are looked up per request, based on which app was serving it. If no handler produces a response, XP's default error page is used.
 
-When an error occurs in the request processing pipeline, the XP framework will look for an error handler to execute.
-For sites specifically, it will (iteratively, in order) go through all applications added to the site,
-and attempt to execute the handler functions until an <<request-response#response, HTTP response>> object is returned.
-This essentially means that developers may choose not to handle particular errors explicitly.
-If the error is not properly handled, it will fallback to the default XP error handler.
+[#generic]
+== error.ts
 
-NOTE: Should an error occur inside an error handler, the framework will take over and fallback to the default error handler.
+An app handles its own errors with the file `src/main/resources/error/error.ts`. It is used for every request the app serves: webapps, APIs, admin tools and extensions, and site pages, as described below.
 
-Rather than exporting HTTP methods like regular HTTP functions and filters, the error handler exports "error code handlers".
+Rather than exporting HTTP methods like HTTP functions and filters do, an error handler exports one function per status code it wants to handle, named `handle<status>`, plus an optional catch-all `handleError`:
 
-For instance, if the current error is a 404, the framework will first attempt to execute the export `handle404`.
-If not found, it will attempt to execute the fallback export `handleError`.
-
-.Basic error handler example
-[source,javascript]
+.Basic error handler
+[source,typescript]
 ----
-include::code/error.js[]
+include::code/error.ts[]
 ----
+
+A handler function returns an <<request-response#response, HTTP response>>, or nothing to decline. Declining hands the error on to the next candidate, so an app may choose to handle a 404 itself and leave everything else to the default page. The response keeps the error's status code unless the handler sets `status` itself.
+
+[#sites]
+== Sites
+
+A site request is served by all the apps added to the site, so XP walks them in the site's app order. For each app it looks for `src/main/resources/cms/error/error.ts` first, and then for the general `error/error.ts`. The first handler that returns a response wins.
+
+`cms/error/error.ts` is therefore an optional override for site pages. An app that serves a site and an API can give site visitors a branded error page from `cms/error/error.ts`, while its API keeps returning the plain responses from `error/error.ts`. An app with only `error/error.ts` uses it for both.
+
+== Resolution order
+
+For a failed request, XP tries the following in order and stops at the first response:
+
+. `handle<status>` in the candidate handlers - for a site, in every app in order, `cms/` file before general file.
+. For a `401`, the <<id-providers#, ID provider>> bound to the request, through its `handle401` function.
+. `handleError` in the candidate handlers, in the same order as step 1.
+. XP's default error page.
+
+Because step 1 covers all apps before step 3 begins, a `handle404` in the second app of a site wins over a `handleError` in the first.
+
+Custom error handlers do not run while a site is rendered in Content Studio's edit mode, so editors see the underlying error rather than the branded page.
+
+NOTE: Should an error occur inside an error handler, it is logged and XP falls back to the default error page.
 
 [WARNING]
 ====

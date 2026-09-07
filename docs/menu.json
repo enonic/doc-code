@@ -305,7 +305,7 @@
           "document": "web/request-response"
         },
         {
-          "title": "Filters",
+          "title": "HTTP filters",
           "document": "web/filters"
         },
         {
