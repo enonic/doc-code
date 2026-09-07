@@ -564,7 +564,7 @@ It is also possible to return the response object received without any changes.<
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/parts/map/map.ts
 import {setCustomLocalAttribute} from '/lib/xp/context';
 
-export function get() {
+export function GET() {
     setCustomLocalAttribute('com.example.myapp.needsMapLibrary', true);
 
     return {body: '&lt;div id="map"&gt;&lt;/div&gt;'};
@@ -627,7 +627,7 @@ If <code>applyFilters</code> is set to <code>false</code> in the <a href="../req
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 10:15:52 UTC
+Last updated 2026-09-07 13:06:04 UTC
 </div>
 </div>
 </body>

@@ -662,7 +662,7 @@ const data = get().attributes['custom.my-data'];</code></pre>
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/pages/article/article.ts
 import {setCustomLocalAttribute} from '/lib/xp/context';
 
-export function get() {
+export function GET() {
     setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
 
     return {body: renderArticle(), contentType: 'text/html'};
@@ -918,7 +918,7 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 10:15:52 UTC
+Last updated 2026-09-07 13:06:04 UTC
 </div>
 </div>
 </body>

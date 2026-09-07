@@ -464,18 +464,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="module-scope"><a class="link" href="#module-scope">What is actually global</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>app</code> is the only name <strong>XP</strong> installs on the JavaScript global object. Every other name on this page is <strong>module-scoped</strong>: XP wraps each module in a function and passes them in as arguments. The engine contributes a few globals of its own on top; the <a href="engines.ahtml#graaljs">GraalJS</a> adds <code>Graal</code>.</p>
+<p><code>app</code> is the only name <strong>XP</strong> installs on the JavaScript global object. Every other name on this page is <strong>module-scoped</strong>: XP wraps each module in a function, passing <code>log</code>, <code>require</code>, <code>resolve</code> and <code>__</code> in as arguments and declaring <code>exports</code> and <code>module</code> inside it. The engine contributes a few globals of its own on top; <a href="engines.ahtml#graaljs">GraalJS</a> adds <code>Graal</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">// what XP evaluates for every module it loads
-(function (log, require, resolve, __, exports, module) {
+(function (log, require, resolve, __) {
+    var exports = {};
+    var module = {};
+    // module.exports reads and writes the same object as exports
+
     // your module's code goes here
+
+    return module.exports;
 });</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Three consequences worth knowing:</p>
+<p>Three consequences:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -483,7 +489,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><strong>They are not on the global object.</strong> On GraalJS, <code>globalThis.app</code> resolves while <code>globalThis.log</code>, <code>globalThis.require</code>, <code>globalThis.resolve</code>, <code>globalThis.exports</code> and <code>globalThis.module</code> are all <code>undefined</code>; Nashorn has no <code>globalThis</code> binding at all. Inside a module <code>typeof require</code> still answers <code>"function"</code>, because the parameter is in scope. A bundled npm package that probes its environment through the global object will find nothing.</p>
 </li>
 <li>
-<p><strong>They can be shadowed.</strong> A variable or parameter named <code>log</code> declared in your module hides the binding for the rest of that scope, exactly as it would any other argument.</p>
+<p><strong>They can be shadowed.</strong> A variable or parameter named <code>log</code> declared in your module hides the binding for the rest of that scope.</p>
 </li>
 <li>
 <p><strong>They are per module.</strong> Each module body gets its own <code>exports</code>, and a <code>require</code> and <code>resolve</code> bound to that module&#8217;s own location — which is what makes a relative path resolve against the file that wrote it.</p>
@@ -740,11 +746,13 @@ The file extension .js is not required.</p>
 <p><code>exports</code> is the object a module exposes to whatever requires it (implementations, libraries, and so on). This is part of the CommonJS module spec.</p>
 </div>
 <div class="paragraph">
-<p>Assign to it from any module to publish functionality:</p>
+<p>Assign to it from any module to publish functionality. Assigning to <code>module.exports</code> replaces the object as a whole, as in CommonJS.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function get(req: Request): Response {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import type {Request, Response} from '@enonic-types/core';
+
+export function GET(req: Request): Response {
     return {body: 'hello'};
 }</code></pre>
 </div>
@@ -767,7 +775,7 @@ Authoring in TypeScript, write <code>export</code> and let the build transpile i
 <h2 id="esm"><a class="link" href="#esm">ECMAScript modules are not supported</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime, on either engine.</p>
+<p><code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime, on either engine. This is a property of XP&#8217;s module loader, not of the engine: XP evaluates every file as a script wrapped in a function, as shown <a href="#module-scope">above</a>, and <code>import</code> is only valid in a file evaluated as an ES module. GraalJS can parse the syntax, but XP never loads a file that way.</p>
 </div>
 <div class="paragraph">
 <p>Use <code>require()</code> and <code>exports</code> in the code you deploy. Writing <code>import</code>/<code>export</code> in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an <code>import</code> statement surviving into the emitted JavaScript.</p>
@@ -786,7 +794,7 @@ more about the <a href="java-bridge.ahtml">Java bridge</a>.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 10:15:52 UTC
+Last updated 2026-09-07 13:06:04 UTC
 </div>
 </div>
 </body>

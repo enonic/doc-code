@@ -557,7 +557,7 @@ GraalJS is not for production use. Nashorn remains the supported engine, and wha
 <dl>
 <dt class="hdlist1">ES modules</dt>
 <dd>
-<p><strong>Not supported.</strong> <code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime. Use <code>require()</code> and <code>exports</code>; see <a href="globals.ahtml#esm">ECMAScript modules</a>.</p>
+<p><strong>Not supported as a loading mechanism.</strong> XP loads every file as a CommonJS module, wrapped in a function, on both engines. GraalJS can parse <code>import</code> and <code>export</code>, but a file XP loads is never evaluated as an ES module, so those statements fail at runtime. Write them in TypeScript and let the build transpile them; see <a href="globals.ahtml#esm">ECMAScript modules</a>.</p>
 </dd>
 <dt class="hdlist1"><code>async</code> / <code>await</code></dt>
 <dd>
@@ -614,7 +614,7 @@ GraalJS is not for production use. Nashorn remains the supported engine, and wha
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 10:15:52 UTC
+Last updated 2026-09-07 13:06:04 UTC
 </div>
 </div>
 </body>
