@@ -162,7 +162,7 @@ const data = get().attributes['custom.my-data'];
 // cms/pages/article/article.ts
 import {setCustomLocalAttribute} from '/lib/xp/context';
 
-export function get() {
+export function GET() {
     setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
 
     return {body: renderArticle(), contentType: 'text/html'};

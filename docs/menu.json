@@ -85,7 +85,7 @@
       "document": "runtime",
       "menuItems": [
         {
-          "title": "JavaScript engines",
+          "title": "JS engines",
           "document": "runtime/engines"
         },
         {

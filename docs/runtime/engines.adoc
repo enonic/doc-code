@@ -54,7 +54,7 @@ if (typeof Graal !== 'undefined') {
 
 A current-standard engine brings browser and Node.js expectations with it. XP is a different environment:
 
-ES modules:: *Not supported.* `import`, `export` and dynamic `import()` do not work at runtime. Use `require()` and `exports`; see <<globals#esm, ECMAScript modules>>.
+ES modules:: *Not supported as a loading mechanism.* XP loads every file as a CommonJS module, wrapped in a function, on both engines. GraalJS can parse `import` and `export`, but a file XP loads is never evaluated as an ES module, so those statements fail at runtime. Write them in TypeScript and let the build transpile them; see <<globals#esm, ECMAScript modules>>.
 `async` / `await`:: *Not supported.* Write synchronous code, and move work that should not block a request into a <<../background/tasks#, task>>.
 Node.js APIs:: *Not supported.* No `process`, `Buffer` or `global`, and no `node_modules` resolution.
 Web APIs:: *Partially supported.* `TextEncoder` and `TextDecoder` are available. Further APIs may become available in future GraalJS versions, while others, such as `fetch` and `setTimeout`, might never be supported. For HTTP, mail, storage and the rest, use the platform <<../libraries#, libraries>>.
