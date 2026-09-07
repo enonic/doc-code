@@ -783,7 +783,7 @@ init-job.audit-log-cleanup.user=system:su</code></pre>
 <div class="paragraph">
 <p>A scheduled job is submitted once per due occurrence, from one node of the cluster, and the task it submits then runs on any node that has the application providing it - see <a href="tasks.ahtml#distributable">task</a> for where that can be. Which node submits is a deployment concern, set with <code>acceptScheduling</code> in the <a href="https://developer.enonic.com/docs/platform/stable/deployment/config#scheduler">scheduler config</a> file; a job behaves the same wherever it is submitted from.</p>
 </div>
-<div class="paragraph">
+<div id="non-overlap" class="paragraph">
 <p><span class="image"><span class="alt">XP 8.1.0</span></span> A job does not start a run while its own previous run is still going. What becomes of the run that was due depends on the calendar: a <a href="#cron">CRON</a> occurrence is skipped, since a cron occurrence is a position in the calendar and a missed one is missed, while a <a href="#fixed-rate">FIXED_RATE</a> run is delayed and starts once its predecessor finishes.</p>
 </div>
 <div class="admonitionblock warning">
@@ -845,7 +845,7 @@ export function run(): void {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 15:00:34 UTC
+Last updated 2026-09-07 15:18:03 UTC
 </div>
 </div>
 </body>

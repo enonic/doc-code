@@ -910,7 +910,7 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 <p><strong>Writing</strong> — <code><a href="#ContextParams">ContextParams</a>.attributes</code>, passed to <code>run()</code> — takes <code>number</code>, <code>string</code> and <code>boolean</code>. An object value is accepted and is visible to Java code reading the context, but it is not part of what <code>get()</code> returns.</p>
 </div>
 <div class="paragraph">
-<p><code>get()</code> merges every store it reads from: attributes set on the context — by <code>run()</code> or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. And unlike attributes passed to <code>run()</code>, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.</p>
+<p><code>get()</code> merges every store it reads from: attributes set on the context — by <code>run()</code> or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. Attributes the platform sets are documented where they apply; a task started by the scheduler, for instance, finds the previous run&#8217;s task id in <code>schedule.lastTaskId</code>, see <a href="../background/scheduler.ahtml#last-task-id">What a scheduled task receives</a>. And unlike attributes passed to <code>run()</code>, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.</p>
 </div>
 </div>
 </div>
@@ -918,7 +918,7 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 15:00:34 UTC
+Last updated 2026-09-07 15:18:03 UTC
 </div>
 </div>
 </body>

@@ -445,7 +445,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#xp-8-1">XP 8.1</a>
 <ul class="sectlevel2">
 <li><a href="#deprecations">Deprecations</a></li>
-<li><a href="#java_apis">Java APIs</a></li>
+<li><a href="#xp-8-1-java">Java APIs</a></li>
 <li><a href="#worth_adopting">Worth adopting</a></li>
 </ul>
 </li>
@@ -733,7 +733,7 @@ legacy.mediaApiAutoMount.enabled = false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="java_apis"><a class="link" href="#java_apis">Java APIs</a></h3>
+<h3 id="xp-8-1-java"><a class="link" href="#xp-8-1-java">Java APIs</a></h3>
 <div class="sect3">
 <h4 id="nodeservice"><a class="link" href="#nodeservice">NodeService</a></h4>
 <div class="paragraph">
@@ -778,7 +778,7 @@ legacy.mediaApiAutoMount.enabled = false</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 15:00:34 UTC
+Last updated 2026-09-07 15:18:03 UTC
 </div>
 </div>
 </body>
