@@ -1,6 +1,6 @@
 = Scheduler
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 The scheduler runs <<tasks#, named tasks>> at a time, at an interval, or on a cron schedule, in a cluster or on a single node.
 

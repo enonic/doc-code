@@ -1,6 +1,6 @@
 = Admin Extensions
 :toc: right
-:imagesdir: images
+:imagesdir: ../images
 
 Admin extensions are dynamic endpoints that plug into into existing <<tools#,admin tools>> at their named interfaces.
 

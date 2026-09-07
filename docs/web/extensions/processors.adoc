@@ -1,6 +1,6 @@
 = Extension response processors
 :toc: right
-:imagesdir: ../images
+:imagesdir: ../../images
 
 image:xp-810.svg[XP 8.1.0,opts=inline] An extension is rendered inside an admin tool page, and that page's response is final before the browser ever fetches the extension. Its `Content-Security-Policy` header in particular is set by the tool, which cannot know what its extensions need. A response processor lets an extension take part in the tool page's response: it runs after the tool's controller, on every tool page the extension is mounted to, and may adjust the policy or add page contributions.
 

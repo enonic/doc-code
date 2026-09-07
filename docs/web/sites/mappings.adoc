@@ -1,6 +1,6 @@
 = Mappings
 :toc: right
-:imagesdir: images
+:imagesdir: ../../images
 
 Bind HTTP functions and filters to specific content types or site-relative URLs
 
