@@ -21,7 +21,7 @@ This documentation covers the app-development surface only, other relevant docum
 
 XP is highly modular: a single instance hosts many apps side by side. Each app is a self-contained bundle that can contribute <<schemas#, content schemas>>, custom <<web/apis#, APIs>>, <<web/tools#, admin tools>> and <<web/extensions#, extensions>>, <<web/id-providers#, ID providers>>, <<web/webapps#, webapps>>, or full <<web/sites#, websites>> — all powered by the same JS/TS runtime and the same standard <<libraries#, libraries>>.
 
-Code in TypeScript, build and deploy your <<fundamentals/apps#, Enonic app>> with full access to XP's persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <<fundamentals/runtime#, XP runtime>>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.
+Code in TypeScript, build and deploy your <<runtime/apps#, Enonic app>> with full access to XP's persistence, clustering, identity, scheduling, and HTTP machinery — powered by the <<runtime#, XP runtime>>, without Node.js, without a separate JS process, and with cluster-aware semantics out of the box.
 
 
 == Tutorials
@@ -32,7 +32,7 @@ IMPORTANT: For a hands-on introduction to development with Enonic XP, visit the 
 
 <<tooling#, Tooling>>:: The CLI, sandboxes, starters, build system, and CI/CD setup that get you building quickly.
 
-<<fundamentals#, Fundamentals>>:: The runtime, the app model, the module system, lifecycle hooks, and the cluster-wide event bus.
+<<runtime#, Runtime>>:: The execution model, the app model, the module system, lifecycle hooks, and the cluster-wide event bus.
 
 <<web#, Web>>:: The shared request pipeline, primitives (request/response, filters, error handlers, websockets, SSE), ID providers, and the four services XP dispatches to.
 

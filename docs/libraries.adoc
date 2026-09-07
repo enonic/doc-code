@@ -8,7 +8,7 @@ This section documents the standard JavaScript libraries shipped with the Enonic
 
 When building Enonic apps you may access a broad set of platform capabilities by requiring these libraries. Each library is pulled into your app as a `build.gradle` dependency and loaded at runtime via `require('/lib/xp/<library>')`.
 
-A library can be loaded two ways — both fully typed once the `@enonic-types` packages are installed (see <<fundamentals/typescript#, TypeScript>>):
+A library can be loaded two ways — both fully typed once the `@enonic-types` packages are installed (see <<tooling/typescript#, TypeScript>>):
 
 .require — CommonJS, the standard form
 [source,typescript]

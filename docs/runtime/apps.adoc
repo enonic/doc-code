@@ -38,7 +38,7 @@ Stop:: Before uninstall (or before a redeploy of a new version), XP stops the ap
 
 Uninstall:: The bundle is removed from the cluster.
 
-The platform calls `main.ts` exactly once per app start, per node. Top-level code in any other module runs once on first `require()` and is then cached — see <<runtime#loading_and_caching, Runtime: Loading and caching>>.
+The platform calls `main.ts` exactly once per app start, per node. Top-level code in any other module runs once on first `require()` and is then cached — see <<../runtime#loading_and_caching, Runtime: Loading and caching>>.
 
 == Redeploy and module cache
 

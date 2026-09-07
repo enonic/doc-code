@@ -1,0 +1,76 @@
+= JavaScript engines
+:toc: right
+:imagesdir: ../images
+
+Server-side code in an Enonic app runs on an embedded JavaScript engine inside the JVM - see <<../runtime#, Runtime>>. Two engines are available: *Nashorn*, the default, and *GraalJS*, available as a preview since XP 8.1.0.
+
+[#choosing]
+== Choosing an engine
+
+The engine is chosen per application. Declare it in _build.gradle_:
+
+[source,groovy]
+----
+app {
+    scriptEngine = 'GraalJS'
+}
+----
+
+The value becomes the `+X-Script-Engine+` header in the application's bundle manifest, and the app's tests run on the same engine. An application that declares no engine runs on the installation default, set by `xp.script-engine` in the platform's https://developer.enonic.com/docs/platform/stable/config/system#script-engine[system properties]. The default is `Nashorn`.
+
+Applications on different engines coexist in the same installation, so a single app can be moved to GraalJS and back without touching the rest.
+
+Every module runs in ECMAScript *strict mode*, on both engines. Nothing about how you *write* an app changes with the engine: the same modules, the same libraries, the same <<java-bridge#, Java bridge>>. What changes is the language level and the execution environment around them.
+
+[#nashorn]
+== Nashorn
+
+Nashorn is the default and the supported engine, shipped with every XP release since 7.x. It implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Transpile to ES5 - that is what the official starters do. See <<../tooling/typescript#, TypeScript>> for the build step.
+
+[#graaljs]
+== GraalJS
+
+image:preview.svg[Preview,opts=inline] GraalJS is the engine that will replace Nashorn. It implements the current ECMAScript standard, so modern syntax runs without down-levelling.
+
+WARNING: GraalJS is not for production use. Nashorn remains the supported engine, and what follows may change while GraalJS is in preview.
+
+Code transpiled to ES5 runs on either engine, which makes it the portable choice while GraalJS is in preview: an app built that way can be moved across and back.
+
+=== Detecting the engine
+
+GraalJS installs a `Graal` global, and Nashorn has no such name:
+
+[source,typescript]
+----
+if (typeof Graal !== 'undefined') {
+    log.info(`${Graal.language} ${Graal.versionECMAScript}`);  // JavaScript 2026
+}
+----
+
+`Graal.versionECMAScript` is the year of the ECMAScript compatibility mode in force. `Graal.versionGraalVM` gives the GraalVM version. See the https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object[Graal object] in the GraalJS compatibility reference.
+
+[#graaljs-limits]
+=== Not supported
+
+A current-standard engine brings browser and Node.js expectations with it. XP is a different environment:
+
+ES modules:: *Not supported.* `import`, `export` and dynamic `import()` do not work at runtime. Use `require()` and `exports`; see <<globals#esm, ECMAScript modules>>.
+`async` / `await`:: *Not supported.* Write synchronous code, and move work that should not block a request into a <<../background/tasks#, task>>.
+Node.js APIs:: *Not supported.* No `process`, `Buffer` or `global`, and no `node_modules` resolution.
+Web APIs:: *Partially supported.* `TextEncoder` and `TextDecoder` are available. Further APIs may become available in future GraalJS versions, while others, such as `fetch` and `setTimeout`, might never be supported. For HTTP, mail, storage and the rest, use the platform <<../libraries#, libraries>>.
+
+[#contexts]
+=== Script contexts
+
+GraalJS executes an application in *script contexts*. The rules below follow from that, and they are stricter versions of what <<../runtime#threading, threading>> already requires.
+
+An application gets a pool of contexts:: Contexts are created lazily as concurrency demands them, and *module-level state is per context*. Two requests may load the same module and see two different copies of its top-level variables. Treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.
+Compiled code is shared:: One engine serves the whole installation, and the code it compiles is cached across every context built from it. A module parsed while one context starts is reused by the next.
+Values cannot leave their context:: A JavaScript function or object belongs to the context that created it. <<../libraries/lib-task#executefunction, `executeFunction()`>> is therefore unsupported. Submit a <<../background/tasks#, named task>> with `submitTask()` instead.
+Disposers are registered during start-up:: Register `+__.disposer+` from `main.ts`, or from a module it loads while starting. See <<java-bridge#disposer, `+__.disposer+`>>.
+
+The size of the context pool is tuned in the platform's https://developer.enonic.com/docs/platform/stable/config/system#script-engine[system properties]. The defaults normally need no attention.
+
+=== Trying it out
+
+Run your test suite against both engines before switching an app. The differences above are the ones the platform imposes; a dependency written against Nashorn's language level can have its own. With `app { scriptEngine }` set, the Gradle plugin runs the app's tests on that engine.

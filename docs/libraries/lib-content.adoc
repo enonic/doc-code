@@ -15,7 +15,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-content` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-content` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Constants
 
@@ -66,7 +66,7 @@ Adds an attachment to an existing content.
 | name | string | Attachment name (unique within the content).
 | mimeType | string | Attachment content type.
 | label | string | *Optional.* Attachment label.
-| data | <<../fundamentals/types#byte-source, ByteSource>> | Stream with the binary data for the attachment.
+| data | <<../libraries/types#byte-source, ByteSource>> | Stream with the binary data for the attachment.
 |===
 
 [.lead]
@@ -156,16 +156,16 @@ To create a content where `name` is not important and there could be multiple in
 | language | string | *Optional.* The language tag representing the content's locale.
 | childOrder | string | *Optional.* Default ordering of children when doing `getChildren` if no order is given in query.
 | data | object | Actual content data.
-| page | object | *Optional.* Content <<../fundamentals/types#page-component, page>>.
+| page | object | *Optional.* Content <<../libraries/types#page-component, page>>.
 | x | object | *Optional.* eXtra data to use.
 | idGenerator | function | *Optional.* Function used to generate the id-suffix appended to the content name. Only called when `name` is auto-generated from `displayName` and the generated name is already taken.
-| workflow | <<../fundamentals/types#workflow, Workflow>> | *Optional.* Workflow information to use. Defaults to `{ state: "READY" }`.
+| workflow | <<../libraries/types#workflow, Workflow>> | *Optional.* Workflow information to use. Defaults to `{ state: "READY" }`.
 |===
 
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#content, Content>>) The content that was created
+*object* : (<<../libraries/types#content, Content>>) The content that was created
 
 [.lead]
 Examples
@@ -303,7 +303,7 @@ Creates a media content
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#content, Content>>) The media content that was created
+*object* : (<<../libraries/types#content, Content>>) The media content that was created
 
 [.lead]
 Examples
@@ -370,7 +370,7 @@ NOTE: `modifyMedia` is the deprecated predecessor of `updateMedia`, still export
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#content, Content>>) The media content that was updated, or `null` if it was not found
+*object* : (<<../libraries/types#content, Content>>) The media content that was updated, or `null` if it was not found
 
 [.lead]
 Examples
@@ -480,7 +480,7 @@ Duplicates a content.
 |===
 | Name | Type | Description
 | contentId | string | Id of the content.
-| workflow | <<../fundamentals/types#workflow, Workflow>> | *Optional.* Workflow information to use. Defaults to `{ state: "READY" }`.
+| workflow | <<../libraries/types#workflow, Workflow>> | *Optional.* Workflow information to use. Defaults to `{ state: "READY" }`.
 | includeChildren | boolean | *Optional.* Indicates that children contents must be duplicated, too. Ignored if `variant=true`. Defaults to `true`.
 | variant | boolean | *Optional.* Indicates that duplicated content is a variant. Defaults to `false`.
 | parent | string | *Optional.* Destination parent path. By default, a duplicated content will be added as a sibling of the source content.
@@ -600,7 +600,7 @@ Returns a content
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#content, Content>>) The content fetched from the repository, or `null` if it was not found
+*object* : (<<../libraries/types#content, Content>>) The content fetched from the repository, or `null` if it was not found
 
 [.lead]
 Examples
@@ -712,7 +712,7 @@ This function returns a content attachments
 [.lead]
 Returns
 
-*object* : A map of <<../fundamentals/types#attachment, Attachment>> objects keyed by attachment name, or `null` if the content was not found
+*object* : A map of <<../libraries/types#attachment, Attachment>> objects keyed by attachment name, or `null` if the content was not found
 
 [.lead]
 Examples
@@ -756,7 +756,7 @@ This function returns a data-stream for the specified content attachment
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#byte-source, ByteSource>>) Stream of the attachment data, or `null` if the content or attachment was not found
+*object* : (<<../libraries/types#byte-source, ByteSource>>) Stream of the attachment data, or `null` if the content or attachment was not found
 
 [.lead]
 Examples
@@ -991,7 +991,7 @@ Returns the parent site of a content
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#content, Content>>) The parent site, or `null` if the content has none
+*object* : (<<../libraries/types#content, Content>>) The parent site, or `null` if the content has none
 
 [.lead]
 Examples
@@ -1338,7 +1338,7 @@ Only these properties are read back from the object the editor returns:
 | language | string | The language tag representing the content's locale.
 | data | object | The main data (properties) of the content, according to its content type.
 | x | object | Extra data (x-data) associated with the content.
-| page | object | The <<../fundamentals/types#page-component, page>> configuration, including regions and components.
+| page | object | The <<../libraries/types#page-component, page>> configuration, including regions and components.
 |===
 
 IMPORTANT: Any other property assigned inside the editor is *silently ignored* — no error is thrown, and the returned content reflects the unchanged value. Notably, setting `workflow` or `publish` in the editor worked in XP 7 but has no effect in XP 8. Use the dedicated functions instead:
@@ -1361,7 +1361,7 @@ The same transition applies to every function built on the same underlying updat
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#content, Content>>) The updated content, or `null` if it was not found
+*object* : (<<../libraries/types#content, Content>>) The updated content, or `null` if it was not found
 
 [.lead]
 Examples
@@ -1578,7 +1578,7 @@ NOTE: Unlike <<update, update()>>, `patch` does no bookkeeping of its own: workf
 | valid | boolean | Sets the content's validity status.
 
 | data | object | A JSON object containing the main data (properties) of the content, according to its content type.
-| page | object | A JSON object describing the <<../fundamentals/types#page-component, page>> configuration including regions and components.
+| page | object | A JSON object describing the <<../libraries/types#page-component, page>> configuration including regions and components.
 | x | object | A JSON object containing extra data (x-data) associated with the content.
 
 | owner | string | The owner of the content. Must be a PrincipalKey string.
@@ -1590,12 +1590,12 @@ NOTE: Unlike <<update, update()>>, `patch` does no bookkeeping of its own: workf
 | archivedTime | string | The archival timestamp. Must be an ISO 8601 formatted string.
 
 | publish | object | A JSON object containing publishing information.
-| workflow | object | A JSON object containing <<../fundamentals/types#workflow, workflow>> state information.
+| workflow | object | A JSON object containing <<../libraries/types#workflow, workflow>> state information.
 
 | inherit | string[] | An array of strings specifying which properties to inherit from the parent (e.g., ["owner", "language"]).
 | variantOf | string | The ContentId (as a string) of the content this item is a variant of (used for localization).
 | processedReferences | string[] | An array of ContentId strings that this content references.
-| validationErrors | <<../fundamentals/types#validation-error, ValidationError>>[] | An array of objects describing validation errors.
+| validationErrors | <<../libraries/types#validation-error, ValidationError>>[] | An array of objects describing validation errors.
 | originProject | string | The name of the project this content was inherited from.
 | originalParentPath | string | The original parent path in the parent project.
 | originalName | string | The original name in the parent project.
@@ -1615,7 +1615,7 @@ Each entry is an object with these properties:
 | name | string | Name of the attachment to create.
 | mimeType | string | *Optional.* Mime-type of the data.
 | label | string | *Optional.* Label of the attachment.
-| data | <<../fundamentals/types#byte-source, ByteSource>> \| string | *Optional.* Data to use. A string is stored as its UTF-8 bytes.
+| data | <<../libraries/types#byte-source, ByteSource>> \| string | *Optional.* Data to use. A string is stored as its UTF-8 bytes.
 |===
 
 CAUTION: These are the only keys accepted. Any other key throws `Unknown CreateAttachment key: <name>`.
@@ -1742,7 +1742,7 @@ Renames a content or moves it to a new path
 [.lead]
 Returns
 
-*object* : (<<../fundamentals/types#content, Content>>) The content that was moved or renamed
+*object* : (<<../libraries/types#content, Content>>) The content that was moved or renamed
 
 [.lead]
 Examples
@@ -2584,7 +2584,7 @@ Properties
 | allowChildContent | boolean | Whether or not to allow creating child items on content of this type.
 | modifiedTime | string | *Deprecated.* Modified time of the content type. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.
 | icon | <<icon, Icon>> | *Optional.* Icon of the content type.
-| form | <<../fundamentals/types#form-item, FormItem>>[] | Form schema — an array of form items.
+| form | <<../libraries/types#form-item, FormItem>>[] | Form schema — an array of form items.
 | config | object | Custom schema configuration for the descriptor.
 |===
 
@@ -2599,7 +2599,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| data | <<../fundamentals/types#byte-source, ByteSource>> | Stream with the binary data for the icon. Read it with `lib-io`.
+| data | <<../libraries/types#byte-source, ByteSource>> | Stream with the binary data for the icon. Read it with `lib-io`.
 | mimeType | string | Mime type of the icon image.
 | modifiedTime | string | *Deprecated.* Modified time of the icon. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read.
 |===
@@ -2607,7 +2607,7 @@ Properties
 [#schedule]
 === Schedule
 
-A publish schedule. Same shape as <<../fundamentals/types#publish-info, PublishInfo>> without the `first` field.
+A publish schedule. Same shape as <<../libraries/types#publish-info, PublishInfo>> without the `first` field.
 
 [.lead]
 Properties
@@ -2634,7 +2634,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| principal | <<../fundamentals/types#principal-key, PrincipalKey>> | Principal the entry applies to (for example, `role:system.admin`, `user:system:su`).
+| principal | <<../libraries/types#principal-key, PrincipalKey>> | Principal the entry applies to (for example, `role:system.admin`, `user:system:su`).
 | allow | string[] | *Optional.* Permissions to grant. Each value is one of `READ`, `CREATE`, `MODIFY`, `DELETE`, `PUBLISH`, `READ_PERMISSIONS`, `WRITE_PERMISSIONS`.
 | deny | string[] | *Optional.* Permissions to deny. Same set of values as `allow`.
 |===
@@ -2691,7 +2691,7 @@ Properties
 | Name | Type | Description
 | total | number | Total number of contents matching the request, ignoring `start` and `count`.
 | count | number | Number of contents in `hits`.
-| hits | <<../fundamentals/types#content, Content>>[] \| <<content-hit, ContentHit>>[] | The contents on this page — or, image:xp-810.svg[XP 8.1.0,opts=inline] where `query` asked for another shape through `returns`, one <<content-hit, ContentHit>> per hit instead of the content itself.
+| hits | <<../libraries/types#content, Content>>[] \| <<content-hit, ContentHit>>[] | The contents on this page — or, image:xp-810.svg[XP 8.1.0,opts=inline] where `query` asked for another shape through `returns`, one <<content-hit, ContentHit>> per hit instead of the content itself.
 | aggregations | object | *Optional.* Aggregation results, keyed by the names used in the `aggregations` request. Present only when the request asked for aggregations.
 | highlight | object | *Optional.* Highlight results, keyed by content id. Present only when the request asked for highlighting.
 |===
@@ -2768,7 +2768,7 @@ Properties
 |===
 | Name | Type | Description
 | operation | string | The operation performed, for example `create`, `update`, `publish` or `unpublish`.
-| user | <<../fundamentals/types#principal-key, PrincipalKey>> | Principal that performed the operation.
+| user | <<../libraries/types#principal-key, PrincipalKey>> | Principal that performed the operation.
 | opTime | string | Time the operation was performed, as an ISO-8601 instant.
 | origin | string | *Optional.* Branch the operation was performed in.
 | editorial | string | *Optional.* Id of the version this one's editorial content traces back to. Lets you tell versions that changed content substance (`displayName`, `data`, `language`, `x`, page components, attachments, ordering) apart from ones that only changed bookkeeping.
@@ -2847,7 +2847,7 @@ Properties
 |===
 | Name | Type | Description
 | branch | string | Name of the branch.
-| content | <<../fundamentals/types#content, Content>> | The patched content in that branch, or `null` if the content does not exist there.
+| content | <<../libraries/types#content, Content>> | The patched content in that branch, or `null` if the content does not exist there.
 |===
 
 [#publish-content-result]
@@ -2880,7 +2880,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| content | <<../fundamentals/types#content, Content>> | The content with its updated metadata.
+| content | <<../libraries/types#content, Content>> | The content with its updated metadata.
 |===
 
 [#update-workflow-result]
@@ -2896,5 +2896,5 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| content | <<../fundamentals/types#content, Content>> | The content with its updated workflow state.
+| content | <<../libraries/types#content, Content>> | The content with its updated workflow state.
 |===

@@ -5,7 +5,7 @@ include::../.variables.adoc[]
 
 We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <<../libraries#, standard libraries>>.
 
-NOTE: XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <<runtime#, Runtime>> for the execution model.
+NOTE: XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <<../runtime#, Runtime>> for the execution model.
 
 
 == TypeScript starter

@@ -15,7 +15,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-admin` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-admin` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Functions
 
@@ -246,7 +246,7 @@ application publishes on those nodes too.
 
 Publishing from an event listener registered in `main.ts` does exactly that: `main.ts` runs on every
 node, so each node's listener publishes to its own subscribers. Distribution is then the event's
-concern - see <<../fundamentals/events#local-vs-distributed, local versus distributed semantics>> - and
+concern - see <<../runtime/events#local-vs-distributed, local versus distributed semantics>> - and
 each subscriber receives one message rather than one per node.
 ====
 

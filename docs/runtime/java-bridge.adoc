@@ -184,7 +184,7 @@ Add a disposer that is called when the app is stopped.
 
 WARNING: image:xp-810.svg[XP 8.1.0,opts=inline] Register disposers while the application is starting — from <<main#, `main.ts`>>, or from a module it loads during start-up. Registering from anywhere else is not supported.
 
-NOTE: GraalJS is a image:preview.svg[Preview,opts=inline] preview engine and *not for production* — see <<runtime#graaljs, GraalJS preview>>. Follow the start-up rule above regardless: it is the portable one.
+NOTE: GraalJS is a image:preview.svg[Preview,opts=inline] preview engine and *not for production* — see <<engines#graaljs, GraalJS>>. Follow the start-up rule above regardless: it is the portable one.
 
 NOTE: Nashorn keeps only the most recent registration per module, so a module that calls `+__.disposer+` twice loses the first callback. Combine clean-up into a single disposer.
 
