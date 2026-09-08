@@ -49,7 +49,7 @@ Java objects constructed by `newBean` may, but not required to, implement `com.e
 There are 2 ways to pass parameters to a Java method, from JavaScript:
 
 - Passing the parameters in the method call
-- Setting the parameters as properties in the Java object, and then calling the method without parameters
+- Calling a setter on the Java object for each parameter, and then calling the method without parameters
 
 The first one is recommended when there are few parameters (1 or 2) and of simple types.
 The second one is better when there are multiple parameters, or some of them are optional.
@@ -65,8 +65,8 @@ exports.doSomething = function (param1, param2) {
 exports.doSomethingElse = function (params) {
     var bean = __.newBean('com.enonic.lib.mylib.MyClass');
 
-    bean.text = __.nullOrValue(params.text) || '';
-    bean.size = __.nullOrValue(params.size) || 250;
+    bean.setText(__.nullOrValue(params.text) || '');
+    bean.setSize(__.nullOrValue(params.size) || 250);
 
     return bean.execute();
 };
@@ -75,7 +75,9 @@ exports.doSomethingElse = function (params) {
 NOTE: When passing values that might be `null` or `undefined` it is recommended to filter them using the `__.nullOrValue` built-in function.
 This function converts any value that is `null` or `undefined` in JavaScript to `null` in Java. Otherwise returns the input value without changes.
 
-To be able to set property values as in the 2nd example above, the Java object must implement a setter method for each field.
+The Java object must implement a setter method for each field set that way.
+
+WARNING: Call the setter, as above - do not assign to the field as if it were a property. Nashorn rewrote `bean.text = value` into `bean.setText(value)`; on GraalJS the assignment fails with `Unknown identifier`. See <<engines#graaljs-interop, Java interop>>.
 
 The Java class used in the example above looks like this:
 
@@ -116,10 +118,14 @@ There are some type conversions that are made when calling from JavaScript to Ja
 - when passing a JavaScript `array`, the Java method should expect a Java `List`
 - when passing a JavaScript `object`, the Java method should expect a Java `Map<String, Object>`
 
+The argument must already be of the type the method declares - it is not coerced on the way in. A JavaScript string passed to a Java `int` or `Long` parameter throws on GraalJS, so parse values that arrive as strings, such as request parameters, before the call. Wrap objects and arrays in `+__.toScriptValue()+` to hand them over as a Java `Map` or `List`.
+
 
 === Returning results from Java
 
 When returning simple values from Java to a JavaScript caller, the same type conversions applies.
+
+Complex values are *not* converted: a Java `Map` returned to JavaScript is still a Java object, and inspecting it with `Object.keys()`, spread or `JSON.stringify()` reports the class methods rather than the entries. Convert it once, in the module that makes the call, with `+__.toNativeObject()+`, as the `readLines` example above does. See <<engines#graaljs-interop, Java interop>>.
 
 To return complex object values, you should create a specific Java class to make the mapping. This class should implement the ``MapSerializable`` interface.
 It will implement the ``serialize`` method, which allows generating a JSON object.

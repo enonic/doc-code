@@ -59,6 +59,20 @@ ES modules:: *Not supported as a loading mechanism.* XP loads every file as a Co
 Node.js APIs:: *Not supported.* No `process`, `Buffer` or `global`, and no `node_modules` resolution.
 Web APIs:: *Partially supported.* `TextEncoder` and `TextDecoder` are available. Further APIs may become available in future GraalJS versions, while others, such as `fetch` and `setTimeout`, might never be supported. For HTTP, mail, storage and the rest, use the platform <<../libraries#, libraries>>.
 
+[#graaljs-interop]
+=== Java interop
+
+The <<java-bridge#, Java bridge>> is the same on both engines - the same `+__+` object, the same beans. What differs is that Nashorn converted values for you at the boundary and GraalJS does not. Four rules cover it:
+
+Convert every value that crosses the boundary:: `+__.toScriptValue()+` on the way in, `+__.toNativeObject()+` on the way out - which is how the platform <<../libraries#, libraries>> are written. A Java `Map` returned straight to JavaScript stays a Java object: `Object.keys()`, spread and `JSON.stringify()` see its class methods rather than its entries, and raise nothing. A single property read may still answer, which is what makes the mistake easy to miss. Java `List` returns behave as arrays on both engines.
+Call setters, do not assign properties:: `bean.setValue(x)`, never `bean.value = x`. Nashorn rewrote that assignment into the setter call; on GraalJS it fails with `Unknown identifier`.
+Pass the type the method declares:: Arguments are not coerced. A JavaScript string handed to a Java `int` parameter throws. Request parameters always arrive as strings, so parse them before they reach Java.
+Do not branch on a Java value's type from JavaScript:: `+Object.prototype.toString.call(value)+` named the Java class on Nashorn; on GraalJS it answers `+[object Object]+`. Convert the value first, then inspect what you got back.
+
+NOTE: XP's bridge is `+__+`, on both engines. The interop globals an engine installs itself - Nashorn's `Java` object among them - are not part of XP's API, and code written against them is not portable across engines.
+
+GraalJS has its own https://www.graalvm.org/javascript/docs/[documentation], which describes the engine as it ships standalone. XP embeds it, so read that reference together with <<graaljs-limits, Not supported>> above and with the rules on this page: what the engine can do and what an XP app may rely on are not the same list.
+
 [#contexts]
 === Script contexts
 
