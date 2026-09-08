@@ -75,11 +75,11 @@ exports.doSomethingElse = function (params) {
 NOTE: When passing values that might be `null` or `undefined` it is recommended to filter them using the `__.nullOrValue` built-in function.
 This function converts any value that is `null` or `undefined` in JavaScript to `null` in Java. Otherwise returns the input value without changes.
 
-The Java object must implement a setter method for each field set that way.
+The Java object must implement a setter method for each parameter passed that way.
 
 [WARNING]
 ====
-The setter must be called. Assigning to the field as if it were a property is supported by Nashorn only, which rewrote such an assignment into the corresponding setter call; on GraalJS it fails with an `Unknown identifier` error. See <<engines#graaljs-interop, Java interop>>.
+The setter must be called. Nashorn also accepted an assignment to a property named after the setter and rewrote it into a call to that setter, but GraalJS exposes no such property, and the assignment fails with an `Unknown identifier` error. See <<engines#graaljs-interop, Java interop>>.
 
 [source,typescript]
 ----

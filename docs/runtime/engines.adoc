@@ -77,7 +77,7 @@ bean.setConfig(__.toScriptValue(params.config));
 const result = __.toNativeObject(bean.execute());
 ----
 
-A Java map returned without conversion remains a Java object. Inspecting it with the standard JavaScript operations reports the methods of its class instead of its entries, and reports no error in doing so. An individual property read may still return the expected value, which is what makes the omission easy to overlook.
+A Java map returned without conversion remains a Java object. Inspecting it with the standard JavaScript operations returns the methods of its class instead of its entries, and throws nothing along the way. An individual property read may still return the expected value, which is what makes the omission easy to overlook.
 
 [source,typescript]
 ----
@@ -95,7 +95,7 @@ Java lists are the exception. They present array semantics on both engines, so i
 
 ==== Call setters rather than assigning properties
 
-Nashorn rewrote an assignment to a bean property into a call to the corresponding setter. GraalJS does not, and the assignment fails with an `Unknown identifier` error.
+Nashorn accepted an assignment to a property named after the setter and rewrote it into a call to that setter. GraalJS exposes the bean's methods and its public fields, and nothing else, so no such property exists and the assignment fails with an `Unknown identifier` error.
 
 [source,typescript]
 ----
