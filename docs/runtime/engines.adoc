@@ -66,7 +66,7 @@ The <<java-bridge#, Java bridge>> is identical on both engines: the same bridge 
 
 ==== Convert values at the boundary
 
-Values are converted explicitly: on the way into Java with `toScriptValue`, and on the way back out with `toNativeObject`. This is how the platform <<../libraries#, libraries>> are written.
+Values are converted explicitly: on the way into Java with `toScriptValue`, and on the way back out with `toNativeObject`.
 
 [source,typescript]
 ----
