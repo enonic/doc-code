@@ -118,7 +118,7 @@ There are some type conversions that are made when calling from JavaScript to Ja
 - when passing a JavaScript `array`, the Java method should expect a Java `List`
 - when passing a JavaScript `object`, the Java method should expect a Java `Map<String, Object>`
 
-The argument must already be of the type the method declares - it is not coerced on the way in. A JavaScript string passed to a Java `int` or `Long` parameter throws on GraalJS, so parse values that arrive as strings, such as request parameters, before the call. Wrap objects and arrays in `+__.toScriptValue()+` to hand them over as a Java `Map` or `List`.
+The argument must already be of the type the method declares - it is not coerced on the way in. A JavaScript string passed to a Java `int` or `Long` parameter throws on GraalJS. For instance, HTTP request parameters always arrive as strings, so parse them before the call. Wrap objects and arrays in `+__.toScriptValue()+` to hand them over as a Java `Map` or `List`.
 
 
 === Returning results from Java

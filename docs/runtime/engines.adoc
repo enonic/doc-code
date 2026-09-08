@@ -66,7 +66,7 @@ The <<java-bridge#, Java bridge>> is the same on both engines - the same `+__+` 
 
 Convert every value that crosses the boundary:: `+__.toScriptValue()+` on the way in, `+__.toNativeObject()+` on the way out - which is how the platform <<../libraries#, libraries>> are written. A Java `Map` returned straight to JavaScript stays a Java object: `Object.keys()`, spread and `JSON.stringify()` see its class methods rather than its entries, and raise nothing. A single property read may still answer, which is what makes the mistake easy to miss. Java `List` returns behave as arrays on both engines.
 Call setters, do not assign properties:: `bean.setValue(x)`, never `bean.value = x`. Nashorn rewrote that assignment into the setter call; on GraalJS it fails with `Unknown identifier`.
-Pass the type the method declares:: Arguments are not coerced. A JavaScript string handed to a Java `int` parameter throws. Request parameters always arrive as strings, so parse them before they reach Java.
+Pass the type the method declares:: Arguments are not coerced. A JavaScript string handed to a Java `int` parameter throws. For instance, HTTP request parameters always arrive as strings, so parse them before they reach Java.
 Do not branch on a Java value's type from JavaScript:: `+Object.prototype.toString.call(value)+` named the Java class on Nashorn; on GraalJS it answers `+[object Object]+`. Convert the value first, then inspect what you got back.
 
 NOTE: XP's bridge is `+__+`, on both engines. The interop globals an engine installs itself - Nashorn's `Java` object among them - are not part of XP's API, and code written against them is not portable across engines.
