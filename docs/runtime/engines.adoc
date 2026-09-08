@@ -62,16 +62,75 @@ Web APIs:: *Partially supported.* `TextEncoder` and `TextDecoder` are available.
 [#graaljs-interop]
 === Java interop
 
-The <<java-bridge#, Java bridge>> is the same on both engines - the same `+__+` object, the same beans. What differs is that Nashorn converted values for you at the boundary and GraalJS does not. Four rules cover it:
+The <<java-bridge#, Java bridge>> is identical on both engines: the same bridge object, the same beans, the same libraries. What differs is conversion. Nashorn converted values implicitly as they crossed between JavaScript and Java, whereas GraalJS converts nothing. Four rules follow from that, and code written to observe them runs unchanged on either engine.
 
-Convert every value that crosses the boundary:: `+__.toScriptValue()+` on the way in, `+__.toNativeObject()+` on the way out - which is how the platform <<../libraries#, libraries>> are written. A Java `Map` returned straight to JavaScript stays a Java object: `Object.keys()`, spread and `JSON.stringify()` see its class methods rather than its entries, and raise nothing. A single property read may still answer, which is what makes the mistake easy to miss. Java `List` returns behave as arrays on both engines.
-Call setters, do not assign properties:: `bean.setValue(x)`, never `bean.value = x`. Nashorn rewrote that assignment into the setter call; on GraalJS it fails with `Unknown identifier`.
-Pass the type the method declares:: Arguments are not coerced. A JavaScript string handed to a Java `int` parameter throws. For instance, HTTP request parameters always arrive as strings, so parse them before they reach Java.
-Do not branch on a Java value's type from JavaScript:: `+Object.prototype.toString.call(value)+` named the Java class on Nashorn; on GraalJS it answers `+[object Object]+`. Convert the value first, then inspect what you got back.
+==== Convert values at the boundary
 
-NOTE: XP's bridge is `+__+`, on both engines. The interop globals an engine installs itself - Nashorn's `Java` object among them - are not part of XP's API, and code written against them is not portable across engines.
+Values are converted explicitly: on the way into Java with `toScriptValue`, and on the way back out with `toNativeObject`. This is how the platform <<../libraries#, libraries>> are written.
 
-GraalJS has its own https://www.graalvm.org/javascript/docs/[documentation], which describes the engine as it ships standalone. XP embeds it, so read that reference together with <<graaljs-limits, Not supported>> above and with the rules on this page: what the engine can do and what an XP app may rely on are not the same list.
+[source,typescript]
+----
+const bean = __.newBean<MyBean>('com.example.MyBean');
+
+bean.setConfig(__.toScriptValue(params.config));
+
+const result = __.toNativeObject(bean.execute());
+----
+
+A Java map returned without conversion remains a Java object. Inspecting it with the standard JavaScript operations reports the methods of its class instead of its entries, and reports no error in doing so. An individual property read may still return the expected value, which is what makes the omission easy to overlook.
+
+[source,typescript]
+----
+const map = bean.getConfig();       // a Java Map, unconverted
+
+const mode = map.mode;              // 'live' - the read succeeds
+const keys = Object.keys(map);      // ['get', 'put', 'size', ...]
+const json = JSON.stringify(map);   // '{}'
+const copy = {...map};              // {}
+
+const config = __.toNativeObject(bean.getConfig());   // a JavaScript object
+----
+
+Java lists are the exception. They present array semantics on both engines, so index access and iteration require no conversion.
+
+==== Call setters rather than assigning properties
+
+Nashorn rewrote an assignment to a bean property into a call to the corresponding setter. GraalJS does not, and the assignment fails with an `Unknown identifier` error.
+
+[source,typescript]
+----
+bean.setValue(42);   // supported on both engines
+bean.value = 42;     // Nashorn only; fails on GraalJS
+----
+
+TypeScript declarations written for a bean should therefore declare its setters and omit the properties, so that the unsupported form does not compile.
+
+==== Pass the type the method declares
+
+Arguments are not coerced to the declared parameter type. HTTP request parameters, for instance, always arrive as strings and must be parsed before they reach a Java method that expects a number.
+
+[source,typescript]
+----
+bean.setCount(req.params.count);                 // fails: a string is not an int
+bean.setCount(parseInt(req.params.count, 10));   // supported on both engines
+----
+
+==== Do not determine Java types from JavaScript
+
+The standard type-tag idiom reported the name of the Java class on Nashorn. On GraalJS it reports a generic tag, so a branch written against that string stops matching, and it does so silently.
+
+[source,typescript]
+----
+Object.prototype.toString.call(value);
+// Nashorn: '[object com.example.Thing]'
+// GraalJS: '[object Object]'
+----
+
+Convert the value at the boundary and branch on the converted result, or perform the type test in Java, where the type is known.
+
+NOTE: The bridge XP supports is the `+__+` object, on both engines. Interop globals installed by an engine itself, among them the `Java` object, are not part of the XP API, and code written against them is not portable between engines.
+
+GraalJS is documented by its maintainers at https://www.graalvm.org/javascript/docs/[graalvm.org]. That reference describes the engine as it is distributed standalone; XP embeds it, so it should be read together with <<graaljs-limits, Not supported>> above. What the engine is capable of and what an application may rely on are not the same set.
 
 [#contexts]
 === Script contexts

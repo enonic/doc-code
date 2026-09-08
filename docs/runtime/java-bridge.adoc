@@ -77,7 +77,16 @@ This function converts any value that is `null` or `undefined` in JavaScript to 
 
 The Java object must implement a setter method for each field set that way.
 
-WARNING: Call the setter, as above - do not assign to the field as if it were a property. Nashorn rewrote `bean.text = value` into `bean.setText(value)`; on GraalJS the assignment fails with `Unknown identifier`. See <<engines#graaljs-interop, Java interop>>.
+[WARNING]
+====
+The setter must be called. Assigning to the field as if it were a property is supported by Nashorn only, which rewrote such an assignment into the corresponding setter call; on GraalJS it fails with an `Unknown identifier` error. See <<engines#graaljs-interop, Java interop>>.
+
+[source,typescript]
+----
+bean.setText('value');   // supported on both engines
+bean.text = 'value';     // Nashorn only; fails on GraalJS
+----
+====
 
 The Java class used in the example above looks like this:
 
@@ -118,14 +127,27 @@ There are some type conversions that are made when calling from JavaScript to Ja
 - when passing a JavaScript `array`, the Java method should expect a Java `List`
 - when passing a JavaScript `object`, the Java method should expect a Java `Map<String, Object>`
 
-The argument must already be of the type the method declares - it is not coerced on the way in. A JavaScript string passed to a Java `int` or `Long` parameter throws on GraalJS. For instance, HTTP request parameters always arrive as strings, so parse them before the call. Wrap objects and arrays in `+__.toScriptValue()+` to hand them over as a Java `Map` or `List`.
+The argument must already be of the type the method declares. Nashorn coerced it where the two differed; GraalJS does not. HTTP request parameters, for instance, always arrive as strings and must be parsed before they are passed to a parameter declared as a number. Objects and arrays are handed over as a Java map or list by converting them first.
+
+[source,typescript]
+----
+bean.setSize(parseInt(req.params.size, 10));       // a Java Long
+bean.setConfig(__.toScriptValue(params.config));   // a Java Map
+----
 
 
 === Returning results from Java
 
 When returning simple values from Java to a JavaScript caller, the same type conversions applies.
 
-Complex values are *not* converted: a Java `Map` returned to JavaScript is still a Java object, and inspecting it with `Object.keys()`, spread or `JSON.stringify()` reports the class methods rather than the entries. Convert it once, in the module that makes the call, with `+__.toNativeObject()+`, as the `readLines` example above does. See <<engines#graaljs-interop, Java interop>>.
+Complex values are not converted. A Java map returned to JavaScript remains a Java object, and inspecting it with the standard JavaScript operations reports the methods of its class rather than its entries. It is converted once, in the module that makes the call, as the `readLines` example above does.
+
+[source,typescript]
+----
+const config = __.toNativeObject(bean.getConfig());
+----
+
+See <<engines#graaljs-interop, Java interop>>.
 
 To return complex object values, you should create a specific Java class to make the mapping. This class should implement the ``MapSerializable`` interface.
 It will implement the ``serialize`` method, which allows generating a JSON object.
