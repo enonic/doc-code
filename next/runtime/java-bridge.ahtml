@@ -525,7 +525,7 @@ this case, converts a Java String array to a JSON object.</p>
 <p>Passing the parameters in the method call</p>
 </li>
 <li>
-<p>Setting the parameters as properties in the Java object, and then calling the method without parameters</p>
+<p>Calling a setter on the Java object for each parameter, and then calling the method without parameters</p>
 </li>
 </ul>
 </div>
@@ -544,8 +544,8 @@ The second one is better when there are multiple parameters, or some of them are
 exports.doSomethingElse = function (params) {
     var bean = __.newBean('com.enonic.lib.mylib.MyClass');
 
-    bean.text = __.nullOrValue(params.text) || '';
-    bean.size = __.nullOrValue(params.size) || 250;
+    bean.setText(__.nullOrValue(params.text) || '');
+    bean.setSize(__.nullOrValue(params.size) || 250);
 
     return bean.execute();
 };</code></pre>
@@ -565,7 +565,27 @@ This function converts any value that is <code>null</code> or <code>undefined</c
 </table>
 </div>
 <div class="paragraph">
-<p>To be able to set property values as in the 2nd example above, the Java object must implement a setter method for each field.</p>
+<p>The Java object must implement a setter method for each parameter passed that way.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The setter must be called. Nashorn also accepted an assignment to a property named after the setter and rewrote it into a call to that setter, but GraalJS exposes no such property, and the assignment fails with an <code>Unknown identifier</code> error. See <a href="engines.ahtml#graaljs-interop">Java interop</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setText('value');   // supported on both engines
+bean.text = 'value';     // Nashorn only; fails on GraalJS</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The Java class used in the example above looks like this:</p>
@@ -621,11 +641,31 @@ public final class MyClass {
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>The argument must already be of the type the method declares. Nashorn coerced it where the two differed; GraalJS does not. HTTP request parameters, for instance, always arrive as strings and must be parsed before they are passed to a parameter declared as a number. Objects and arrays are handed over as a Java map or list by converting them first.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setSize(parseInt(req.params.size, 10));       // a Java Long
+bean.setConfig(__.toScriptValue(params.config));   // a Java Map</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="returning_results_from_java"><a class="link" href="#returning_results_from_java">Returning results from Java</a></h3>
 <div class="paragraph">
 <p>When returning simple values from Java to a JavaScript caller, the same type conversions applies.</p>
+</div>
+<div class="paragraph">
+<p>Complex values are not converted. A Java map returned to JavaScript remains a Java object, and inspecting it with the standard JavaScript operations reports the methods of its class rather than its entries. It is converted once, in the module that makes the call, as the <code>readLines</code> example above does.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const config = __.toNativeObject(bean.getConfig());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="engines.ahtml#graaljs-interop">Java interop</a>.</p>
 </div>
 <div class="paragraph">
 <p>To return complex object values, you should create a specific Java class to make the mapping. This class should implement the <code>MapSerializable</code> interface.
@@ -981,7 +1021,7 @@ Nashorn keeps only the most recent registration per module, so a module that cal
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 20:33:17 UTC
+Last updated 2026-09-09 08:21:25 UTC
 </div>
 </div>
 </body>

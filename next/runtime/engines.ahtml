@@ -447,6 +447,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#detecting_the_engine">Detecting the engine</a></li>
 <li><a href="#graaljs-limits">Not supported</a></li>
+<li><a href="#graaljs-interop">Java interop</a></li>
 <li><a href="#contexts">Script contexts</a></li>
 <li><a href="#trying_it_out">Trying it out</a></li>
 </ul>
@@ -575,6 +576,103 @@ GraalJS is not for production use. Nashorn remains the supported engine, and wha
 </div>
 </div>
 <div class="sect2">
+<h3 id="graaljs-interop"><a class="link" href="#graaljs-interop">Java interop</a></h3>
+<div class="paragraph">
+<p>The <a href="java-bridge.ahtml">Java bridge</a> is identical on both engines: the same bridge object, the same beans, the same libraries. What differs is conversion. Nashorn converted values implicitly as they crossed between JavaScript and Java, whereas GraalJS converts nothing. Four rules follow from that, and code written to observe them runs unchanged on either engine.</p>
+</div>
+<div class="sect3">
+<h4 id="convert_values_at_the_boundary"><a class="link" href="#convert_values_at_the_boundary">Convert values at the boundary</a></h4>
+<div class="paragraph">
+<p>Values are converted explicitly: on the way into Java with <code>toScriptValue</code>, and on the way back out with <code>toNativeObject</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const bean = __.newBean&lt;MyBean&gt;('com.example.MyBean');
+
+bean.setConfig(__.toScriptValue(params.config));
+
+const result = __.toNativeObject(bean.execute());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A Java map returned without conversion remains a Java object. Inspecting it with the standard JavaScript operations returns the methods of its class instead of its entries, and throws nothing along the way. An individual property read may still return the expected value, which is what makes the omission easy to overlook.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const map = bean.getConfig();       // a Java Map, unconverted
+
+const mode = map.mode;              // 'live' - the read succeeds
+const keys = Object.keys(map);      // ['get', 'put', 'size', ...]
+const json = JSON.stringify(map);   // '{}'
+const copy = {...map};              // {}
+
+const config = __.toNativeObject(bean.getConfig());   // a JavaScript object</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Java lists are the exception. They present array semantics on both engines, so index access and iteration require no conversion.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="call_setters_rather_than_assigning_properties"><a class="link" href="#call_setters_rather_than_assigning_properties">Call setters rather than assigning properties</a></h4>
+<div class="paragraph">
+<p>Nashorn accepted an assignment to a property named after the setter and rewrote it into a call to that setter. GraalJS exposes the bean&#8217;s methods and its public fields, and nothing else, so no such property exists and the assignment fails with an <code>Unknown identifier</code> error.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setValue(42);   // supported on both engines
+bean.value = 42;     // Nashorn only; fails on GraalJS</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TypeScript declarations written for a bean should therefore declare its setters and omit the properties, so that the unsupported form does not compile.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="pass_the_type_the_method_declares"><a class="link" href="#pass_the_type_the_method_declares">Pass the type the method declares</a></h4>
+<div class="paragraph">
+<p>Arguments are not coerced to the declared parameter type. HTTP request parameters, for instance, always arrive as strings and must be parsed before they reach a Java method that expects a number.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setCount(req.params.count);                 // fails: a string is not an int
+bean.setCount(parseInt(req.params.count, 10));   // supported on both engines</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="do_not_determine_java_types_from_javascript"><a class="link" href="#do_not_determine_java_types_from_javascript">Do not determine Java types from JavaScript</a></h4>
+<div class="paragraph">
+<p>The standard type-tag idiom reported the name of the Java class on Nashorn. On GraalJS it reports a generic tag, so a branch written against that string stops matching, and it does so silently.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">Object.prototype.toString.call(value);
+// Nashorn: '[object com.example.Thing]'
+// GraalJS: '[object Object]'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Convert the value at the boundary and branch on the converted result, or perform the type test in Java, where the type is known.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The bridge XP supports is the <code>__</code> object, on both engines. Interop globals installed by an engine itself, among them the <code>Java</code> object, are not part of the XP API, and code written against them is not portable between engines.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>GraalJS is documented by its maintainers at <a href="https://www.graalvm.org/javascript/docs/">graalvm.org</a>. That reference describes the engine as it is distributed standalone; XP embeds it, so it should be read together with <a href="#graaljs-limits">Not supported</a> above. What the engine is capable of and what an application may rely on are not the same set.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="contexts"><a class="link" href="#contexts">Script contexts</a></h3>
 <div class="paragraph">
 <p>GraalJS executes an application in <strong>script contexts</strong>. The rules below follow from that, and they are stricter versions of what <a href="../runtime.ahtml#threading">threading</a> already requires.</p>
@@ -614,7 +712,7 @@ GraalJS is not for production use. Nashorn remains the supported engine, and wha
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-07 20:33:17 UTC
+Last updated 2026-09-09 08:21:25 UTC
 </div>
 </div>
 </body>
