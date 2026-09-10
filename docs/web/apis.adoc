@@ -2,11 +2,7 @@
 :toc: right
 :imagesdir: images
 
-A core feature of Enonic XP is the ability to build custom APIs and reuse them across the platform — aka the Universal API.
-
-== Introduction
-
-The Universal API is a powerful feature of the Enonic XP platform that lets developers create custom APIs. It enables applications to dynamically extend the platform's API surface as they are installed.
+A Universal API is a custom HTTP API shipped in an application: a TypeScript module and a descriptor under `src/main/resources/apis/`. Installing the application adds the API to the instance, and the same implementation can then be exposed on the Web endpoint, inside a site, webapp, or admin tool, or on the management port — including from other applications, which may borrow it by name. Nothing is mounted or reachable until the descriptor says so, and an API mounts at a single, fixed location per endpoint, never at arbitrary points along a URL.
 
 == Request pipeline
 
@@ -16,22 +12,10 @@ A Universal API is not tied to a single URL — the same implementation can be r
 // Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.api-pipeline.mmd -o docs/web/images/api-pipeline.svg -b transparent
 image::api-pipeline.svg[Universal API request pipeline, 400px]
 
-Access control:: The API must be mounted on the location the request arrived through, and the caller must satisfy its `allow` list. Not mounted there returns *404*; a caller without access gets *401* or *403* (see the <<#descriptor, descriptor>>). The `allow` list is enforced on every request, regardless of endpoint.
+Access control:: The API must be mounted on the location the request arrived through, and the caller must satisfy its `allow` list — on every request, regardless of endpoint. The <<#descriptor, descriptor>> section lists the resulting status codes.
 `+<api-name>.ts+`:: The matched API's exported function for the request method (`GET`, `POST`, …) handles the request; subpaths arrive as `req.path`.
 
 See <<#where-apis-are-reachable, Where APIs are reachable>> for the rules governing each mount point.
-
-== Features
-
-The main features of the Universal API are:
-
-* Secure by default.
- ** APIs are not mounted anywhere by default, so there is no risk of accidentally exposing an admin API on a site.
- ** Nobody can access an API without explicitly specifying access rights in the descriptor.
- ** APIs mount at a single, fixed location, never at arbitrary points along the URL.
-* Headless friendly. APIs can be mounted under the `/api` endpoint, so they can be used by any client.
-* Granular. Mounting must be explicitly specified in service descriptor files.
-* Modular. APIs can be borrowed from other applications, so you can reuse existing APIs in your application.
 
 == Usage
 
@@ -42,14 +26,14 @@ Example:
 .src/main/resources/apis/<api-name>/<api-name>.ts
 [source,typescript]
 ----
-exports.GET = (req) => {
+export function GET(req) {
   return {
     body: {
       time: new Date()
     },
     contentType: 'application/json; charset=utf-8'
   };
-};
+}
 ----
 
 === Subpath routing
@@ -174,25 +158,7 @@ apis:
 
 <2> The `<app>:<api>` form mounts an API from a different application, letting the service borrow APIs deployed by other apps.
 
-The webapp and admin tool descriptors take the same `apis:` list:
-
-.src/main/resources/webapp/webapp.yaml
-[source,yaml]
-----
-kind: "WebApp"
-apis:
-  - "ws"
-  - "app:graphql"
-----
-
-.src/main/resources/admin/tools/<tool-name>/<tool-name>.yaml
-[source,yaml]
-----
-kind: "AdminTool"
-apis:
-  - "ws"
-  - "app:graphql"
-----
+`src/main/resources/webapp/webapp.yaml` (`kind: "WebApp"`) and `src/main/resources/admin/tools/<tool-name>/<tool-name>.yaml` (`kind: "AdminTool"`) take the same `apis:` list.
 
 NOTE: Wildcards and "expose all APIs from app X" rules are intentionally not supported here. Each API must be listed by its descriptor key. The reason is security: it prevents new or insecure APIs from being silently exposed on a service path when an app is upgraded or a new dependency is added. Publishing an additional API always requires an explicit change to the hosting descriptor.
 
@@ -230,9 +196,9 @@ To safely generate an API URL, use the `apiUrl()` function from the <<../librari
 
 [source,typescript]
 ----
-const portalLib = require('/lib/xp/portal');
+import {apiUrl} from '/lib/xp/portal';
 
-const url = portalLib.apiUrl({
+const url = apiUrl({
     api: 'com.example.myapp:myapi', // <1>
     path: '/items',                 // <2>
     params: { id: '42' }            // <3>
