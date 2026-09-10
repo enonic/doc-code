@@ -567,7 +567,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td><strong>apis</strong> — list of <a href="apis.ahtml">Universal API</a> descriptor keys mounted under this tool&#8217;s URL. Bare names refer to APIs in the same app; <code>&lt;app&gt;:&lt;api&gt;</code> form borrows from another app. APIs become reachable as service points at <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>.</td>
+<td><strong>apis</strong> — list of <a href="apis.ahtml">Universal API</a> descriptor keys mounted under this tool&#8217;s URL. Bare names refer to APIs in the same app; <code>&lt;app&gt;:&lt;api&gt;</code> form borrows from another app. APIs become reachable at <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/&lt;app&gt;:&lt;api&gt;</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -608,7 +608,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </div>
 </div>
 <div class="paragraph">
-<p>The implementation is the entry point for <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;</code> and any deeper path that does not match a service-point URL. For anything beyond a couple of static endpoints, use the <a href="https://market.enonic.com/vendors/enonic/router-lib">router library</a> for method dispatch, parameter extraction, and pattern matching.</p>
+<p>The implementation is the entry point for <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;</code> and any deeper path that does not match a contextually mounted API. For anything beyond a couple of static endpoints, use the <a href="https://market.enonic.com/vendors/enonic/router-lib">router library</a> for method dispatch, parameter extraction, and pattern matching.</p>
 </div>
 </div>
 </div>
@@ -621,7 +621,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 <p>Tool entry point: <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;</code></p>
 </li>
 <li>
-<p>API service point under the tool: <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/&lt;app&gt;:&lt;api-name&gt;</code></p>
+<p>Contextual API under the tool: <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/&lt;app&gt;:&lt;api-name&gt;</code></p>
 </li>
 <li>
 <p>Admin extension dispatcher under the tool: <code>/admin/&lt;app-key&gt;/&lt;tool-name&gt;/_/admin:extension/&lt;app&gt;:&lt;extension-name&gt;/</code></p>
@@ -658,7 +658,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 <h2 id="mounting_universal_apis"><a class="link" href="#mounting_universal_apis">Mounting Universal APIs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Any API listed in <code>apis:</code> is mounted as a service point under the tool&#8217;s URL. The same API can simultaneously be mounted on the Web endpoint (<code>mount: ["web"]</code> in the API descriptor) — the two mounts are independent. See <a href="apis.ahtml#service-point">Universal API: Service point</a>.</p>
+<p>Any API listed in <code>apis:</code> is mounted contextually under the tool&#8217;s URL. The same API can simultaneously be mounted on the Web endpoint (<code>mount: ["web"]</code> in the API descriptor) — the two mounts are independent. See <a href="apis.ahtml#contextual-apis">Universal API: Contextual APIs</a>.</p>
 </div>
 </div>
 </div>
@@ -681,7 +681,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 19:11:16 UTC
+Last updated 2026-09-10 20:51:46 UTC
 </div>
 </div>
 </body>

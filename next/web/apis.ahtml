@@ -452,10 +452,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#descriptor">Descriptor</a></li>
 <li><a href="#where-apis-are-reachable">Where APIs are reachable</a></li>
-<li><a href="#service-point">Service point</a></li>
-<li><a href="#web-endpoint">Web endpoint</a></li>
-<li><a href="#management-endpoint">Management Endpoint</a></li>
+<li><a href="#web-endpoint">Web endpoint</a>
+<ul class="sectlevel2">
 <li><a href="#api_discovery">API discovery</a></li>
+</ul>
+</li>
+<li><a href="#contextual-apis">Contextual APIs</a></li>
+<li><a href="#management-endpoint">Management endpoint</a></li>
 <li><a href="#apiurl">apiUrl()</a></li>
 <li><a href="#tracing">Tracing</a></li>
 <li><a href="#reserved_api_application_names">Reserved API application names</a></li>
@@ -482,11 +485,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A Universal API is not tied to a single URL — the same implementation is reachable as the <a href="#web-endpoint">Web endpoint</a> (<code>/api/&lt;app&gt;:&lt;api&gt;</code>) and as a <a href="#service-point">service point</a> inside the site, webapp, and admin services (<code>/_/&lt;app&gt;:&lt;api&gt;</code>). However it arrives, every request is gated the same way:</p>
+<p>A Universal API is not tied to a single URL — the same implementation can be reached from the <a href="#web-endpoint">Web endpoint</a> (<code>/api/&lt;app&gt;:&lt;api&gt;</code>) or as a <a href="#contextual-apis">contextual API</a> inside the site, webapp, and admin services (<code>/_/&lt;app&gt;:&lt;api&gt;</code>). However it arrives, every request is gated the same way:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/api-pipeline.svg" alt="Universal API request pipeline" width="500px">
+<img src="images/api-pipeline.svg" alt="Universal API request pipeline" width="4fix00px">
 </div>
 </div>
 <div class="dlist">
@@ -568,7 +571,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="subpath_routing"><a class="link" href="#subpath_routing">Subpath routing</a></h3>
 <div class="paragraph">
-<p>A request to <code>/api/&lt;app&gt;:&lt;api&gt;/foo/bar</code> (or the equivalent service-point URL) reaches the same implementation; everything after the descriptor segment arrives as <code>req.path</code>. The implementation is free to dispatch on <code>req.path</code> any way it likes, but for anything beyond a couple of static endpoints, use the <a href="https://market.enonic.com/vendors/enonic/router-lib">router library</a> for method dispatch, parameter extraction, and pattern matching.</p>
+<p>A request to <code>/api/&lt;app&gt;:&lt;api&gt;/foo/bar</code> (or the equivalent contextual URL) reaches the same implementation; everything after the descriptor segment arrives as <code>req.path</code>. The implementation is free to dispatch on <code>req.path</code> any way it likes, but for anything beyond a couple of static endpoints, use the <a href="https://market.enonic.com/vendors/enonic/router-lib">router library</a> for method dispatch, parameter extraction, and pattern matching.</p>
 </div>
 </div>
 <div class="sect2">
@@ -649,26 +652,99 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Service point</strong> — the API is mounted into a <code>site</code>, <code>webapp</code>, or <code>admin tool</code> service via that service&#8217;s descriptor.</p>
+<p><strong>Web endpoint</strong> — the API opts in with <code>mount: "web"</code> and becomes reachable on the public XP port under <code>:8080/api/</code>.</p>
 </li>
 <li>
-<p><strong>Web endpoint</strong> — the API opts in with <code>mount: "web"</code> and becomes reachable on the <strong>Web</strong> endpoint (the public XP port) under <code>/api/</code>.</p>
+<p><strong>Contextual</strong> — the API is mounted into a <code>site</code>, <code>webapp</code>, or <code>admin tool</code> service via that service&#8217;s descriptor, and is reachable under that service&#8217;s <code>/_/&lt;app&gt;:&lt;api&gt;</code> path.</p>
 </li>
 <li>
-<p><strong>Management endpoint</strong> — the API opts in with <code>mount: "management"</code> and becomes reachable on the <strong>Management</strong> endpoint, which listens on its own port.</p>
+<p><strong>Management endpoint</strong> — the API opts in with <code>mount: "management"</code> and becomes reachable at the root of the <strong>Management</strong> endpoint, <code>:4848/</code>.</p>
 </li>
 </ol>
-</div>
-<div class="paragraph">
-<p>The two endpoints are served on <strong>different ports</strong> and use <strong>different URL forms</strong>: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code> on the Web endpoint, <code>/&lt;app-name&gt;:&lt;api-name&gt;</code> at the root of the Management endpoint. The Management endpoint is not reachable through the Web endpoint and vice versa.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="service-point"><a class="link" href="#service-point">Service point</a></h2>
+<h2 id="web-endpoint"><a class="link" href="#web-endpoint">Web endpoint</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the <code>site</code>, <code>webapp</code>, and <code>admin</code> services, APIs are reachable as service points under the service&#8217;s URL space. The <code>_</code> segment separates the service&#8217;s content path from service paths (services, components, idprovider, and APIs):</p>
+<p>The dedicated <code>/api</code> URL on the <strong>Web</strong> endpoint (the public XP port) exposes APIs independently of any service, so they can be consumed by any HTTP client:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generic API endpoint: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To opt in, an API must include <code>"web"</code> in its <code>mount</code> list (see <a href="#descriptor">API descriptor</a>).</p>
+</div>
+<div class="paragraph">
+<p>The port and the <code>/api</code> prefix are XP&#8217;s defaults. A deployment may expose the API on a custom domain and path with <a href="https://developer.enonic.com/docs/platform/xp8/config/vhosts">virtual hosts</a>, so generate API URLs with <a href="#apiurl"><code>apiUrl()</code></a> rather than hardcoding them.</p>
+</div>
+<div class="sect2">
+<h3 id="api_discovery"><a class="link" href="#api_discovery">API discovery</a></h3>
+<div class="paragraph">
+<p><code>GET /api</code> returns a JSON index of every API with <code>"web"</code> in its <code>mount</code> list. The response is a <code>resources</code> array, one entry per API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "resources": [
+    {
+      "descriptor": "com.example.app:myapi",
+      "application": "com.example.app",
+      "name": "myapi",
+      "title": "My API",
+      "description": "API for my app",
+      "documentationUrl": "https://example.com/docs",
+      "mount": ["web"],
+      "allowedPrincipals": ["role:system.admin", "role:myapp.role"]
+    }
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Behavior worth knowing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Management endpoint serves no equivalent index.</p>
+</li>
+<li>
+<p>Contextually mounted APIs (available only under sites, webapps, or admin tools) do not appear in the listing.</p>
+</li>
+<li>
+<p>Both YAML-declared APIs and dynamically registered Java handlers are included.</p>
+</li>
+<li>
+<p>The listing is <strong>not</strong> filtered by the caller&#8217;s principals — clients see every API mounted on the endpoint and are expected to compare against the <code>allowedPrincipals</code> field themselves before invoking.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Discovery is intended for development. By default it is enabled only when XP runs in dev mode and disabled in production.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="contextual-apis"><a class="link" href="#contextual-apis">Contextual APIs</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the <code>site</code>, <code>webapp</code>, and <code>admin</code> services, APIs are mounted contextually under the service&#8217;s URL space. The <code>_</code> segment separates the service&#8217;s content path from service paths (services, components, idprovider, and APIs):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -759,77 +835,16 @@ Wildcards and "expose all APIs from app X" rules are intentionally not supported
 </div>
 </div>
 <div class="sect1">
-<h2 id="web-endpoint"><a class="link" href="#web-endpoint">Web endpoint</a></h2>
+<h2 id="management-endpoint"><a class="link" href="#management-endpoint">Management endpoint</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The dedicated <code>/api</code> URL on the <strong>Web</strong> endpoint (the public XP port) exposes APIs independently of any service, so they can be consumed by any HTTP client:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Generic API endpoint: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
-</li>
-</ul>
+<p>An API may also be mounted on the <strong>Management</strong> endpoint. This is XP&#8217;s control plane — the port the Enonic CLI talks to for operations against the instance itself, such as deploying applications, snapshots, and reindexing, and what the endpoint is named after. It listens on <code>4848</code> by default and every request must be authenticated. The endpoint itself, its configuration, and the operations XP already exposes there are documented in the <a href="https://developer.enonic.com/docs/platform/xp8/endpoints/management">platform documentation</a>.</p>
 </div>
 <div class="paragraph">
-<p>To opt in, an API must include <code>"web"</code> in its <code>mount</code> list (see <a href="#descriptor">API descriptor</a>).</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="management-endpoint"><a class="link" href="#management-endpoint">Management Endpoint</a></h2>
-<div class="sectionbody">
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-The <code>mount: "management"</code> feature is experimental and subject to change. The API shape, behavior, and configuration may change in future releases without the usual deprecation cycle. Avoid relying on it for production workloads.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The Management endpoint is for <strong>advanced use only</strong>. It is intended for extending XP&#8217;s management capabilities (cluster operations, internal tooling, infrastructure integrations) — not for regular application APIs.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>An API can also be exposed on the <strong>Management</strong> endpoint by adding <code>"management"</code> to its <code>mount</code> list. The Management endpoint is a separate listener on its own port, distinct from the Web endpoint — use it for internal or operational APIs that should not be reachable from the public network.</p>
-</div>
-<div class="paragraph">
-<p>APIs are served from the <strong>root</strong> of the Management port, with no <code>/api</code> prefix:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Generic API endpoint: <code>/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-The <code>/api</code> prefix used on the Web endpoint does not exist on the Management endpoint. Requesting <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code> on the management port returns <strong>404 Not Found</strong> even when the API is mounted and running.
-</td>
-</tr>
-</table>
+<p>Add <code>"management"</code> to the <code>mount</code> list to expose an API there:</p>
 </div>
 <div class="listingblock">
-<div class="title">src/main/resources/apis/&lt;api-name&gt;/&lt;api-name&gt;.yaml</div>
+<div class="title">src/main/resources/apis/myapi/myapi.yaml</div>
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "API"
 title: "Cluster ops"
@@ -839,64 +854,30 @@ allow:
 </div>
 </div>
 <div class="paragraph">
-<p>Both mounts can be combined: <code>mount: ["web", "management"]</code> makes the API reachable on both endpoints. The <code>allow</code> principal list is enforced on every request regardless of which endpoint served it.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="api_discovery"><a class="link" href="#api_discovery">API discovery</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>GET /api</code> (or <code>GET /api/</code>) on the Web endpoint returns a JSON index of every API with <code>"web"</code> in its <code>mount</code> list. The response is a <code>resources</code> array, one entry per API:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "resources": [
-    {
-      "descriptor": "com.example.app:myapi",
-      "application": "com.example.app",
-      "name": "myapi",
-      "title": "My API",
-      "description": "API for my app",
-      "documentationUrl": "https://example.com/docs",
-      "mount": ["web"],
-      "allowedPrincipals": ["role:system.admin", "role:myapp.role"]
-    }
-  ]
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Behavior worth knowing:</p>
+<p>APIs on the Management endpoint are served from the root of the port — there is no <code>/api</code> prefix here:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Discovery is available on the Web endpoint only — the Management endpoint serves no API index.</p>
-</li>
-<li>
-<p>Service points (APIs mounted only under sites, webapps, or admin tools) do not appear in the listing.</p>
-</li>
-<li>
-<p>Both YAML-declared APIs and dynamically registered Java handlers are included.</p>
-</li>
-<li>
-<p>The listing is <strong>not</strong> filtered by the caller&#8217;s principals — clients see every API mounted on the endpoint and are expected to compare against the <code>allowedPrincipals</code> field themselves before invoking.</p>
+<p><code>:4848/myapp:myapi</code></p>
 </li>
 </ul>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Discovery is intended for development. By default it is enabled only when XP runs in dev mode and disabled in production.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Listing both mounts — <code>mount: ["web", "management"]</code> — makes the same API reachable on either port, each under its own URL form:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>:8080/api/myapp:myapi</code></p>
+</li>
+<li>
+<p><code>:4848/myapp:myapi</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>allow</code> principal list is enforced on every request regardless of which endpoint served it.</p>
 </div>
 </div>
 </div>
@@ -904,7 +885,7 @@ Discovery is intended for development. By default it is enabled only when XP run
 <h2 id="apiurl"><a class="link" href="#apiurl">apiUrl()</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To safely generate an API URL, use the <code>apiUrl()</code> function from the <a href="../libraries/lib-portal.ahtml">Portal library</a>. It picks the right URL form based on the calling context — a service-point under the active service when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
+<p>To safely generate an API URL, use the <code>apiUrl()</code> function from the <a href="../libraries/lib-portal.ahtml">Portal library</a>. It picks the right URL form based on the calling context — a contextual URL under the active service when called from a site, webapp, or admin tool, and <code>/api/</code> otherwise.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -986,7 +967,7 @@ This list includes but is not limited to:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 19:11:16 UTC
+Last updated 2026-09-10 20:51:46 UTC
 </div>
 </div>
 </body>
