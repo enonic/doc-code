@@ -10,11 +10,11 @@ The Universal API is a powerful feature of the Enonic XP platform that lets deve
 
 == Request pipeline
 
-A Universal API is not tied to a single URL — the same implementation can be reached from the <<#web-endpoint, Web endpoint>> (`+/api/<app>:<api>+`) or as a <<#contextual-apis, contextual API>> inside the site, webapp, and admin services (`+/_/<app>:<api>+`). However it arrives, every request is gated the same way:
+A Universal API is not tied to a single URL — the same implementation can be reached from the <<#web-endpoint, Web endpoint>> (`+/api/<app>:<api>+`), as a <<#contextual-apis, contextual API>> inside the site, webapp, and admin services (`+/_/<app>:<api>+`), or on the <<#management-endpoint, Management endpoint>> (`+/<app>:<api>+`). However it arrives, every request is gated the same way:
 
 // Diagram source: web/images/.api-pipeline.mmd (dot-prefixed, not imported to the CMS).
 // Re-render after editing: npx -p @mermaid-js/mermaid-cli -p @mermaid-js/layout-elk mmdc -i docs/web/images/.api-pipeline.mmd -o docs/web/images/api-pipeline.svg -b transparent
-image::api-pipeline.svg[Universal API request pipeline, 4fix00px]
+image::api-pipeline.svg[Universal API request pipeline, 400px]
 
 Access control:: The API must be mounted on the location the request arrived through, and the caller must satisfy its `allow` list. Not mounted there returns *404*; a caller without access gets *401* or *403* (see the <<#descriptor, descriptor>>). The `allow` list is enforced on every request, regardless of endpoint.
 `+<api-name>.ts+`:: The matched API's exported function for the request method (`GET`, `POST`, …) handles the request; subpaths arrive as `req.path`.
@@ -86,8 +86,7 @@ allow: # <5>
 
 <3> *documentationUrl* is a link to the API documentation that will be shown in the UI.
 
-<4> By default, APIs are not mounted on the <<#web-endpoint,Web endpoint>>.
-To enable it, add `"web"` to the `mount` list.
+<4> *mount* lists the endpoints the API is exposed on: `"web"` for the <<#web-endpoint,Web endpoint>>, `"management"` for the <<#management-endpoint,Management endpoint>>, or both. APIs are mounted nowhere by default.
 
 <5> APIs must list principals that have access to it. It is required to specify at least one principal. Use `role:system.everyone` to make the API public.
 
@@ -107,7 +106,7 @@ A Universal API can be exposed through three *independent* axes — they don't s
 
 The dedicated `/api` URL on the *Web* endpoint (the public XP port) exposes APIs independently of any service, so they can be consumed by any HTTP client:
 
-* Generic API endpoint: `/api/<app-name>:<api-name>`
+* `/api/<app>:<api>`
 
 To opt in, an API must include `"web"` in its `mount` list (see <<#descriptor,API descriptor>>).
 
@@ -149,13 +148,13 @@ NOTE: Discovery is intended for development. By default it is enabled only when 
 
 In the `site`, `webapp`, and `admin` services, APIs are mounted contextually under the service's URL space. The `_` segment separates the service's content path from service paths (services, components, idprovider, and APIs):
 
-* For the `site` service: `+/site/<site-path>/_/<app-name>:<api-name>+`
-* For the `webapp` service: `+/webapp/<webapp-app>/_/<app-name>:<api-name>+`
-* For the `admin` service: `+/admin/<admin-app>/<tool>/_/<app-name>:<api-name>+`
+* For the `site` service: `+/site/<site-path>/_/<app>:<api>+`
+* For the `webapp` service: `+/webapp/<webapp-app>/_/<app>:<api>+`
+* For the `admin` service: `+/admin/<admin-app>/<tool>/_/<app>:<api>+`
 
 Each service descriptor declares the APIs it exposes via its `apis` list. For `webapp` and `admin` this is sufficient — the descriptor of the hosting application controls the mount. For `site`, two conditions must both hold:
 
-. The application providing the site descriptor must be *configured on the site instance*  Without this, the site descriptor's `apis` list is not consulted at all for that site.
+. The application providing the site descriptor must be *configured on the site instance*. Without this, the site descriptor's `apis` list is not consulted at all for that site.
 . That application's site descriptor must list the API in its `apis` field.
 
 The site mount is also limited to the *site root*: the path between `<branch>` and `+/_/+` must be the site's root content path. Deeper content paths like `+/site/<project>/<branch>/some/page/_/<app>:<api>+` do not resolve as APIs.
@@ -173,7 +172,7 @@ apis:
 
 <1> A bare name resolves to an API in the current application — here, `ws` defined in `src/main/resources/apis/ws/`.
 
-<2> The `<app-key>:<api-name>` form mounts an API from a different application, letting the service borrow APIs deployed by other apps.
+<2> The `<app>:<api>` form mounts an API from a different application, letting the service borrow APIs deployed by other apps.
 
 The webapp and admin tool descriptors take the same `apis:` list:
 
@@ -252,8 +251,7 @@ Each Universal API request emits a `universalAPI` trace event with the API descr
 
 == Reserved API application names
 
-A few application names are reserved.
-This list includes but is not limited to:
+Application names that collide with XP's own endpoint segments under `_` or with built-in APIs such as `media:image` are reserved, including:
 
 - `media`
 - `admin`
