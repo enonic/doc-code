@@ -102,7 +102,7 @@ A Universal API can be exposed through three *independent* axes — they don't s
 . *Web endpoint* — the API opts in with `mount: "web"` and becomes reachable on the *Web* endpoint (the public XP port) under `/api/`.
 . *Management endpoint* — the API opts in with `mount: "management"` and becomes reachable on the *Management* endpoint, which listens on its own port.
 
-The `/api/` URL prefix is the same on both endpoints, but the two are served on *different ports*. The Management endpoint is not reachable through the Web endpoint and vice versa.
+The two endpoints are served on *different ports* and use *different URL forms*: `/api/<app-name>:<api-name>` on the Web endpoint, `/<app-name>:<api-name>` at the root of the Management endpoint. The Management endpoint is not reachable through the Web endpoint and vice versa.
 
 [#service-point]
 == Service point
@@ -175,6 +175,12 @@ NOTE: The Management endpoint is for *advanced use only*. It is intended for ext
 
 An API can also be exposed on the *Management* endpoint by adding `"management"` to its `mount` list. The Management endpoint is a separate listener on its own port, distinct from the Web endpoint — use it for internal or operational APIs that should not be reachable from the public network.
 
+APIs are served from the *root* of the Management port, with no `/api` prefix:
+
+* Generic API endpoint: `/<app-name>:<api-name>`
+
+IMPORTANT: The `/api` prefix used on the Web endpoint does not exist on the Management endpoint. Requesting `/api/<app-name>:<api-name>` on the management port returns *404 Not Found* even when the API is mounted and running.
+
 .src/main/resources/apis/<api-name>/<api-name>.yaml
 [source,yaml]
 ----
@@ -189,7 +195,7 @@ Both mounts can be combined: `mount: ["web", "management"]` makes the API reacha
 
 == API discovery
 
-`GET /api` (or `GET /api/`) returns a JSON index of every API mounted on the *endpoint that received the request*. Calling it on the Web endpoint lists APIs with `"web"` in `mount`; calling it on the Management endpoint lists APIs with `"management"` in `mount`. The response is a `resources` array, one entry per API:
+`GET /api` (or `GET /api/`) on the Web endpoint returns a JSON index of every API with `"web"` in its `mount` list. The response is a `resources` array, one entry per API:
 
 [source,json]
 ----
@@ -211,7 +217,8 @@ Both mounts can be combined: `mount: ["web", "management"]` makes the API reacha
 
 Behavior worth knowing:
 
-* Service points (APIs mounted only under sites, webapps, or admin tools) do not appear in either listing.
+* Discovery is available on the Web endpoint only — the Management endpoint serves no API index.
+* Service points (APIs mounted only under sites, webapps, or admin tools) do not appear in the listing.
 * Both YAML-declared APIs and dynamically registered Java handlers are included.
 * The listing is *not* filtered by the caller's principals — clients see every API mounted on the endpoint and are expected to compare against the `allowedPrincipals` field themselves before invoking.
 
