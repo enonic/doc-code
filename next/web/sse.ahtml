@@ -474,7 +474,7 @@ An SSE stream keeps an HTTP connection open for its entire lifetime. Over HTTP/1
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function GET(req) {
     return {
         sse: {
             attributes: { startedAt: Date.now() }, <i class="conum" data-value="1"></i><b>(1)</b>
@@ -482,7 +482,7 @@ An SSE stream keeps an HTTP connection open for its entire lifetime. Over HTTP/1
             timeout: 0                             <i class="conum" data-value="3"></i><b>(3)</b>
         }
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -506,13 +506,13 @@ An SSE stream keeps an HTTP connection open for its entire lifetime. Over HTTP/1
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.sseEvent = (event) =&gt; {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function sseEvent(event) {
     if (event.type === 'open') {
         // send a message back using event.clientId, or add it to a group for later broadcasts
     } else if (event.type === 'close') {
         // optional teardown — group membership is cleaned up automatically
     }
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -558,16 +558,16 @@ An SSE stream keeps an HTTP connection open for its entire lifetime. Over HTTP/1
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const sseLib = require('/lib/xp/sse');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {send} from '/lib/xp/sse';
 
-exports.sseEvent = (event) =&gt; {
+export function sseEvent(event) {
     if (event.type === 'open') {
-        sseLib.send({
+        send({
             clientId: event.clientId,
             message: { event: 'welcome', data: 'Hello!' }
         });
     }
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -588,16 +588,16 @@ exports.sseEvent = (event) =&gt; {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const sseLib = require('/lib/xp/sse');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {addToGroup, sendToGroup} from '/lib/xp/sse';
 
-exports.sseEvent = (event) =&gt; {
+export function sseEvent(event) {
     if (event.type === 'open') {
-        sseLib.addToGroup({ group: 'live', clientId: event.clientId });
+        addToGroup({ group: 'live', clientId: event.clientId });
     }
-};
+}
 
 // from an event listener:
-sseLib.sendToGroup({ group: 'live', message: { data: 'Update' } });</code></pre>
+sendToGroup({ group: 'live', message: { data: 'Update' } });</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -620,7 +620,7 @@ sseLib.sendToGroup({ group: 'live', message: { data: 'Update' } });</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

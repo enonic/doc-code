@@ -580,13 +580,13 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 <div class="listingblock">
 <div class="title">Sample my-extension.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function GET(req) {
     const contentId = req.params.contentId;
     return {
         body: `&lt;div&gt;Inspecting content ${contentId}&lt;/div&gt;`,
         contentType: 'text/html'
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -602,9 +602,9 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const adminLib = require('/lib/xp/admin');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {extensionUrl} from '/lib/xp/admin';
 
-const url = adminLib.extensionUrl({
+const url = extensionUrl({
     application: 'com.example.app',
     extension: 'my-extension',
     params: { contentId: '123' }
@@ -642,8 +642,10 @@ This is the extension&#8217;s only address space: an extension is served by the 
 <div class="listingblock">
 <div class="title">Sample my-extension.ts serving its own assets</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const router = require('/lib/router')();
-const staticLib = require('/lib/enonic/static');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import Router from '/lib/router';
+import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
+
+const router = Router();
 
 router.get('', (req) =&gt; ({
     contentType: 'text/html',
@@ -651,13 +653,15 @@ router.get('', (req) =&gt; ({
 &lt;div class="my-extension"&gt;Hello&lt;/div&gt;`
 }));
 
-router.get('/_static/{path:.*}', (req) =&gt; staticLib.requestHandler(req, {
+router.get('/_static/{path:.*}', (req) =&gt; requestHandler(req, {
     root: '/assets',
-    relativePath: staticLib.mappedRelativePath('/_static'),
+    relativePath: mappedRelativePath('/_static'),
     index: false
 }));
 
-exports.all = (req) =&gt; router.dispatch(req);</code></pre>
+export function all(req) {
+    return router.dispatch(req);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -732,7 +736,7 @@ Client-side code in the extension can call back to the same URL space for data, 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

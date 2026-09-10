@@ -598,13 +598,15 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 <div class="listingblock">
 <div class="title">Sample my-tool.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {render} from '/lib/thymeleaf';
+
+export function GET(req) {
     const view = resolve('my-tool.html');
     return {
         body: render(view, { user: req.user }),
         contentType: 'text/html'
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -681,7 +683,7 @@ config:                          <i class="conum" data-value="6"></i><b>(6)</b>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

@@ -821,29 +821,30 @@ return {
 <p>Using the extension to render a custom preview right inside Content Studio, without involving any external services.</p>
 </div>
 <div class="paragraph">
-<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code> for the full Content API, plus any other standard library (<code>lib-portal</code>, <code>lib-node</code>, <code>lib-i18n</code>, <code>lib-io</code>, &#8230;&#8203;) and 3rd-party modules the app bundles.
+<p>The implementation is a regular server-side XP module: import <code>/lib/xp/content</code> for the full Content API, plus any other standard library (<code>lib-portal</code>, <code>lib-node</code>, <code>lib-i18n</code>, <code>lib-io</code>, &#8230;&#8203;) and 3rd-party modules the app bundles.
 The widget can query related content, traverse children, fetch attachments, render aggregated views — anything an XP module can do.</p>
 </div>
 <div class="listingblock">
 <div class="title">src/main/resources/admin/extensions/my-preview/my-preview.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const contentLib = require('/lib/xp/content');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get as getContent} from '/lib/xp/content';
+
 const ALLOWED_TYPE = 'myapp:article';
 const SECURITY_HEADERS = {
     'X-Frame-Options': 'SAMEORIGIN',
     'Content-Security-Policy': "default-src 'self'; style-src 'unsafe-inline'"
 };
 
-exports.HEAD = (req) =&gt; ({
-    status: req.params.type === ALLOWED_TYPE ? 200 : 418
-});
+export function HEAD(req) {
+    return { status: req.params.type === ALLOWED_TYPE ? 200 : 418 };
+}
 
-exports.GET = (req) =&gt; {
+export function GET(req) {
     if (req.params.type !== ALLOWED_TYPE) {
         return { status: 418 };
     }
 
-    const content = contentLib.get({ key: req.params.contentId });
+    const content = getContent({ key: req.params.contentId });
     if (!content) {
         return { status: 404 };
     }
@@ -868,7 +869,7 @@ exports.GET = (req) =&gt; {
   &lt;/body&gt;
 &lt;/html&gt;`
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -888,11 +889,11 @@ The <code>enonic-widget-data</code> header surfaces a warning when the article h
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">const ALLOWED_TYPE = 'myapp:article';
 const PREVIEW_BASE = 'https://preview.myapp.com';
 
-exports.HEAD = (req) =&gt; ({
-    status: req.params.type === ALLOWED_TYPE ? 200 : 418
-});
+export function HEAD(req) {
+    return { status: req.params.type === ALLOWED_TYPE ? 200 : 418 };
+}
 
-exports.GET = (req) =&gt; {
+export function GET(req) {
     if (req.params.type !== ALLOWED_TYPE) {
         return { status: 418 };
     }
@@ -905,7 +906,7 @@ exports.GET = (req) =&gt; {
             'enonic-widget-data': JSON.stringify({ redirect: url })
         }
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -918,7 +919,7 @@ Pass through <code>branch</code> and any other request parameters the external p
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

@@ -479,7 +479,7 @@ classes. The <code>newBean</code> function will wrap the Java object named in th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">var bean = __.newBean('com.enonic.xp.lib.io.IOHandlerBean');</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const bean = __.newBean('com.enonic.xp.lib.io.IOHandlerBean');</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -501,9 +501,9 @@ methods, like the <code>readLines</code> method:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.readLines = function (stream) {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function readLines(stream) {
   return __.toNativeObject(bean.readLines(stream));
-  };</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -535,20 +535,20 @@ The second one is better when there are multiple parameters, or some of them are
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.doSomething = function (param1, param2) {
-    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function doSomething(param1, param2) {
+    const bean = __.newBean('com.enonic.lib.mylib.MyClass');
 
     return bean.execute(param1, param2);
-};
+}
 
-exports.doSomethingElse = function (params) {
-    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
+export function doSomethingElse(params) {
+    const bean = __.newBean('com.enonic.lib.mylib.MyClass');
 
     bean.setText(__.nullOrValue(params.text) || '');
     bean.setSize(__.nullOrValue(params.size) || 250);
 
     return bean.execute();
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -674,7 +674,7 @@ It will implement the <code>serialize</code> method, which allows generating a J
 <div class="listingblock">
 <div class="title">Serialization example</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">package com.enonic.lib.mylib;
+<pre class="highlight"><code class="language-java" data-lang="java">package com.enonic.lib.mylib;
 
 import java.util.Map;
 
@@ -1021,7 +1021,7 @@ Nashorn keeps only the most recent registration per module, so a module that cal
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

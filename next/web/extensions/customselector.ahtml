@@ -765,7 +765,7 @@ interfaces:
 <div class="listingblock">
 <div class="title">src/main/resources/admin/extensions/my-selector/my-selector.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.get = function (request) {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function GET(request) {
     return {
         status: 200,
         contentType: 'application/json',
@@ -791,7 +791,7 @@ interfaces:
             total: 3
         }),
     };
- }</code></pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -799,7 +799,7 @@ interfaces:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

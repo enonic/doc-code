@@ -441,9 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
 <li><a href="#request_pipeline">Request pipeline</a></li>
-<li><a href="#features">Features</a></li>
 <li><a href="#usage">Usage</a>
 <ul class="sectlevel2">
 <li><a href="#subpath_routing">Subpath routing</a></li>
@@ -469,15 +467,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>A core feature of Enonic XP is the ability to build custom APIs and reuse them across the platform — aka the Universal API.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Universal API is a powerful feature of the Enonic XP platform that lets developers create custom APIs. It enables applications to dynamically extend the platform&#8217;s API surface as they are installed.</p>
+<p>A Universal API is a custom HTTP API shipped in an application: a TypeScript module and a descriptor under <code>src/main/resources/apis/</code>. Installing the application adds the API to the instance, and the same implementation can then be exposed on the Web endpoint, inside a site, webapp, or admin tool, or on the management port — including from other applications, which may borrow it by name. Nothing is mounted or reachable until the descriptor says so, and an API mounts at a single, fixed location per endpoint, never at arbitrary points along a URL.</p>
 </div>
 </div>
 </div>
@@ -485,18 +475,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="request_pipeline"><a class="link" href="#request_pipeline">Request pipeline</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A Universal API is not tied to a single URL — the same implementation can be reached from the <a href="#web-endpoint">Web endpoint</a> (<code>/api/&lt;app&gt;:&lt;api&gt;</code>) or as a <a href="#contextual-apis">contextual API</a> inside the site, webapp, and admin services (<code>/_/&lt;app&gt;:&lt;api&gt;</code>). However it arrives, every request is gated the same way:</p>
+<p>A Universal API is not tied to a single URL — the same implementation can be reached from the <a href="#web-endpoint">Web endpoint</a> (<code>/api/&lt;app&gt;:&lt;api&gt;</code>), as a <a href="#contextual-apis">contextual API</a> inside the site, webapp, and admin services (<code>/_/&lt;app&gt;:&lt;api&gt;</code>), or on the <a href="#management-endpoint">Management endpoint</a> (<code>/&lt;app&gt;:&lt;api&gt;</code>). However it arrives, every request is gated the same way:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/api-pipeline.svg" alt="Universal API request pipeline" width="4fix00px">
+<img src="images/api-pipeline.svg" alt="Universal API request pipeline" width="400px">
 </div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Access control</dt>
 <dd>
-<p>The API must be mounted on the location the request arrived through, and the caller must satisfy its <code>allow</code> list. Not mounted there returns <strong>404</strong>; a caller without access gets <strong>401</strong> or <strong>403</strong> (see the <a href="#descriptor">descriptor</a>). The <code>allow</code> list is enforced on every request, regardless of endpoint.</p>
+<p>The API must be mounted on the location the request arrived through, and the caller must satisfy its <code>allow</code> list — on every request, regardless of endpoint. The <a href="#descriptor">descriptor</a> section lists the resulting status codes.</p>
 </dd>
 <dt class="hdlist1"><code>&lt;api-name&gt;.ts</code></dt>
 <dd>
@@ -506,43 +496,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p>See <a href="#where-apis-are-reachable">Where APIs are reachable</a> for the rules governing each mount point.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="features"><a class="link" href="#features">Features</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The main features of the Universal API are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Secure by default.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>APIs are not mounted anywhere by default, so there is no risk of accidentally exposing an admin API on a site.</p>
-</li>
-<li>
-<p>Nobody can access an API without explicitly specifying access rights in the descriptor.</p>
-</li>
-<li>
-<p>APIs mount at a single, fixed location, never at arbitrary points along the URL.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Headless friendly. APIs can be mounted under the <code>/api</code> endpoint, so they can be used by any client.</p>
-</li>
-<li>
-<p>Granular. Mounting must be explicitly specified in service descriptor files.</p>
-</li>
-<li>
-<p>Modular. APIs can be borrowed from other applications, so you can reuse existing APIs in your application.</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -558,14 +511,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">src/main/resources/apis/&lt;api-name&gt;/&lt;api-name&gt;.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function GET(req) {
   return {
     body: {
       time: new Date()
     },
     contentType: 'application/json; charset=utf-8'
   };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -620,8 +573,7 @@ allow: <i class="conum" data-value="5"></i><b>(5)</b>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>By default, APIs are not mounted on the <a href="#web-endpoint">Web endpoint</a>.
-To enable it, add <code>"web"</code> to the <code>mount</code> list.</td>
+<td><strong>mount</strong> lists the endpoints the API is exposed on: <code>"web"</code> for the <a href="#web-endpoint">Web endpoint</a>, <code>"management"</code> for the <a href="#management-endpoint">Management endpoint</a>, or both. APIs are mounted nowhere by default.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -673,7 +625,7 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 <div class="ulist">
 <ul>
 <li>
-<p>Generic API endpoint: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
+<p><code>/api/&lt;app&gt;:&lt;api&gt;</code></p>
 </li>
 </ul>
 </div>
@@ -749,13 +701,13 @@ Discovery is intended for development. By default it is enabled only when XP run
 <div class="ulist">
 <ul>
 <li>
-<p>For the <code>site</code> service: <code>/site/&lt;site-path&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
+<p>For the <code>site</code> service: <code>/site/&lt;site-path&gt;/_/&lt;app&gt;:&lt;api&gt;</code></p>
 </li>
 <li>
-<p>For the <code>webapp</code> service: <code>/webapp/&lt;webapp-app&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
+<p>For the <code>webapp</code> service: <code>/webapp/&lt;webapp-app&gt;/_/&lt;app&gt;:&lt;api&gt;</code></p>
 </li>
 <li>
-<p>For the <code>admin</code> service: <code>/admin/&lt;admin-app&gt;/&lt;tool&gt;/_/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
+<p>For the <code>admin</code> service: <code>/admin/&lt;admin-app&gt;/&lt;tool&gt;/_/&lt;app&gt;:&lt;api&gt;</code></p>
 </li>
 </ul>
 </div>
@@ -765,7 +717,7 @@ Discovery is intended for development. By default it is enabled only when XP run
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The application providing the site descriptor must be <strong>configured on the site instance</strong>  Without this, the site descriptor&#8217;s <code>apis</code> list is not consulted at all for that site.</p>
+<p>The application providing the site descriptor must be <strong>configured on the site instance</strong>. Without this, the site descriptor&#8217;s <code>apis</code> list is not consulted at all for that site.</p>
 </li>
 <li>
 <p>That application&#8217;s site descriptor must list the API in its <code>apis</code> field.</p>
@@ -795,30 +747,12 @@ apis:
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The <code>&lt;app-key&gt;:&lt;api-name&gt;</code> form mounts an API from a different application, letting the service borrow APIs deployed by other apps.</td>
+<td>The <code>&lt;app&gt;:&lt;api&gt;</code> form mounts an API from a different application, letting the service borrow APIs deployed by other apps.</td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The webapp and admin tool descriptors take the same <code>apis:</code> list:</p>
-</div>
-<div class="listingblock">
-<div class="title">src/main/resources/webapp/webapp.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "WebApp"
-apis:
-  - "ws"
-  - "app:graphql"</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">src/main/resources/admin/tools/&lt;tool-name&gt;/&lt;tool-name&gt;.yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "AdminTool"
-apis:
-  - "ws"
-  - "app:graphql"</code></pre>
-</div>
+<p><code>src/main/resources/webapp/webapp.yaml</code> (<code>kind: "WebApp"</code>) and <code>src/main/resources/admin/tools/&lt;tool-name&gt;/&lt;tool-name&gt;.yaml</code> (<code>kind: "AdminTool"</code>) take the same <code>apis:</code> list.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -889,9 +823,9 @@ allow:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portalLib = require('/lib/xp/portal');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {apiUrl} from '/lib/xp/portal';
 
-const url = portalLib.apiUrl({
+const url = apiUrl({
     api: 'com.example.myapp:myapi', <i class="conum" data-value="1"></i><b>(1)</b>
     path: '/items',                 <i class="conum" data-value="2"></i><b>(2)</b>
     params: { id: '42' }            <i class="conum" data-value="3"></i><b>(3)</b>
@@ -928,8 +862,7 @@ const url = portalLib.apiUrl({
 <h2 id="reserved_api_application_names"><a class="link" href="#reserved_api_application_names">Reserved API application names</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A few application names are reserved.
-This list includes but is not limited to:</p>
+<p>Application names that collide with XP&#8217;s own endpoint segments under <code>_</code> or with built-in APIs such as <code>media:image</code> are reserved, including:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -967,7 +900,7 @@ This list includes but is not limited to:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

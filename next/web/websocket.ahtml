@@ -474,8 +474,8 @@ It can supply <code>data</code> object that will be available via <code>event.da
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Create a websocket if websocket request.
-exports.GET = function (req) {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Create a websocket if websocket request.
+export function GET(req) {
 
   if (!req.webSocket) {
     return {
@@ -491,7 +491,7 @@ exports.GET = function (req) {
       subProtocols: ["text"]
     }
   };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -499,22 +499,22 @@ exports.GET = function (req) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Listen to a websocket event
-exports.webSocketEvent = function (event) {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Listen to a websocket event
+export function webSocketEvent(event) {
 
-  if (event.type == 'open' &amp;&amp; event.data.user == 'test') {
+  if (event.type === 'open' &amp;&amp; event.data.user === 'test') {
     // Do something on open
   }
 
-  if (event.type == 'message') {
+  if (event.type === 'message') {
     // Do something on message received
   }
 
-  if (event.type == 'close') {
+  if (event.type === 'close') {
     // Do something on close
   }
 
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -593,32 +593,33 @@ in groups. Adding to groups allows for multicast message sending.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Lib that contains websocket functions.
-var webSocketLib = require('/lib/xp/websocket');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Lib that contains websocket functions.
+import {send, addToGroup, getGroupSize, sendToGroup} from '/lib/xp/websocket';
 
 // Listen to a websocket event
-exports.webSocketEvent = function (event) {
+export function webSocketEvent(event) {
 
-  if (event.type == 'open') {
+  if (event.type === 'open') {
     // Send message back to client
-    webSocketLib.send(event.session.id, 'Welcome to our chat ' + event.session.user ? event.session.user.displayName : 'anonymous' );
+    const name = event.session.user ? event.session.user.displayName : 'anonymous';
+    send(event.session.id, `Welcome to our chat ${name}`);
 
     // Add client into a group
-    webSocketLib.addToGroup('chat', event.session.id);
+    addToGroup('chat', event.session.id);
 
-    log.info(`New group size ${webSocketLib.getGroupSize('chat')}`);
+    log.info(`New group size ${getGroupSize('chat')}`);
   }
 
-  if (event.type == 'message') {
+  if (event.type === 'message') {
     // Propagate message to group
-    webSocketLib.sendToGroup('chat', event.message);
+    sendToGroup('chat', event.message);
   }
 
-  if (event.type == 'close') {
+  if (event.type === 'close') {
     log.info(`User left the chat`);
   }
 
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -650,8 +651,8 @@ exports.webSocketEvent = function (event) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Allow only specific origins to open the WebSocket
-exports.GET = function (req) {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Allow only specific origins to open the WebSocket
+export function GET(req) {
 
   if (!req.webSocket) {
     return { status: 404 };
@@ -660,13 +661,12 @@ exports.GET = function (req) {
   return {
     webSocket: {
       subProtocols: ['text'],
-      checkOrigin: function (origin) {
-        return origin === 'https://app.example.com'
-            || origin.endsWith('.example.com');
-      }
+      checkOrigin: (origin) =&gt;
+        origin === 'https://app.example.com'
+          || origin.endsWith('.example.com')
     }
   };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -771,7 +771,7 @@ Idle-expired sessions are invalidated by a periodic sweep, not at the exact mome
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

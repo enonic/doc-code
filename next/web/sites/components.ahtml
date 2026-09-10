@@ -534,10 +534,10 @@ The site service uses the underlying permissions of the content, which means the
 <div class="listingblock">
 <div class="title">Sample page implementation using the context</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getContent} from '/lib/xp/portal';
 
-exports.GET = (req) =&gt; {
-  const content = portal.getContent();
+export function GET(req) {
+  const content = getContent();
   return {
     body: `&lt;html&gt;
             &lt;body&gt;
@@ -545,7 +545,7 @@ exports.GET = (req) =&gt; {
             &lt;/body&gt;
           &lt;/html&gt;`
   };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -559,16 +559,16 @@ exports.GET = (req) =&gt; {
 <div class="listingblock">
 <div class="title">Sample part implementation using the form value</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getComponent} from '/lib/xp/portal';
 
-exports.GET = (req) =&gt; {
-  const config = portal.getComponent();
+export function GET(req) {
+  const config = getComponent();
   return {
     body: `&lt;div&gt;
               &lt;h1&gt;${config.heading}&lt;/h1&gt;
           &lt;/div&gt;`
   };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -582,19 +582,19 @@ exports.GET = (req) =&gt; {
 <div class="listingblock">
 <div class="title">Sample layout using Thymeleaf to render two regions</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
-const thymeleaf = require('/lib/thymeleaf');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getComponent} from '/lib/xp/portal';
+import {render} from '/lib/thymeleaf';
 
-exports.GET = (req) =&gt; {
-    const component = portal.getComponent();
+export function GET(req) {
+    const component = getComponent();
 
     return {
-        body: thymeleaf.render(resolve('./layout-two-column.html'), {
+        body: render(resolve('./layout-two-column.html'), {
             leftRegion: component.regions["left"],
             rightRegion: component.regions["right"],
         })
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -646,11 +646,11 @@ exports.GET = (req) =&gt; {
 <div class="listingblock">
 <div class="title">Manually create component placeholders</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getContent} from '/lib/xp/portal';
 
-exports.GET = (req) =&gt; {
+export function GET(req) {
   // Get components of the main region
-  const content = portal.getContent();
+  const content = getContent();
   const components = content.page.regions["main"].components || [];
 
   // Render with placeholders
@@ -663,7 +663,7 @@ exports.GET = (req) =&gt; {
             &lt;/body&gt;
           &lt;/html&gt;`
   };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -675,19 +675,19 @@ exports.GET = (req) =&gt; {
 <div class="listingblock">
 <div class="title">Page implementation passing region to template</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const portal = require('/lib/xp/portal');
-const thymeleaf = require('/lib/thymeleaf');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getContent} from '/lib/xp/portal';
+import {render} from '/lib/thymeleaf';
 
-exports.GET = (req) =&gt; {
+export function GET(req) {
   // Get the contextual content item
-  const content = portal.getContent();
+  const content = getContent();
   const mainRegion = content.page.regions["main"];
 
   // Render and return the result
   return {
-    body: thymeleaf.render(view, mainRegion)
+    body: render(view, mainRegion)
   };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -826,7 +826,7 @@ Bypass the built-in implementation by running your own code instead of injecting
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

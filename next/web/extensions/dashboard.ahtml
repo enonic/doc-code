@@ -718,10 +718,10 @@ No query parameters are sent — a dashboard widget has no context.</p>
 <div class="listingblock">
 <div class="title">src/main/resources/admin/extensions/my-widget/my-widget.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const projectLib = require('/lib/xp/project');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {list} from '/lib/xp/project';
 
-exports.GET = (req) =&gt; {
-    const projects = projectLib.list();
+export function GET(req) {
+    const projects = list();
 
     return {
         status: 200,
@@ -736,11 +736,11 @@ exports.GET = (req) =&gt; {
   &lt;ul&gt;${projects.map((p) =&gt; `&lt;li&gt;${p.displayName}&lt;/li&gt;`).join('')}&lt;/ul&gt;
 &lt;/div&gt;`
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code>, <code>require('/lib/xp/project')</code>, and any other standard library are available, along with 3rd-party modules the app bundles.</p>
+<p>The implementation is a regular server-side XP module: <code>/lib/xp/content</code>, <code>/lib/xp/project</code>, and any other standard library can be imported, along with 3rd-party modules the app bundles.</p>
 </div>
 <div class="paragraph">
 <p>For non-trivial widgets, separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the widget URL, as described in <a href="../extensions.ahtml#assets">Sub-paths and static assets</a>.
@@ -752,7 +752,7 @@ Enonic&#8217;s own <a href="https://github.com/enonic/app-dashboard-widgets">das
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

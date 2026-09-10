@@ -505,7 +505,7 @@ Response processors are only available in <a href="components.ahtml">component r
 <div class="listingblock">
 <div class="title">cms/processors/tracker.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.responseProcessor = (req, res) =&gt; {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function responseProcessor(req, res) {
     const trackingScript = '&lt;script src="http://some.cdn/js/tracker.js"&gt;&lt;/script&gt;';
 
     if (!res.pageContributions.bodyEnd) {
@@ -514,7 +514,7 @@ Response processors are only available in <a href="components.ahtml">component r
     res.pageContributions.bodyEnd.push(trackingScript);
 
     return res;
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -627,7 +627,7 @@ If <code>applyFilters</code> is set to <code>false</code> in the <a href="../req
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

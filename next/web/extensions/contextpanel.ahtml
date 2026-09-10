@@ -638,10 +638,10 @@ interfaces:
 <div class="listingblock">
 <div class="title">src/main/resources/admin/extensions/my-panel/my-panel.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const contentLib = require('/lib/xp/content');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get as getContent} from '/lib/xp/content';
 
-exports.GET = (req) =&gt; {
-    const content = contentLib.get({ key: req.params.contentId });
+export function GET(req) {
+    const content = getContent({ key: req.params.contentId });
     if (!content) {
         return { status: 404 };
     }
@@ -663,11 +663,11 @@ exports.GET = (req) =&gt; {
   &lt;/dl&gt;
 &lt;/div&gt;`
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The implementation is a regular server-side XP module: <code>require('/lib/xp/content')</code> for the full Content API, plus any other standard library (<code>lib-portal</code>, <code>lib-i18n</code>, <code>lib-node</code>, &#8230;&#8203;) and 3rd-party modules the app bundles.</p>
+<p>The implementation is a regular server-side XP module: import <code>/lib/xp/content</code> for the full Content API, plus any other standard library (<code>lib-portal</code>, <code>lib-i18n</code>, <code>lib-node</code>, &#8230;&#8203;) and 3rd-party modules the app bundles.</p>
 </div>
 <div class="paragraph">
 <p>For non-trivial panels, separate the HTML, CSS, and JS into asset files and serve them from a sub-path of the extension URL, as described in <a href="../extensions.ahtml#assets">Sub-paths and static assets</a> — the response then becomes a small <code>&lt;link&gt;</code> + <code>&lt;script&gt;</code> shell that pulls in the bundled assets, keeping the implementation focused on data and the bundle focused on presentation.</p>
@@ -677,7 +677,7 @@ exports.GET = (req) =&gt; {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

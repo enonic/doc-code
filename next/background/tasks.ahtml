@@ -510,14 +510,14 @@ form:
 <div class="listingblock">
 <div class="title">Example task implementation</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const taskLib = require('/lib/xp/task');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {progress} from '/lib/xp/task';
 
-exports.run = (params, taskId) =&gt; {
+export function run(params, taskId) {
     const count = params.count || 42;
-    taskLib.progress({ info: `Initializing task ${taskId}` });
+    progress({ info: `Initializing task ${taskId}` });
 
     for (let i = 0; i &lt; count; i++) {
-        taskLib.progress({
+        progress({
             info: `Processing item ${i + 1}`,
             current: i,
             total: count
@@ -525,8 +525,8 @@ exports.run = (params, taskId) =&gt; {
         processItem(i);
     }
 
-    taskLib.progress({ info: `Task completed ${taskId}` });
-};</code></pre>
+    progress({ info: `Task completed ${taskId}` });
+}</code></pre>
 </div>
 </div>
 </div>
@@ -540,9 +540,9 @@ exports.run = (params, taskId) =&gt; {
 <div class="listingblock">
 <div class="title">Sample execution of a named task</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const taskLib = require('/lib/xp/task');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {submitTask} from '/lib/xp/task';
 
-const taskId = taskLib.submitTask({
+const taskId = submitTask({
     descriptor: 'mytask',
     config: {
         count: 10
@@ -620,7 +620,7 @@ For fine-grained control which nodes should be capable to execute distributable 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>

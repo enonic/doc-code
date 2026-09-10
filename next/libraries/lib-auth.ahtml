@@ -703,7 +703,7 @@ const group = createGroup({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "group",
     key: "group:system:group-a",
     displayName: "Group A",
@@ -810,7 +810,7 @@ const idProvider = createIdProvider({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     key: "myIdProvider",
     displayName: "My ID Provider",
     description: "My ID provider description",
@@ -896,7 +896,7 @@ const role = createRole({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "role",
     key: "role:aRole",
     displayName: "Role Display Name",
@@ -985,7 +985,7 @@ const user = createUser({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "user",
     key: "user:system:user1",
     displayName: "The One And Only",
@@ -1121,7 +1121,7 @@ const result = findPrincipals({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     total: 1,
     count: 1,
     hits: [
@@ -1225,7 +1225,7 @@ const findUsersResult = findUsers({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     total: 2,
     count: 1,
     hits: [
@@ -1360,7 +1360,7 @@ const idProviders = getIdProviders();</code></pre>
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">([
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">([
     {
         key: "system",
         displayName: "System Id Provider"
@@ -1409,7 +1409,7 @@ const result = getMembers('group:system:content-managers');</code></pre>
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">[{
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">[{
     type: "user",
     key: "user:system:user1",
     displayName: "User 1",
@@ -1463,7 +1463,7 @@ const result = getMemberships('user:system:user1');</code></pre>
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">[{
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">[{
     type: "role",
     key: "role:system.admin",
     displayName: "Administrator"
@@ -1481,7 +1481,7 @@ const result = getMemberships('user:system:user1', true);</code></pre>
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">[
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">[
     {
         type: "role",
         key: "role:system.admin.login",
@@ -1537,7 +1537,7 @@ const result = getPrincipal('user:system:user1');</code></pre>
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "user",
     key: "user:system:user1",
     displayName: "User 1",
@@ -1613,7 +1613,7 @@ const result = getProfile({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     nickName: "User Nick"
 })</code></pre>
 </div>
@@ -1673,7 +1673,7 @@ const result = getUser();</code></pre>
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "user",
     key: "user:system:user1",
     displayName: "User 1",
@@ -1808,7 +1808,7 @@ const loginResult = login({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     authenticated: true,
     user: {
         type: "user",
@@ -1914,7 +1914,7 @@ const group = modifyGroup({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "group",
     key: "group:system:group-a",
     displayName: "Modified display name",
@@ -2004,7 +2004,7 @@ const profileModified = modifyProfile({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     nickName: "User Nick"
 })</code></pre>
 </div>
@@ -2082,7 +2082,7 @@ const theRole = modifyRole({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "role",
     key: "role:aRole",
     displayName: "Nothing Role",
@@ -2163,7 +2163,7 @@ const theUser = modifyUser({
 <div class="listingblock">
 <div class="title">Sample response</div>
 <div class="content">
-<pre class="highlight"><code class="language-js" data-lang="js">({
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">({
     type: "user",
     key: "user:system:user1",
     displayName: "User 1-A",
@@ -2441,7 +2441,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 20:51:46 UTC
+Last updated 2026-09-10 21:42:57 UTC
 </div>
 </div>
 </body>
