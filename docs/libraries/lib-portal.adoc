@@ -30,7 +30,7 @@ To serve media from another host, configure `+media.defaultBaseUrl+` — see the
 
 === apiUrl
 
-Generates a URL pointing to a <<../web/apis#, Universal API>>. Picks the right URL form based on the calling context — a service-point under the active service when called from a site, webapp, or admin tool, and `/api/` otherwise.
+Generates a URL pointing to a <<../web/apis#, Universal API>>. Picks the right URL form based on the calling context — a contextual URL under the active service when called from a site, webapp, or admin tool, and `/api/` otherwise.
 
 [.lead]
 Parameters

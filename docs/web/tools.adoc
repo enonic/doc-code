@@ -61,7 +61,7 @@ config:                          # <6>
 <1> *title* — string, or `{ text, i18n }` for localization. Shown in the Launcher.
 <2> *description* — string, or `{ text, i18n }`.
 <3> *allow* — principal keys (roles, groups, users) granted access. The implicit `role:system.admin` always has access regardless. Required to expose the tool to non-admins.
-<4> *apis* — list of <<apis#,Universal API>> descriptor keys mounted under this tool's URL. Bare names refer to APIs in the same app; `<app>:<api>` form borrows from another app. APIs become reachable as service points at `+/admin/<app-key>/<tool-name>/_/<app>:<api>+`.
+<4> *apis* — list of <<apis#,Universal API>> descriptor keys mounted under this tool's URL. Bare names refer to APIs in the same app; `<app>:<api>` form borrows from another app. APIs become reachable at `+/admin/<app-key>/<tool-name>/_/<app>:<api>+`.
 <5> *interfaces* — named interface points this tool exposes. Admin extensions whose `interfaces:` list intersects with this list are eligible to be mounted into the tool. Names are free-form strings — pick stable identifiers and document them.
 <6> *config* — free-form key/value map readable from the implementation.
 
@@ -89,12 +89,12 @@ exports.GET = (req) => {
 };
 ----
 
-The implementation is the entry point for `+/admin/<app-key>/<tool-name>+` and any deeper path that does not match a service-point URL. For anything beyond a couple of static endpoints, use the https://market.enonic.com/vendors/enonic/router-lib[router library] for method dispatch, parameter extraction, and pattern matching.
+The implementation is the entry point for `+/admin/<app-key>/<tool-name>+` and any deeper path that does not match a contextually mounted API. For anything beyond a couple of static endpoints, use the https://market.enonic.com/vendors/enonic/router-lib[router library] for method dispatch, parameter extraction, and pattern matching.
 
 == URL
 
 * Tool entry point: `/admin/<app-key>/<tool-name>`
-* API service point under the tool: `/admin/<app-key>/<tool-name>/_/<app>:<api-name>`
+* Contextual API under the tool: `/admin/<app-key>/<tool-name>/_/<app>:<api-name>`
 * Admin extension dispatcher under the tool: `/admin/<app-key>/<tool-name>/_/admin:extension/<app>:<extension-name>/`
 
 Generate URLs from the implementation with the <<../libraries/lib-portal#,Portal library>>: `adminUrl()` for the tool itself, `apiUrl()` for mounted APIs.
@@ -110,7 +110,7 @@ A failed check returns *401 Unauthorized* if the configured ID provider asks for
 
 == Mounting Universal APIs
 
-Any API listed in `apis:` is mounted as a service point under the tool's URL. The same API can simultaneously be mounted on the Web endpoint (`mount: ["web"]` in the API descriptor) — the two mounts are independent. See <<apis#service-point,Universal API: Service point>>.
+Any API listed in `apis:` is mounted contextually under the tool's URL. The same API can simultaneously be mounted on the Web endpoint (`mount: ["web"]` in the API descriptor) — the two mounts are independent. See <<apis#contextual-apis,Universal API: Contextual APIs>>.
 
 == Hosting admin extensions
 

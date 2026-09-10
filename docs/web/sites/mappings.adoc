@@ -133,7 +133,7 @@ Supported services:
 `attachment` (deprecated):: Override the legacy attachment service at `+/_/attachment/<mode>/<id>[:<fingerprint>]/<name>+` (e.g. `+/_/attachment/inline/123456/logo.png+`). Replaced by the `media:attachment` Universal API.
 
 
-NOTE: <<../apis#, Universal APIs>> mounted as points (`+/_/<app>:<api>+`) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+NOTE: <<../apis#, Universal APIs>> mounted contextually (`+/_/<app>:<api>+`) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on such a URL, implement a custom Universal API instead.
 
 [#reroute]
 == Re-routing to another content
