@@ -38,14 +38,14 @@ A named task's implementation lives at `src/main/resources/tasks/<taskname>/<tas
 .Example task implementation
 [source,typescript]
 ----
-const taskLib = require('/lib/xp/task');
+import {progress} from '/lib/xp/task';
 
-exports.run = (params, taskId) => {
+export function run(params, taskId) {
     const count = params.count || 42;
-    taskLib.progress({ info: `Initializing task ${taskId}` });
+    progress({ info: `Initializing task ${taskId}` });
 
     for (let i = 0; i < count; i++) {
-        taskLib.progress({
+        progress({
             info: `Processing item ${i + 1}`,
             current: i,
             total: count
@@ -53,8 +53,8 @@ exports.run = (params, taskId) => {
         processItem(i);
     }
 
-    taskLib.progress({ info: `Task completed ${taskId}` });
-};
+    progress({ info: `Task completed ${taskId}` });
+}
 ----
 
 == Execution
@@ -64,9 +64,9 @@ Named tasks may be submitted from any module in the app. Applications may even r
 .Sample execution of a named task
 [source,typescript]
 ----
-const taskLib = require('/lib/xp/task');
+import {submitTask} from '/lib/xp/task';
 
-const taskId = taskLib.submitTask({
+const taskId = submitTask({
     descriptor: 'mytask',
     config: {
         count: 10

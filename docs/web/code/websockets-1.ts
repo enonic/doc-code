@@ -1,6 +1,6 @@
 
 // Create a websocket if websocket request.
-exports.GET = function (req) {
+export function GET(req) {
 
   if (!req.webSocket) {
     return {
@@ -16,4 +16,4 @@ exports.GET = function (req) {
       subProtocols: ["text"]
     }
   };
-};
+}

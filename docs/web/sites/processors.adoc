@@ -26,7 +26,7 @@ The implementation must export a `responseProcessor` function. It receives a req
 .cms/processors/tracker.ts
 [source,typescript]
 ----
-exports.responseProcessor = (req, res) => {
+export function responseProcessor(req, res) {
     const trackingScript = '<script src="http://some.cdn/js/tracker.js"></script>';
 
     if (!res.pageContributions.bodyEnd) {
@@ -35,7 +35,7 @@ exports.responseProcessor = (req, res) => {
     res.pageContributions.bodyEnd.push(trackingScript);
 
     return res;
-};
+}
 ----
 
 == Triggering

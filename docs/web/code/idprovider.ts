@@ -1,49 +1,49 @@
-var authLib = require('/lib/xp/auth');
+import {logout as logoutUser} from '/lib/xp/auth';
 
 // Filter every request
-exports.autoLogin = function (req) {
+export function autoLogin(req) {
     log.info('Invoked only unless user is already authenticated');
-};
+}
 
 // Override error handler when authentication is required
-exports.handle401 = function (req) {
-    var body = generateLoginPage();
+export function handle401(req) {
+    const body = generateLoginPage();
     return {
         status: 401,
         contentType: 'text/html',
         body: body
     };
-};
+}
 
 // Triggered when user visits the ID providers login endpoint
-exports.login = function (req) {
+export function login(req) {
 
-    var redirectUrl = req.validTicket ? req.params.redirect : undefined;
+    const redirectUrl = req.validTicket ? req.params.redirect : undefined;
 
-    var body = generateLoginPage(redirectUrl);
+    const body = generateLoginPage(redirectUrl);
     return {
         contentType: 'text/html',
         body: body
     };
-};
+}
 
 // Triggered when user visits the ID providers logout endpoint
-exports.logout = function (req) {
+export function logout(req) {
 
     // Sign user out of XP
-    authLib.logout();
+    logoutUser();
 
-    var redirectUrl = req.validTicket ? req.params.redirect : undefined;
+    const redirectUrl = req.validTicket ? req.params.redirect : undefined;
 
     if (redirectUrl) {
         return {
             redirect: redirectUrl
         };
     } else {
-        var body = generateLoginPage();
+        const body = generateLoginPage();
         return {
             contentType: 'text/html',
             body: body
         };
     }
-};
+}

@@ -178,29 +178,30 @@ The two variants are equally first-class; the built-in *Site rendering* widget u
 
 Using the extension to render a custom preview right inside Content Studio, without involving any external services.
 
-The implementation is a regular server-side XP module: `require('/lib/xp/content')` for the full Content API, plus any other standard library (`lib-portal`, `lib-node`, `lib-i18n`, `lib-io`, ...) and 3rd-party modules the app bundles.
+The implementation is a regular server-side XP module: import `/lib/xp/content` for the full Content API, plus any other standard library (`lib-portal`, `lib-node`, `lib-i18n`, `lib-io`, ...) and 3rd-party modules the app bundles.
 The widget can query related content, traverse children, fetch attachments, render aggregated views — anything an XP module can do.
 
 .src/main/resources/admin/extensions/my-preview/my-preview.ts
 [source,typescript]
 ----
-const contentLib = require('/lib/xp/content');
+import {get as getContent} from '/lib/xp/content';
+
 const ALLOWED_TYPE = 'myapp:article';
 const SECURITY_HEADERS = {
     'X-Frame-Options': 'SAMEORIGIN',
     'Content-Security-Policy': "default-src 'self'; style-src 'unsafe-inline'"
 };
 
-exports.HEAD = (req) => ({
-    status: req.params.type === ALLOWED_TYPE ? 200 : 418
-});
+export function HEAD(req) {
+    return { status: req.params.type === ALLOWED_TYPE ? 200 : 418 };
+}
 
-exports.GET = (req) => {
+export function GET(req) {
     if (req.params.type !== ALLOWED_TYPE) {
         return { status: 418 };
     }
 
-    const content = contentLib.get({ key: req.params.contentId });
+    const content = getContent({ key: req.params.contentId });
     if (!content) {
         return { status: 404 };
     }
@@ -225,7 +226,7 @@ exports.GET = (req) => {
   </body>
 </html>`
     };
-};
+}
 ----
 
 `HEAD` returns `418` for any content that is not an article, so *Automatic* mode falls through to the next widget without doing any work.
@@ -242,11 +243,11 @@ For preview frontends hosted elsewhere — a Next.js, SvelteKit, or Astro app, a
 const ALLOWED_TYPE = 'myapp:article';
 const PREVIEW_BASE = 'https://preview.myapp.com';
 
-exports.HEAD = (req) => ({
-    status: req.params.type === ALLOWED_TYPE ? 200 : 418
-});
+export function HEAD(req) {
+    return { status: req.params.type === ALLOWED_TYPE ? 200 : 418 };
+}
 
-exports.GET = (req) => {
+export function GET(req) {
     if (req.params.type !== ALLOWED_TYPE) {
         return { status: 418 };
     }
@@ -259,7 +260,7 @@ exports.GET = (req) => {
             'enonic-widget-data': JSON.stringify({ redirect: url })
         }
     };
-};
+}
 ----
 
 The widget does no rendering itself — the external server is responsible for fetching the content (typically through the https://developer.enonic.com/docs/guillotine[GraphQL API]) and setting its own `+X-Frame-Options+` / `+Content-Security-Policy+` headers so Content Studio's iframe can load it.

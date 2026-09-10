@@ -118,7 +118,7 @@ The HTTP function returns a ``response`` object that XP converts to the outgoing
 
 Cookie values in the response object can be set as plain strings or as objects carrying full cookie configuration.
 
-[source,javascript]
+[source,typescript]
 ----
 return {
     status: 200,

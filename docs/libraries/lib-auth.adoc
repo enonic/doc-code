@@ -132,7 +132,7 @@ const group = createGroup({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "group",
@@ -196,7 +196,7 @@ const idProvider = createIdProvider({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     key: "myIdProvider",
@@ -251,7 +251,7 @@ const role = createRole({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "role",
@@ -303,7 +303,7 @@ const user = createUser({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "user",
@@ -386,7 +386,7 @@ const result = findPrincipals({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     total: 1,
@@ -448,7 +448,7 @@ const findUsersResult = findUsers({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     total: 2,
@@ -562,7 +562,7 @@ const idProviders = getIdProviders();
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ([
     {
@@ -607,7 +607,7 @@ const result = getMembers('group:system:content-managers');
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 [{
     type: "user",
@@ -657,7 +657,7 @@ const result = getMemberships('user:system:user1');
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 [{
     type: "role",
@@ -675,7 +675,7 @@ const result = getMemberships('user:system:user1', true);
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 [
     {
@@ -727,7 +727,7 @@ const result = getPrincipal('user:system:user1');
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "user",
@@ -778,7 +778,7 @@ const result = getProfile({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     nickName: "User Nick"
@@ -820,7 +820,7 @@ const result = getUser();
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "user",
@@ -902,7 +902,7 @@ const loginResult = login({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     authenticated: true,
@@ -979,7 +979,7 @@ const group = modifyGroup({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "group",
@@ -1038,7 +1038,7 @@ const profileModified = modifyProfile({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     nickName: "User Nick"
@@ -1091,7 +1091,7 @@ const theRole = modifyRole({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "role",
@@ -1147,7 +1147,7 @@ const theUser = modifyUser({
 ----
 
 .Sample response
-[source,js]
+[source,typescript]
 ----
 ({
     type: "user",

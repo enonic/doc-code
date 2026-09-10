@@ -148,7 +148,7 @@ Below is a minimal example that returns a static list of selectable options. In 
 .src/main/resources/admin/extensions/my-selector/my-selector.ts
 [source,typescript]
 ----
-exports.get = function (request) {
+export function GET(request) {
     return {
         status: 200,
         contentType: 'application/json',
@@ -174,5 +174,5 @@ exports.get = function (request) {
             total: 3
         }),
     };
- }
+}
 ----

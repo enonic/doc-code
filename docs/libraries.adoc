@@ -13,8 +13,9 @@ A library can be loaded two ways — both fully typed once the `@enonic-types` p
 .require — CommonJS, the standard form
 [source,typescript]
 ----
-const authLib = require('/lib/xp/auth');
-const user = authLib.getUser();
+import {getUser} from '/lib/xp/auth';
+
+const user = getUser();
 ----
 
 .ES6 import — also needs a `paths` mapping in `tsconfig.json`

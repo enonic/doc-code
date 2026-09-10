@@ -1,5 +1,5 @@
 // Allow only specific origins to open the WebSocket
-exports.GET = function (req) {
+export function GET(req) {
 
   if (!req.webSocket) {
     return { status: 404 };
@@ -8,10 +8,9 @@ exports.GET = function (req) {
   return {
     webSocket: {
       subProtocols: ['text'],
-      checkOrigin: function (origin) {
-        return origin === 'https://app.example.com'
-            || origin.endsWith('.example.com');
-      }
+      checkOrigin: (origin) =>
+        origin === 'https://app.example.com'
+          || origin.endsWith('.example.com')
     }
   };
-};
+}

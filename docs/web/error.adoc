@@ -60,7 +60,7 @@ The input parameter for handler functions is an error JSON object.
 The object contains the status code, error message, Exception object, and the original <<request-response#request, HTTP request>> object:
 
 .Sample error object
-[source,javascript]
+[source,json]
 ----
 include::code/error.json[]
 ----

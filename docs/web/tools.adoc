@@ -80,13 +80,15 @@ The implementation lives at `+src/main/resources/admin/tools/<tool-name>/<tool-n
 .Sample my-tool.ts
 [source,typescript]
 ----
-exports.GET = (req) => {
+import {render} from '/lib/thymeleaf';
+
+export function GET(req) {
     const view = resolve('my-tool.html');
     return {
         body: render(view, { user: req.user }),
         contentType: 'text/html'
     };
-};
+}
 ----
 
 The implementation is the entry point for `+/admin/<app-key>/<tool-name>+` and any deeper path that does not match a contextually mounted API. For anything beyond a couple of static endpoints, use the https://market.enonic.com/vendors/enonic/router-lib[router library] for method dispatch, parameter extraction, and pattern matching.

@@ -67,13 +67,13 @@ The implementation lives at `+src/main/resources/admin/extensions/<extension-nam
 .Sample my-extension.ts
 [source,typescript]
 ----
-exports.GET = (req) => {
+export function GET(req) {
     const contentId = req.params.contentId;
     return {
         body: `<div>Inspecting content ${contentId}</div>`,
         contentType: 'text/html'
     };
-};
+}
 ----
 
 For anything beyond a couple of static endpoints, use the https://market.enonic.com/vendors/enonic/router-lib[router library] for method dispatch, parameter extraction, and pattern matching.
@@ -84,9 +84,9 @@ The URL at which an extension is reachable is a platform internal and may change
 
 [source,typescript]
 ----
-const adminLib = require('/lib/xp/admin');
+import {extensionUrl} from '/lib/xp/admin';
 
-const url = adminLib.extensionUrl({
+const url = extensionUrl({
     application: 'com.example.app',
     extension: 'my-extension',
     params: { contentId: '123' }
@@ -111,8 +111,10 @@ Serve CSS, JS, images, and other static files from a sub-path of the extension U
 .Sample my-extension.ts serving its own assets
 [source,typescript]
 ----
-const router = require('/lib/router')();
-const staticLib = require('/lib/enonic/static');
+import Router from '/lib/router';
+import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
+
+const router = Router();
 
 router.get('', (req) => ({
     contentType: 'text/html',
@@ -120,13 +122,15 @@ router.get('', (req) => ({
 <div class="my-extension">Hello</div>`
 }));
 
-router.get('/_static/{path:.*}', (req) => staticLib.requestHandler(req, {
+router.get('/_static/{path:.*}', (req) => requestHandler(req, {
     root: '/assets',
-    relativePath: staticLib.mappedRelativePath('/_static'),
+    relativePath: mappedRelativePath('/_static'),
     index: false
 }));
 
-exports.all = (req) => router.dispatch(req);
+export function all(req) {
+    return router.dispatch(req);
+}
 ----
 
 Files placed under `src/main/resources/assets/` are then reachable at `+<extension URL>/_static/<path>+`, behind the same access control as the extension itself.
