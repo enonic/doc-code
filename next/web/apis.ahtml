@@ -660,7 +660,7 @@ A request to an API that is not mounted on the matched URL returns <strong>404 N
 </ol>
 </div>
 <div class="paragraph">
-<p>The <code>/api/</code> URL prefix is the same on both endpoints, but the two are served on <strong>different ports</strong>. The Management endpoint is not reachable through the Web endpoint and vice versa.</p>
+<p>The two endpoints are served on <strong>different ports</strong> and use <strong>different URL forms</strong>: <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code> on the Web endpoint, <code>/&lt;app-name&gt;:&lt;api-name&gt;</code> at the root of the Management endpoint. The Management endpoint is not reachable through the Web endpoint and vice versa.</p>
 </div>
 </div>
 </div>
@@ -806,6 +806,28 @@ The Management endpoint is for <strong>advanced use only</strong>. It is intende
 <div class="paragraph">
 <p>An API can also be exposed on the <strong>Management</strong> endpoint by adding <code>"management"</code> to its <code>mount</code> list. The Management endpoint is a separate listener on its own port, distinct from the Web endpoint — use it for internal or operational APIs that should not be reachable from the public network.</p>
 </div>
+<div class="paragraph">
+<p>APIs are served from the <strong>root</strong> of the Management port, with no <code>/api</code> prefix:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generic API endpoint: <code>/&lt;app-name&gt;:&lt;api-name&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>/api</code> prefix used on the Web endpoint does not exist on the Management endpoint. Requesting <code>/api/&lt;app-name&gt;:&lt;api-name&gt;</code> on the management port returns <strong>404 Not Found</strong> even when the API is mounted and running.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="title">src/main/resources/apis/&lt;api-name&gt;/&lt;api-name&gt;.yaml</div>
 <div class="content">
@@ -825,7 +847,7 @@ allow:
 <h2 id="api_discovery"><a class="link" href="#api_discovery">API discovery</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>GET /api</code> (or <code>GET /api/</code>) returns a JSON index of every API mounted on the <strong>endpoint that received the request</strong>. Calling it on the Web endpoint lists APIs with <code>"web"</code> in <code>mount</code>; calling it on the Management endpoint lists APIs with <code>"management"</code> in <code>mount</code>. The response is a <code>resources</code> array, one entry per API:</p>
+<p><code>GET /api</code> (or <code>GET /api/</code>) on the Web endpoint returns a JSON index of every API with <code>"web"</code> in its <code>mount</code> list. The response is a <code>resources</code> array, one entry per API:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -851,7 +873,10 @@ allow:
 <div class="ulist">
 <ul>
 <li>
-<p>Service points (APIs mounted only under sites, webapps, or admin tools) do not appear in either listing.</p>
+<p>Discovery is available on the Web endpoint only — the Management endpoint serves no API index.</p>
+</li>
+<li>
+<p>Service points (APIs mounted only under sites, webapps, or admin tools) do not appear in the listing.</p>
 </li>
 <li>
 <p>Both YAML-declared APIs and dynamically registered Java handlers are included.</p>
@@ -961,7 +986,7 @@ This list includes but is not limited to:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-09 08:21:25 UTC
+Last updated 2026-09-10 19:11:16 UTC
 </div>
 </div>
 </body>
