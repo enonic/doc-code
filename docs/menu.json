@@ -5,6 +5,10 @@
       "document": "index"
     },
     {
+      "title": "Applications",
+      "document": "apps"
+    },
+    {
       "title": "Tooling",
       "document": "tooling",
       "menuItems": [
@@ -23,6 +27,10 @@
         {
           "title": "Build system",
           "document": "tooling/build"
+        },
+        {
+          "title": "TypeScript",
+          "document": "tooling/typescript"
         },
         {
           "title": "CI/CD",
@@ -77,48 +85,36 @@
       ]
     },
     {
-      "title": "Fundamentals",
-      "document": "fundamentals",
+      "title": "Runtime",
+      "document": "runtime",
       "menuItems": [
         {
-          "title": "Runtime",
-          "document": "fundamentals/runtime"
-        },
-        {
-          "title": "TypeScript",
-          "document": "fundamentals/typescript"
-        },
-        {
-          "title": "Types",
-          "document": "fundamentals/types"
-        },
-        {
-          "title": "Apps",
-          "document": "fundamentals/apps"
+          "title": "JS engines",
+          "document": "runtime/engines"
         },
         {
           "title": "Functions",
-          "document": "fundamentals/functions"
+          "document": "runtime/functions"
         },
         {
           "title": "Main",
-          "document": "fundamentals/main"
+          "document": "runtime/main"
         },
         {
           "title": "Globals",
-          "document": "fundamentals/globals"
+          "document": "runtime/globals"
         },
         {
           "title": "Events",
-          "document": "fundamentals/events"
+          "document": "runtime/events"
         },
         {
           "title": "Localization",
-          "document": "fundamentals/i18n"
+          "document": "runtime/i18n"
         },
         {
           "title": "Java bridge",
-          "document": "fundamentals/java-bridge"
+          "document": "runtime/java-bridge"
         }
       ]
     },
@@ -126,6 +122,10 @@
       "title": "Libraries",
       "document": "libraries",
       "menuItems": [
+        {
+          "title": "Types",
+          "document": "libraries/types"
+        },
         {
           "title": "Admin",
           "document": "libraries/lib-admin"
@@ -237,11 +237,11 @@
           "document": "web/apis"
         },
         {
-          "title": "Tools",
+          "title": "Admin tools",
           "document": "web/tools"
         },
         {
-          "title": "Extensions",
+          "title": "Admin extensions",
           "document": "web/extensions",
           "menuItems": [
             {
@@ -253,18 +253,22 @@
               "document": "web/extensions/customselector"
             },
             {
+              "title": "Dashboard widget",
+              "document": "web/extensions/dashboard"
+            },
+            {
               "title": "Live view",
               "document": "web/extensions/liveview"
             },
             {
               "title": "Menu item",
               "document": "web/extensions/menuitem"
+            },
+            {
+              "title": "Response processors",
+              "document": "web/extensions/processors"
             }
           ]
-        },
-        {
-          "title": "ID providers",
-          "document": "web/id-providers"
         },
         {
           "title": "Sites",
@@ -297,15 +301,19 @@
           "document": "web/request-response"
         },
         {
-          "title": "Filters",
+          "title": "HTTP filters",
           "document": "web/filters"
         },
         {
-          "title": "Error handler",
+          "title": "HTTP error handler",
           "document": "web/error"
         },
         {
-          "title": "Websocket",
+          "title": "ID providers",
+          "document": "web/id-providers"
+        },
+        {
+          "title": "WebSocket",
           "document": "web/websocket"
         },
         {
@@ -333,12 +341,8 @@
       "document": "upgrade",
       "menuItems": [
         {
-          "title": "XP 8.0 to 8.1",
-          "document": "upgrade/8-1"
-        },
-        {
-          "title": "XP 8.1 to 8.2",
-          "document": "upgrade/8-2"
+          "title": "From XP 7",
+          "document": "upgrade/xp7"
         }
       ]
     }

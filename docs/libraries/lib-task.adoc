@@ -15,7 +15,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-task` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-task` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Events
 
@@ -447,7 +447,7 @@ Properties
 | description | string | Task description.
 | state       | <<task-state-type,`TaskStateType`>> | Task state.
 | application | string | Application containing the callback function to run.
-| user        | <<../fundamentals/types#user-key, UserKey>> | Key of the user that submitted the task.
+| user        | <<../libraries/types#user-key, UserKey>> | Key of the user that submitted the task.
 | startTime   | string | Time when the task was submitted (in ISO-8601 format).
 | progress    | <<task-progress,`TaskProgress`>> | Progress information provided by the running task.
 | node        | string | *Optional.* Identifier of the cluster node where the task is running. Absent when no cluster is configured.

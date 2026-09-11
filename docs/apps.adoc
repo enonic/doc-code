@@ -1,0 +1,91 @@
+= Applications
+:toc: right
+:imagesdir: images
+
+An *Enonic application* is a named package of functionality that XP installs, starts and configures as one unit. The application name is unique within an installation, and everything the app ships is identified by it: schemas, endpoints, tools, extensions, jobs and configuration. Many apps run side by side in one XP instance, and most of XP's own components are apps.
+
+An app may contain nothing but CMS schemas, or JavaScript that serves a site or an API, or Java components, or all of these. This documentation covers apps that contain code. Modelling content with schemas is covered in the https://developer.enonic.com/docs/cms/stable[CMS documentation], and installing and operating apps in the https://developer.enonic.com/docs/platform/stable/apps[platform documentation].
+
+[#name]
+== Name
+
+Every app has a unique name, such as `com.example.myapp`. Reverse-DNS is the convention. The name acts as the namespace for the app: it is the prefix that identifies everything the app ships, so two apps can both have an `article` content type without colliding.
+
+[cols="1,2", options="header"]
+|===
+| What | Identified as
+
+| Schemas: content types, mixins, form fragments, macros
+| `com.example.myapp:article`
+
+| APIs
+| `com.example.myapp:myapi`, served under `+/api/com.example.myapp:myapi+`
+
+| Admin tools and extensions
+| `com.example.myapp:mytool`
+
+| Tasks
+| `com.example.myapp:reindex`
+
+| Configuration
+| `com.example.myapp.cfg`
+
+| Modules
+| `require()` resolves within the app that calls it; see <<runtime#modules_and_bundling, Modules>>
+|===
+
+Platform-provided types use the reserved names `base`, `portal` and `media`, as in `base:folder`, `portal:site` and `media:image`. No app can take these names.
+
+== What an app can contain
+
+Everything below is optional. An app ships whichever parts it needs.
+
+Schemas:: Content types, mixins, form fragments and macros, under `src/main/resources/cms/`. See <<schemas#, Schemas>>.
+Sites:: Page, layout and part components, mappings, filters and response processors for CMS-driven sites. See <<web/sites#, Sites>>.
+APIs:: HTTP endpoints exposed under `/api`, and mountable under sites, webapps and admin tools. See <<web/apis#, APIs>>.
+Admin tools and extensions:: Screens in the XP admin, and extensions that plug into other tools. See <<web/tools#, Tools>> and <<web/extensions#, Extensions>>.
+Webapps:: Standalone web applications. See <<web/webapps#, Webapps>>.
+ID providers:: Authentication for sites, webapps and the admin. See <<web/id-providers#, ID providers>>.
+Background work:: Named tasks and scheduled jobs. See <<background#, Background>>.
+Start-up code:: A `main.ts` that runs when the app starts. See <<runtime/main#, Main>>.
+Java:: OSGi components and code reached through the Java bridge. See <<runtime/java-bridge#, Java bridge>>.
+Localization:: Phrases files for the app's own text and its schemas. See <<runtime/i18n#, Localization>>.
+
+== Building and deploying
+
+Create a project from a https://market.enonic.com/starters[starter] with the <<tooling/cli#, Enonic CLI>>, build it with `enonic project build`, and deploy it to a <<tooling/sandboxes#, sandbox>> with `enonic project deploy`. During development, `enonic project dev` rebuilds on every change and the sandbox picks the changes up without a redeploy. The project files, the Gradle plugin and the build and deploy steps are covered under <<tooling/build#, Building apps>>; automated builds under <<tooling/ci-cd#, CI/CD>>.
+
+== Lifecycle
+
+An app's life inside XP follows a fixed sequence:
+
+Install:: The app package is uploaded to the cluster and registered. Installation alone does not run any of your code.
+
+Start:: XP starts the app on every cluster node. If the app contains <<runtime/main#, `main.ts`>> at `src/main/resources/main.ts`, it is loaded and its top-level code runs once per node. image:xp-810.svg[XP 8.1.0,opts=inline] Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. `+__.disposer()+` registrations made during start are remembered for the stop phase; registering one later is not dependable.
+
+Running:: The app is reachable. HTTP functions, event listeners, scheduled tasks, components, and admin tools all become live. Modules are loaded lazily on first `require()` and cached for the lifetime of the deploy.
+
+Stop:: Before uninstall (or before a redeploy of a new version), XP stops the app on every node. Registered disposers are invoked. After stop, no further requests reach the app's code.
+
+Uninstall:: The app is removed from the cluster.
+
+The platform calls `main.ts` exactly once per app start, per node. Top-level code in any other module runs once on first `require()` and is then cached — see <<runtime#loading_and_caching, Runtime: Loading and caching>>.
+
+Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and `main.ts` runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.
+
+This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).
+
+== Installation
+
+Apps reach an XP instance through the Enonic CLI and the management API, which is the standard path for CI/CD; through the Applications admin tool, which also installs from https://market.enonic.com[Enonic Market]; or by dropping the app file into the instance's `deploy/` folder during development. Installation channels, clustering and operations are covered in the https://developer.enonic.com/docs/platform/stable/apps[platform documentation]. See <<tooling/ci-cd#, CI/CD>> for the developer side.
+
+[#configuration]
+== Configuration
+
+Each app may read configuration from a `<app-name>.cfg` file (e.g. `com.example.myapp.cfg`) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform's configuration APIs.
+
+The file format, location, and reload behavior are documented in the https://developer.enonic.com/docs/platform/stable/config[XP platform documentation].
+
+== Packaging
+
+The https://developer.enonic.com/docs/enonic-gradle-plugins[Enonic Gradle plugin] builds an app into a single file, today a jar, that XP installs as one unit; the name is set as `appName` in _gradle.properties_. See <<tooling/build#, Build system>>.

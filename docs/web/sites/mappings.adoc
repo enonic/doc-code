@@ -1,6 +1,6 @@
 = Mappings
 :toc: right
-:imagesdir: images
+:imagesdir: ../../images
 
 Bind HTTP functions and filters to specific content types or site-relative URLs
 
@@ -54,7 +54,7 @@ An application may contain multiple mappings, and multiple applications can be a
 
 If several mappings have the same `order` value, the sort order of the applications on the site determines which mapping is used.
 
-Which mappings apply is decided once, before the first filter runs, from the content originally requested. A filter that <<../filters#reroute, re-routes rendering to another content>> therefore does not change the selection — the mappings already chosen keep running, in order, against the re-routed request.
+Which mappings apply is decided once, before the first filter runs, from the content originally requested. A filter that <<#reroute, re-routes rendering to another content>> therefore does not change the selection — the mappings already chosen keep running, in order, against the re-routed request.
 
 == Pattern mappings
 
@@ -133,4 +133,54 @@ Supported services:
 `attachment` (deprecated):: Override the legacy attachment service at `+/_/attachment/<mode>/<id>[:<fingerprint>]/<name>+` (e.g. `+/_/attachment/inline/123456/logo.png+`). Replaced by the `media:attachment` Universal API.
 
 
-NOTE: <<../apis#, Universal APIs>> mounted as points (`+/_/<app>:<api>+`) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on a service-point URL, implement a custom Universal API instead.
+NOTE: <<../apis#, Universal APIs>> mounted contextually (`+/_/<app>:<api>+`) cannot be remapped through site mappings — they are routed before the site service processes mappings. If you need custom behavior on such a URL, implement a custom Universal API instead.
+
+[#reroute]
+== Re-routing to another content
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A filter reached through a mapping can change *which content is rendered* while the visitor's URL stays the same. Set `contentPath` on the request before handing it on, and the site service resolves the request against that content instead:
+
+.Render a variant content at the canonical URL
+[source,typescript]
+----
+export function filter(req, next) {
+    if (req.cookies.experiment === 'b') {
+        // Visitors in the experiment get /mysite/campaign/variant-b,
+        // still under the /mysite/campaign address they asked for
+        req.contentPath = `${req.contentPath}/variant-b`;
+    }
+
+    return next(req);
+}
+----
+
+This is a rendering re-route, not a redirect: no `Location` header, no second request, and `path`, `url` and the client's address bar are untouched. Downstream, the request describes the new content. <<../../libraries/lib-portal#getcontent, `getContent()`>> returns it, and its page or page template is resolved and rendered as though it had been requested directly. Only the target moves, so a re-route cannot leave the current project or branch: the new path is looked up in the same repository and branch, and the site is re-derived from it.
+
+Rules:
+
+* *Only documented fields are read from the object you pass to `next()`.* Mutate `req` and hand it on. A fresh object works as long as it carries `contentPath`, but anything else you put on it is lost.
+* *The re-routed content's permissions apply.* The lookup itself is privileged, so a filter can target content the visitor cannot read, but the response then fails with `403`, as it would on a direct request. A path that resolves to nothing yields `404`, naming the path the filter set.
+* *Mappings are already chosen.* Which mappings match is decided before any filter runs, from the originally requested content. A re-route does not re-run that matching, so it neither picks up mappings that would match the new content nor cancels the ones already selected. The remaining filters and any controller mapping in the chain receive the re-routed request.
+* *Each filter may re-route once*, starting from whatever the previous filter passed it. Inside the filter that re-routes, both before and after `next()`, `getContent()` still reports the original content. The change applies to the request handed onwards.
+* *Generated URLs follow the re-route.* <<../../libraries/lib-portal#pageurl, `pageUrl()`>> without `id` or `path`, relative `path` values and component URLs resolve against the re-routed content, not the address the visitor asked for. A variant rendered at `/mysite/campaign` would link to itself as `/mysite/campaign/variant-b`. Pass the canonical target explicitly; the filter can hand it down with <<../../libraries/lib-context#setcustomlocalattribute, `setCustomLocalAttribute()`>> before it re-routes.
+
+.Keeping links on the canonical address
+[source,typescript]
+----
+// the filter, before re-routing
+import {setCustomLocalAttribute} from '/lib/xp/context';
+
+setCustomLocalAttribute('com.example.myapp.canonicalPath', req.contentPath);
+req.contentPath = `${req.contentPath}/variant-b`;
+
+// the page, when linking to itself
+import {get as getContext} from '/lib/xp/context';
+import {pageUrl} from '/lib/xp/portal';
+
+const canonical = getContext().attributes['custom.com.example.myapp.canonicalPath'] as string | undefined;
+const selfUrl = pageUrl({path: canonical});
+----
+
+Re-routing only maps an incoming address to content. It does not change how URLs are generated, and Content Studio's built-in preview still renders a content at its real path. A URL scheme of your own therefore also needs a URL function of your own in place of `pageUrl()`, a decision about whether the real path stays reachable, and, for editors to preview the scheme, a <<../extensions/liveview#, Live view extension>> that points the preview at your address.
+
+TIP: Build the new path from values you control rather than interpolating a query parameter straight into it. A content path is a lookup key, and path segments have their own validation rules.

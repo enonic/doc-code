@@ -29,10 +29,10 @@ The page implementation lives next to its https://developer.enonic.com/docs/cms/
 .Sample page implementation using the context
 [source,typescript]
 ----
-const portal = require('/lib/xp/portal');
+import {getContent} from '/lib/xp/portal';
 
-exports.GET = (req) => {
-  const content = portal.getContent();
+export function GET(req) {
+  const content = getContent();
   return {
     body: `<html>
             <body>
@@ -40,7 +40,7 @@ exports.GET = (req) => {
             </body>
           </html>`
   };
-};
+}
 ----
 
 == Parts
@@ -50,16 +50,16 @@ A part implementation lives next to its https://developer.enonic.com/docs/cms/xp
 .Sample part implementation using the form value
 [source,typescript]
 ----
-const portal = require('/lib/xp/portal');
+import {getComponent} from '/lib/xp/portal';
 
-exports.GET = (req) => {
-  const config = portal.getComponent();
+export function GET(req) {
+  const config = getComponent();
   return {
     body: `<div>
               <h1>${config.heading}</h1>
           </div>`
   };
-};
+}
 ----
 
 == Layouts
@@ -69,19 +69,19 @@ The layout implementation lives next to its https://developer.enonic.com/docs/cm
 .Sample layout using Thymeleaf to render two regions
 [source,typescript]
 ----
-const portal = require('/lib/xp/portal');
-const thymeleaf = require('/lib/thymeleaf');
+import {getComponent} from '/lib/xp/portal';
+import {render} from '/lib/thymeleaf';
 
-exports.GET = (req) => {
-    const component = portal.getComponent();
+export function GET(req) {
+    const component = getComponent();
 
     return {
-        body: thymeleaf.render(resolve('./layout-two-column.html'), {
+        body: render(resolve('./layout-two-column.html'), {
             leftRegion: component.regions["left"],
             rightRegion: component.regions["right"],
         })
     };
-};
+}
 ----
 
 .Thymeleaf view to render layout
@@ -124,11 +124,11 @@ A basic approach to rendering the main region of a page might look like this:
 .Manually create component placeholders
 [source,typescript]
 ----
-const portal = require('/lib/xp/portal');
+import {getContent} from '/lib/xp/portal';
 
-exports.GET = (req) => {
+export function GET(req) {
   // Get components of the main region
-  const content = portal.getContent();
+  const content = getContent();
   const components = content.page.regions["main"].components || [];
 
   // Render with placeholders
@@ -141,7 +141,7 @@ exports.GET = (req) => {
             </body>
           </html>`
   };
-};
+}
 ----
 
 === Templating example
@@ -151,19 +151,19 @@ Using Thymeleaf templating, placeholder generation might look like this:
 .Page implementation passing region to template
 [source,typescript]
 ----
-const portal = require('/lib/xp/portal');
-const thymeleaf = require('/lib/thymeleaf');
+import {getContent} from '/lib/xp/portal';
+import {render} from '/lib/thymeleaf';
 
-exports.GET = (req) => {
+export function GET(req) {
   // Get the contextual content item
-  const content = portal.getContent();
+  const content = getContent();
   const mainRegion = content.page.regions["main"];
 
   // Render and return the result
   return {
-    body: thymeleaf.render(view, mainRegion)
+    body: render(view, mainRegion)
   };
-};
+}
 ----
 
 .Thymeleaf template creating placeholders

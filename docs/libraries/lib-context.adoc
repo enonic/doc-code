@@ -15,7 +15,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-context` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-context` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Functions
 
@@ -162,7 +162,7 @@ const data = get().attributes['custom.my-data'];
 // cms/pages/article/article.ts
 import {setCustomLocalAttribute} from '/lib/xp/context';
 
-export function get() {
+export function GET() {
     setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
 
     return {body: renderArticle(), contentType: 'text/html'};
@@ -228,7 +228,7 @@ Properties
 | repository | string | *Optional.* Repository to run the callback in. Defaults to the current repository.
 | branch | string | *Optional.* Branch to run the callback in. Defaults to the current branch.
 | user | <<ContextUserParams, ContextUserParams>> | *Optional.* User to run the callback as.
-| principals | <<../fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.
+| principals | <<../libraries/types#principal-key, PrincipalKey>>[] | *Optional.* Additional principal keys (users, groups, and roles) to attach to the authentication info for the duration of the callback.
 | attributes | <<ContextAttributes, ContextAttributes>> | *Optional.* Additional context attributes.
 |===
 
@@ -245,8 +245,8 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| user | <<../fundamentals/types#user, User>> | *Optional.* The currently authenticated user. Omitted when no user is logged in.
-| principals | <<../fundamentals/types#principal-key, PrincipalKey>>[] | *Optional.* Principal keys (users, groups, and roles) attached to the authentication info.
+| user | <<../libraries/types#user, User>> | *Optional.* The currently authenticated user. Omitted when no user is logged in.
+| principals | <<../libraries/types#principal-key, PrincipalKey>>[] | *Optional.* Principal keys (users, groups, and roles) attached to the authentication info.
 |===
 
 [#ContextUserParams]
@@ -275,4 +275,4 @@ Attributes are read and written through different value sets, so the two directi
 
 *Writing* — `<<ContextParams, ContextParams>>.attributes`, passed to `run()` — takes `number`, `string` and `boolean`. An object value is accepted and is visible to Java code reading the context, but it is not part of what `get()` returns.
 
-`get()` merges every store it reads from: attributes set on the context — by `run()` or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. And unlike attributes passed to `run()`, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.
+`get()` merges every store it reads from: attributes set on the context — by `run()` or by the platform — win over local-scope attributes with the same key, which in turn win over session attributes. Attributes the platform sets are documented where they apply; a task started by the scheduler, for instance, finds the previous run's task id in `schedule.lastTaskId`, see <<../background/scheduler#last-task-id, What a scheduled task receives>>. And unlike attributes passed to `run()`, which are scoped to the callback, a local-scope attribute stays readable after the call that wrote it returns.

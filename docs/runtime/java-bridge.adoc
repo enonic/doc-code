@@ -11,9 +11,9 @@ In Enonic XP, there is a global object named `+__+` (double underscore), accessi
 a way to wrap Java objects in a JavaScript object. The `+__+` object has functions that allow JavaScript to communicate with Java
 classes. The ``newBean`` function will wrap the Java object named in the parameter, for instance:
 
-[source,javascript]
+[source,typescript]
 ----
-var bean = __.newBean('com.enonic.xp.lib.io.IOHandlerBean');
+const bean = __.newBean('com.enonic.xp.lib.io.IOHandlerBean');
 ----
 
 This line is from the `lib-io` library, which is a good example of how this is used. In the Java ``IOHandlerBean`` class, there are several
@@ -31,11 +31,11 @@ public List<String> readLines( final Object value )
 
 This method is now accessible as a function on the JavaScript `bean` and may be invoked from JavaScript, like this:
 
-[source,javascript]
+[source,typescript]
 ----
-exports.readLines = function (stream) {
+export function readLines(stream) {
   return __.toNativeObject(bean.readLines(stream));
-  };
+}
 ----
 
 This results in a global JavaScript function ``readLines``. This example also shows the use of the ``toNativeObject`` method, which in
@@ -49,33 +49,44 @@ Java objects constructed by `newBean` may, but not required to, implement `com.e
 There are 2 ways to pass parameters to a Java method, from JavaScript:
 
 - Passing the parameters in the method call
-- Setting the parameters as properties in the Java object, and then calling the method without parameters
+- Calling a setter on the Java object for each parameter, and then calling the method without parameters
 
 The first one is recommended when there are few parameters (1 or 2) and of simple types.
 The second one is better when there are multiple parameters, or some of them are optional.
 
-[source,javascript]
+[source,typescript]
 ----
-exports.doSomething = function (param1, param2) {
-    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
+export function doSomething(param1, param2) {
+    const bean = __.newBean('com.enonic.lib.mylib.MyClass');
 
     return bean.execute(param1, param2);
-};
+}
 
-exports.doSomethingElse = function (params) {
-    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
+export function doSomethingElse(params) {
+    const bean = __.newBean('com.enonic.lib.mylib.MyClass');
 
-    bean.text = __.nullOrValue(params.text) || '';
-    bean.size = __.nullOrValue(params.size) || 250;
+    bean.setText(__.nullOrValue(params.text) || '');
+    bean.setSize(__.nullOrValue(params.size) || 250);
 
     return bean.execute();
-};
+}
 ----
 
 NOTE: When passing values that might be `null` or `undefined` it is recommended to filter them using the `__.nullOrValue` built-in function.
 This function converts any value that is `null` or `undefined` in JavaScript to `null` in Java. Otherwise returns the input value without changes.
 
-To be able to set property values as in the 2nd example above, the Java object must implement a setter method for each field.
+The Java object must implement a setter method for each parameter passed that way.
+
+[WARNING]
+====
+The setter must be called. Nashorn also accepted an assignment to a property named after the setter and rewrote it into a call to that setter, but GraalJS exposes no such property, and the assignment fails with an `Unknown identifier` error. See <<engines#graaljs-interop, Java interop>>.
+
+[source,typescript]
+----
+bean.setText('value');   // supported on both engines
+bean.text = 'value';     // Nashorn only; fails on GraalJS
+----
+====
 
 The Java class used in the example above looks like this:
 
@@ -116,16 +127,33 @@ There are some type conversions that are made when calling from JavaScript to Ja
 - when passing a JavaScript `array`, the Java method should expect a Java `List`
 - when passing a JavaScript `object`, the Java method should expect a Java `Map<String, Object>`
 
+The argument must already be of the type the method declares. Nashorn coerced it where the two differed; GraalJS does not. HTTP request parameters, for instance, always arrive as strings and must be parsed before they are passed to a parameter declared as a number. Objects and arrays are handed over as a Java map or list by converting them first.
+
+[source,typescript]
+----
+bean.setSize(parseInt(req.params.size, 10));       // a Java Long
+bean.setConfig(__.toScriptValue(params.config));   // a Java Map
+----
+
 
 === Returning results from Java
 
 When returning simple values from Java to a JavaScript caller, the same type conversions applies.
 
+Complex values are not converted. A Java map returned to JavaScript remains a Java object, and inspecting it with the standard JavaScript operations reports the methods of its class rather than its entries. It is converted once, in the module that makes the call, as the `readLines` example above does.
+
+[source,typescript]
+----
+const config = __.toNativeObject(bean.getConfig());
+----
+
+See <<engines#graaljs-interop, Java interop>>.
+
 To return complex object values, you should create a specific Java class to make the mapping. This class should implement the ``MapSerializable`` interface.
 It will implement the ``serialize`` method, which allows generating a JSON object.
 
 .Serialization example
-[source,javascript]
+[source,java]
 ----
 package com.enonic.lib.mylib;
 
@@ -184,7 +212,7 @@ Add a disposer that is called when the app is stopped.
 
 WARNING: image:xp-810.svg[XP 8.1.0,opts=inline] Register disposers while the application is starting — from <<main#, `main.ts`>>, or from a module it loads during start-up. Registering from anywhere else is not supported.
 
-NOTE: GraalJS is a image:preview.svg[Preview,opts=inline] preview engine and *not for production* — see <<runtime#graaljs, GraalJS preview>>. Follow the start-up rule above regardless: it is the portable one.
+NOTE: GraalJS is a image:preview.svg[Preview,opts=inline] preview engine and *not for production* — see <<engines#graaljs, GraalJS>>. Follow the start-up rule above regardless: it is the portable one.
 
 NOTE: Nashorn keeps only the most recent registration per module, so a module that calls `+__.disposer+` twice loses the first callback. Combine clean-up into a single disposer.
 

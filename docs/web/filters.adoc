@@ -2,29 +2,74 @@
 :toc: right
 :imagesdir: ../images
 
-HTTP filters enable pipelined processing of http requests.
+A filter is a function that runs around a request handler. It receives the request and a `next` function, may inspect or change the request before calling `next(req)`, and may inspect or change the response `next()` returns before handing it back. A filter that does not call `next()` answers the request itself.
 
 [#http-filter]
-== Filters
+== The filter contract
 
-NOTE: You may wire a filter into the Site service's execution pipeline via a <<sites/mappings#, Site mapping>>.
-
-Filters enable you to step into the request pipeline, and execute code at both request and response of the execution pipeline, possibly intercepting the request directly.
-Similar to an <<request-response#, HTTP function>>, standalone filters are triggered based on an export.
-
-As such, to make a filter, it must export a `filter` function:
+A filter module exports a single function named `filter`:
 
 .Minimal filter timing the subsequent request
-[source,js]
+[source,typescript]
 ----
-exports.filter = function (req, next) {
-    var before = new Date().getTime();
-    var response = next(req);  // next(req) hands over the request to the pipeline and returns the response
-    var after = new Date().getTime();
-    log.info((after - before) + 'ms');
+export function filter(req, next) {
+    const before = Date.now();
+    const response = next(req);  // next(req) hands over the request to the pipeline and returns the response
+    log.info(`${Date.now() - before}ms`);
     return response;
-};
+}
 ----
+
+`req` is the <<request-response#, request object>>, and `next()` returns a <<request-response#, response object>>. The same module works wherever a filter is wired, and it can be wired in two ways.
+
+[#site]
+== In the site service
+
+The site service invokes filters for you. A <<sites/mappings#, site mapping>> with a `filter:` property names the module, and a `pattern:` or `match:` decides which requests it applies to:
+
+.cms/site.yaml
+[source,yaml]
+----
+kind: "Site"
+mappings:
+- filter: "/cms/filters/timing.ts"
+  pattern: '/.*'
+  order: 10
+----
+
+For a request, the site service collects the matching filter mappings from every app on the site, sorts them by `order`, and calls the first one. Its `next()` runs the second, and so on down to the page or controller mapping that produces the response. The response then passes back up through the same filters in reverse: code after `next()` in the first filter runs last. A response with `applyFilters: false` stops this: no further filters or <<sites/processors#, response processors>> run on it.
+
+Two things follow from the site service being in charge of `next()`:
+
+* *Only the documented request fields cross `next()`.* The site service rebuilds the request from the object you pass, reading the <<request-response#, documented fields>> and nothing else. Assigning a property of your own, such as `+req.myFlag = true+`, is not an error, but the field is dropped, so nothing downstream sees it. To pass your own data along the pipeline, use image:xp-810.svg[XP 8.1.0,opts=inline] <<../libraries/lib-context#setcustomlocalattribute, `setCustomLocalAttribute()`>>: it stores the value in the current execution, where implementations, response processors and the code after `next()` in this very filter can all read it back.
+* *A filter can re-route rendering.* Assigning `contentPath` before `next()` makes the site service render another content at the same address. See <<sites/mappings#reroute, Re-routing to another content>>.
+
+[#explicit]
+== In webapps, APIs and admin tools
+
+The other services have no filter mappings. Nothing invokes a filter for you there, and the same module is wired by calling it from the handler:
+
+.A webapp handler wrapped in a filter
+[source,typescript]
+----
+import {filter as requireToken} from '/filters/require-token';
+
+function handle(req) {
+    return {body: 'hello'};
+}
+
+export function GET(req) {
+    return requireToken(req, handle);
+}
+----
+
+To run several filters, or to combine them with routing, use https://market.enonic.com/vendors/enonic/router-lib[lib-router]: `router.filter(fn)` adds a filter to the chain in front of every route, with the same `(req, next)` signature.
+
+Because `next()` is now a plain function, the request is the same object all the way through. Properties you assign survive into the handler, and `contentPath` has no effect: re-routing is a site service feature.
+
+== Examples
+
+The examples below work in both modes.
 
 .Filter logging the request and the response
 [source,typescript]
@@ -37,65 +82,41 @@ export function filter(req, next) {
 }
 ----
 
-WARNING: Only the documented <<request-response#, request and response>> fields cross the `next()` boundary. Assigning a property of your own — `+req.myFlag = true+` — is not an error, but the field is dropped when the request is handed on, so nothing downstream ever sees it. To pass your own data along the pipeline, use image:xp-810.svg[XP 8.1.0,opts=inline] <<../libraries/lib-context#setcustomlocalattribute, `+context.setCustomLocalAttribute()+`>>: it stores the value in the current execution, where implementations, <<sites/processors#, response processors>> and the code after `next()` in this very filter can all read it back.
-
 .Filter intercepting the request
-[source,js]
+[source,typescript]
 ----
-exports.filter = function (req, next) {
-
+export function filter(req, next) {
     if (req.getHeader('X-Auth-Token') !== 'letMeIn') {
         // intercept request pipeline
         return {
             status: 403
-        }
+        };
     }
 
     req.headers['Authenticated'] = true;
     return next(req);
-};
+}
 ----
 
 .Filter changing request params
-[source,js]
-----
-exports.filter = function (req, next) {
-    req.params = {
-            param1: 'val', // if param1 was not in the original request it will be added, otherwise the original value will be replaced
-            param2: null, // remove param2 from the original request
-            param3: [] // another way to remove a parameter
-        }
-    return next(req);
-};
-----
-
-[#reroute]
-== Re-routing to another content
-
-image:xp-810.svg[XP 8.1.0,opts=inline] A filter reached through a <<sites/mappings#, site mapping>> can change *which content is rendered*, while the address the visitor asked for stays exactly as it was. Set `contentPath` on the request before handing it on, and the site service resolves the request against that content instead:
-
-.Render a variant content at the canonical URL
 [source,typescript]
 ----
 export function filter(req, next) {
-    if (req.cookies.experiment === 'b') {
-        // Visitors in the experiment get /mysite/campaign/variant-b,
-        // still under the /mysite/campaign address they asked for
-        req.contentPath = `${req.contentPath}/variant-b`;
-    }
-
+    req.params = {
+        param1: 'val', // if param1 was not in the original request it will be added, otherwise the original value will be replaced
+        param2: null,  // remove param2 from the original request
+        param3: []     // another way to remove a parameter
+    };
     return next(req);
 }
 ----
 
-This is a rendering re-route, not a redirect: no `Location` header, no second request, and `path`, `url` and the client's address bar are untouched. Downstream, the request describes the new content — <<../libraries/lib-portal#getcontent, `getContent()`>> returns it, and its page or page template is resolved and rendered as though it had been requested directly. Only the target moves, so a re-route cannot leave the current project or branch: the new path is looked up in the same repository and branch, and the site is re-derived from it.
-
-A few things to keep in mind:
-
-* *Pass on the request you were given.* Mutate `req` and hand that object to `next()`. Building a fresh object instead drops the fields the site service depends on, and the re-route does not take effect.
-* *The re-routed content's permissions apply.* The lookup itself is privileged, so a filter can target content the visitor cannot read — but the response then fails with `403`, as it would have on a direct request. A path that resolves to nothing yields `404`, naming the path the filter set.
-* *Mappings are already chosen.* Which mappings match is decided before any filter runs, from the originally requested content. A re-route does not re-run that matching, so it neither picks up mappings that would match the new content nor cancels the ones already selected — the remaining filters and any controller mapping in the chain simply receive the re-routed request.
-* *Each filter may re-route once*, starting from whatever the previous filter passed it. Inside the filter that re-routes, both before and after `next()`, `getContent()` still reports the original content — the change applies to the request handed onwards.
-
-TIP: Build the new path from values you control rather than interpolating a query parameter straight into it — a content path is a lookup key, and path segments have their own validation rules.
-
+.Filter adding a response header
+[source,typescript]
+----
+export function filter(req, next) {
+    const response = next(req);
+    response.headers = {...response.headers, 'X-Served-By': app.name};
+    return response;
+}
+----

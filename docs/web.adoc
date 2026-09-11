@@ -15,7 +15,7 @@ image::common-pipeline.svg[Common HTTP request pipeline, 500px]
 
 Vhost filters:: Request routing based on https://developer.enonic.com/docs/platform/xp8/config/vhosts[virtual hosts].
 
-Platform filters:: Optional system-level request filters. Implemented in Java as OSGi components — a platform extension mechanism, not part of the JS/TS app surface.
+Platform filters:: Optional system-level request filters. Implemented in Java as OSGi components — a platform extension mechanism, not part of the JS/TS app surface. App-level <<web/filters#, HTTP filters>> are something else: JavaScript functions that the site service runs from mappings, and that other services call explicitly.
 
 Autologin filter:: The https://developer.enonic.com/docs/platform/xp8/config/system#idprovider[virtual host contextual ID provider] is invoked, unless a user already exists in the context.
 

@@ -167,8 +167,8 @@ An administrator then enables the endpoint per vhost by listing the flow — `+e
 == Sample
 The code below demonstrates how an ID provider may be implemented
 
-.Sample idprovider.js
-[source,javascript]
+.Sample idprovider.ts
+[source,typescript]
 ----
-include::code/idprovider.js[]
+include::code/idprovider.ts[]
 ----

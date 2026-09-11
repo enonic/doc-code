@@ -6,7 +6,7 @@ The XP framework also supports execution of asynchronous (potentially long runni
 
 Tasks may be executed as inline functions, or as named tasks. Named tasks are defined by creating a folder, e.g. `src/main/resources/tasks/<taskname>`, in your project.
 
-WARNING: Inline function tasks - <<../libraries/lib-task#executefunction, `executeFunction()`>> - are deprecated since XP 8.1 and will be removed together with the Nashorn engine. They are also unsupported on the <<../fundamentals/runtime#graaljs, GraalJS preview>>. Use named tasks; see <<../upgrade/8-1#, Upgrading from XP 8.0 to 8.1>> for how to convert one.
+WARNING: Inline function tasks - <<../libraries/lib-task#executefunction, `executeFunction()`>> - are deprecated since XP 8.1 and will be removed together with the Nashorn engine. They are also unsupported on the <<../runtime/engines#graaljs, GraalJS>>. Use named tasks; see <<../upgrade#xp-8-1, XP 8.1 upgrade notes>> for how to convert one.
 
 == Descriptor
 Named tasks requires a descriptor file.
@@ -38,14 +38,14 @@ A named task's implementation lives at `src/main/resources/tasks/<taskname>/<tas
 .Example task implementation
 [source,typescript]
 ----
-const taskLib = require('/lib/xp/task');
+import {progress} from '/lib/xp/task';
 
-exports.run = (params, taskId) => {
+export function run(params, taskId) {
     const count = params.count || 42;
-    taskLib.progress({ info: `Initializing task ${taskId}` });
+    progress({ info: `Initializing task ${taskId}` });
 
     for (let i = 0; i < count; i++) {
-        taskLib.progress({
+        progress({
             info: `Processing item ${i + 1}`,
             current: i,
             total: count
@@ -53,8 +53,8 @@ exports.run = (params, taskId) => {
         processItem(i);
     }
 
-    taskLib.progress({ info: `Task completed ${taskId}` });
-};
+    progress({ info: `Task completed ${taskId}` });
+}
 ----
 
 == Execution
@@ -64,9 +64,9 @@ Named tasks may be submitted from any module in the app. Applications may even r
 .Sample execution of a named task
 [source,typescript]
 ----
-const taskLib = require('/lib/xp/task');
+import {submitTask} from '/lib/xp/task';
 
-const taskId = taskLib.submitTask({
+const taskId = submitTask({
     descriptor: 'mytask',
     config: {
         count: 10
@@ -88,7 +88,7 @@ If you need such check, use inline function task instead.
 
 NOTE: Nodes that do not accept distributable tasks execution are still capable to submit them.
 
-NOTE: For fine-grained control which nodes should be capable to execute distributable tasks use https://developer.enonic.com/docs/platform/stable/deployment/config#application[Application] filter config or local apps. Or disable execution of named tasks entirely on some nodes by https://developer.enonic.com/docs/platform/stable/deployment/config#task[Task] config.
+NOTE: For fine-grained control which nodes should be capable to execute distributable tasks use https://developer.enonic.com/docs/platform/stable/config/system#application[Application] filter config or local apps. Or disable execution of named tasks entirely on some nodes by https://developer.enonic.com/docs/platform/stable/config/system#task[Task] config.
 
 == API
 

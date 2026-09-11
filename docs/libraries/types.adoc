@@ -9,7 +9,7 @@ This page is the canonical reference for the cross-library types.
 
 principals, binary streams, the content object, page components, and more. They are defined once in the `@enonic-types/core` package and re-exported by the individual `@enonic-types/lib-*` packages, so the same `User`, `Content`, or `ByteSource` you receive from one library is the exact type another library accepts.
 
-Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <<typescript#, TypeScript>>.
+Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <<../tooling/typescript#, TypeScript>>.
 
 NOTE: These are the TypeScript shapes of the runtime objects. The conceptual models behind them — the content model, the query language, form schemas — are documented in the https://developer.enonic.com/docs/cms[CMS] and https://developer.enonic.com/docs/platform[XP platform] docs, linked from the relevant types below.
 
@@ -110,7 +110,7 @@ Properties
 [#byte-source]
 === ByteSource
 
-An opaque handle to a binary stream. You don't read its fields directly — you pass it to library functions (for example `+io.readText+`, `+io.getSize+`, attachment and media APIs) that consume or produce binary data. Obtain one from `<<../libraries/lib-io#, lib-io>>` (`newStream`, a resource stream) or from content attachments.
+An opaque handle to a binary stream. You don't read its fields directly — you pass it to library functions (for example `+io.readText+`, `+io.getSize+`, attachment and media APIs) that consume or produce binary data. Obtain one from `<<lib-io#, lib-io>>` (`newStream`, a resource stream) or from content attachments.
 
 [#resource]
 === Resource

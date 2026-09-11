@@ -16,7 +16,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-app` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-app` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Functions
 
@@ -368,7 +368,7 @@ Properties
 [grid="none"]
 |===
 | Name                      | Type       | Description
-| data                      | <<../fundamentals/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
+| data                      | <<../libraries/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
 | mimeType                  | string     | Icon MIME type
 | modifiedTime              | string     | *Deprecated.* Icon modified time, ISO-8601 instant. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read
 
