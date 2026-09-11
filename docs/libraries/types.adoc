@@ -277,7 +277,7 @@ Properties
 
 == Page and components
 
-A content's `page` (and a fragment's `fragment`) is a tree of components. Every component carries a `type` discriminant — one of `'page'`, `'layout'`, `'part'`, `'text'`, or `'fragment'`. There is no separate `Page` type: the page-level node is a <<page-component, PageComponent>>.
+A content's `page` (and a fragment's `fragment`) is a tree of components. Every component carries a `type` discriminant — one of `'page'`, `'layout'`, `'part'`, `'text'`, or `'fragment'`. There is no separate `Page` type: the page-level node is a <<page-component, PageComponent>>. The same tree is what <<../libraries/lib-content#pages-and-components, lib-content>> takes when creating or updating a page; `path` and a region's `name` are set by XP when the page is stored and are ignored on input.
 
 [#component]
 === Component
@@ -297,11 +297,11 @@ Properties
 |===
 | Name | Type | Description
 | type | string | Always `'page'`.
-| descriptor | string | Descriptor key of the page component (e.g. `com.myapp:main`).
-| config | object | The component's configuration, shaped by the descriptor.
-| regions | object | Map of region name to <<region, Region>>.
+| descriptor | string | *Optional.* Descriptor key of the page component (e.g. `com.myapp:main`). Absent when the page uses a template; mutually exclusive with `template`.
+| config | object | *Optional.* The component's configuration, shaped by the descriptor.
+| regions | object | *Optional.* Map of region name to <<region, Region>>.
 | path | string | Component path; always `/` for the page root.
-| template | string | *Optional.* Page template key, when the page uses a template.
+| template | string | *Optional.* Id of the page template the page uses; mutually exclusive with `descriptor`.
 |===
 
 [#layout-component]

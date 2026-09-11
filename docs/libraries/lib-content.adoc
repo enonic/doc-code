@@ -156,7 +156,7 @@ To create a content where `name` is not important and there could be multiple in
 | language | string | *Optional.* The language tag representing the content's locale.
 | childOrder | string | *Optional.* Default ordering of children when doing `getChildren` if no order is given in query.
 | data | object | Actual content data.
-| page | object | *Optional.* Content <<../libraries/types#page-component, page>>.
+| page | object | *Optional.* The content's <<../libraries/types#page-component, page>> — see <<pages-and-components, Pages and components>>.
 | x | object | *Optional.* eXtra data to use.
 | idGenerator | function | *Optional.* Function used to generate the id-suffix appended to the content name. Only called when `name` is auto-generated from `displayName` and the generated name is already taken.
 | workflow | <<../libraries/types#workflow, Workflow>> | *Optional.* Workflow information to use. Defaults to `{ state: "READY" }`.
@@ -1338,7 +1338,7 @@ Only these properties are read back from the object the editor returns:
 | language | string | The language tag representing the content's locale.
 | data | object | The main data (properties) of the content, according to its content type.
 | x | object | Extra data (x-data) associated with the content.
-| page | object | The <<../libraries/types#page-component, page>> configuration, including regions and components.
+| page | object | The <<../libraries/types#page-component, page>> as stored — see <<pages-and-components, Pages and components>>. Applied key by key: `descriptor`, `template`, `config` and `regions` each replace what is stored when present, keep it when left out, and clear it when set to `null`. Assign `null` to the whole `page` to remove it.
 |===
 
 IMPORTANT: Any other property assigned inside the editor is *silently ignored* — no error is thrown, and the returned content reflects the unchanged value. Notably, setting `workflow` or `publish` in the editor worked in XP 7 but has no effect in XP 8. Use the dedicated functions instead:
@@ -1578,7 +1578,7 @@ NOTE: Unlike <<update, update()>>, `patch` does no bookkeeping of its own: workf
 | valid | boolean | Sets the content's validity status.
 
 | data | object | A JSON object containing the main data (properties) of the content, according to its content type.
-| page | object | A JSON object describing the <<../libraries/types#page-component, page>> configuration including regions and components.
+| page | object | The <<../libraries/types#page-component, page>> — see <<pages-and-components, Pages and components>>. Replaces the stored page as a whole.
 | x | object | A JSON object containing extra data (x-data) associated with the content.
 
 | owner | string | The owner of the content. Must be a PrincipalKey string.
@@ -2561,6 +2561,118 @@ const expected = [
     "e1f57280-d672-4cd8-b674-98e26e5b69ae"
 ];
 ----
+
+[#pages-and-components]
+== Pages and components
+
+The `page` property of <<create, create()>>, <<update, update()>> and <<patch, patch()>> takes the same tree that <<get, get()>> returns for a content's page — a <<../libraries/types#page-component, PageComponent>> whose `regions` hold <<../libraries/types#layout-component, layouts>>, <<../libraries/types#part-component, parts>> and <<../libraries/types#text-component, text>>. It takes one of three forms:
+
+* `{}` — no page of its own. The content renders through whatever page template its content type resolves to.
+* `{ type: 'page', template: '<id>' }` — a specific page template, referenced by the id of the template content.
+* A full page — a `descriptor`, its `config`, and `regions` holding the components.
+
+`descriptor` and `template` are mutually exclusive; a page with both is rejected. Each component needs a `type`; a component without one, or with a type other than `layout`, `part`, `text` or `fragment`, is rejected. Regions are keyed by name, and a layout carries its own `regions` in the same shape as the page. `path` — and a `name` inside a region — are set by XP when the page is stored and are ignored on input.
+
+The tree is a view. As raw node properties, a page is persisted as a flat `components` list — one entry per component, carrying its `path`, its `type`, and a block named after the type — and lib-content converts between the two on every read and write. The flat list is what Guillotine's `components` field exposes, and what you see when reading the content's node directly; its shape is described in the https://developer.enonic.com/docs/cms/stable/pages/indexing[CMS documentation]. It is a read-only view for application code: always write content through this library, which validates the page against its descriptors and applies the rest of the content logic — never through <<../libraries/lib-node#, lib-node>>, which bypasses all of it. Templates are the other difference between the reading APIs: <<get, get()>> returns the page as stored, so a content that uses a template has `template` and no regions, while <<../libraries/lib-portal#getcontent, `getContent()`>> in lib-portal returns the page as rendered, with the template's components in place.
+
+NOTE: A property of the wrong type is dropped silently rather than rejected — a `descriptor` that is not a string leaves the page without a descriptor, and a `config` that is not an object leaves the component without one. Check the returned content when a page does not come out as expected.
+
+.Creating a content with a page
+[source,typescript]
+----
+import {create} from '/lib/xp/content';
+
+const article = create({
+    parentPath: '/mysite/articles',
+    displayName: 'Hello',
+    contentType: 'com.myapp:article',
+    data: {
+        title: 'Hello'
+    },
+    page: {
+        type: 'page',
+        descriptor: 'com.myapp:article',
+        config: {
+            theme: 'dark'
+        },
+        regions: {
+            main: {
+                components: [
+                    {
+                        type: 'layout',
+                        descriptor: 'com.myapp:two-column',
+                        regions: {
+                            left: {
+                                components: [
+                                    {
+                                        type: 'part',
+                                        descriptor: 'com.myapp:teaser',
+                                        config: {
+                                            limit: 3
+                                        }
+                                    }
+                                ]
+                            },
+                            right: {
+                                components: [
+                                    {
+                                        type: 'text',
+                                        text: '<p>Welcome</p>'
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+});
+----
+
+The stored page comes back with a `path` on every component — `/main/0` for the layout, `/main/0/left/0` for the part — which is how <<../libraries/lib-portal#, `getComponent()`>> and component URLs address them.
+
+The three writing functions treat the object differently. `create()` and `patch()` take it whole: what you pass is the page. `update()` applies it *key by key* — the editor receives the page as stored, and of `descriptor`, `template`, `config` and `regions`, each key present in what the editor returns replaces the stored value, a key left out keeps it, and a key set to `null` clears it. Since `descriptor` and `template` are exclusive, switching from one to the other means clearing the other in the same edit, or the update is rejected. Assigning `null` to `page` itself removes the page, so the content falls back to the template its content type resolves to.
+
+There is no way to address a single component; the unit written is the tree. In practice the editor's round trip makes this a small edit — walk to the component in the stored tree, change it, and return the tree. The stored shape is accepted as input as it is, since `path` and a region's `name` are ignored.
+
+.Editing one component and appending another
+[source,typescript]
+----
+import {update} from '/lib/xp/content';
+
+update({
+    key: '/mysite/articles/hello',
+    editor: (c) => {
+        const layout = c.page.regions.main.components[0];
+        layout.regions.left.components[0].config.limit = 5;
+        c.page.regions.main.components.push({
+            type: 'text',
+            text: '<p>New paragraph</p>'
+        });
+        return c;
+    }
+});
+----
+
+.Switching a page from its own descriptor to a template
+[source,typescript]
+----
+import {update} from '/lib/xp/content';
+
+update({
+    key: '/mysite/articles/hello',
+    editor: (c) => {
+        c.page.template = '79e21db0-5b43-45ce-b58c-6e1c420b22bd';
+        c.page.descriptor = null;
+        c.page.regions = null;
+        c.page.config = null;
+        return c;
+    }
+});
+----
+
+Clearing `regions` and `config` as well hands rendering entirely to the template. A page that keeps `template` and also carries `regions` or `config` of its own is valid — at render time they take the place of the template's, which is how a templated page is customized.
 
 == Type Definitions
 

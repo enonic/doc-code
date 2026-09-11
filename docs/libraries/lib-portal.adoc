@@ -368,6 +368,8 @@ const expected = {
 
 Returns the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.
 
+The content's `page` is the page as rendered: where the content uses a page template, the template's components are in place. For the page as stored, and for how the tree relates to the flat `components` list XP persists, see <<../libraries/lib-content#pages-and-components, Pages and components>>.
+
 The content follows the request's `contentPath`, so when a <<../web/sites/mappings#reroute, site mapping filter>> has re-routed rendering, this returns the content the request was re-routed to.
 
 [.lead]
