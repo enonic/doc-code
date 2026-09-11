@@ -12,7 +12,7 @@ Set the platform version in _gradle.properties_ to the release you are targeting
 
 [source,properties]
 ----
-xpVersion = 8.1.0
+xpVersion = 8.2.0
 ----
 
 TypeScript projects also need the matching type definitions, or the parameters and functions added in the release will not type-check:
@@ -22,8 +22,8 @@ TypeScript projects also need the matching type definitions, or the parameters a
 ----
 {
   "devDependencies": {
-    "@enonic-types/global": "^8.1.0",
-    "@enonic-types/lib-content": "^8.1.0"
+    "@enonic-types/global": "^8.2.0",
+    "@enonic-types/lib-content": "^8.2.0"
   }
 }
 ----
@@ -33,6 +33,23 @@ Then rebuild and deploy:
   enonic project deploy
 
 The app builds and runs. What follows is work that can be done at your own pace.
+
+[#xp-8-2]
+== XP 8.2
+
+No breaking changes for application code. The rest of this section concerns ID provider implementations.
+
+=== autoLogin may run where it did not before
+
+`autoLogin` now runs for every ID provider enabled on the request's virtual host - the `default` provider first - until one of them authenticates the request or returns a response. Previously only the `default` provider's `autoLogin` ran, so a provider configured as `enabled` will now have its `autoLogin` called on requests where it never ran before. Implementations that quietly return when they find no credentials to act on - the common shape - need no change.
+
+=== Worth adopting: flow gating
+
+A vhost may now restrict the flows an ID provider serves. XP enforces `login`, `autologin` and `logout` itself, and hands the configured list to the implementation as `request.idProviderFlows` - absent when no restriction applies. An ID provider with custom `GET`/`POST` endpoints can gate additional flows of its own on it, letting administrators enable or disable those endpoints per vhost - the Standard ID Provider gates its (deprecated) basic authentication on the additional `basic` flow this way. See <<web/id-providers#flows, Flows>>.
+
+=== Deprecations
+
+For code reaching the `VirtualHost` Java API through the <<runtime/java-bridge#, Java bridge>>: `getIdProviderKeys()` is deprecated in favor of `getIdProviders()` - a map of the enabled ID providers to their per-vhost configuration (flow lists today), the default provider first.
 
 [#xp-8-1]
 == XP 8.1
