@@ -7,9 +7,11 @@ An *Enonic application* is a named package of functionality that XP installs, st
 An app may contain nothing but CMS schemas, or JavaScript that serves a site or an API, or Java components, or all of these. This documentation covers apps that contain code. Modelling content with schemas is covered in the https://developer.enonic.com/docs/cms/stable[CMS documentation], and installing and operating apps in the https://developer.enonic.com/docs/platform/stable/apps[platform documentation].
 
 [#name]
-== Name
+== Name and namespace
 
-Every app has a unique name, such as `com.example.myapp`. Reverse-DNS is the convention. The name acts as the namespace for the app: it is the prefix that identifies everything the app ships, so two apps can both have an `article` content type without colliding.
+Every app has a unique name, such as `com.example.myapp`. Reverse-DNS is the convention. When installed, the app claims a *namespace* matching its name. The resources it contributes belong to this namespace; no separate namespace declaration is needed.
+
+For example, an `article` content type contributed by `com.example.myapp` is identified as `com.example.myapp:article`. Another app can contribute its own `article` type without a collision because it has a different namespace. The same application name identifies resources across the app's functionality:
 
 [cols="1,2", options="header"]
 |===
@@ -33,6 +35,8 @@ Every app has a unique name, such as `com.example.myapp`. Reverse-DNS is the con
 | Modules
 | `require()` resolves within the app that calls it; see <<runtime#modules_and_bundling, Modules>>
 |===
+
+See the https://developer.enonic.com/docs/cms/stable/schemas/namespaces[CMS namespace reference] for schema identifier rules and how namespaces are represented in stored content and APIs.
 
 Platform-provided types use the reserved names `base`, `portal` and `media`, as in `base:folder`, `portal:site` and `media:image`. No app can take these names.
 
