@@ -32,7 +32,7 @@ The schemas are registered when the app is installed and become available immedi
 
 == File structure
 
-Schemas must be placed under `src/main/resources/cms/`, with one folder per kind:
+Schemas live under `/cms` relative to the app's resource root, with one folder per kind. In a Gradle project, `src/main/resources` is the app resource root, so `/cms` corresponds to `src/main/resources/cms/` in the project:
 
 [source,text]
 ----

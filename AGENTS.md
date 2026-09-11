@@ -36,7 +36,7 @@ Avoid:
 
 Prefer flowing prose over mechanical substitution. *"The implementation must export `X`"* usually reads better than *"the implementation file must export `X`"*. Once a path is on the page, *"the file"* is fine for back-references. Drop the noun where the role already carries it: *"the webapp is reachable at..."*, *"the task receives a `params` object..."*.
 
-Code examples are TypeScript only — runtime transpilation makes raw JavaScript misleading.
+Code examples are TypeScript only.
 
 ### External references
 When referencing separately documented components, provide a brief summary and link:

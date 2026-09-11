@@ -73,7 +73,7 @@ settings.gradle:: Mandatory file to boostrap the build process
 
 === General resources
 
-The majority of Enonic specific code is placed within `src/main/resources/`:
+In a Gradle project, `src/main/resources/` is the app resource root. Paths within the app are relative to this directory: for example, `/cms/content-types/article/article.yaml` corresponds to `src/main/resources/cms/content-types/article/article.yaml` in the project. The folders below are relative to this resource root:
 
 admin/tools/:: Admin tools are defined here. Tools are administrative apps listed in the admin console menu.
 

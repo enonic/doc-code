@@ -6,7 +6,7 @@ What powers your Enonic app at execution time - the JVM-hosted JavaScript engine
 
 == Execution model
 
-Enonic XP runs on top of the Java Virtual Machine. Your app's TypeScript and JavaScript files are executed by an embedded JavaScript engine, with full access to the JVM through the <<runtime/java-bridge#, Java bridge>>. There is no Node.js, no separate JS process, and no inter-process bridge — server-side JS runs inside the same JVM as the platform itself.
+Enonic XP runs on top of the Java Virtual Machine. Your app's packaged JavaScript modules are executed by an embedded JavaScript engine, with full access to the JVM through the <<runtime/java-bridge#, Java bridge>>. TypeScript source files must be compiled to JavaScript before deployment. There is no Node.js, no separate JS process, and no inter-process bridge — server-side JS runs inside the same JVM as the platform itself.
 
 Two engines are available:
 
@@ -20,13 +20,15 @@ An app declares its engine in _build.gradle_; see <<runtime/engines#choosing, Ch
 
 Every module runs in ECMAScript *strict mode*, on both engines.
 
-Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Transpile to ES5 - that is what the official starters do. See <<tooling/typescript#, TypeScript>> for the build step.
+Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Target ES5 when building for Nashorn.
 
-GraalJS implements the current ECMAScript standard. Code transpiled to ES5 runs on either engine, which makes it the portable choice while GraalJS is in preview.
+GraalJS supports modern ECMAScript, so the build can preserve newer JavaScript syntax. TypeScript must still be compiled to JavaScript for either engine. See <<tooling/typescript#ecmascript-target, ECMAScript target>> for the distinction between TypeScript compilation, the emitted JavaScript syntax, and the module format.
 
 == Modules and bundling
 
-Each `.ts` or `.js` file in your app is a module under the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS module specification]. Modules export values via `exports`, and consume other modules via `require()` — `import` and `export` statements are not supported at runtime, on either engine, see <<runtime/globals#esm, ECMAScript modules>>. Paths are rooted at the app bundle, not the filesystem — `require('/lib/greet')` loads `src/main/resources/lib/greet.ts` from the same app.
+Each `.ts` or `.js` source file is a module. At runtime, XP loads the packaged JavaScript modules under the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS module specification]. Modules export values via `exports`, and consume other modules via `require()` — `import` and `export` statements are not supported at runtime, on either engine, see <<runtime/globals#esm, ECMAScript modules>>.
+
+Paths are rooted at the app bundle. For example, `require('/lib/greet')` loads `lib/greet.js` from the same app's bundle. In a project with the source at `src/main/resources/lib/greet.ts`, the build transpiles that TypeScript module to JavaScript and packages it at this location.
 
 Platform libraries are referenced by name (for example, `require('/lib/xp/content')`). See <<runtime/functions#modules_and_the_bundle, Functions: Modules and the bundle>> for the full path-resolution rules and bundle boundaries.
 

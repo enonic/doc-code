@@ -25,16 +25,16 @@ Every module runs in ECMAScript *strict mode*, on both engines. Nothing about ho
 [#nashorn]
 == Nashorn
 
-Nashorn is the default and the supported engine, shipped with every XP release since 7.x. It implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Transpile to ES5 - that is what the official starters do. See <<../tooling/typescript#, TypeScript>> for the build step.
+Nashorn is the default and the supported engine, shipped with every XP release since 7.x. It implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Target ES5 when compiling TypeScript for Nashorn. See <<../tooling/typescript#ecmascript-target, ECMAScript target>> for build configuration.
 
 [#graaljs]
 == GraalJS
 
-image:preview.svg[Preview,opts=inline] GraalJS is the engine that will replace Nashorn. It implements the current ECMAScript standard, so modern syntax runs without down-levelling.
+image:preview.svg[Preview,opts=inline] GraalJS is the engine that will replace Nashorn. It supports modern ECMAScript, so the build can preserve newer JavaScript syntax. This does not add native TypeScript support: TypeScript must still be compiled to JavaScript before deployment. See <<../tooling/typescript#ecmascript-target, ECMAScript target>>.
 
 WARNING: GraalJS is not for production use. Nashorn remains the supported engine, and what follows may change while GraalJS is in preview.
 
-Code transpiled to ES5 runs on either engine, which makes it the portable choice while GraalJS is in preview: an app built that way can be moved across and back.
+ES5 remains a common syntax target when supporting both engines. An app must also account for the runtime and Java interoperability differences described below when switching engines.
 
 === Detecting the engine
 
