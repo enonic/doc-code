@@ -1525,14 +1525,16 @@ const result = updateWorkflow({
 
 === patch
 
-Patches a content
+Patches a content. This is an operations-level write, meant for content upgrades, migrations and repairs — as opposed to the everyday editing that <<update, update()>> is for.
 
 [WARNING]
 ====
-This is a low-level and potentially dangerous operation.
+`patch()` bypasses the checks that keep content consistent. It stores exactly what the patcher returns: no validation against the content type, no content processors, no change detection, and no stamping of `modifier`, `modifiedTime` or the workflow state — everything `update()` does on a genuine change. It also writes to every branch listed in `branches` in a single call, so a mistake can land in `master` without ever passing through publishing.
 
-It should be used with caution. Access is restricted to users with `admin` or `cms.admin` roles.
+Use it only from upgrade tasks and maintenance scripts, and use `update()` for anything an editor could have done in Content Studio. Access is restricted to users with the `admin` or `cms.admin` role.
 ====
+
+What the bypass buys: `patch()` can set the fields those mechanisms normally own — `creator`, `createdTime`, `modifier`, `modifiedTime`, `valid`, `workflow`, `publish`, `originProject`, … — and a fix applied to `draft` and `master` together needs no republish.
 
 [.lead]
 *Parameters:*
@@ -2632,7 +2634,7 @@ const article = create({
 
 The stored page comes back with a `path` on every component — `/main/0` for the layout, `/main/0/left/0` for the part — which is how <<../libraries/lib-portal#, `getComponent()`>> and component URLs address them.
 
-The three writing functions treat the object differently. `create()` and `patch()` take it whole: what you pass is the page. `update()` applies it *key by key* — the editor receives the page as stored, and of `descriptor`, `template`, `config` and `regions`, each key present in what the editor returns replaces the stored value, a key left out keeps it, and a key set to `null` clears it. Since `descriptor` and `template` are exclusive, switching from one to the other means clearing the other in the same edit, or the update is rejected. Assigning `null` to `page` itself removes the page, so the content falls back to the template its content type resolves to.
+The three writing functions treat the object differently. `create()` and `patch()` take it whole: what you pass is the page. `update()` applies it *key by key* — the editor receives the page as stored, and of `descriptor`, `template`, `config` and `regions`, each key present in what the editor returns replaces the stored value, a key left out keeps it, and a key set to `null` clears it. Since `descriptor` and `template` are exclusive, switching from one to the other means clearing the other in the same edit, or the update is rejected. Assigning `null` to `page` itself removes the page — it reads back as `{}` — so the content falls back to the template its content type resolves to.
 
 There is no way to address a single component; the unit written is the tree. In practice the editor's round trip makes this a small edit — walk to the component in the stored tree, change it, and return the tree. The stored shape is accepted as input as it is, since `path` and a region's `name` are ignored.
 
@@ -2673,6 +2675,8 @@ update({
 ----
 
 Clearing `regions` and `config` as well hands rendering entirely to the template. A page that keeps `template` and also carries `regions` or `config` of its own is valid — at render time they take the place of the template's, which is how a templated page is customized.
+
+A page edit is a content change like any other: through `update()` it resets the workflow state to `IN_PROGRESS`, so the content will not <<publish, publish>> until it is marked ready again with <<updateworkflow, updateWorkflow()>>; through `patch()` the workflow state is left as it was.
 
 == Type Definitions
 
