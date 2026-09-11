@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#name">Name</a></li>
+<li><a href="#name">Name and namespace</a></li>
 <li><a href="#what_an_app_can_contain">What an app can contain</a></li>
 <li><a href="#building_and_deploying">Building and deploying</a></li>
 <li><a href="#lifecycle">Lifecycle</a></li>
@@ -463,10 +463,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="name"><a class="link" href="#name">Name</a></h2>
+<h2 id="name"><a class="link" href="#name">Name and namespace</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every app has a unique name, such as <code>com.example.myapp</code>. Reverse-DNS is the convention. The name acts as the namespace for the app: it is the prefix that identifies everything the app ships, so two apps can both have an <code>article</code> content type without colliding.</p>
+<p>Every app has a unique name, such as <code>com.example.myapp</code>. Reverse-DNS is the convention. When installed, the app claims a <strong>namespace</strong> matching its name. The resources it contributes belong to this namespace; no separate namespace declaration is needed.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>article</code> content type contributed by <code>com.example.myapp</code> is identified as <code>com.example.myapp:article</code>. Another app can contribute its own <code>article</code> type without a collision because it has a different namespace. The same application name identifies resources across the app&#8217;s functionality:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -506,6 +509,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>See the <a href="https://developer.enonic.com/docs/cms/stable/schemas/namespaces">CMS namespace reference</a> for schema identifier rules and how namespaces are represented in stored content and APIs.</p>
+</div>
 <div class="paragraph">
 <p>Platform-provided types use the reserved names <code>base</code>, <code>portal</code> and <code>media</code>, as in <code>base:folder</code>, <code>portal:site</code> and <code>media:image</code>. No app can take these names.</p>
 </div>
@@ -642,7 +648,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-11 11:10:07 UTC
+Last updated 2026-09-11 11:16:24 UTC
 </div>
 </div>
 </body>
