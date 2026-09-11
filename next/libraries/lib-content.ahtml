@@ -484,6 +484,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#unpublish">unpublish</a></li>
 </ul>
 </li>
+<li><a href="#pages-and-components">Pages and components</a></li>
 <li><a href="#type_definitions">Type Definitions</a>
 <ul class="sectlevel2">
 <li><a href="#content-type">ContentType</a></li>
@@ -816,7 +817,7 @@ log.info('Archived content ids: %s', result2.join(','));</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Content <a href="../libraries/types.ahtml#page-component">page</a>.</p>
+<p><strong>Optional.</strong> The content&#8217;s <a href="../libraries/types.ahtml#page-component">page</a> — see <a href="#pages-and-components">Pages and components</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2607,7 +2608,7 @@ Properties starting with <code>_</code> may not be modified using this function.
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The <a href="../libraries/types.ahtml#page-component">page</a> configuration, including regions and components.</p>
+<p>The <a href="../libraries/types.ahtml#page-component">page</a> as stored — see <a href="#pages-and-components">Pages and components</a>. Applied key by key: <code>descriptor</code>, <code>template</code>, <code>config</code> and <code>regions</code> each replace what is stored when present, keep it when left out, and clear it when set to <code>null</code>. Assign <code>null</code> to the whole <code>page</code> to remove it.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -3046,7 +3047,7 @@ Unlike <a href="#update">update()</a>, <code>patch</code> does no bookkeeping of
 <td class="tableblock halign-left valign-top"><p class="tableblock">page</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>A JSON object describing the <a href="../libraries/types.ahtml#page-component">page</a> configuration including regions and components.</p>
+<p>The <a href="../libraries/types.ahtml#page-component">page</a> — see <a href="#pages-and-components">Pages and components</a>. Replaces the stored page as a whole.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -4573,6 +4574,146 @@ const expected = [
 </div>
 </div>
 <div class="sect1">
+<h2 id="pages-and-components"><a class="link" href="#pages-and-components">Pages and components</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>page</code> property of <a href="#create">create()</a>, <a href="#update">update()</a> and <a href="#patch">patch()</a> takes the same tree that <a href="#get">get()</a> returns for a content&#8217;s page — a <a href="../libraries/types.ahtml#page-component">PageComponent</a> whose <code>regions</code> hold <a href="../libraries/types.ahtml#layout-component">layouts</a>, <a href="../libraries/types.ahtml#part-component">parts</a> and <a href="../libraries/types.ahtml#text-component">text</a>. It takes one of three forms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{}</code> — no page of its own. The content renders through whatever page template its content type resolves to.</p>
+</li>
+<li>
+<p><code>{ type: 'page', template: '&lt;id&gt;' }</code> — a specific page template, referenced by the id of the template content.</p>
+</li>
+<li>
+<p>A full page — a <code>descriptor</code>, its <code>config</code>, and <code>regions</code> holding the components.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>descriptor</code> and <code>template</code> are mutually exclusive; a page with both is rejected. Each component needs a <code>type</code>; a component without one, or with a type other than <code>layout</code>, <code>part</code>, <code>text</code> or <code>fragment</code>, is rejected. Regions are keyed by name, and a layout carries its own <code>regions</code> in the same shape as the page. <code>path</code> — and a <code>name</code> inside a region — are set by XP when the page is stored and are ignored on input.</p>
+</div>
+<div class="paragraph">
+<p>The tree is a view. As raw node properties, a page is persisted as a flat <code>components</code> list — one entry per component, carrying its <code>path</code>, its <code>type</code>, and a block named after the type — and lib-content converts between the two on every read and write. The flat list is what Guillotine&#8217;s <code>components</code> field exposes, and what you see when reading the content&#8217;s node directly; its shape is described in the <a href="https://developer.enonic.com/docs/cms/stable/pages/indexing">CMS documentation</a>. It is a read-only view for application code: always write content through this library, which validates the page against its descriptors and applies the rest of the content logic — never through <a href="../libraries/lib-node.ahtml">lib-node</a>, which bypasses all of it. Templates are the other difference between the reading APIs: <a href="#get">get()</a> returns the page as stored, so a content that uses a template has <code>template</code> and no regions, while <a href="../libraries/lib-portal.ahtml#getcontent"><code>getContent()</code></a> in lib-portal returns the page as rendered, with the template&#8217;s components in place.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A property of the wrong type is dropped silently rather than rejected — a <code>descriptor</code> that is not a string leaves the page without a descriptor, and a <code>config</code> that is not an object leaves the component without one. Check the returned content when a page does not come out as expected.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Creating a content with a page</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {create} from '/lib/xp/content';
+
+const article = create({
+    parentPath: '/mysite/articles',
+    displayName: 'Hello',
+    contentType: 'com.myapp:article',
+    data: {
+        title: 'Hello'
+    },
+    page: {
+        type: 'page',
+        descriptor: 'com.myapp:article',
+        config: {
+            theme: 'dark'
+        },
+        regions: {
+            main: {
+                components: [
+                    {
+                        type: 'layout',
+                        descriptor: 'com.myapp:two-column',
+                        regions: {
+                            left: {
+                                components: [
+                                    {
+                                        type: 'part',
+                                        descriptor: 'com.myapp:teaser',
+                                        config: {
+                                            limit: 3
+                                        }
+                                    }
+                                ]
+                            },
+                            right: {
+                                components: [
+                                    {
+                                        type: 'text',
+                                        text: '&lt;p&gt;Welcome&lt;/p&gt;'
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The stored page comes back with a <code>path</code> on every component — <code>/main/0</code> for the layout, <code>/main/0/left/0</code> for the part — which is how <a href="../libraries/lib-portal.ahtml"><code>getComponent()</code></a> and component URLs address them.</p>
+</div>
+<div class="paragraph">
+<p>The three writing functions treat the object differently. <code>create()</code> and <code>patch()</code> take it whole: what you pass is the page. <code>update()</code> applies it <strong>key by key</strong> — the editor receives the page as stored, and of <code>descriptor</code>, <code>template</code>, <code>config</code> and <code>regions</code>, each key present in what the editor returns replaces the stored value, a key left out keeps it, and a key set to <code>null</code> clears it. Since <code>descriptor</code> and <code>template</code> are exclusive, switching from one to the other means clearing the other in the same edit, or the update is rejected. Assigning <code>null</code> to <code>page</code> itself removes the page, so the content falls back to the template its content type resolves to.</p>
+</div>
+<div class="paragraph">
+<p>There is no way to address a single component; the unit written is the tree. In practice the editor&#8217;s round trip makes this a small edit — walk to the component in the stored tree, change it, and return the tree. The stored shape is accepted as input as it is, since <code>path</code> and a region&#8217;s <code>name</code> are ignored.</p>
+</div>
+<div class="listingblock">
+<div class="title">Editing one component and appending another</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {update} from '/lib/xp/content';
+
+update({
+    key: '/mysite/articles/hello',
+    editor: (c) =&gt; {
+        const layout = c.page.regions.main.components[0];
+        layout.regions.left.components[0].config.limit = 5;
+        c.page.regions.main.components.push({
+            type: 'text',
+            text: '&lt;p&gt;New paragraph&lt;/p&gt;'
+        });
+        return c;
+    }
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Switching a page from its own descriptor to a template</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {update} from '/lib/xp/content';
+
+update({
+    key: '/mysite/articles/hello',
+    editor: (c) =&gt; {
+        c.page.template = '79e21db0-5b43-45ce-b58c-6e1c420b22bd';
+        c.page.descriptor = null;
+        c.page.regions = null;
+        c.page.config = null;
+        return c;
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Clearing <code>regions</code> and <code>config</code> as well hands rendering entirely to the template. A page that keeps <code>template</code> and also carries <code>regions</code> or <code>config</code> of its own is valid — at render time they take the place of the template&#8217;s, which is how a templated page is customized.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="type_definitions"><a class="link" href="#type_definitions">Type Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -5399,7 +5540,7 @@ const expected = {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 21:42:57 UTC
+Last updated 2026-09-11 06:58:47 UTC
 </div>
 </div>
 </body>

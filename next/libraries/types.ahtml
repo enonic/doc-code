@@ -1352,7 +1352,7 @@ A content that has never been published still carries a <code>publish</code> pro
 <h2 id="page_and_components"><a class="link" href="#page_and_components">Page and components</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A content&#8217;s <code>page</code> (and a fragment&#8217;s <code>fragment</code>) is a tree of components. Every component carries a <code>type</code> discriminant — one of <code>'page'</code>, <code>'layout'</code>, <code>'part'</code>, <code>'text'</code>, or <code>'fragment'</code>. There is no separate <code>Page</code> type: the page-level node is a <a href="#page-component">PageComponent</a>.</p>
+<p>A content&#8217;s <code>page</code> (and a fragment&#8217;s <code>fragment</code>) is a tree of components. Every component carries a <code>type</code> discriminant — one of <code>'page'</code>, <code>'layout'</code>, <code>'part'</code>, <code>'text'</code>, or <code>'fragment'</code>. There is no separate <code>Page</code> type: the page-level node is a <a href="#page-component">PageComponent</a>. The same tree is what <a href="../libraries/lib-content.ahtml#pages-and-components">lib-content</a> takes when creating or updating a page; <code>path</code> and a region&#8217;s <code>name</code> are set by XP when the page is stored and are ignored on input.</p>
 </div>
 <div class="sect2">
 <h3 id="component"><a class="link" href="#component">Component</a></h3>
@@ -1391,21 +1391,21 @@ A content that has never been published still carries a <code>publish</code> pro
 <td class="tableblock halign-left valign-top"><p class="tableblock">descriptor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Descriptor key of the page component (e.g. <code>com.myapp:main</code>).</p>
+<p><strong>Optional.</strong> Descriptor key of the page component (e.g. <code>com.myapp:main</code>). Absent when the page uses a template; mutually exclusive with <code>template</code>.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The component&#8217;s configuration, shaped by the descriptor.</p>
+<p><strong>Optional.</strong> The component&#8217;s configuration, shaped by the descriptor.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">regions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Map of region name to <a href="#region">Region</a>.</p>
+<p><strong>Optional.</strong> Map of region name to <a href="#region">Region</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1419,7 +1419,7 @@ A content that has never been published still carries a <code>publish</code> pro
 <td class="tableblock halign-left valign-top"><p class="tableblock">template</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Page template key, when the page uses a template.</p>
+<p><strong>Optional.</strong> Id of the page template the page uses; mutually exclusive with <code>descriptor</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1854,7 +1854,7 @@ A content that has never been published still carries a <code>publish</code> pro
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 21:42:57 UTC
+Last updated 2026-09-11 06:58:47 UTC
 </div>
 </div>
 </body>

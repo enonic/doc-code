@@ -1133,6 +1133,9 @@ log.info('Current component name = %s', result.name);</code></pre>
 <p>Returns the content in the current execution context. Meant to be called from a page, layout, or part. Takes no arguments.</p>
 </div>
 <div class="paragraph">
+<p>The content&#8217;s <code>page</code> is the page as rendered: where the content uses a page template, the template&#8217;s components are in place. For the page as stored, and for how the tree relates to the flat <code>components</code> list XP persists, see <a href="../libraries/lib-content.ahtml#pages-and-components">Pages and components</a>.</p>
+</div>
+<div class="paragraph">
 <p>The content follows the request&#8217;s <code>contentPath</code>, so when a <a href="../web/sites/mappings.ahtml#reroute">site mapping filter</a> has re-routed rendering, this returns the content the request was re-routed to.</p>
 </div>
 <div class="paragraph lead">
@@ -3007,7 +3010,7 @@ const url = buildUrl({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-10 21:42:57 UTC
+Last updated 2026-09-11 06:58:47 UTC
 </div>
 </div>
 </body>
