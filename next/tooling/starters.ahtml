@@ -567,7 +567,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 <div class="sect2">
 <h3 id="general_resources"><a class="link" href="#general_resources">General resources</a></h3>
 <div class="paragraph">
-<p>The majority of Enonic specific code is placed within <code>src/main/resources/</code>:</p>
+<p>In a Gradle project, <code>src/main/resources/</code> is the app resource root. Paths within the app are relative to this directory: for example, <code>/cms/content-types/article/article.yaml</code> corresponds to <code>src/main/resources/cms/content-types/article/article.yaml</code> in the project. The folders below are relative to this resource root:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -715,7 +715,7 @@ Check out <a href="https://market.enonic.com/starters/library-starter">the libra
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-11 08:11:23 UTC
+Last updated 2026-09-11 11:10:07 UTC
 </div>
 </div>
 </body>

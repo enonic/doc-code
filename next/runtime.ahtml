@@ -476,7 +476,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="execution_model"><a class="link" href="#execution_model">Execution model</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP runs on top of the Java Virtual Machine. Your app&#8217;s TypeScript and JavaScript files are executed by an embedded JavaScript engine, with full access to the JVM through the <a href="runtime/java-bridge.ahtml">Java bridge</a>. There is no Node.js, no separate JS process, and no inter-process bridge — server-side JS runs inside the same JVM as the platform itself.</p>
+<p>Enonic XP runs on top of the Java Virtual Machine. Your app&#8217;s packaged JavaScript modules are executed by an embedded JavaScript engine, with full access to the JVM through the <a href="runtime/java-bridge.ahtml">Java bridge</a>. TypeScript source files must be compiled to JavaScript before deployment. There is no Node.js, no separate JS process, and no inter-process bridge — server-side JS runs inside the same JVM as the platform itself.</p>
 </div>
 <div class="paragraph">
 <p>Two engines are available:</p>
@@ -519,10 +519,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Every module runs in ECMAScript <strong>strict mode</strong>, on both engines.</p>
 </div>
 <div class="paragraph">
-<p>Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Transpile to ES5 - that is what the official starters do. See <a href="tooling/typescript.ahtml">TypeScript</a> for the build step.</p>
+<p>Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Target ES5 when building for Nashorn.</p>
 </div>
 <div class="paragraph">
-<p>GraalJS implements the current ECMAScript standard. Code transpiled to ES5 runs on either engine, which makes it the portable choice while GraalJS is in preview.</p>
+<p>GraalJS supports modern ECMAScript, so the build can preserve newer JavaScript syntax. TypeScript must still be compiled to JavaScript for either engine. See <a href="tooling/typescript.ahtml#ecmascript-target">ECMAScript target</a> for the distinction between TypeScript compilation, the emitted JavaScript syntax, and the module format.</p>
 </div>
 </div>
 </div>
@@ -531,7 +531,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="modules_and_bundling"><a class="link" href="#modules_and_bundling">Modules and bundling</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Each <code>.ts</code> or <code>.js</code> file in your app is a module under the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS module specification</a>. Modules export values via <code>exports</code>, and consume other modules via <code>require()</code> — <code>import</code> and <code>export</code> statements are not supported at runtime, on either engine, see <a href="runtime/globals.ahtml#esm">ECMAScript modules</a>. Paths are rooted at the app bundle, not the filesystem — <code>require('/lib/greet')</code> loads <code>src/main/resources/lib/greet.ts</code> from the same app.</p>
+<p>Each <code>.ts</code> or <code>.js</code> source file is a module. At runtime, XP loads the packaged JavaScript modules under the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS module specification</a>. Modules export values via <code>exports</code>, and consume other modules via <code>require()</code> — <code>import</code> and <code>export</code> statements are not supported at runtime, on either engine, see <a href="runtime/globals.ahtml#esm">ECMAScript modules</a>.</p>
+</div>
+<div class="paragraph">
+<p>Paths are rooted at the app bundle. For example, <code>require('/lib/greet')</code> loads <code>lib/greet.js</code> from the same app&#8217;s bundle. In a project with the source at <code>src/main/resources/lib/greet.ts</code>, the build transpiles that TypeScript module to JavaScript and packages it at this location.</p>
 </div>
 <div class="paragraph">
 <p>Platform libraries are referenced by name (for example, <code>require('/lib/xp/content')</code>). See <a href="runtime/functions.ahtml#modules_and_the_bundle">Functions: Modules and the bundle</a> for the full path-resolution rules and bundle boundaries.</p>
@@ -747,7 +750,7 @@ On GraalJS a module is loaded once per <strong>script context</strong> rather th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-11 08:11:23 UTC
+Last updated 2026-09-11 11:10:07 UTC
 </div>
 </div>
 </body>

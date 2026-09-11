@@ -442,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#intro">Intro</a></li>
+<li><a href="#ecmascript-target">ECMAScript target</a></li>
 <li><a href="#typescript_starter">TypeScript starter</a></li>
 <li><a href="#install_types">Install types</a></li>
 <li><a href="#enonic_libraries">Enonic Libraries</a>
@@ -491,6 +492,30 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ecmascript-target"><a class="link" href="#ecmascript-target">ECMAScript target</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TypeScript compilation is required for both XP engines. The ECMAScript target controls the JavaScript syntax emitted by the build:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Nashorn:</strong> Target ES5. The engine implements ECMAScript 5.1 with only a subset of later features, so the build must also convert newer syntax to that language level.</p>
+</li>
+<li>
+<p><strong>GraalJS:</strong> A modern ECMAScript target supported by the embedded engine can preserve newer JavaScript syntax. The build must still convert TypeScript to JavaScript before deployment.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Choose the target in your TypeScript compiler or bundler configuration to match the <a href="../runtime/engines.ahtml">JavaScript engine</a> used by the app. ES5 remains a common syntax target when supporting both engines; it does not remove differences in their runtime behavior.</p>
+</div>
+<div class="paragraph">
+<p>The module format is a separate setting. XP loads CommonJS modules on both engines, so the build must also convert <code>import</code> and <code>export</code> statements to CommonJS. See <a href="../runtime/globals.ahtml#esm">ECMAScript modules</a>.</p>
 </div>
 </div>
 </div>
@@ -750,7 +775,7 @@ const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-11 08:11:23 UTC
+Last updated 2026-09-11 11:10:07 UTC
 </div>
 </div>
 </body>

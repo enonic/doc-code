@@ -545,7 +545,7 @@ Choose the app name carefully. It becomes part of the schema namespace and is aw
 <h2 id="file_structure"><a class="link" href="#file_structure">File structure</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Schemas must be placed under <code>src/main/resources/cms/</code>, with one folder per kind:</p>
+<p>Schemas live under <code>/cms</code> relative to the app&#8217;s resource root, with one folder per kind. In a Gradle project, <code>src/main/resources</code> is the app resource root, so <code>/cms</code> corresponds to <code>src/main/resources/cms/</code> in the project:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -730,7 +730,7 @@ form:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-11 08:11:23 UTC
+Last updated 2026-09-11 11:10:07 UTC
 </div>
 </div>
 </body>

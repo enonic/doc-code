@@ -491,7 +491,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="nashorn"><a class="link" href="#nashorn">Nashorn</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Nashorn is the default and the supported engine, shipped with every XP release since 7.x. It implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Transpile to ES5 - that is what the official starters do. See <a href="../tooling/typescript.ahtml">TypeScript</a> for the build step.</p>
+<p>Nashorn is the default and the supported engine, shipped with every XP release since 7.x. It implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Target ES5 when compiling TypeScript for Nashorn. See <a href="../tooling/typescript.ahtml#ecmascript-target">ECMAScript target</a> for build configuration.</p>
 </div>
 </div>
 </div>
@@ -516,7 +516,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
     <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
     <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
   </g>
-</svg></span> GraalJS is the engine that will replace Nashorn. It implements the current ECMAScript standard, so modern syntax runs without down-levelling.</p>
+</svg></span> GraalJS is the engine that will replace Nashorn. It supports modern ECMAScript, so the build can preserve newer JavaScript syntax. This does not add native TypeScript support: TypeScript must still be compiled to JavaScript before deployment. See <a href="../tooling/typescript.ahtml#ecmascript-target">ECMAScript target</a>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -531,7 +531,7 @@ GraalJS is not for production use. Nashorn remains the supported engine, and wha
 </table>
 </div>
 <div class="paragraph">
-<p>Code transpiled to ES5 runs on either engine, which makes it the portable choice while GraalJS is in preview: an app built that way can be moved across and back.</p>
+<p>ES5 remains a common syntax target when supporting both engines. An app must also account for the runtime and Java interoperability differences described below when switching engines.</p>
 </div>
 <div class="sect2">
 <h3 id="detecting_the_engine"><a class="link" href="#detecting_the_engine">Detecting the engine</a></h3>
@@ -712,7 +712,7 @@ The bridge XP supports is the <code>__</code> object, on both engines. Interop g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-11 08:11:23 UTC
+Last updated 2026-09-11 11:10:07 UTC
 </div>
 </div>
 </body>
