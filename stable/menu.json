@@ -334,7 +334,13 @@
     },
     {
       "title": "Upgrading",
-      "document": "upgrade"
+      "document": "upgrade",
+      "menuItems": [
+        {
+          "title": "From XP 7",
+          "document": "upgrade/xp7"
+        }
+      ]
     }
   ]
 }

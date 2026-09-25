@@ -608,7 +608,7 @@ XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScrip
 <dl>
 <dt class="hdlist1">Compatibility</dt>
 <dd>
-<p>An app built against any XP release runs unchanged on every patch and minor release within the same major version. Major version upgrades are documented separately — see <a href="../upgrade.ahtml">Upgrading</a>.</p>
+<p>An app built against any XP release runs unchanged on every patch and minor release within the same major version. For the changes needed when moving from XP 7 to XP 8, see <a href="../upgrade/xp7.ahtml">Upgrading from XP 7</a>.</p>
 </dd>
 </dl>
 </div>
@@ -620,7 +620,7 @@ XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScrip
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-14 12:14:38 UTC
+Last updated 2026-09-25 10:03:56 UTC
 </div>
 </div>
 </body>
