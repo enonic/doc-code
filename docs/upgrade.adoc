@@ -4,6 +4,8 @@
 
 This page is the entry point for upgrading an Enonic application. Choose the guidance that applies to the application's current XP version and the version you are targeting.
 
+TIP: When building a new Enonic application, use the https://market.enonic.com/starters/typescript-starter[TypeScript Starter] (`starter-ts`). It provides a project structure and build setup for TypeScript development.
+
 == Choosing upgrade notes
 
 * *Coming from XP 7:* Follow <<upgrade/xp7#, Upgrading Enonic apps from XP 7 to XP 8>>. That guide covers the changes needed to reach an XP 8.0 baseline.
