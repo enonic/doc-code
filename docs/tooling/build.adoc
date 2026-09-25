@@ -4,7 +4,7 @@
 
 This section explains the details of the Enonic XP build system
 
-NOTE: Upgrading from XP 7? See <<../upgrade#, the Upgrading guide>>.
+NOTE: Upgrading from XP 7? See <<../upgrade/xp7#, the XP 7 migration guide>>.
 
 == Main builder
 

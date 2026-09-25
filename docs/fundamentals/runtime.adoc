@@ -67,4 +67,4 @@ Apps run inside a fully equipped platform. The runtime gives you, without extra 
 * *Localization* — see <<i18n#, Localization>>.
 * *Java interop* — see <<java-bridge#, Java bridge>>.
 
-Compatibility:: An app built against any XP release runs unchanged on every patch and minor release within the same major version. Major version upgrades are documented separately — see <<../upgrade#, Upgrading>>.
+Compatibility:: An app built against any XP release runs unchanged on every patch and minor release within the same major version. For the changes needed when moving from XP 7 to XP 8, see <<../upgrade/xp7#, Upgrading from XP 7>>.
