@@ -453,6 +453,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>This page is the entry point for upgrading an Enonic application. Choose the guidance that applies to the application&#8217;s current XP version and the version you are targeting.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+When building a new Enonic application, use the <a href="https://market.enonic.com/starters/typescript-starter">TypeScript Starter</a> (<code>starter-ts</code>). It provides a project structure and build setup for TypeScript development.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -525,7 +537,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-25 10:03:56 UTC
+Last updated 2026-09-25 10:09:22 UTC
 </div>
 </div>
 </body>
