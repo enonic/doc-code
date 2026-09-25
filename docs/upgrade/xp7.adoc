@@ -1154,7 +1154,7 @@ Lib guillotine has been deprecated for a long time, and is not supported for XP8
 
 HTTP Services are now deprecated, but continues to work in XP 8. We recommend upgrading to Universal API instead.
 
-Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under `/_/service/<app-name>/<service-name>`, while Universal APIs are contextually available directly under `/_/<app-name>:<api-name>` in addition to the new `/api` mount point. 
+Migrating to Universal API means the existing service endpoint URLs will change. Services were previously mounted under `/_/service/<app-name>/<service-name>`, while Universal APIs are contextually available directly under `/_/<app-name>:<api-name>` in addition to the new `/api` mount point.
 
 HTTP Services were "unsecure by default" by automatically mounting on admin tools, web-apps, and sites, while Universal APIs must be explicitly mounted via the respective descriptors where you need it.
 

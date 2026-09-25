@@ -2,9 +2,17 @@
 :toc: right
 :imagesdir: images
 
-This page covers upgrading an Enonic application between releases of XP 8. Minor releases make no breaking changes to application code: an app built for XP 8.0 runs on every later 8.x release as it is. Each release section below lists the APIs it deprecated and the replacement to move to. Every deprecated API keeps working, so the clean-ups can be done one at a time - read every section between your current and your target version.
+This page is the entry point for upgrading an Enonic application. Choose the guidance that applies to the application's current XP version and the version you are targeting.
 
-IMPORTANT: Coming from XP 7? Follow <<upgrade/xp7#, Upgrading Enonic apps from XP 7 to XP 8>> first. This page picks up where that one ends.
+TIP: When building a new Enonic application, use the https://market.enonic.com/starters/typescript-starter[TypeScript Starter] (`starter-ts`). It provides a project structure and build setup for TypeScript development.
+
+== Choosing upgrade notes
+
+* *Coming from XP 7:* Follow <<upgrade/xp7#, Upgrading Enonic apps from XP 7 to XP 8>>. That guide covers the changes needed to reach an XP 8.0 baseline.
+* *Already on XP 8:* Read the release sections between your current and target versions, in version order. Apply required changes and any guidance for features your application uses. Optional deprecation clean-ups can be done separately.
+* *Moving from XP 7 to a later XP 8 release:* Combine the XP 7 guide with the subsequent release notes up to your target version. You can apply the changes together and build directly for the target version; an intermediate deployment on XP 8.0 is not required.
+
+The same selection applies when using an AI coding agent: start here, then read the linked guide and release sections that apply to the upgrade.
 
 == Version bump
 
@@ -33,6 +41,11 @@ Then rebuild and deploy:
   enonic project deploy
 
 The app builds and runs. What follows is work that can be done at your own pace.
+
+[#xp-8-0]
+== XP 8.0
+
+XP 8.0 is the baseline for this documentation. The <<upgrade/xp7#, XP 7 migration guide>> covers changes to the build system, descriptors, application code and APIs when moving from XP 7.
 
 [#xp-8-1]
 == XP 8.1
