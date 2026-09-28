@@ -150,7 +150,7 @@ Parameters
 
 Takes two positional arguments: `name` (string) — the attribute name, stored with the `custom.` prefix — and `value`, the JSON-like value to store. Passing `null`, `undefined`, or omitting the value removes the attribute.
 
-In TypeScript, a type argument names the type of the value: `+setCustomLocalAttribute<MyData>('my-data', value)+` accepts only a `MyData` whose fields are all JSON-like, so a function or `Date` anywhere in it is a compile error. This is checked at compile time only — nothing is validated at runtime. Use the same type on the read side with <<get, `get()`>>.
+In TypeScript, a type argument names the type of the value: `+setCustomLocalAttribute<MyData>('my-data', value)+` accepts only a `MyData` whose fields are all JSON-like, so a function or `Date` anywhere in it is a compile error as well as a runtime one. The type argument itself is a compile-time aid: the runtime rejects non-JSON values as described above, but does not check the value against `MyData`. Use the same type on the read side with <<get, `get()`>>.
 
 [.lead]
 Returns
@@ -295,7 +295,7 @@ Attributes are read and written through different value sets, so the two directi
 
 *Reading* — `<<Context, Context>>.attributes` — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> comes back in full, keyed as `+custom.<name>+`. In TypeScript the value type is `ContextAttributeValue`, or the type named in the type argument to `get()`.
 
-*Storing* — `setCustomLocalAttribute()` — takes a `+CustomAttributeValue<T>+`: the JSON-like shape of `T`, where functions and non-JSON objects such as `Date` are rejected. Without a type argument it is the same as `ContextAttributeValue`.
+*Storing* — `setCustomLocalAttribute()` — takes a `+CustomAttributeValue<T>+`: the JSON-like shape of `T`, where functions and non-JSON objects such as `Date` become `never`, so they fail to compile just as they fail at runtime. Without a type argument it is the same as `ContextAttributeValue`.
 
 *Writing* — `<<ContextParams, ContextParams>>.attributes`, passed to `run()` — takes `number`, `string` and `boolean`. An object value is accepted and is visible to Java code reading the context, but it is not part of what `get()` returns.
 
