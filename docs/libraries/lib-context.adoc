@@ -33,6 +33,8 @@ Returns
 
 *object* : (<<Context,`Context`>>) The current context. The `attributes` field is always present (possibly empty); `branch`, `repository`, and `authInfo` are present when set on the calling context.
 
+In TypeScript, `get()` takes an optional type argument naming the attributes you expect to read. Each is typed as optional, since nothing guarantees it was set. Any other attribute stays readable as a plain `ContextAttributeValue`.
+
 [.lead]
 Example
 
@@ -42,6 +44,16 @@ Example
 import {get} from '/lib/xp/context';
 
 const context = get();
+----
+
+.Typing the attributes you read
+[source,typescript]
+----
+import {get} from '/lib/xp/context';
+
+type MyData = {values: string[]};
+
+const data = get<{'custom.my-data': MyData}>().attributes['custom.my-data'];  // MyData | undefined
 ----
 
 .Sample response
@@ -138,6 +150,8 @@ Parameters
 
 Takes two positional arguments: `name` (string) — the attribute name, stored with the `custom.` prefix — and `value`, the JSON-like value to store. Passing `null`, `undefined`, or omitting the value removes the attribute.
 
+In TypeScript, a type argument names the type of the value: `+setCustomLocalAttribute<MyData>('my-data', value)+` accepts only a `MyData` whose fields are all JSON-like, so a function or `Date` anywhere in it is a compile error. This is checked at compile time only — nothing is validated at runtime. Use the same type on the read side with <<get, `get()`>>.
+
 [.lead]
 Returns
 
@@ -151,9 +165,11 @@ Example
 ----
 import {get, setCustomLocalAttribute} from '/lib/xp/context';
 
-setCustomLocalAttribute('my-data', {values: ['one', 'two']});
+type MyData = {values: string[]};
 
-const data = get().attributes['custom.my-data'];
+setCustomLocalAttribute<MyData>('my-data', {values: ['one', 'two']});
+
+const data = get<{'custom.my-data': MyData}>().attributes['custom.my-data'];
 ----
 
 .Hand data from a page implementation to a response processor
@@ -161,9 +177,10 @@ const data = get().attributes['custom.my-data'];
 ----
 // cms/pages/article/article.ts
 import {setCustomLocalAttribute} from '/lib/xp/context';
+import type {Tracking} from '/lib/tracking';
 
 export function GET() {
-    setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
+    setCustomLocalAttribute<Tracking>('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
 
     return {body: renderArticle(), contentType: 'text/html'};
 }
@@ -171,13 +188,18 @@ export function GET() {
 
 [source,typescript]
 ----
+// lib/tracking.ts
+export type Tracking = {pageType: string; experiment: string};
+----
+
+[source,typescript]
+----
 // cms/processors/tracker.ts
 import {get as getContext} from '/lib/xp/context';
-
-type Tracking = {pageType: string; experiment: string};
+import type {Tracking} from '/lib/tracking';
 
 export function responseProcessor(req, res) {
-    const tracking = getContext().attributes['custom.com.example.myapp.tracking'] as Tracking | undefined;
+    const tracking = getContext<{'custom.com.example.myapp.tracking': Tracking}>().attributes['custom.com.example.myapp.tracking'];
 
     if (tracking) {
         res.pageContributions.bodyEnd = [
@@ -196,7 +218,7 @@ NOTE: A value stored during a request is *not* carried into a task submitted fro
 [#Context]
 === Context
 
-The shape of the object returned by `get()`.
+The shape of the object returned by `get()`. In TypeScript it takes an optional type argument, `+Context<Attributes>+`, whose properties are added to `attributes` as optional, typed entries.
 
 [.lead]
 Properties
@@ -206,7 +228,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| attributes | <<ContextAttributes, ContextAttributes>> | Custom attributes set on the context. Always present; may be empty. Attributes stored with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> appear here under their `custom.` prefixed name.
+| attributes | <<ContextAttributes, ContextAttributes>> | Custom attributes set on the context. Always present; may be empty. Attributes stored with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> appear here under their `custom.` prefixed name, typed by the type argument when one is given.
 | branch | string | *Optional.* Branch context.
 | repository | string | *Optional.* Repository context.
 | authInfo | <<AuthInfo, AuthInfo>> | *Optional.* Authentication information for the current context.
@@ -271,7 +293,9 @@ Properties
 
 Attributes are read and written through different value sets, so the two directions do not share a type.
 
-*Reading* — `<<Context, Context>>.attributes` — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> comes back in full, keyed as `+custom.<name>+`. In TypeScript the value type is `ContextAttributeValue`.
+*Reading* — `<<Context, Context>>.attributes` — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <<setcustomlocalattribute, `setCustomLocalAttribute()`>> comes back in full, keyed as `+custom.<name>+`. In TypeScript the value type is `ContextAttributeValue`, or the type named in the type argument to `get()`.
+
+*Storing* — `setCustomLocalAttribute()` — takes a `+CustomAttributeValue<T>+`: the JSON-like shape of `T`, where functions and non-JSON objects such as `Date` are rejected. Without a type argument it is the same as `ContextAttributeValue`.
 
 *Writing* — `<<ContextParams, ContextParams>>.attributes`, passed to `run()` — takes `number`, `string` and `boolean`. An object value is accepted and is visible to Java code reading the context, but it is not part of what `get()` returns.
 
