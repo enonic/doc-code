@@ -507,6 +507,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p><strong>object</strong> : (<a href="#Context"><code>Context</code></a>) The current context. The <code>attributes</code> field is always present (possibly empty); <code>branch</code>, <code>repository</code>, and <code>authInfo</code> are present when set on the calling context.</p>
 </div>
+<div class="paragraph">
+<p>In TypeScript, <code>get()</code> takes an optional type argument naming the attributes you expect to read. Each is typed as optional, since nothing guarantees it was set. Any other attribute stays readable as a plain <code>ContextAttributeValue</code>.</p>
+</div>
 <div class="paragraph lead">
 <p>Example</p>
 </div>
@@ -516,6 +519,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get} from '/lib/xp/context';
 
 const context = get();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Typing the attributes you read</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get} from '/lib/xp/context';
+
+type MyData = {values: string[]};
+
+const data = get&lt;{'custom.my-data': MyData}&gt;().attributes['custom.my-data'];  // MyData | undefined</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -637,6 +650,9 @@ All apps in a request write into <strong>one flat namespace</strong>. The <code>
 <div class="paragraph">
 <p>Takes two positional arguments: <code>name</code> (string) — the attribute name, stored with the <code>custom.</code> prefix — and <code>value</code>, the JSON-like value to store. Passing <code>null</code>, <code>undefined</code>, or omitting the value removes the attribute.</p>
 </div>
+<div class="paragraph">
+<p>In TypeScript, a type argument names the type of the value: <code>setCustomLocalAttribute&lt;MyData&gt;('my-data', value)</code> accepts only a <code>MyData</code> whose fields are all JSON-like, so a function or <code>Date</code> anywhere in it is a compile error as well as a runtime one. The type argument itself is a compile-time aid: the runtime rejects non-JSON values as described above, but does not check the value against <code>MyData</code>. Use the same type on the read side with <a href="#get"><code>get()</code></a>.</p>
+</div>
 <div class="paragraph lead">
 <p>Returns</p>
 </div>
@@ -651,9 +667,11 @@ All apps in a request write into <strong>one flat namespace</strong>. The <code>
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">import {get, setCustomLocalAttribute} from '/lib/xp/context';
 
-setCustomLocalAttribute('my-data', {values: ['one', 'two']});
+type MyData = {values: string[]};
 
-const data = get().attributes['custom.my-data'];</code></pre>
+setCustomLocalAttribute&lt;MyData&gt;('my-data', {values: ['one', 'two']});
+
+const data = get&lt;{'custom.my-data': MyData}&gt;().attributes['custom.my-data'];</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -661,9 +679,10 @@ const data = get().attributes['custom.my-data'];</code></pre>
 <div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/pages/article/article.ts
 import {setCustomLocalAttribute} from '/lib/xp/context';
+import type {Tracking} from '/lib/tracking';
 
 export function GET() {
-    setCustomLocalAttribute('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
+    setCustomLocalAttribute&lt;Tracking&gt;('com.example.myapp.tracking', {pageType: 'article', experiment: 'B'});
 
     return {body: renderArticle(), contentType: 'text/html'};
 }</code></pre>
@@ -671,13 +690,18 @@ export function GET() {
 </div>
 <div class="listingblock">
 <div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// lib/tracking.ts
+export type Tracking = {pageType: string; experiment: string};</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">// cms/processors/tracker.ts
 import {get as getContext} from '/lib/xp/context';
-
-type Tracking = {pageType: string; experiment: string};
+import type {Tracking} from '/lib/tracking';
 
 export function responseProcessor(req, res) {
-    const tracking = getContext().attributes['custom.com.example.myapp.tracking'] as Tracking | undefined;
+    const tracking = getContext&lt;{'custom.com.example.myapp.tracking': Tracking}&gt;().attributes['custom.com.example.myapp.tracking'];
 
     if (tracking) {
         res.pageContributions.bodyEnd = [
@@ -710,7 +734,7 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 <div class="sect2">
 <h3 id="Context"><a class="link" href="#Context">Context</a></h3>
 <div class="paragraph">
-<p>The shape of the object returned by <code>get()</code>.</p>
+<p>The shape of the object returned by <code>get()</code>. In TypeScript it takes an optional type argument, <code>Context&lt;Attributes&gt;</code>, whose properties are added to <code>attributes</code> as optional, typed entries.</p>
 </div>
 <div class="paragraph lead">
 <p>Properties</p>
@@ -733,7 +757,7 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 <td class="tableblock halign-left valign-top"><p class="tableblock">attributes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ContextAttributes">ContextAttributes</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Custom attributes set on the context. Always present; may be empty. Attributes stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> appear here under their <code>custom.</code> prefixed name.</p>
+<p>Custom attributes set on the context. Always present; may be empty. Attributes stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> appear here under their <code>custom.</code> prefixed name, typed by the type argument when one is given.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -904,7 +928,10 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 <p>Attributes are read and written through different value sets, so the two directions do not share a type.</p>
 </div>
 <div class="paragraph">
-<p><strong>Reading</strong> — <code><a href="#Context">Context</a>.attributes</code> — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> comes back in full, keyed as <code>custom.&lt;name&gt;</code>. In TypeScript the value type is <code>ContextAttributeValue</code>.</p>
+<p><strong>Reading</strong> — <code><a href="#Context">Context</a>.attributes</code> — is a record of JSON-like values: strings, numbers, booleans, arrays, and objects nesting those. Everything stored with <a href="#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> comes back in full, keyed as <code>custom.&lt;name&gt;</code>. In TypeScript the value type is <code>ContextAttributeValue</code>, or the type named in the type argument to <code>get()</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Storing</strong> — <code>setCustomLocalAttribute()</code> — takes a <code>CustomAttributeValue&lt;T&gt;</code>: the JSON-like shape of <code>T</code>, where functions and non-JSON objects such as <code>Date</code> become <code>never</code>, so they fail to compile just as they fail at runtime. Without a type argument it is the same as <code>ContextAttributeValue</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>Writing</strong> — <code><a href="#ContextParams">ContextParams</a>.attributes</code>, passed to <code>run()</code> — takes <code>number</code>, <code>string</code> and <code>boolean</code>. An object value is accepted and is visible to Java code reading the context, but it is not part of what <code>get()</code> returns.</p>
@@ -918,7 +945,7 @@ A value stored during a request is <strong>not</strong> carried into a task subm
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-25 10:12:06 UTC
+Last updated 2026-09-28 10:32:13 UTC
 </div>
 </div>
 </body>
