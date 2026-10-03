@@ -26,6 +26,34 @@ image:xp-810.svg[XP 8.1.0,opts=inline] A configured Base URL is used *verbatim* 
 
 To serve media from another host, configure `+media.defaultBaseUrl+` — see the https://developer.enonic.com/docs/platform/xp8/config/cms[portal configuration].
 
+[#url_parts]
+=== URL parts
+
+image:xp-810.svg[XP 8.1.0,opts=inline] The URL functions follow the request: they generate the URL the current request leads to, through its virtual host. A frontend serving content from a host of its own, such as a headless one, needs URLs resolved from configuration alone instead. Each request-following function has a counterpart that returns such a URL as parts to assemble:
+
+[%header,cols="1,1"]
+[frame="none"]
+[grid="none"]
+|===
+| Follows the request | From configuration alone
+| <<pageurl, `pageUrl()`>> | <<pageurlparts, `pageUrlParts()`>>
+| <<imageUrl, `imageUrl()`>> | <<imageurlparts, `imageUrlParts()`>>
+| <<attachmentUrl, `attachmentUrl()`>> | <<attachmenturlparts, `attachmentUrlParts()`>>
+| <<processHtml, `processHtml()`>> | <<processhtmlparts, `processHtmlParts()`>>
+| <<baseurl, `baseUrl()`>> | <<urlbase, `urlBase()`>>
+|===
+
+Page URLs and rich text belong to a site, or to a project. <<urlbase, `urlBase()`>> resolves that site or project once, and its result is passed as `base` to every `pageUrlParts()` and `processHtmlParts()` call of the same request. Its `baseUrl` is the Base URL configured there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`, and the path is relative to the site or project.
+
+`imageUrlParts()` and `attachmentUrlParts()` take a `project` and `branch`. A media URL is `mediaBaseUrl + path + queryString`, where the caller supplies the root of the media APIs as it serves them; `+media.defaultBaseUrl+` and the mounts of the media APIs do not apply.
+
+Parts are URL-escaped as they appear in the URL: assemble them without encoding them again.
+
+[#unresolved_urls]
+=== URLs that do not resolve
+
+image:xp-810.svg[XP 8.1.0,opts=inline] When the content a URL names does not resolve - a missing content, a content that is not an image, an unknown attachment, or a deleted project or branch - <<pageurl, `pageUrl()`>>, <<imageUrl, `imageUrl()`>>, <<attachmentUrl, `attachmentUrl()`>> and <<processHtml, `processHtml()`>> generate a URL answered with *404 Not Found*, and log a warning. A broken link in rich text therefore leaves the rest of the text intact. In <<processhtmlparts, `processHtmlParts()`>>, the element of a link or image that does not resolve holds such a URL, and its entry has no parts.
+
 == Functions
 
 === apiUrl
@@ -143,7 +171,7 @@ Parameters
 [.lead]
 Returns
 
-*string* : The generated URL.
+*string* : The generated URL; one answered with 404 when the attachment does not resolve — see <<unresolved_urls, URLs that do not resolve>>.
 
 [.lead]
 Example
@@ -158,14 +186,66 @@ const url = attachmentUrl({
 });
 ----
 
-=== baseUrl
+=== attachmentUrlParts
 
-Generates a base URL.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of an attachment URL from configuration alone: `mediaBaseUrl + path + queryString`, where `mediaBaseUrl` is the root of the media APIs as the caller serves them. See <<url_parts, URL parts>>.
+
+The parts also hold the segments of the path - `context`, `id`, `fingerprint` and `name` - for a host that serves the media API with leading segments hidden by a virtual host mapping, such as `+https://cdn.example.com/<context>/<id>:<fingerprint>/<name>+`. The attachment is picked as in <<attachmentUrl, `attachmentUrl()`>>.
 
 [.lead]
 Parameters
 
-`baseUrl()` takes a single `BaseUrlParams` object with these properties:
+`attachmentUrlParts()` takes a single `AttachmentUrlPartsParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | *Optional.* Id of the content holding the attachment. Either `id` or `path` is required.
+| path | string | *Optional.* Path of the content holding the attachment, within the project.
+| name | string | *Optional.* Name of the attachment. Picks the attachment by name, before `label`.
+| label | string | *Optional.* Label of the attachment, used when `name` is absent. Defaults to `source`.
+| download | boolean | *Optional.* Set to `true` to ask for the attachment to be downloaded. Defaults to `false`.
+| project | string | *Optional.* Name of the project. Defaults to the project of the current context.
+| branch | string | *Optional.* Name of the branch. Defaults to the branch of the current context.
+| params | object | *Optional.* Custom query parameters of the URL.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<attachment-url-parts, `AttachmentUrlParts`>>) The parts of the URL.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {attachmentUrlParts} from '/lib/xp/portal';
+
+// Parts of the URL of an attachment, to be downloaded
+const parts = attachmentUrlParts({
+  path: '/my-site/documents/report',
+  download: true,
+  project: 'myproject',
+  branch: 'draft'
+});
+
+// The root of the media APIs as the frontend serves them
+const url = 'https://cdn.example.com/api' + parts.path + parts.queryString;
+----
+
+=== baseUrl
+
+Generates the base URL of the current site request: the address of the site - or project - the matched virtual host mapping points at, rewritten for that host. Page URLs following the request are relative to it, and so are routes the site serves outside the content tree, such as <<../web/sites/mappings#, mappings>>. Without a site request, it is the Base URL configured for the project of the current context, or else the address the site engine serves the project at.
+
+For the Base URL configured for a site or project, independent of the request, use <<urlbase, `urlBase()`>>.
+
+[.lead]
+Parameters
+
+`baseUrl()` takes a single, optional `BaseUrlParams` object with these properties:
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -173,10 +253,10 @@ Parameters
 |===
 | Name | Type | Description
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`. Ignored when the site has a configured Base URL — see <<base_urls, Base URLs>>.
-| id | string | *Optional.* ID of the content.
-| path | string | *Optional.* Path to the content.
-| project | string | *Optional.* Name of the project to use for resolving the URL.
-| branch | string | *Optional.* Name of the branch to use for resolving the URL.
+| id | string | *Deprecated.* Use <<urlbase, `urlBase()`>> with `key` instead.
+| path | string | *Deprecated.* Use <<urlbase, `urlBase()`>> with `key` instead.
+| project | string | *Deprecated.* Use <<urlbase, `urlBase()`>> with `project` instead.
+| branch | string | *Deprecated.* Use <<urlbase, `urlBase()`>> with `branch` instead.
 |===
 
 [.lead]
@@ -191,11 +271,13 @@ Example
 ----
 import {baseUrl} from '/lib/xp/portal';
 
-const url = baseUrl({
-  type: 'server',
-  path: '/path',
-  project: 'explicit-project',
-  branch: 'explicit-branch'
+// The address the current site request is served from: routes of the site are relative to it
+const base = baseUrl();
+const searchUrl = base + '/search';
+
+// The same, as an absolute URL, for a canonical link
+const absoluteBase = baseUrl({
+  type: 'absolute'
 });
 ----
 
@@ -724,7 +806,7 @@ const expected = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACb
 [[imageUrl]]
 === imageUrl
 
-Generates URL to an image.
+Generates URL to an image: an image or a vector image.
 
 [.lead]
 Parameters
@@ -753,7 +835,7 @@ Parameters
 [.lead]
 Returns
 
-*string* : The generated URL.
+*string* : The generated URL; one answered with 404 when the image does not resolve — see <<unresolved_urls, URLs that do not resolve>>.
 
 [.lead]
 Example
@@ -768,6 +850,61 @@ const url = imageUrl({
   scale: 'block(1024,768)',
   filter: 'rounded(5);sharpen()'
 });
+----
+
+=== imageUrlParts
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of an image URL from configuration alone: `mediaBaseUrl + path + queryString`, where `mediaBaseUrl` is the root of the media APIs as the caller serves them. See <<url_parts, URL parts>>.
+
+The parts also hold the segments of the path - `context`, `id`, `fingerprint`, `scale` and `name` - for a host that serves the media API with leading segments hidden by a virtual host mapping, such as `+https://img.example.com/<context>/<id>:<fingerprint>/<scale>/<name>+`.
+
+The content has to be an image or a vector image; for other content an error is raised. An image the image API serves as stored, such as a vector image, has a single URL, with the `full` scale and none of the processing parameters.
+
+[.lead]
+Parameters
+
+`imageUrlParts()` takes a single `ImageUrlPartsParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | *Optional.* ID of the image content. Either `id` or `path` is required.
+| path | string | *Optional.* Path of the image content within the project.
+| scale | string | Options are `width(px)`, `height(px)`, `block(width,height)`, `square(px)`, `max(px)`, `wide(width,height)` and `full`.
+| quality | number | *Optional.* Quality for JPEG images, ranges from 0 (max compression) to 100 (min compression). Defaults to `85`.
+| background | string | *Optional.* Background color.
+| format | string | *Optional.* Format of the image.
+| filter | string | *Optional.* Filters to alter the image appearance, for example, `blur(3)`, `grayscale()`, `rounded(5)`.
+| project | string | *Optional.* Name of the project. Defaults to the project of the current context.
+| branch | string | *Optional.* Name of the branch. Defaults to the branch of the current context.
+| params | object | *Optional.* Custom query parameters of the URL.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<image-url-parts, `ImageUrlParts`>>) The parts of the URL.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {imageUrlParts} from '/lib/xp/portal';
+
+// Parts of the URL of a scaled image
+const parts = imageUrlParts({
+  id: '11cc4e09-0d9d-4a4d-9a4b-1a3a8c2b6f3e',
+  scale: 'block(1024,768)',
+  quality: 85,
+  project: 'myproject',
+  branch: 'master'
+});
+
+// The root of the media APIs as the frontend serves them
+const url = 'https://cdn.example.com/api' + parts.path + parts.queryString;
 ----
 
 === loginUrl
@@ -836,15 +973,15 @@ Parameters
 | id | string | *Optional.* Id of a content. If id is set, then path is not used.
 | path | string | *Optional.* Path of a content. Relative paths are resolved based on the current context.
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute` or `websocket`. Default is `server`. Ignored when the site has a configured Base URL — see <<base_urls, Base URLs>>.
-| project | string | *Optional.* Project of the context.
-| branch | string | *Optional.* Branch of the project for context.
+| project | string | *Deprecated.* Use <<pageurlparts, `pageUrlParts()`>> with a `base` from <<urlbase, `urlBase()`>> with `project` instead.
+| branch | string | *Deprecated.* Use <<pageurlparts, `pageUrlParts()`>> with a `base` from <<urlbase, `urlBase()`>> with `branch` instead.
 | params | object | *Optional.* Custom query parameters to append to the URL.
 |===
 
 [.lead]
 Returns
 
-*string* : The generated URL.
+*string* : The generated URL; one answered with 404 when the page does not resolve — see <<unresolved_urls, URLs that do not resolve>>.
 
 [.lead]
 Example
@@ -863,11 +1000,71 @@ const url = pageUrl({
 });
 ----
 
+=== pageUrlParts
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of a page URL from configuration alone, for the site or project `base` stands for: `baseUrl + path + queryString`. See <<url_parts, URL parts>>.
+
+The page has to be inside the site or project `base` stands for, or be it; for a page elsewhere an error is raised.
+
+[.lead]
+Parameters
+
+`pageUrlParts()` takes a single `PageUrlPartsParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | *Optional.* Id of the page. Either `id` or `path` is required.
+| path | string | *Optional.* Path of the page within the project.
+| base | <<url-base, UrlBase>> | *Optional.* The site or project the URL belongs to, resolved by <<urlbase, `urlBase()`>>; the page is looked up in its project and branch. Defaults to the project of the current context.
+| params | object | *Optional.* Custom query parameters of the URL.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<page-url-parts, `PageUrlParts`>>) The parts of the URL.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {pageUrlParts, urlBase} from '/lib/xp/portal';
+
+// The site the URLs belong to: resolve it once, and pass it to every call of the same request
+const base = urlBase({
+  key: '/my-site',
+  project: 'myproject',
+  branch: 'master'
+});
+
+// Parts of the URL of a page, relative to the site it belongs to
+const parts = pageUrlParts({
+  path: '/my-site/posts/first-post',
+  base,
+  params: {
+    a: 1
+  }
+});
+
+// The site's configured Base URL, or the origin the frontend serves the site from
+const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.queryString;
+----
+
 === processHtml
 [#processHtml]
 
 Resolves internal links to images and internal content items contained in an HTML text and replaces them with correct URLs.
 It will also process embedded macros.
+
+image:xp-810.svg[XP 8.1.0,opts=inline] An image names its style in the `style` parameter of its `+image://+` link: `<application>:<name>` for the style of that application, or a name alone for the first style of that name. Styles come from the system application and the applications configured on the site.
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A macro is resolved when the HTML is processed, among the applications configured on the site - by its name, then ignoring case - and then among the built-in macros; a macro no application provides stays as written. HTML comments in the text stay plain comments: they are never run as macros.
+
+A link or image that does not resolve gets a URL answered with 404 — see <<unresolved_urls, URLs that do not resolve>>.
 
 TIP: When outputting processed HTML in Thymeleaf, use attribute `data-th-utext="${processedHtml}"`.
 
@@ -883,8 +1080,8 @@ Parameters
 | Name | Type | Description
 | value | string | Html value string to process.
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
-| imageWidths | number[] | *Optional.* A comma-separated list of image widths. If this parameter is provided, all `+<img>+` tags will have an additional `srcset` attribute with image URLs generated for specified widths.
-| imageSizes | string | *Optional.* Specifies the width for an image depending on browser dimensions. The value has the following format: `(media-condition) width`. Multiple sizes are comma-separated.
+| imageWidths | number[] | *Optional.* A comma-separated list of image widths. If this parameter is provided, the `+<img>+` tags of images the image API scales will have an additional `srcset` attribute with image URLs generated for specified widths.
+| imageSizes | string | *Optional.* Specifies the width for an image depending on browser dimensions. The value has the following format: `(media-condition) width`. Multiple sizes are comma-separated. Written only along with the `srcset` that `imageWidths` adds.
 |===
 
 [.lead]
@@ -907,6 +1104,77 @@ const html = processHtml({
          '<img src="image://123"/>',
   imageWidths: [32, 480, 800]
 });
+----
+
+=== processHtmlParts
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Processes an HTML text like <<processHtml, `processHtml()`>>, from configuration alone, for the site or project `base` stands for, and returns the parts of every internal link, image and macro in it. See <<url_parts, URL parts>>.
+
+Everything is resolved for the base: the Base URL, the path each content link is relative to, the project and branch contents and media are looked up in, and the applications image styles and macros come from.
+
+Internal links, images and macros in the returned HTML are placeholders, which the caller renders from their entries:
+
+* a link carries a `data-link-ref` attribute, and an image a `data-image-ref` attribute, naming its entry in `links` or `images`;
+* a macro an application of the base provides becomes an `editor-macro` element holding its body, with a `data-macro-name` attribute holding the name of its descriptor and a `data-macro-ref` attribute naming its entry in `macros`. Other macros stay as written.
+
+A link or image that does not resolve keeps its ref, and its entry has no parts, so the caller decides how to render it.
+
+[.lead]
+Parameters
+
+`processHtmlParts()` takes a single `ProcessHtmlPartsParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| value | string | Html value string to process.
+| base | <<url-base, UrlBase>> | *Optional.* The site or project the HTML belongs to, resolved by <<urlbase, `urlBase()`>>. Defaults to the project of the current context.
+| imageWidths | number[] | *Optional.* Image widths for the `srcset` attribute of `+<img>+` tags, for images the image API scales.
+| imageSizes | string | *Optional.* Value of the `sizes` attribute of `+<img>+` tags. Written only along with the `srcset` that `imageWidths` adds.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<processed-html, `ProcessedHtml`>>) The processed HTML, with the parts of its links and images, and its macros.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {processHtmlParts, urlBase} from '/lib/xp/portal';
+
+const base = urlBase({
+  key: '/my-site',
+  project: 'myproject',
+  branch: 'master'
+});
+
+const result = processHtmlParts({
+  value: '<a href="content://123456">Post</a>[youtube videoid="abc"/]',
+  base
+});
+
+// The site's configured Base URL, or the origin the frontend serves the site from
+const origin = result.baseUrl ?? 'https://www.example.com';
+
+for (const link of result.links) {
+  // a link that does not resolve has no parts
+  if (link.type === 'content' && link.page) {
+    const href = origin + link.page.path + link.page.queryString + (link.fragment ? `#${link.fragment}` : '');
+    // set href on the element whose data-link-ref is link.ref
+  }
+}
+
+for (const macro of result.macros) {
+  if (macro.descriptor === 'com.example.myapp:youtube') {
+    const embedUrl = 'https://www.youtube.com/embed/' + macro.params.videoId[0];
+    // render the editor-macro element whose data-macro-ref is macro.ref
+  }
+}
 ----
 
 === sanitizeHtml
@@ -1027,7 +1295,233 @@ const url = buildUrl({
 });
 ----
 
+=== urlBase
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the site - or the project - URLs belong to, from configuration alone, for <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>. Resolve it once and pass it as `base` to every call of the same request. See <<url_parts, URL parts>>.
+
+[.lead]
+Parameters
+
+`urlBase()` takes a single, optional `UrlBaseParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| key | string | *Optional.* Id or path of the site, or of a content inside it. A key starting with `/` is a path. Defaults to `/`, which selects the project.
+| project | string | *Optional.* Name of the project. Defaults to the project of the current context.
+| branch | string | *Optional.* Name of the branch. Defaults to the branch of the current context.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<url-base, `UrlBase`>>) The resolved site or project.
+
+[.lead]
+Example
+
+[source,typescript]
+----
+import {pageUrlParts, urlBase} from '/lib/xp/portal';
+
+// The site URLs belong to, resolved once for every URL of the same request
+const base = urlBase({
+  key: '/my-site',
+  project: 'myproject',
+  branch: 'master'
+});
+
+// The site's configured Base URL, or the origin the frontend serves the site from
+const origin = base.baseUrl ?? 'https://www.example.com';
+
+const post = pageUrlParts({path: '/my-site/posts/first-post', base});
+const url = origin + post.path + post.queryString;
+----
+
 == Type Definitions
+
+[#url-base]
+=== UrlBase
+
+image:xp-810.svg[XP 8.1.0,opts=inline] The site or project URLs belong to, resolved by <<urlbase, `urlBase()`>>. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| baseUrl | string \| null | Base URL configured for the site or project, without a trailing slash; `null` when none is configured.
+|===
+
+[#page-url-parts]
+=== PageUrlParts
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Parts of a page URL: `baseUrl + path + queryString`.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| baseUrl | string \| null | Base URL configured for the site or project the URL belongs to, without a trailing slash; `null` when none is configured.
+| path | string | URL-escaped content path relative to that site or project, with a leading slash; empty for the site itself, so that `baseUrl + path` is the Base URL.
+| queryString | string | URL-escaped query string prefixed with `?`; empty when there are no parameters.
+|===
+
+[#image-url-parts]
+=== ImageUrlParts
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Parts of an image URL: `mediaBaseUrl + path + queryString`, with the media base supplied by the caller. All values are URL-escaped as they appear in the URL.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| path | string | The media API path with a leading slash: `+/media:image/<context>/<id>:<fingerprint>/<scale>/<name>+`.
+| queryString | string | Query string prefixed with `?`; empty when there are no parameters.
+| context | string | Project context segment: `<project>` on the master branch, `<project>:<branch>` otherwise.
+| id | string | Content id.
+| fingerprint | string \| null | Media fingerprint, joined with the id as `<id>:<fingerprint>` in the path.
+| scale | string | Scale segment, for example `max-300`.
+| name | string | File name segment, with the requested format extension applied.
+|===
+
+[#attachment-url-parts]
+=== AttachmentUrlParts
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Parts of an attachment URL: `mediaBaseUrl + path + queryString`, with the media base supplied by the caller. All values are URL-escaped as they appear in the URL.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| path | string | The media API path with a leading slash: `+/media:attachment/<context>/<id>:<fingerprint>/<name>+`.
+| queryString | string | Query string prefixed with `?`, holding `download` when requested; empty when there are no parameters.
+| context | string | Project context segment: `<project>` on the master branch, `<project>:<branch>` otherwise.
+| id | string | Content id.
+| fingerprint | string \| null | Media fingerprint, joined with the id as `<id>:<fingerprint>` in the path.
+| name | string | Attachment file name segment.
+|===
+
+[#processed-html]
+=== ProcessedHtml
+
+image:xp-810.svg[XP 8.1.0,opts=inline] Result of <<processhtmlparts, `processHtmlParts()`>>.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| html | string | The processed HTML, with placeholders for its internal links, images and macros.
+| baseUrl | string \| null | Base URL configured for the site or project the HTML belongs to, without a trailing slash; `null` when none is configured. It is the `baseUrl` of the page parts of every content link.
+| links | (<<processed-html-content-link, ProcessedHtmlContentLink>> \| <<processed-html-attachment-link, ProcessedHtmlAttachmentLink>>)[] | Internal links to contents and attachments, in document order, told apart by their `type`.
+| images | <<processed-html-image, ProcessedHtmlImage>>[] | Internal images, in document order.
+| macros | <<processed-html-macro, ProcessedHtmlMacro>>[] | Macros, in document order.
+|===
+
+[#processed-html-content-link]
+=== ProcessedHtmlContentLink
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A link to a content page, written as `content://<id>`.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | `content`.
+| ref | string | Value of the `data-link-ref` attribute of the element.
+| uri | string | The link as written in the HTML.
+| contentId | string | Id of the linked content.
+| page | <<page-url-parts, PageUrlParts>> \| null | Parts of the page URL, with the query string the link carries; `null` when the link does not resolve.
+| fragment | string \| null | Fragment of the link, without `#`; `null` when it has none.
+|===
+
+[#processed-html-attachment-link]
+=== ProcessedHtmlAttachmentLink
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A link to the attachment of a media content, written as `media://<mode>/<id>`.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| type | string | `attachment`.
+| ref | string | Value of the `data-link-ref` attribute of the element.
+| uri | string | The link as written in the HTML.
+| contentId | string | Id of the media content.
+| attachment | <<attachment-url-parts, AttachmentUrlParts>> \| null | Parts of the attachment URL; `null` when the link does not resolve.
+| download | boolean | Whether the link asks for the attachment to be downloaded.
+|===
+
+[#processed-html-image]
+=== ProcessedHtmlImage
+
+image:xp-810.svg[XP 8.1.0,opts=inline] An internal image.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| ref | string | Value of the `data-image-ref` attribute of the element.
+| contentId | string | Id of the image content.
+| style | <<processed-html-image-style, ProcessedHtmlImageStyle>> \| null | The image style applied; `null` for none.
+| src | <<image-url-parts, ImageUrlParts>> \| null | Parts of the URL in `src`; `null` when the image does not resolve.
+| srcset | <<processed-html-image-source, ProcessedHtmlImageSource>>[] | Parts of the URLs in `srcset`, one for each image width; empty for an image the image API serves as stored.
+|===
+
+[#processed-html-image-style]
+=== ProcessedHtmlImageStyle
+
+image:xp-810.svg[XP 8.1.0,opts=inline] The style applied to an image.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| application | string | Key of the application whose style descriptor holds the style.
+| name | string | Name of the style in that style descriptor.
+| aspectRatio | string \| null | Aspect ratio the image is cropped to, such as `16:9`; `null` for none.
+| filter | string \| null | Image filter; `null` for none.
+|===
+
+[#processed-html-image-source]
+=== ProcessedHtmlImageSource
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A `srcset` candidate of an image.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| width | number | Width in pixels, the `w` descriptor of the candidate.
+| url | <<image-url-parts, ImageUrlParts>> | Parts of the URL of the image at that width.
+|===
+
+[#processed-html-macro]
+=== ProcessedHtmlMacro
+
+image:xp-810.svg[XP 8.1.0,opts=inline] A macro, resolved among the applications of the site or project the HTML belongs to.
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| ref | string | Value of the `data-macro-ref` attribute of the `editor-macro` element.
+| descriptor | string | Key of the macro descriptor, such as `system:embed`.
+| params | object | Parameters of the macro, each a list of its values in the order written. A parameter matching an input of the descriptor's form, ignoring case, is named as that input.
+| body | string | Body of the macro as written; empty for a macro without one.
+|===
 
 [#site]
 === Site
