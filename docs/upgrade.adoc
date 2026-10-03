@@ -47,74 +47,10 @@ The app builds and runs. What follows is work that can be done at your own pace.
 
 XP 8.0 is the baseline for this documentation. The <<upgrade/xp7#, XP 7 migration guide>> covers changes to the build system, descriptors, application code and APIs when moving from XP 7.
 
-[#xp-8-2]
-== XP 8.2
-
-No breaking changes for JavaScript application code. Every API deprecated in 8.2 still works, and every replacement ships with 8.2.0, apart from the Java macro instruction noted below.
-
-=== Deprecations
-
-[#xp-8-2-lib-portal]
-==== lib-portal
-
-Setting a project or branch on a request-following URL function switched it from the request to configuration, even for the request's own project, so the URL left the virtual host the request came through. These parameters are deprecated in favour of the <<libraries/lib-portal#url_parts, URL parts>> functions, which resolve URLs from configuration alone:
-
-* `project` and `branch` on <<libraries/lib-portal#pageurl, `pageUrl()`>>: use <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>> with a `base` from <<libraries/lib-portal#urlbase, `urlBase()`>>.
-* `id`, `path`, `project` and `branch` on <<libraries/lib-portal#baseurl, `baseUrl()`>>: use <<libraries/lib-portal#urlbase, `urlBase()`>>. `baseUrl()` keeps `type`, and without parameters it is the base URL of the current site request.
-
-.Before
-[source,typescript]
-----
-import {pageUrl} from '/lib/xp/portal';
-
-const url = pageUrl({
-    path: '/my-site/posts/first-post',
-    project: 'myproject',
-    branch: 'master',
-    type: 'absolute'
-});
-----
-
-.After
-[source,typescript]
-----
-import {pageUrlParts, urlBase} from '/lib/xp/portal';
-
-const base = urlBase({key: '/my-site', project: 'myproject', branch: 'master'});
-const parts = pageUrlParts({path: '/my-site/posts/first-post', base});
-const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.queryString;
-----
-
-The `project` and `branch` of <<libraries/lib-portal#imageUrl, `imageUrl()`>> and <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> stay: a media URL carries them in its path.
-
-[#xp-8-2-java]
-==== Java APIs
-
-`MacroService.postProcessInstructionSerialize()` is deprecated, and post-processing no longer executes the instructions it writes: an instruction runs only when it names the macro descriptor it was resolved to, which `processHtml()` writes for the macros of the HTML it processes. Process rich text with `processHtml()` instead of serializing macro instructions yourself.
-
-=== Behaviour changes
-
-URLs that do not resolve::
-<<libraries/lib-portal#pageurl, `pageUrl()`>>, <<libraries/lib-portal#imageUrl, `imageUrl()`>>, <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> and <<libraries/lib-portal#processHtml, `processHtml()`>> generate a URL answered with 404, rather than one answered with 500, when the content it names does not resolve. See <<libraries/lib-portal#unresolved_urls, URLs that do not resolve>>.
-
-Rich text images::
-`processHtml()` writes `sizes` only along with a `srcset` of at least one width, and an image the image API serves as stored gets no `srcset`.
-
-Rich text macros::
-A macro in rich text is resolved when `processHtml()` processes it, and no longer needs a site request to render. A macro no application provides stays as written, and post-processing instructions already present in the HTML are not executed.
-
-=== Worth adopting
-
-URLs for a frontend of your own::
-A frontend that serves content from a host of its own builds its URLs from the <<libraries/lib-portal#url_parts, URL parts>> functions: <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>>, <<libraries/lib-portal#imageurlparts, `imageUrlParts()`>>, <<libraries/lib-portal#attachmenturlparts, `attachmentUrlParts()`>> and <<libraries/lib-portal#processhtmlparts, `processHtmlParts()`>>, with the site or project resolved once by <<libraries/lib-portal#urlbase, `urlBase()`>>.
-
-Image styles of a given application::
-An image in rich text can name its style as `<application>:<name>`, where several applications define styles of the same name.
-
 [#xp-8-1]
 == XP 8.1
 
-No breaking changes for application code. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0.
+No breaking changes for JavaScript application code. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, apart from the Java macro instruction noted below.
 
 === Deprecations
 
@@ -283,6 +219,36 @@ See https://developer.enonic.com/docs/platform/stable/config/vhosts#api-location
 
 Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.
 
+Setting a project or branch on a request-following URL function switched it from the request to configuration, even for the request's own project, so the URL left the virtual host the request came through. These parameters are deprecated in favour of the <<libraries/lib-portal#url_parts, URL parts>> functions, which resolve URLs from configuration alone:
+
+* `project` and `branch` on <<libraries/lib-portal#pageurl, `pageUrl()`>>: use <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>> with a `base` from <<libraries/lib-portal#urlbase, `urlBase()`>>.
+* `id`, `path`, `project` and `branch` on <<libraries/lib-portal#baseurl, `baseUrl()`>>: use <<libraries/lib-portal#urlbase, `urlBase()`>>. `baseUrl()` keeps `type`, and without parameters it is the base URL of the current site request.
+
+.Before
+[source,typescript]
+----
+import {pageUrl} from '/lib/xp/portal';
+
+const url = pageUrl({
+    path: '/my-site/posts/first-post',
+    project: 'myproject',
+    branch: 'master',
+    type: 'absolute'
+});
+----
+
+.After
+[source,typescript]
+----
+import {pageUrlParts, urlBase} from '/lib/xp/portal';
+
+const base = urlBase({key: '/my-site', project: 'myproject', branch: 'master'});
+const parts = pageUrlParts({path: '/my-site/posts/first-post', base});
+const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.queryString;
+----
+
+The `project` and `branch` of <<libraries/lib-portal#imageUrl, `imageUrl()`>> and <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> stay: a media URL carries them in its path.
+
 [#xp-8-1-lib-export]
 ==== lib-export
 
@@ -313,6 +279,21 @@ There is no drop-in replacement, and no general rule - what to key on depends on
 
 `ApplicationListener` is deprecated. It misses applications that were already active when the listener registered. Track `Application` services with a service tracker instead: `addingService` replays every active application on open and delivers future ones, and `removedService` is delivered before any replacement is registered.
 
+==== MacroService
+
+`MacroService.postProcessInstructionSerialize()` is deprecated, and post-processing no longer executes the instructions it writes: an instruction runs only when it names the macro descriptor it was resolved to, which `processHtml()` writes for the macros of the HTML it processes. Process rich text with `processHtml()` instead of serializing macro instructions yourself.
+
+=== Behaviour changes
+
+URLs that do not resolve::
+<<libraries/lib-portal#pageurl, `pageUrl()`>>, <<libraries/lib-portal#imageUrl, `imageUrl()`>>, <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> and <<libraries/lib-portal#processHtml, `processHtml()`>> generate a URL answered with 404, rather than one answered with 500, when the content it names does not resolve. See <<libraries/lib-portal#unresolved_urls, URLs that do not resolve>>.
+
+Rich text images::
+`processHtml()` writes `sizes` only along with a `srcset` of at least one width, and an image the image API serves as stored gets no `srcset`.
+
+Rich text macros::
+A macro in rich text is resolved when `processHtml()` processes it, and no longer needs a site request to render. A macro no application provides stays as written, and post-processing instructions already present in the HTML are not executed.
+
 === Worth adopting
 
 None of these are deprecations. They are places where 8.1 offers a supported way to do something apps have had to work around.
@@ -328,3 +309,9 @@ Initialization guards::
 
 Disposer registration::
 `+__.disposer()+` registrations are remembered when they are made while the application is starting - from `main.ts`, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.
+
+URLs for a frontend of your own::
+A frontend that serves content from a host of its own builds its URLs from the <<libraries/lib-portal#url_parts, URL parts>> functions: <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>>, <<libraries/lib-portal#imageurlparts, `imageUrlParts()`>>, <<libraries/lib-portal#attachmenturlparts, `attachmentUrlParts()`>> and <<libraries/lib-portal#processhtmlparts, `processHtmlParts()`>>, with the site or project resolved once by <<libraries/lib-portal#urlbase, `urlBase()`>>.
+
+Image styles of a given application::
+An image in rich text can name its style as `<application>:<name>`, where several applications define styles of the same name.

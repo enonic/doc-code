@@ -29,7 +29,7 @@ To serve media from another host, configure `+media.defaultBaseUrl+` — see the
 [#url_parts]
 === URL parts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] The URL functions follow the request: they generate the URL the current request leads to, through its virtual host. A frontend serving content from a host of its own, such as a headless one, needs URLs resolved from configuration alone instead. Each request-following function has a counterpart that returns such a URL as parts to assemble:
+image:xp-810.svg[XP 8.1.0,opts=inline] The URL functions follow the request: they generate the URL the current request leads to, through its virtual host. A frontend serving content from a host of its own, such as a headless one, needs URLs resolved from configuration alone instead. Each request-following function has a counterpart that returns such a URL as parts to assemble:
 
 [%header,cols="1,1"]
 [frame="none"]
@@ -52,7 +52,7 @@ Parts are URL-escaped as they appear in the URL: assemble them without encoding 
 [#unresolved_urls]
 === URLs that do not resolve
 
-image:xp-820.svg[XP 8.2.0,opts=inline] When the content a URL names does not resolve - a missing content, a content that is not an image, an unknown attachment, or a deleted project or branch - <<pageurl, `pageUrl()`>>, <<imageUrl, `imageUrl()`>>, <<attachmentUrl, `attachmentUrl()`>> and <<processHtml, `processHtml()`>> generate a URL answered with *404 Not Found*, and log a warning. A broken link in rich text therefore leaves the rest of the text intact. In <<processhtmlparts, `processHtmlParts()`>>, the element of a link or image that does not resolve holds such a URL, and its entry has no parts.
+image:xp-810.svg[XP 8.1.0,opts=inline] When the content a URL names does not resolve - a missing content, a content that is not an image, an unknown attachment, or a deleted project or branch - <<pageurl, `pageUrl()`>>, <<imageUrl, `imageUrl()`>>, <<attachmentUrl, `attachmentUrl()`>> and <<processHtml, `processHtml()`>> generate a URL answered with *404 Not Found*, and log a warning. A broken link in rich text therefore leaves the rest of the text intact. In <<processhtmlparts, `processHtmlParts()`>>, the element of a link or image that does not resolve holds such a URL, and its entry has no parts.
 
 == Functions
 
@@ -188,7 +188,7 @@ const url = attachmentUrl({
 
 === attachmentUrlParts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Resolves the parts of an attachment URL from configuration alone: `mediaBaseUrl + path + queryString`, where `mediaBaseUrl` is the root of the media APIs as the caller serves them. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of an attachment URL from configuration alone: `mediaBaseUrl + path + queryString`, where `mediaBaseUrl` is the root of the media APIs as the caller serves them. See <<url_parts, URL parts>>.
 
 The parts also hold the segments of the path - `context`, `id`, `fingerprint` and `name` - for a host that serves the media API with leading segments hidden by a virtual host mapping, such as `+https://cdn.example.com/<context>/<id>:<fingerprint>/<name>+`. The attachment is picked as in <<attachmentUrl, `attachmentUrl()`>>.
 
@@ -854,7 +854,7 @@ const url = imageUrl({
 
 === imageUrlParts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Resolves the parts of an image URL from configuration alone: `mediaBaseUrl + path + queryString`, where `mediaBaseUrl` is the root of the media APIs as the caller serves them. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of an image URL from configuration alone: `mediaBaseUrl + path + queryString`, where `mediaBaseUrl` is the root of the media APIs as the caller serves them. See <<url_parts, URL parts>>.
 
 The parts also hold the segments of the path - `context`, `id`, `fingerprint`, `scale` and `name` - for a host that serves the media API with leading segments hidden by a virtual host mapping, such as `+https://img.example.com/<context>/<id>:<fingerprint>/<scale>/<name>+`.
 
@@ -1002,7 +1002,7 @@ const url = pageUrl({
 
 === pageUrlParts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Resolves the parts of a page URL from configuration alone, for the site or project `base` stands for: `baseUrl + path + queryString`. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of a page URL from configuration alone, for the site or project `base` stands for: `baseUrl + path + queryString`. See <<url_parts, URL parts>>.
 
 The page has to be inside the site or project `base` stands for, or be it; for a page elsewhere an error is raised.
 
@@ -1060,9 +1060,9 @@ const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.qu
 Resolves internal links to images and internal content items contained in an HTML text and replaces them with correct URLs.
 It will also process embedded macros.
 
-image:xp-820.svg[XP 8.2.0,opts=inline] An image names its style in the `style` parameter of its `+image://+` link: `<application>:<name>` for the style of that application, or a name alone for the first style of that name. Styles come from the system application and the applications configured on the site.
+image:xp-810.svg[XP 8.1.0,opts=inline] An image names its style in the `style` parameter of its `+image://+` link: `<application>:<name>` for the style of that application, or a name alone for the first style of that name. Styles come from the system application and the applications configured on the site.
 
-image:xp-820.svg[XP 8.2.0,opts=inline] A macro is resolved when the HTML is processed, among the applications configured on the site - by its name, then ignoring case - and then among the built-in macros; a macro no application provides stays as written. Post-processing instructions already present in the HTML are not executed.
+image:xp-810.svg[XP 8.1.0,opts=inline] A macro is resolved when the HTML is processed, among the applications configured on the site - by its name, then ignoring case - and then among the built-in macros; a macro no application provides stays as written. Post-processing instructions already present in the HTML are not executed.
 
 A link or image that does not resolve gets a URL answered with 404 — see <<unresolved_urls, URLs that do not resolve>>.
 
@@ -1108,7 +1108,7 @@ const html = processHtml({
 
 === processHtmlParts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Processes an HTML text like <<processHtml, `processHtml()`>>, from configuration alone, for the site or project `base` stands for, and returns the parts of every internal link, image and macro in it. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Processes an HTML text like <<processHtml, `processHtml()`>>, from configuration alone, for the site or project `base` stands for, and returns the parts of every internal link, image and macro in it. See <<url_parts, URL parts>>.
 
 Everything is resolved for the base: the Base URL, the path each content link is relative to, the project and branch contents and media are looked up in, and the applications image styles and macros come from.
 
@@ -1297,7 +1297,7 @@ const url = buildUrl({
 
 === urlBase
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Resolves the site - or the project - URLs belong to, from configuration alone, for <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>. Resolve it once and pass it as `base` to every call of the same request. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the site - or the project - URLs belong to, from configuration alone, for <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>. Resolve it once and pass it as `base` to every call of the same request. See <<url_parts, URL parts>>.
 
 [.lead]
 Parameters
@@ -1345,7 +1345,7 @@ const url = origin + post.path + post.queryString;
 [#url-base]
 === UrlBase
 
-image:xp-820.svg[XP 8.2.0,opts=inline] The site or project URLs belong to, resolved by <<urlbase, `urlBase()`>>. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] The site or project URLs belong to, resolved by <<urlbase, `urlBase()`>>. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1358,7 +1358,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] The site or project URLs belong to, resol
 [#page-url-parts]
 === PageUrlParts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Parts of a page URL: `baseUrl + path + queryString`.
+image:xp-810.svg[XP 8.1.0,opts=inline] Parts of a page URL: `baseUrl + path + queryString`.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1373,7 +1373,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] Parts of a page URL: `baseUrl + path + qu
 [#image-url-parts]
 === ImageUrlParts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Parts of an image URL: `mediaBaseUrl + path + queryString`, with the media base supplied by the caller. All values are URL-escaped as they appear in the URL.
+image:xp-810.svg[XP 8.1.0,opts=inline] Parts of an image URL: `mediaBaseUrl + path + queryString`, with the media base supplied by the caller. All values are URL-escaped as they appear in the URL.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1392,7 +1392,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] Parts of an image URL: `mediaBaseUrl + pa
 [#attachment-url-parts]
 === AttachmentUrlParts
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Parts of an attachment URL: `mediaBaseUrl + path + queryString`, with the media base supplied by the caller. All values are URL-escaped as they appear in the URL.
+image:xp-810.svg[XP 8.1.0,opts=inline] Parts of an attachment URL: `mediaBaseUrl + path + queryString`, with the media base supplied by the caller. All values are URL-escaped as they appear in the URL.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1410,7 +1410,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] Parts of an attachment URL: `mediaBaseUrl
 [#processed-html]
 === ProcessedHtml
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Result of <<processhtmlparts, `processHtmlParts()`>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Result of <<processhtmlparts, `processHtmlParts()`>>.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1427,7 +1427,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] Result of <<processhtmlparts, `processHtm
 [#processed-html-content-link]
 === ProcessedHtmlContentLink
 
-image:xp-820.svg[XP 8.2.0,opts=inline] A link to a content page, written as `content://<id>`.
+image:xp-810.svg[XP 8.1.0,opts=inline] A link to a content page, written as `content://<id>`.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1445,7 +1445,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] A link to a content page, written as `con
 [#processed-html-attachment-link]
 === ProcessedHtmlAttachmentLink
 
-image:xp-820.svg[XP 8.2.0,opts=inline] A link to the attachment of a media content, written as `media://<mode>/<id>`.
+image:xp-810.svg[XP 8.1.0,opts=inline] A link to the attachment of a media content, written as `media://<mode>/<id>`.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1463,7 +1463,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] A link to the attachment of a media conte
 [#processed-html-image]
 === ProcessedHtmlImage
 
-image:xp-820.svg[XP 8.2.0,opts=inline] An internal image.
+image:xp-810.svg[XP 8.1.0,opts=inline] An internal image.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1480,7 +1480,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] An internal image.
 [#processed-html-image-style]
 === ProcessedHtmlImageStyle
 
-image:xp-820.svg[XP 8.2.0,opts=inline] The style applied to an image.
+image:xp-810.svg[XP 8.1.0,opts=inline] The style applied to an image.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1496,7 +1496,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] The style applied to an image.
 [#processed-html-image-source]
 === ProcessedHtmlImageSource
 
-image:xp-820.svg[XP 8.2.0,opts=inline] A `srcset` candidate of an image.
+image:xp-810.svg[XP 8.1.0,opts=inline] A `srcset` candidate of an image.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -1510,7 +1510,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] A `srcset` candidate of an image.
 [#processed-html-macro]
 === ProcessedHtmlMacro
 
-image:xp-820.svg[XP 8.2.0,opts=inline] A macro, resolved among the applications of the site or project the HTML belongs to.
+image:xp-810.svg[XP 8.1.0,opts=inline] A macro, resolved among the applications of the site or project the HTML belongs to.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
