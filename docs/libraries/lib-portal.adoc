@@ -45,7 +45,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] The URL functions follow the request: the
 
 Page URLs and rich text belong to a site, or to a project. <<urlbase, `urlBase()`>> resolves that site or project once, and its result is passed as `base` to every `pageUrlParts()` and `processHtmlParts()` call of the same request. Its `baseUrl` is the Base URL configured there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`, and the path is relative to the site or project.
 
-A media URL carries its project and branch in its path and belongs to no site, so `imageUrlParts()` and `attachmentUrlParts()` take a `project` and `branch` instead of a base. A media URL is `mediaBaseUrl + path + queryString`, where the caller supplies the root of the media APIs as it serves them; `+media.defaultBaseUrl+` and the mounts of the media APIs do not apply.
+`imageUrlParts()` and `attachmentUrlParts()` take a `project` and `branch`. A media URL is `mediaBaseUrl + path + queryString`, where the caller supplies the root of the media APIs as it serves them; `+media.defaultBaseUrl+` and the mounts of the media APIs do not apply.
 
 Parts are URL-escaped as they appear in the URL: assemble them without encoding them again.
 

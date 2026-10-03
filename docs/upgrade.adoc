@@ -247,8 +247,6 @@ const parts = pageUrlParts({path: '/my-site/posts/first-post', base});
 const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.queryString;
 ----
 
-The `project` and `branch` of <<libraries/lib-portal#imageUrl, `imageUrl()`>> and <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> stay: a media URL carries them in its path.
-
 [#xp-8-1-lib-export]
 ==== lib-export
 
