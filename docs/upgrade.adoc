@@ -279,7 +279,7 @@ There is no drop-in replacement, and no general rule - what to key on depends on
 
 ==== MacroService
 
-`MacroService.postProcessInstructionSerialize()` is deprecated, and post-processing no longer executes the instructions it writes: an instruction runs only when it names the macro descriptor it was resolved to, which `processHtml()` writes for the macros of the HTML it processes. Process rich text with `processHtml()` instead of serializing macro instructions yourself.
+`MacroService.postProcessInstructionSerialize()` is deprecated. It turned a macro into an HTML comment that XP replaced with the macro's output when rendering the page. XP no longer does that for these comments: the page shows the macro as written, such as `[mymacro]`. Pass rich text through `processHtml()` instead; the macros it finds are rendered with the page.
 
 === Behaviour changes
 
@@ -290,7 +290,7 @@ Rich text images::
 `processHtml()` writes `sizes` only along with a `srcset` of at least one width, and an image the image API serves as stored gets no `srcset`.
 
 Rich text macros::
-A macro in rich text is resolved when `processHtml()` processes it, and no longer needs a site request to render. A macro no application provides stays as written, and post-processing instructions already present in the HTML are not executed.
+`processHtml()` now looks up each macro itself, so macros render on any page, also outside a site. A macro no application provides is shown as written. HTML comments in the rich text stay plain comments: they are never run as macros.
 
 === Worth adopting
 

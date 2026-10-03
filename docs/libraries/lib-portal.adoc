@@ -1062,7 +1062,7 @@ It will also process embedded macros.
 
 image:xp-810.svg[XP 8.1.0,opts=inline] An image names its style in the `style` parameter of its `+image://+` link: `<application>:<name>` for the style of that application, or a name alone for the first style of that name. Styles come from the system application and the applications configured on the site.
 
-image:xp-810.svg[XP 8.1.0,opts=inline] A macro is resolved when the HTML is processed, among the applications configured on the site - by its name, then ignoring case - and then among the built-in macros; a macro no application provides stays as written. Post-processing instructions already present in the HTML are not executed.
+image:xp-810.svg[XP 8.1.0,opts=inline] A macro is resolved when the HTML is processed, among the applications configured on the site - by its name, then ignoring case - and then among the built-in macros; a macro no application provides stays as written. HTML comments in the text stay plain comments: they are never run as macros.
 
 A link or image that does not resolve gets a URL answered with 404 — see <<unresolved_urls, URLs that do not resolve>>.
 
