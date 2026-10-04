@@ -1345,7 +1345,7 @@ const url = origin + post.path + post.queryString;
 [#url-base]
 === UrlBase
 
-image:xp-810.svg[XP 8.1.0,opts=inline] The site or project URLs belong to, resolved by <<urlbase, `urlBase()`>>. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] The site or project URLs belong to, resolved by <<urlbase, `urlBase()`>>. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>; a `base` that `urlBase()` did not return raises an error.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
