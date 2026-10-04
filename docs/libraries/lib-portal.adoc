@@ -1164,7 +1164,7 @@ const origin = result.baseUrl ?? 'https://www.example.com';
 for (const link of result.links) {
   // a link that does not resolve has no parts
   if (link.type === 'content' && link.page) {
-    const href = origin + link.page.path + link.page.queryString + (link.fragment ? `#${link.fragment}` : '');
+    const href = origin + link.page.path + link.page.queryString + link.fragment;
     // set href on the element whose data-link-ref is link.ref
   }
 }
@@ -1439,7 +1439,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] A link to a content page, written as `con
 | uri | string | The link as written in the HTML.
 | contentId | string | Id of the linked content.
 | page | <<page-url-parts, PageUrlParts>> \| null | Parts of the page URL, with the query string the link carries; `null` when the link does not resolve.
-| fragment | string \| null | Fragment of the link, without `#`; `null` when it has none.
+| fragment | string | Fragment of the link, with its leading `#`; empty when it has none. The href of the link is `baseUrl + path + queryString + fragment`.
 |===
 
 [#processed-html-attachment-link]
