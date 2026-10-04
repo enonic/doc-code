@@ -43,7 +43,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] The URL functions follow the request: the
 | <<baseurl, `baseUrl()`>> | <<urlbase, `urlBase()`>>
 |===
 
-Page URLs and rich text belong to a site, or to a project. <<urlbase, `urlBase()`>> resolves that site or project once, and its result is passed as `base` to every `pageUrlParts()` and `processHtmlParts()` call of the same request. Its `baseUrl` is the Base URL configured there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`, and the path is relative to the site or project.
+Page URLs and rich text belong to a site, or to a project. The request-following functions take it from the request: its project, branch, site and the site's configuration. <<urlbase, `urlBase()`>> resolves the same from configuration alone, as a stand-in for a site request, and its result is passed as `base` to every `pageUrlParts()` and `processHtmlParts()` call for that site. Its `baseUrl` is the Base URL configured there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`, and the path is relative to the site or project.
 
 `imageUrlParts()` and `attachmentUrlParts()` take a `project` and `branch`. A media URL is `mediaBaseUrl + path + queryString`, where the caller supplies the root of the media APIs as it serves them; `+media.defaultBaseUrl+` and the mounts of the media APIs do not apply.
 
@@ -1034,7 +1034,7 @@ Example
 ----
 import {pageUrlParts, urlBase} from '/lib/xp/portal';
 
-// The site the URLs belong to: resolve it once, and pass it to every call of the same request
+// The site the URLs belong to, in place of a site request: resolve it once, and pass it to every call for that site
 const base = urlBase({
   key: '/my-site',
   project: 'myproject',
@@ -1297,7 +1297,7 @@ const url = buildUrl({
 
 === urlBase
 
-image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the site - or the project - URLs belong to, from configuration alone, for <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>. Resolve it once and pass it as `base` to every call of the same request. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the site - or the project - URLs belong to, from configuration alone, for <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>: what a site request would provide them - the project, the branch, the site and its configuration - without one. Resolve it once and pass it as `base` to every call for that site. See <<url_parts, URL parts>>.
 
 [.lead]
 Parameters
@@ -1326,7 +1326,7 @@ Example
 ----
 import {pageUrlParts, urlBase} from '/lib/xp/portal';
 
-// The site URLs belong to, resolved once for every URL of the same request
+// The site URLs belong to, in place of a site request: resolved once for every URL of that site
 const base = urlBase({
   key: '/my-site',
   project: 'myproject',
@@ -1345,7 +1345,7 @@ const url = origin + post.path + post.queryString;
 [#url-base]
 === UrlBase
 
-image:xp-810.svg[XP 8.1.0,opts=inline] The site or project URLs belong to, resolved by <<urlbase, `urlBase()`>>. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>; a `base` that `urlBase()` did not return raises an error.
+image:xp-810.svg[XP 8.1.0,opts=inline] The site or project URLs belong to, resolved by <<urlbase, `urlBase()`>>. It stands in for a site request: what request-following URLs take from the request, the URL parts take from the base. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>; a `base` that `urlBase()` did not return raises an error.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
