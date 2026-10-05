@@ -144,7 +144,7 @@ const url = assetUrl({
 
 Generates URL to an attachment.
 
-If `name` is provided, XP will try to find an attachment by the unique name and give an exception if it's not found. If `name` is empty but `label` is provided, XP will try to find an attachment with the provided label (will return the first one if several were found, or give an exception if none were found). If both `name` and `label` are empty, XP will generate attachment url only for a binary content with an attachment.
+If `name` is provided, the URL points to the attachment with that unique name. If `name` is empty but `label` is provided, it points to the first attachment with that label. If both `name` and `label` are empty, it points to the attachment of a binary content. When no attachment matches, the URL is answered with 404 — see <<unresolved_urls, URLs that do not resolve>>.
 
 [.lead]
 Parameters
@@ -1078,9 +1078,9 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| value | string | Html value string to process.
+| value | string | HTML to process.
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
-| imageWidths | number[] | *Optional.* A comma-separated list of image widths. If this parameter is provided, the `+<img>+` tags of images the image API scales will have an additional `srcset` attribute with image URLs generated for specified widths.
+| imageWidths | number[] | *Optional.* Image widths, such as `[400, 800]`. If provided, the `+<img>+` tags of images the image API scales get a `srcset` attribute with an image URL for each width.
 | imageSizes | string | *Optional.* Specifies the width for an image depending on browser dimensions. The value has the following format: `(media-condition) width`. Multiple sizes are comma-separated. Written only along with the `srcset` that `imageWidths` adds.
 |===
 
@@ -1129,7 +1129,7 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| value | string | Html value string to process.
+| value | string | HTML to process.
 | scope | <<portal-scope, PortalScope>> | *Optional.* The site or project the HTML belongs to, resolved by <<portalscope, `portalScope()`>>. Defaults to the project of the current context.
 | imageWidths | number[] | *Optional.* Image widths for the `srcset` attribute of `+<img>+` tags, for images the image API scales.
 | imageSizes | string | *Optional.* Value of the `sizes` attribute of `+<img>+` tags. Written only along with the `srcset` that `imageWidths` adds.
