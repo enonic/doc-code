@@ -1171,7 +1171,7 @@ for (const link of result.links) {
 
 for (const macro of result.macros) {
   if (macro.descriptor === 'com.example.myapp:youtube') {
-    const embedUrl = 'https://www.youtube.com/embed/' + macro.params.videoId[0];
+    const embedUrl = 'https://www.youtube.com/embed/' + macro.config.videoId;
     // render the editor-macro element whose data-macro-ref is macro.ref
   }
 }
@@ -1519,7 +1519,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] A macro, resolved among the applications 
 | Name | Type | Description
 | ref | string | Value of the `data-macro-ref` attribute of the `editor-macro` element.
 | descriptor | string | Key of the macro descriptor, such as `system:embed`.
-| params | object | Parameters of the macro, each a list of its values in the order written. A parameter matching an input of the descriptor's form, ignoring case, is named as that input.
+| config | object | Parameters of the macro. A parameter matching an input of the descriptor's form, ignoring case, is named as that input. An input taking several values holds a list of them in the order written; any other parameter holds its first value.
 | body | string | Body of the macro as written; empty for a macro without one.
 |===
 
