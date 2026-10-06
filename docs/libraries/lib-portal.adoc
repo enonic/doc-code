@@ -49,6 +49,8 @@ Page URLs and rich text belong to a site, or to a project. The request-following
 
 Parts are URL-escaped as they appear in the URL: assemble them without encoding them again.
 
+WARNING: Use each image URL as it is returned, and don't make other sizes by editing its `scale` segment. The fingerprint of an image URL can depend on its whole transformation, so an edited URL may no longer be served. The image's style also contributes to the scale. Ask XP for each size instead, with `scale` of <<imageurlparts, `imageUrlParts()`>>, or `imageSrcWidth` and `imageWidths` of <<processhtmlparts, `processHtmlParts()`>>.
+
 [#unresolved_urls]
 === URLs that do not resolve
 
