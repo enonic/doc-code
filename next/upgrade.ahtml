@@ -448,6 +448,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#deprecations">Deprecations</a></li>
 <li><a href="#xp-8-1-java">Java APIs</a></li>
+<li><a href="#behaviour_changes">Behaviour changes</a></li>
 <li><a href="#worth_adopting">Worth adopting</a></li>
 </ul>
 </li>
@@ -545,7 +546,7 @@ When building a new Enonic application, use the <a href="https://market.enonic.c
 <h2 id="xp-8-1"><a class="link" href="#xp-8-1">XP 8.1</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>No breaking changes for application code. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0.</p>
+<p>No breaking changes for JavaScript application code. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, apart from the Java macro instruction noted below.</p>
 </div>
 <div class="sect2">
 <h3 id="deprecations"><a class="link" href="#deprecations">Deprecations</a></h3>
@@ -687,7 +688,7 @@ const taskId = submitTask({
 <div class="sect3">
 <h4 id="xp-8-1-lib-portal"><a class="link" href="#xp-8-1-lib-portal">lib-portal</a></h4>
 <div class="paragraph">
-<p>The <code>baseUrl</code> parameter is deprecated on <a href="libraries/lib-portal.ahtml#imageurl"><code>imageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#attachmenturl"><code>attachmentUrl()</code></a> and <a href="libraries/lib-portal.ahtml#apiurl"><code>apiUrl()</code></a>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.</p>
+<p>The <code>baseUrl</code> parameter is deprecated on <a href="libraries/lib-portal.ahtml#imageUrl"><code>imageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#attachmentUrl"><code>attachmentUrl()</code></a> and <a href="libraries/lib-portal.ahtml#apiurl"><code>apiUrl()</code></a>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.</p>
 </div>
 <div class="listingblock">
 <div class="title">Before</div>
@@ -738,6 +739,42 @@ legacy.mediaApiAutoMount.enabled = false</code></pre>
 <div class="paragraph">
 <p>Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.</p>
 </div>
+<div class="paragraph">
+<p>Setting a project or branch on a request-following URL function switched it from the request to configuration, even for the request&#8217;s own project, so the URL left the virtual host the request came through. These parameters are deprecated in favour of the <a href="libraries/lib-portal.ahtml#url_parts">URL parts</a> functions, which resolve URLs from configuration alone:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>project</code> and <code>branch</code> on <a href="libraries/lib-portal.ahtml#pageurl"><code>pageUrl()</code></a>: use <a href="libraries/lib-portal.ahtml#pageurlparts"><code>pageUrlParts()</code></a> with a <code>scope</code> from <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>.</p>
+</li>
+<li>
+<p><code>id</code>, <code>path</code>, <code>project</code> and <code>branch</code> on <a href="libraries/lib-portal.ahtml#baseurl"><code>baseUrl()</code></a>: use <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>. <code>baseUrl()</code> keeps <code>type</code>, and without parameters it is the base URL of the current site request.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {pageUrl} from '/lib/xp/portal';
+
+const url = pageUrl({
+    path: '/my-site/posts/first-post',
+    project: 'myproject',
+    branch: 'master',
+    type: 'absolute'
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {pageUrlParts, portalScope} from '/lib/xp/portal';
+
+const scope = portalScope({key: '/my-site', project: 'myproject', branch: 'master'});
+const parts = pageUrlParts({path: '/my-site/posts/first-post', scope});
+const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.queryString;</code></pre>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="xp-8-1-lib-export"><a class="link" href="#xp-8-1-lib-export">lib-export</a></h4>
@@ -777,6 +814,31 @@ legacy.mediaApiAutoMount.enabled = false</code></pre>
 <p><code>ApplicationListener</code> is deprecated. It misses applications that were already active when the listener registered. Track <code>Application</code> services with a service tracker instead: <code>addingService</code> replays every active application on open and delivers future ones, and <code>removedService</code> is delivered before any replacement is registered.</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="macroservice"><a class="link" href="#macroservice">MacroService</a></h4>
+<div class="paragraph">
+<p><code>MacroService.postProcessInstructionSerialize()</code> is deprecated. It turned a macro into an HTML comment that XP replaced with the macro&#8217;s output when rendering the page. XP no longer does that for these comments: the page shows the macro as written, such as <code>[mymacro]</code>. Pass rich text through <code>processHtml()</code> instead; the macros it finds are rendered with the page.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="behaviour_changes"><a class="link" href="#behaviour_changes">Behaviour changes</a></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">URLs that do not resolve</dt>
+<dd>
+<p><a href="libraries/lib-portal.ahtml#pageurl"><code>pageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#imageUrl"><code>imageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#attachmentUrl"><code>attachmentUrl()</code></a> and <a href="libraries/lib-portal.ahtml#processHtml"><code>processHtml()</code></a> generate a URL answered with 404, rather than one answered with 500, when the content it names does not resolve. See <a href="libraries/lib-portal.ahtml#unresolved_urls">URLs that do not resolve</a>.</p>
+</dd>
+<dt class="hdlist1">Rich text images</dt>
+<dd>
+<p><code>processHtml()</code> writes <code>sizes</code> only along with a <code>srcset</code> of at least one width, and an image the image API serves as stored gets no <code>srcset</code>. <code>srcset</code> and <code>sizes</code> come right after <code>src</code> in the <code>&lt;img&gt;</code> tag. The height of an image with an aspect ratio is rounded to the nearest pixel: a <code>21:9</code> image is now 329 pixels high at the default width of 768, rather than 324.</p>
+</dd>
+<dt class="hdlist1">Rich text macros</dt>
+<dd>
+<p><code>processHtml()</code> now looks up each macro itself, so macros render on any page, also outside a site. A macro no application provides is shown as written. HTML comments in the rich text stay plain comments: they are never run as macros.</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
 <h3 id="worth_adopting"><a class="link" href="#worth_adopting">Worth adopting</a></h3>
@@ -801,6 +863,18 @@ legacy.mediaApiAutoMount.enabled = false</code></pre>
 <dd>
 <p><code>__.disposer()</code> registrations are remembered when they are made while the application is starting - from <code>main.ts</code>, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.</p>
 </dd>
+<dt class="hdlist1">URLs for a frontend of your own</dt>
+<dd>
+<p>A frontend that serves content from a host of its own builds its URLs from the <a href="libraries/lib-portal.ahtml#url_parts">URL parts</a> functions: <a href="libraries/lib-portal.ahtml#pageurlparts"><code>pageUrlParts()</code></a>, <a href="libraries/lib-portal.ahtml#imageurlparts"><code>imageUrlParts()</code></a>, <a href="libraries/lib-portal.ahtml#attachmenturlparts"><code>attachmentUrlParts()</code></a> and <a href="libraries/lib-portal.ahtml#processhtmlparts"><code>processHtmlParts()</code></a>, with the site or project resolved once by <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>.</p>
+</dd>
+<dt class="hdlist1">Width of rich text images</dt>
+<dd>
+<p>The <code>src</code> of every image in rich text was 768 pixels wide. <code>imageSrcWidth</code> of <a href="libraries/lib-portal.ahtml#processHtml"><code>processHtml()</code></a> sets that width; the height still follows the image&#8217;s style.</p>
+</dd>
+<dt class="hdlist1">Image styles of a given application</dt>
+<dd>
+<p>An image in rich text can name its style as <code>&lt;application&gt;:&lt;name&gt;</code>, where several applications define styles of the same name.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -809,7 +883,7 @@ legacy.mediaApiAutoMount.enabled = false</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-28 10:32:13 UTC
+Last updated 2026-10-06 12:55:52 UTC
 </div>
 </div>
 </body>
