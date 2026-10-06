@@ -167,7 +167,7 @@ Parameters
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
 | baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
-| params | object | *Deprecated.* Custom query parameters to append to the URL. The attachment API reads none but `download`, which the `download` parameter sets.
+| params | object | *Optional.* _Deprecated._ Custom query parameters to append to the URL. The attachment API reads none but `download`, which the `download` parameter sets.
 |===
 
 [.lead]
@@ -830,7 +830,7 @@ Parameters
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
 | baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
-| params | object | *Deprecated.* Custom query parameters to append to the URL. The image API reads none but `quality`, `background` and `filter`, which have their own parameters.
+| params | object | *Optional.* _Deprecated._ Custom query parameters to append to the URL. The image API reads none but `quality`, `background` and `filter`, which have their own parameters.
 |===
 
 [.lead]
