@@ -287,7 +287,7 @@ URLs that do not resolve::
 <<libraries/lib-portal#pageurl, `pageUrl()`>>, <<libraries/lib-portal#imageUrl, `imageUrl()`>>, <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> and <<libraries/lib-portal#processHtml, `processHtml()`>> generate a URL answered with 404, rather than one answered with 500, when the content it names does not resolve. See <<libraries/lib-portal#unresolved_urls, URLs that do not resolve>>.
 
 Rich text images::
-`processHtml()` writes `sizes` only along with a `srcset` of at least one width, and an image the image API serves as stored gets no `srcset`.
+`processHtml()` writes `sizes` only along with a `srcset` of at least one width, and an image the image API serves as stored gets no `srcset`. `srcset` and `sizes` come right after `src` in the `+<img>+` tag. The height of an image with an aspect ratio is rounded to the nearest pixel: a `21:9` image is now 329 pixels high at the default width of 768, rather than 324.
 
 Rich text macros::
 `processHtml()` now looks up each macro itself, so macros render on any page, also outside a site. A macro no application provides is shown as written. HTML comments in the rich text stay plain comments: they are never run as macros.
@@ -310,6 +310,9 @@ Disposer registration::
 
 URLs for a frontend of your own::
 A frontend that serves content from a host of its own builds its URLs from the <<libraries/lib-portal#url_parts, URL parts>> functions: <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>>, <<libraries/lib-portal#imageurlparts, `imageUrlParts()`>>, <<libraries/lib-portal#attachmenturlparts, `attachmentUrlParts()`>> and <<libraries/lib-portal#processhtmlparts, `processHtmlParts()`>>, with the site or project resolved once by <<libraries/lib-portal#portalscope, `portalScope()`>>.
+
+Width of rich text images::
+The `src` of every image in rich text was 768 pixels wide. `imageSrcWidth` of <<libraries/lib-portal#processHtml, `processHtml()`>> sets that width; the height still follows the image's style.
 
 Image styles of a given application::
 An image in rich text can name its style as `<application>:<name>`, where several applications define styles of the same name.

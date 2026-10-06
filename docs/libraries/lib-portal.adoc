@@ -1080,6 +1080,7 @@ Parameters
 | Name | Type | Description
 | value | string | HTML to process.
 | type | string | *Optional.* URL type. Either `server` (server-relative URL) or `absolute`. Default is `server`.
+| imageSrcWidth | number | image:xp-810.svg[XP 8.1.0,opts=inline] *Optional.* Width of the `src` of `+<img>+` tags, for images the image API scales. The height follows the aspect ratio of the image's style or scale. Default is `768`.
 | imageWidths | number[] | *Optional.* Image widths, such as `[400, 800]`. If provided, the `+<img>+` tags of images the image API scales get a `srcset` attribute with an image URL for each width.
 | imageSizes | string | *Optional.* Specifies the width for an image depending on browser dimensions. The value has the following format: `(media-condition) width`. Multiple sizes are comma-separated. Written only along with the `srcset` that `imageWidths` adds.
 |===
@@ -1102,7 +1103,9 @@ const html = processHtml({
          '<a href="media://inline/123" target="">Inline</a>' +
          '<a href="media://download/123" target="">Download</a>' +
          '<img src="image://123"/>',
-  imageWidths: [32, 480, 800]
+  imageSrcWidth: 800,
+  imageWidths: [480, 800, 1200],
+  imageSizes: '(max-width: 800px) 100vw, 800px'
 });
 ----
 
@@ -1131,6 +1134,7 @@ Parameters
 | Name | Type | Description
 | value | string | HTML to process.
 | scope | <<portal-scope, PortalScope>> | *Optional.* The site or project the HTML belongs to, resolved by <<portalscope, `portalScope()`>>. Defaults to the project of the current context.
+| imageSrcWidth | number | *Optional.* Width of the `src` of `+<img>+` tags, for images the image API scales. The height follows the aspect ratio of the image's style or scale. Default is `768`.
 | imageWidths | number[] | *Optional.* Image widths for the `srcset` attribute of `+<img>+` tags, for images the image API scales.
 | imageSizes | string | *Optional.* Value of the `sizes` attribute of `+<img>+` tags. Written only along with the `srcset` that `imageWidths` adds.
 |===
