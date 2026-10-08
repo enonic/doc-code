@@ -688,6 +688,9 @@ const taskId = submitTask({
 <div class="sect3">
 <h4 id="xp-8-1-lib-portal"><a class="link" href="#xp-8-1-lib-portal">lib-portal</a></h4>
 <div class="paragraph">
+<p>The <code>params</code> parameter is deprecated on <a href="libraries/lib-portal.ahtml#imageUrl"><code>imageUrl()</code></a> and <a href="libraries/lib-portal.ahtml#attachmentUrl"><code>attachmentUrl()</code></a>. The image API reads no query parameters but <code>quality</code>, <code>background</code> and <code>filter</code>, and the attachment API none but <code>download</code>, all set by their own parameters. Any other custom parameter only makes URLs to the same media differ, and one of those names - such as <code>params: {filter: 'blur(10)'}</code> - changes the image past the parameter meant for it. Use <code>quality</code>, <code>background</code>, <code>filter</code> and <code>download</code> instead.</p>
+</div>
+<div class="paragraph">
 <p>The <code>baseUrl</code> parameter is deprecated on <a href="libraries/lib-portal.ahtml#imageUrl"><code>imageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#attachmentUrl"><code>attachmentUrl()</code></a> and <a href="libraries/lib-portal.ahtml#apiurl"><code>apiUrl()</code></a>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.</p>
 </div>
 <div class="listingblock">
@@ -883,7 +886,7 @@ const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.qu
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-06 12:55:52 UTC
+Last updated 2026-10-08 07:53:17 UTC
 </div>
 </div>
 </body>

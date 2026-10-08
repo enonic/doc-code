@@ -882,7 +882,7 @@ const url = assetUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+<p><strong>Optional.</strong> <em>Deprecated.</em> Custom query parameters to append to the URL. The attachment API reads none but <code>download</code>, which the <code>download</code> parameter sets.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -982,13 +982,6 @@ const url = attachmentUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Name of the branch. Defaults to the branch of the current context.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters of the URL.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1880,7 +1873,7 @@ const url = imagePlaceholder({
 <td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters to append to the URL.</p>
+<p><strong>Optional.</strong> <em>Deprecated.</em> Custom query parameters to append to the URL. The image API reads none but <code>quality</code>, <code>background</code> and <code>filter</code>, which have their own parameters.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1956,7 +1949,7 @@ const url = imageUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">scale</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Options are <code>width(px)</code>, <code>height(px)</code>, <code>block(width,height)</code>, <code>square(px)</code>, <code>max(px)</code>, <code>wide(width,height)</code> and <code>full</code>.</p>
+<p><strong>Optional.</strong> Options are <code>width(px)</code>, <code>height(px)</code>, <code>block(width,height)</code>, <code>square(px)</code>, <code>max(px)</code>, <code>wide(width,height)</code> and <code>full</code>. Defaults to <code>full</code>, the image as stored.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1999,13 +1992,6 @@ const url = imageUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Optional.</strong> Name of the branch. Defaults to the branch of the current context.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">object</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Custom query parameters of the URL.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -4241,7 +4227,7 @@ const url = origin + post.path + post.queryString;</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-06 12:55:52 UTC
+Last updated 2026-10-08 07:53:17 UTC
 </div>
 </div>
 </body>
