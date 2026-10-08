@@ -167,7 +167,7 @@ Parameters
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
 | baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
-| params | object | *Optional.* Custom query parameters to append to the URL.
+| params | object | *Optional.* _Deprecated._ Custom query parameters to append to the URL. The attachment API reads none but `download`, which the `download` parameter sets.
 |===
 
 [.lead]
@@ -211,7 +211,6 @@ Parameters
 | download | boolean | *Optional.* Set to `true` to ask for the attachment to be downloaded. Defaults to `false`.
 | project | string | *Optional.* Name of the project. Defaults to the project of the current context.
 | branch | string | *Optional.* Name of the branch. Defaults to the branch of the current context.
-| params | object | *Optional.* Custom query parameters of the URL.
 |===
 
 [.lead]
@@ -831,7 +830,7 @@ Parameters
 | project | string | *Optional.* Name of the project.
 | branch | string | *Optional.* Name of the branch.
 | baseUrl | string | *Deprecated.* Configure `+media.defaultBaseUrl+`, or a Base URL on the site, instead.
-| params | object | *Optional.* Custom query parameters to append to the URL.
+| params | object | *Optional.* _Deprecated._ Custom query parameters to append to the URL. The image API reads none but `quality`, `background` and `filter`, which have their own parameters.
 |===
 
 [.lead]
@@ -874,14 +873,13 @@ Parameters
 | Name | Type | Description
 | id | string | *Optional.* ID of the image content. Either `id` or `path` is required.
 | path | string | *Optional.* Path of the image content within the project.
-| scale | string | Options are `width(px)`, `height(px)`, `block(width,height)`, `square(px)`, `max(px)`, `wide(width,height)` and `full`.
+| scale | string | *Optional.* Options are `width(px)`, `height(px)`, `block(width,height)`, `square(px)`, `max(px)`, `wide(width,height)` and `full`. Defaults to `full`, the image as stored.
 | quality | number | *Optional.* Quality for JPEG images, ranges from 0 (max compression) to 100 (min compression). Defaults to `85`.
 | background | string | *Optional.* Background color.
 | format | string | *Optional.* Format of the image.
 | filter | string | *Optional.* Filters to alter the image appearance, for example, `blur(3)`, `grayscale()`, `rounded(5)`.
 | project | string | *Optional.* Name of the project. Defaults to the project of the current context.
 | branch | string | *Optional.* Name of the branch. Defaults to the branch of the current context.
-| params | object | *Optional.* Custom query parameters of the URL.
 |===
 
 [.lead]

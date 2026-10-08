@@ -173,6 +173,8 @@ Two differences to plan for. A named task takes its input as `config`, validated
 [#xp-8-1-lib-portal]
 ==== lib-portal
 
+The `params` parameter is deprecated on <<libraries/lib-portal#imageUrl, `imageUrl()`>> and <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>>. The image API reads no query parameters but `quality`, `background` and `filter`, and the attachment API none but `download`, all set by their own parameters. Any other custom parameter only makes URLs to the same media differ, and one of those names - such as `params: {filter: 'blur(10)'}` - changes the image past the parameter meant for it. Use `quality`, `background`, `filter` and `download` instead.
+
 The `baseUrl` parameter is deprecated on <<libraries/lib-portal#imageUrl, `imageUrl()`>>, <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> and <<libraries/lib-portal#apiurl, `apiUrl()`>>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.
 
 .Before
