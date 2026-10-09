@@ -43,7 +43,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] The URL functions follow the request: the
 | <<baseurl, `baseUrl()`>> | <<portalscope, `portalScope()`>>
 |===
 
-Page URLs and rich text belong to a site, or to a project. The request-following functions take it from the request: its project, branch, site and the site's configuration. <<portalscope, `portalScope()`>> resolves the same from configuration alone, as a stand-in for a site request, and its result is passed as `scope` to every `pageUrlParts()` and `processHtmlParts()` call for that site. Page paths are relative to the content its `key` names, as they are to the content a virtual host mounts. Its `baseUrl` is the Base URL configured for the site or project, followed by the path of that content there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`.
+Page URLs and rich text belong to a site, or to a project. The request-following functions take it from the request: its project, branch, site and the site's configuration. <<portalscope, `portalScope()`>> resolves the same from configuration alone, as a stand-in for a site request. Its `key` names the content that page paths are relative to, as they are to the content a virtual host mounts, and its result is passed as `scope` to every `pageUrlParts()` and `processHtmlParts()` call below that content. Its `baseUrl` is the Base URL configured for the site or project, followed by the path of that content there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`.
 
 `imageUrlParts()` and `attachmentUrlParts()` take a `project` and `branch`. A media URL is `mediaBaseUrl + path + queryString`, where the caller supplies the root of the media APIs as it serves them; `+media.defaultBaseUrl+` and the mounts of the media APIs do not apply.
 
@@ -1301,7 +1301,7 @@ const url = buildUrl({
 
 === portalScope
 
-image:xp-810.svg[XP 8.1.0,opts=inline] Resolves a portal scope: an immutable, request-independent context for resolving page URLs and processing rich text below a selected content or project, from configuration alone. It provides <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>> what a site request would - the project, the branch, the site and its configuration - without one. Resolve it once and pass it as `scope` to every call for that site. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves a portal scope: an immutable, request-independent context for resolving page URLs and processing rich text below a selected content or project, from configuration alone. It provides <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>> what a site request would - the project, the branch, the site and its configuration - without one. Resolve it once and pass it as `scope` to every call below the content `key` names. See <<url_parts, URL parts>>.
 
 Page paths are relative to the content `key` names, as they are to the content a virtual host mounts. The configuration - the applications and the Base URL - is that of the nearest site at or above that content, or of the project outside any site.
 
@@ -1315,7 +1315,7 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | *Optional.* Id or path of the content page paths are relative to: a site, or any other content. A key starting with `/` is a path. Defaults to `/`, which selects the project.
+| key | string | *Optional.* Id or path of the content that page paths are relative to: a site, or any other content. A key starting with `/` is a path. Defaults to `/`, which selects the project.
 | project | string | *Optional.* Name of the project. Defaults to the project of the current context.
 | branch | string | *Optional.* Name of the branch. Defaults to the branch of the current context.
 |===
