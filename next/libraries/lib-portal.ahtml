@@ -588,7 +588,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 <div class="paragraph">
-<p>Page URLs and rich text belong to a site, or to a project. The request-following functions take it from the request: its project, branch, site and the site&#8217;s configuration. <a href="#portalscope"><code>portalScope()</code></a> resolves the same from configuration alone, as a stand-in for a site request, and its result is passed as <code>scope</code> to every <code>pageUrlParts()</code> and <code>processHtmlParts()</code> call for that site. Its <code>baseUrl</code> is the Base URL configured there, or <code>null</code>. A page URL is <code>baseUrl + path + queryString</code>, where the caller supplies the origin the site is served from when <code>baseUrl</code> is <code>null</code>, and the path is relative to the site or project.</p>
+<p>Page URLs and rich text belong to a site, or to a project. The request-following functions take it from the request: its project, branch, site and the site&#8217;s configuration. <a href="#portalscope"><code>portalScope()</code></a> resolves the same from configuration alone, as a stand-in for a site request. Its <code>key</code> names the content that page paths are relative to, as they are to the content a virtual host mounts, and its result is passed as <code>scope</code> to every <code>pageUrlParts()</code> and <code>processHtmlParts()</code> call below that content. Its <code>baseUrl</code> is the Base URL configured for the site or project, followed by the path of that content there, or <code>null</code>. A page URL is <code>baseUrl + path + queryString</code>, where the caller supplies the origin the site is served from when <code>baseUrl</code> is <code>null</code>.</p>
 </div>
 <div class="paragraph">
 <p><code>imageUrlParts()</code> and <code>attachmentUrlParts()</code> take a <code>project</code> and <code>branch</code>. A media URL is <code>mediaBaseUrl + path + queryString</code>, where the caller supplies the root of the media APIs as it serves them; <code>media.defaultBaseUrl</code> and the mounts of the media APIs do not apply.</p>
@@ -2236,10 +2236,10 @@ const url = pageUrl({
 <div class="sect2">
 <h3 id="pageurlparts"><a class="link" href="#pageurlparts">pageUrlParts</a></h3>
 <div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Resolves the parts of a page URL from configuration alone, for the site or project <code>scope</code> stands for: <code>baseUrl + path + queryString</code>. See <a href="#url_parts">URL parts</a>.</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Resolves the parts of a page URL from configuration alone, for the <code>scope</code>: <code>baseUrl + path + queryString</code>. See <a href="#url_parts">URL parts</a>.</p>
 </div>
 <div class="paragraph">
-<p>The page has to be inside the site or project <code>scope</code> stands for, or be it; for a page elsewhere an error is raised.</p>
+<p>The page has to be inside the content of the <code>scope</code>, or be it; for a page elsewhere an error is raised.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
@@ -2279,7 +2279,7 @@ const url = pageUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#portal-scope">PortalScope</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> The site or project the URL belongs to, resolved by <a href="#portalscope"><code>portalScope()</code></a>; the page is looked up in its project and branch. Defaults to the project of the current context.</p>
+<p><strong>Optional.</strong> The scope the URL belongs to, resolved by <a href="#portalscope"><code>portalScope()</code></a>; the page is looked up in its project and branch. Defaults to the project of the current context.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2438,10 +2438,10 @@ const html = processHtml({
 <div class="sect2">
 <h3 id="processhtmlparts"><a class="link" href="#processhtmlparts">processHtmlParts</a></h3>
 <div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Processes an HTML text like <a href="#processHtml"><code>processHtml()</code></a>, from configuration alone, for the site or project <code>scope</code> stands for, and returns the parts of every internal link, image and macro in it. See <a href="#url_parts">URL parts</a>.</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Processes an HTML text like <a href="#processHtml"><code>processHtml()</code></a>, from configuration alone, for the <code>scope</code>, and returns the parts of every internal link, image and macro in it. See <a href="#url_parts">URL parts</a>.</p>
 </div>
 <div class="paragraph">
-<p>Everything is resolved for the base: the Base URL, the path each content link is relative to, the project and branch contents and media are looked up in, and the applications image styles and macros come from.</p>
+<p>Everything is resolved for the scope: the Base URL, the path each content link is relative to, the project and branch contents and media are looked up in, and the applications image styles and macros come from.</p>
 </div>
 <div class="paragraph">
 <p>Internal links, images and macros in the returned HTML are placeholders, which the caller renders from their entries:</p>
@@ -2490,7 +2490,7 @@ const html = processHtml({
 <td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#portal-scope">PortalScope</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> The site or project the HTML belongs to, resolved by <a href="#portalscope"><code>portalScope()</code></a>. Defaults to the project of the current context.</p>
+<p><strong>Optional.</strong> The scope the HTML belongs to, resolved by <a href="#portalscope"><code>portalScope()</code></a>. Defaults to the project of the current context.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2773,7 +2773,10 @@ const url = buildUrl({
 <div class="sect2">
 <h3 id="portalscope"><a class="link" href="#portalscope">portalScope</a></h3>
 <div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Resolves a portal scope: an immutable, request-independent context for resolving page URLs and processing rich text for a selected site or project, from configuration alone. It provides <a href="#pageurlparts"><code>pageUrlParts()</code></a> and <a href="#processhtmlparts"><code>processHtmlParts()</code></a> what a site request would - the project, the branch, the site and its configuration - without one. Resolve it once and pass it as <code>scope</code> to every call for that site. See <a href="#url_parts">URL parts</a>.</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Resolves a portal scope: an immutable, request-independent context for resolving page URLs and processing rich text below a selected content or project, from configuration alone. It provides <a href="#pageurlparts"><code>pageUrlParts()</code></a> and <a href="#processhtmlparts"><code>processHtmlParts()</code></a> what a site request would - the project, the branch, the site and its configuration - without one. Resolve it once and pass it as <code>scope</code> to every call below the content <code>key</code> names. See <a href="#url_parts">URL parts</a>.</p>
+</div>
+<div class="paragraph">
+<p>Page paths are relative to the content <code>key</code> names, as they are to the content a virtual host mounts. The configuration - the applications and the Base URL - is that of the nearest site at or above that content, or of the project outside any site.</p>
 </div>
 <div class="paragraph lead">
 <p>Parameters</p>
@@ -2799,7 +2802,7 @@ const url = buildUrl({
 <td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><strong>Optional.</strong> Id or path of the site, or of a content inside it. A key starting with <code>/</code> is a path. Defaults to <code>/</code>, which selects the project.</p>
+<p><strong>Optional.</strong> Id or path of the content that page paths are relative to: a site, or any other content. A key starting with <code>/</code> is a path. Defaults to <code>/</code>, which selects the project.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2854,7 +2857,7 @@ const url = origin + post.path + post.queryString;</code></pre>
 <div class="sect2">
 <h3 id="portal-scope"><a class="link" href="#portal-scope">PortalScope</a></h3>
 <div class="paragraph">
-<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> An immutable, request-independent context for resolving page URLs and processing rich text for a selected site or project, resolved by <a href="#portalscope"><code>portalScope()</code></a>. It stands in for a site request: what request-following URLs take from the request, the URL parts take from the scope. Pass it as is to <a href="#pageurlparts"><code>pageUrlParts()</code></a> and <a href="#processhtmlparts"><code>processHtmlParts()</code></a>; a <code>scope</code> that <code>portalScope()</code> did not return raises an error.</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> An immutable, request-independent context for resolving page URLs and processing rich text below a selected content or project, resolved by <a href="#portalscope"><code>portalScope()</code></a>. It stands in for a site request: what request-following URLs take from the request, the URL parts take from the scope. Pass it as is to <a href="#pageurlparts"><code>pageUrlParts()</code></a> and <a href="#processhtmlparts"><code>processHtmlParts()</code></a>; a <code>scope</code> that <code>portalScope()</code> did not return raises an error.</p>
 </div>
 <table class="tableblock frame-none grid-none stretch">
 <colgroup>
@@ -2874,7 +2877,7 @@ const url = origin + post.path + post.queryString;</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | null</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Base URL configured for the site or project, without a trailing slash; <code>null</code> when none is configured.</p>
+<p>Base URL configured for the site or project, followed by the path of the scope&#8217;s content there, without a trailing slash; <code>null</code> when none is configured.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2903,14 +2906,14 @@ const url = origin + post.path + post.queryString;</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | null</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Base URL configured for the site or project the URL belongs to, without a trailing slash; <code>null</code> when none is configured.</p>
+<p>Base URL of the scope the URL belongs to, without a trailing slash; <code>null</code> when none is configured.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">path</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>URL-escaped content path relative to that site or project, with a leading slash; empty for the site itself, so that <code>baseUrl + path</code> is the Base URL.</p>
+<p>URL-escaped content path relative to the scope&#8217;s content, with a leading slash; empty for that content itself, so that <code>baseUrl + path</code> is the Base URL.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3088,7 +3091,7 @@ const url = origin + post.path + post.queryString;</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">baseUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string | null</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Base URL configured for the site or project the HTML belongs to, without a trailing slash; <code>null</code> when none is configured. It is the <code>baseUrl</code> of the page parts of every content link.</p>
+<p>Base URL of the scope the HTML belongs to, without a trailing slash; <code>null</code> when none is configured. It is the <code>baseUrl</code> of the page parts of every content link.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -4227,7 +4230,7 @@ const url = origin + post.path + post.queryString;</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-08 07:53:17 UTC
+Last updated 2026-10-09 10:45:41 UTC
 </div>
 </div>
 </body>

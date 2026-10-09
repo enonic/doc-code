@@ -751,7 +751,7 @@ legacy.mediaApiAutoMount.enabled = false</code></pre>
 <p><code>project</code> and <code>branch</code> on <a href="libraries/lib-portal.ahtml#pageurl"><code>pageUrl()</code></a>: use <a href="libraries/lib-portal.ahtml#pageurlparts"><code>pageUrlParts()</code></a> with a <code>scope</code> from <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>.</p>
 </li>
 <li>
-<p><code>id</code>, <code>path</code>, <code>project</code> and <code>branch</code> on <a href="libraries/lib-portal.ahtml#baseurl"><code>baseUrl()</code></a>: use <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>. <code>baseUrl()</code> keeps <code>type</code>, and without parameters it is the base URL of the current site request.</p>
+<p><code>id</code>, <code>path</code>, <code>project</code> and <code>branch</code> on <a href="libraries/lib-portal.ahtml#baseurl"><code>baseUrl()</code></a>: use <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>, with <code>key</code> naming the site. <code>baseUrl()</code> keeps <code>type</code>, and without parameters it is the base URL of the current site request.</p>
 </li>
 </ul>
 </div>
@@ -886,7 +886,7 @@ const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.qu
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-08 07:53:17 UTC
+Last updated 2026-10-09 10:45:41 UTC
 </div>
 </div>
 </body>
