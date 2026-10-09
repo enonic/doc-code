@@ -224,7 +224,7 @@ Both are read at URL generation, so the same code produces the right URL in ever
 Setting a project or branch on a request-following URL function switched it from the request to configuration, even for the request's own project, so the URL left the virtual host the request came through. These parameters are deprecated in favour of the <<libraries/lib-portal#url_parts, URL parts>> functions, which resolve URLs from configuration alone:
 
 * `project` and `branch` on <<libraries/lib-portal#pageurl, `pageUrl()`>>: use <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>> with a `scope` from <<libraries/lib-portal#portalscope, `portalScope()`>>.
-* `id`, `path`, `project` and `branch` on <<libraries/lib-portal#baseurl, `baseUrl()`>>: use <<libraries/lib-portal#portalscope, `portalScope()`>>. `baseUrl()` keeps `type`, and without parameters it is the base URL of the current site request.
+* `id`, `path`, `project` and `branch` on <<libraries/lib-portal#baseurl, `baseUrl()`>>: use <<libraries/lib-portal#portalscope, `portalScope()`>>, with `key` naming the site. `baseUrl()` keeps `type`, and without parameters it is the base URL of the current site request.
 
 .Before
 [source,typescript]

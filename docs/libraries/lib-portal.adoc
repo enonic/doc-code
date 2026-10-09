@@ -43,7 +43,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] The URL functions follow the request: the
 | <<baseurl, `baseUrl()`>> | <<portalscope, `portalScope()`>>
 |===
 
-Page URLs and rich text belong to a site, or to a project. The request-following functions take it from the request: its project, branch, site and the site's configuration. <<portalscope, `portalScope()`>> resolves the same from configuration alone, as a stand-in for a site request, and its result is passed as `scope` to every `pageUrlParts()` and `processHtmlParts()` call for that site. Its `baseUrl` is the Base URL configured there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`, and the path is relative to the site or project.
+Page URLs and rich text belong to a site, or to a project. The request-following functions take it from the request: its project, branch, site and the site's configuration. <<portalscope, `portalScope()`>> resolves the same from configuration alone, as a stand-in for a site request. Its `key` names the content that page paths are relative to, as they are to the content a virtual host mounts, and its result is passed as `scope` to every `pageUrlParts()` and `processHtmlParts()` call below that content. Its `baseUrl` is the Base URL configured for the site or project, followed by the path of that content there, or `null`. A page URL is `baseUrl + path + queryString`, where the caller supplies the origin the site is served from when `baseUrl` is `null`.
 
 `imageUrlParts()` and `attachmentUrlParts()` take a `project` and `branch`. A media URL is `mediaBaseUrl + path + queryString`, where the caller supplies the root of the media APIs as it serves them; `+media.defaultBaseUrl+` and the mounts of the media APIs do not apply.
 
@@ -1002,9 +1002,9 @@ const url = pageUrl({
 
 === pageUrlParts
 
-image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of a page URL from configuration alone, for the site or project `scope` stands for: `baseUrl + path + queryString`. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves the parts of a page URL from configuration alone, for the `scope`: `baseUrl + path + queryString`. See <<url_parts, URL parts>>.
 
-The page has to be inside the site or project `scope` stands for, or be it; for a page elsewhere an error is raised.
+The page has to be inside the content of the `scope`, or be it; for a page elsewhere an error is raised.
 
 [.lead]
 Parameters
@@ -1018,7 +1018,7 @@ Parameters
 | Name | Type | Description
 | id | string | *Optional.* Id of the page. Either `id` or `path` is required.
 | path | string | *Optional.* Path of the page within the project.
-| scope | <<portal-scope, PortalScope>> | *Optional.* The site or project the URL belongs to, resolved by <<portalscope, `portalScope()`>>; the page is looked up in its project and branch. Defaults to the project of the current context.
+| scope | <<portal-scope, PortalScope>> | *Optional.* The scope the URL belongs to, resolved by <<portalscope, `portalScope()`>>; the page is looked up in its project and branch. Defaults to the project of the current context.
 | params | object | *Optional.* Custom query parameters of the URL.
 |===
 
@@ -1111,9 +1111,9 @@ const html = processHtml({
 
 === processHtmlParts
 
-image:xp-810.svg[XP 8.1.0,opts=inline] Processes an HTML text like <<processHtml, `processHtml()`>>, from configuration alone, for the site or project `scope` stands for, and returns the parts of every internal link, image and macro in it. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Processes an HTML text like <<processHtml, `processHtml()`>>, from configuration alone, for the `scope`, and returns the parts of every internal link, image and macro in it. See <<url_parts, URL parts>>.
 
-Everything is resolved for the base: the Base URL, the path each content link is relative to, the project and branch contents and media are looked up in, and the applications image styles and macros come from.
+Everything is resolved for the scope: the Base URL, the path each content link is relative to, the project and branch contents and media are looked up in, and the applications image styles and macros come from.
 
 Internal links, images and macros in the returned HTML are placeholders, which the caller renders from their entries:
 
@@ -1133,7 +1133,7 @@ Parameters
 |===
 | Name | Type | Description
 | value | string | HTML to process.
-| scope | <<portal-scope, PortalScope>> | *Optional.* The site or project the HTML belongs to, resolved by <<portalscope, `portalScope()`>>. Defaults to the project of the current context.
+| scope | <<portal-scope, PortalScope>> | *Optional.* The scope the HTML belongs to, resolved by <<portalscope, `portalScope()`>>. Defaults to the project of the current context.
 | imageSrcWidth | number | *Optional.* Width of the `src` of `+<img>+` tags, for images the image API scales. The height follows the aspect ratio of the image's style or scale. Default is `768`.
 | imageWidths | number[] | *Optional.* Image widths for the `srcset` attribute of `+<img>+` tags, for images the image API scales.
 | imageSizes | string | *Optional.* Value of the `sizes` attribute of `+<img>+` tags. Written only along with the `srcset` that `imageWidths` adds.
@@ -1301,7 +1301,9 @@ const url = buildUrl({
 
 === portalScope
 
-image:xp-810.svg[XP 8.1.0,opts=inline] Resolves a portal scope: an immutable, request-independent context for resolving page URLs and processing rich text for a selected site or project, from configuration alone. It provides <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>> what a site request would - the project, the branch, the site and its configuration - without one. Resolve it once and pass it as `scope` to every call for that site. See <<url_parts, URL parts>>.
+image:xp-810.svg[XP 8.1.0,opts=inline] Resolves a portal scope: an immutable, request-independent context for resolving page URLs and processing rich text below a selected content or project, from configuration alone. It provides <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>> what a site request would - the project, the branch, the site and its configuration - without one. Resolve it once and pass it as `scope` to every call below the content `key` names. See <<url_parts, URL parts>>.
+
+Page paths are relative to the content `key` names, as they are to the content a virtual host mounts. The configuration - the applications and the Base URL - is that of the nearest site at or above that content, or of the project outside any site.
 
 [.lead]
 Parameters
@@ -1313,7 +1315,7 @@ Parameters
 [grid="none"]
 |===
 | Name | Type | Description
-| key | string | *Optional.* Id or path of the site, or of a content inside it. A key starting with `/` is a path. Defaults to `/`, which selects the project.
+| key | string | *Optional.* Id or path of the content that page paths are relative to: a site, or any other content. A key starting with `/` is a path. Defaults to `/`, which selects the project.
 | project | string | *Optional.* Name of the project. Defaults to the project of the current context.
 | branch | string | *Optional.* Name of the branch. Defaults to the branch of the current context.
 |===
@@ -1349,14 +1351,14 @@ const url = origin + post.path + post.queryString;
 [#portal-scope]
 === PortalScope
 
-image:xp-810.svg[XP 8.1.0,opts=inline] An immutable, request-independent context for resolving page URLs and processing rich text for a selected site or project, resolved by <<portalscope, `portalScope()`>>. It stands in for a site request: what request-following URLs take from the request, the URL parts take from the scope. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>; a `scope` that `portalScope()` did not return raises an error.
+image:xp-810.svg[XP 8.1.0,opts=inline] An immutable, request-independent context for resolving page URLs and processing rich text below a selected content or project, resolved by <<portalscope, `portalScope()`>>. It stands in for a site request: what request-following URLs take from the request, the URL parts take from the scope. Pass it as is to <<pageurlparts, `pageUrlParts()`>> and <<processhtmlparts, `processHtmlParts()`>>; a `scope` that `portalScope()` did not return raises an error.
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
 [grid="none"]
 |===
 | Name | Type | Description
-| baseUrl | string \| null | Base URL configured for the site or project, without a trailing slash; `null` when none is configured.
+| baseUrl | string \| null | Base URL configured for the site or project, followed by the path of the scope's content there, without a trailing slash; `null` when none is configured.
 |===
 
 [#page-url-parts]
@@ -1369,8 +1371,8 @@ image:xp-810.svg[XP 8.1.0,opts=inline] Parts of a page URL: `baseUrl + path + qu
 [grid="none"]
 |===
 | Name | Type | Description
-| baseUrl | string \| null | Base URL configured for the site or project the URL belongs to, without a trailing slash; `null` when none is configured.
-| path | string | URL-escaped content path relative to that site or project, with a leading slash; empty for the site itself, so that `baseUrl + path` is the Base URL.
+| baseUrl | string \| null | Base URL of the scope the URL belongs to, without a trailing slash; `null` when none is configured.
+| path | string | URL-escaped content path relative to the scope's content, with a leading slash; empty for that content itself, so that `baseUrl + path` is the Base URL.
 | queryString | string | URL-escaped query string prefixed with `?`; empty when there are no parameters.
 |===
 
@@ -1422,7 +1424,7 @@ image:xp-810.svg[XP 8.1.0,opts=inline] Result of <<processhtmlparts, `processHtm
 |===
 | Name | Type | Description
 | html | string | The processed HTML, with placeholders for its internal links, images and macros.
-| baseUrl | string \| null | Base URL configured for the site or project the HTML belongs to, without a trailing slash; `null` when none is configured. It is the `baseUrl` of the page parts of every content link.
+| baseUrl | string \| null | Base URL of the scope the HTML belongs to, without a trailing slash; `null` when none is configured. It is the `baseUrl` of the page parts of every content link.
 | links | (<<processed-html-content-link, ProcessedHtmlContentLink>> \| <<processed-html-attachment-link, ProcessedHtmlAttachmentLink>>)[] | Internal links to contents and attachments, in document order, told apart by their `type`.
 | images | <<processed-html-image, ProcessedHtmlImage>>[] | Internal images, in document order.
 | macros | <<processed-html-macro, ProcessedHtmlMacro>>[] | Macros, in document order.
