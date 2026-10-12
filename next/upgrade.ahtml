@@ -823,6 +823,103 @@ const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.qu
 <p><code>MacroService.postProcessInstructionSerialize()</code> is deprecated. It turned a macro into an HTML comment that XP replaced with the macro&#8217;s output when rendering the page. XP no longer does that for these comments: the page shows the macro as written, such as <code>[mymacro]</code>. Pass rich text through <code>processHtml()</code> instead; the macros it finds are rendered with the page.</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="applicationinvalidator"><a class="link" href="#applicationinvalidator">ApplicationInvalidator</a></h4>
+<div class="paragraph">
+<p><code>ApplicationInvalidator</code> and <code>ApplicationInvalidationLevel</code> are deprecated for the same reason as <code>ApplicationListener</code>: the callback arrives only after the application&#8217;s services are gone, possibly after a replacement has started. Track <code>Application</code> services instead.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="children_and_paths"><a class="link" href="#children_and_paths">Children and paths</a></h4>
+<div class="paragraph">
+<p><code>ContentService.findByParent()</code>, <code>findIdsByParent()</code> and <code>findPaths()</code> are deprecated, as are <code>NodeService.findByParent()</code> and <code>NodeQuery.Builder.withPath()</code>. A query does the same job and accepts every constraint a search supports:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ContentService.find()</code> with <code>ContentQuery.Builder.parentPath()</code> or <code>parentId()</code>, followed by <code>getByIds()</code> for the contents actually needed;</p>
+</li>
+<li>
+<p><code>find()</code> with <code>returnFields()</code> naming <code>_path</code>, in place of <code>findPaths()</code>;</p>
+</li>
+<li>
+<p><code>NodeService.findByQuery()</code> with <code>NodeQuery.Builder.parent()</code>, and <code>returnFields()</code> with <code>NodeIndexPath.PATH</code> in place of <code>withPath()</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="progress_listeners"><a class="link" href="#progress_listeners">Progress listeners</a></h4>
+<div class="paragraph">
+<p>Listener methods are renamed, so that every listener names its work the same way. The old methods are still called by the default implementations of the new ones:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>resolved()</code> replaces <code>PushContentListener.contentResolved()</code>, <code>NodeExportListener.nodeResolved()</code>, <code>NodeImportListener.nodeResolved()</code>, and <code>setTotal()</code> of <code>ApplyPermissionsListener</code> and <code>ApplyNodePermissionsListener</code>;</p>
+</li>
+<li>
+<p><code>CleanUpAuditLogListener.recordsDeleted()</code> replaces <code>processed()</code>; its <code>start()</code> and <code>finished()</code> are deprecated without a replacement.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="export_and_import"><a class="link" href="#export_and_import">Export and import</a></h4>
+<div class="paragraph">
+<p><code>ExportNodesParams.Builder.batchSize()</code> is ignored, as in lib-export. <code>ImportNodesParams.Builder.xsltFileName()</code> is ignored: use <code>xslt()</code> with a <code>VirtualFile</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="modified_times"><a class="link" href="#modified_times">Modified times</a></h4>
+<div class="paragraph">
+<p><code>getModifiedTime()</code> is deprecated on <code>Icon</code>, <code>BaseSchema</code>, <code>MacroDescriptor</code>, <code>ComponentDescriptor</code>, <code>CmsDescriptor</code>, <code>SiteDescriptor</code> and <code>StyleDescriptor</code>, and so is <code>Resource.getTimestamp()</code>, for the reasons given for <code>modifiedTime</code> in JavaScript.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="portal_urls"><a class="link" href="#portal_urls">Portal URLs</a></h4>
+<div class="paragraph">
+<p>The Java URL parameters follow the JavaScript ones:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>baseUrl</code> on <code>ImageUrlParams</code>, <code>AttachmentUrlParams</code>, <code>ProcessHtmlParams</code>, <code>ImageUrlGeneratorParams</code> and <code>AttachmentUrlGeneratorParams</code>: configure where the media APIs are served, with a virtual host mapping or <code>media.defaultBaseUrl</code> in <code>com.enonic.xp.portal.cfg</code>;</p>
+</li>
+<li>
+<p><code>setBaseUrl()</code> on <code>ApiUrlParams</code> and <code>ApiUrlGeneratorParams</code>: expose the API location as a virtual host mapping;</p>
+</li>
+<li>
+<p><code>projectName()</code> and <code>branch()</code> on <code>PageUrlParams</code>: use <code>PortalUrlService.pageUrlParts()</code> with a <code>PortalScope</code> resolved for the project and branch;</p>
+</li>
+<li>
+<p><code>setProjectName()</code>, <code>setBranch()</code>, <code>setId()</code> and <code>setPath()</code> on <code>BaseUrlParams</code>: use <code>PortalUrlService.portalScope()</code>;</p>
+</li>
+<li>
+<p><code>projectName()</code> and <code>branch()</code> on <code>ComponentUrlParams</code>: a component URL addresses a component of the page the request renders, in that request&#8217;s project and branch.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="scripts_and_tracing"><a class="link" href="#scripts_and_tracing">Scripts and tracing</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PortalScriptService.executeAsync()</code> and <code>ScriptRuntime.executeAsync()</code>: use <code>bootstrap()</code> for bootstrap scripts, or <code>execute()</code> on an executor of your choice.</p>
+</li>
+<li>
+<p><code>ScriptSettings.Builder.globalVariable()</code>, <code>ScriptSettings.getGlobalVariables()</code> and <code>ScriptTestSupport.addGlobalVariable()</code>: custom JavaScript globals are phased out, and <code>app</code> is the only supported global.</p>
+</li>
+<li>
+<p><code>Trace.putAll()</code> and <code>clear()</code>: record attributes with the typed <code>attribute()</code> methods; <code>Trace</code> will stop extending <code>Map</code>.</p>
+</li>
+<li>
+<p><code>getSize()</code>, <code>getBodyLength()</code> and <code>addTraceInfo()</code> of <code>BaseWebHandler</code>: XP records the response trace info itself.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="behaviour_changes"><a class="link" href="#behaviour_changes">Behaviour changes</a></h3>
@@ -886,7 +983,7 @@ const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.qu
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-09 10:45:41 UTC
+Last updated 2026-10-12 13:09:58 UTC
 </div>
 </div>
 </body>
