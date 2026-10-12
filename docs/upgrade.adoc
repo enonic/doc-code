@@ -283,6 +283,50 @@ There is no drop-in replacement, and no general rule - what to key on depends on
 
 `MacroService.postProcessInstructionSerialize()` is deprecated. It turned a macro into an HTML comment that XP replaced with the macro's output when rendering the page. XP no longer does that for these comments: the page shows the macro as written, such as `[mymacro]`. Pass rich text through `processHtml()` instead; the macros it finds are rendered with the page.
 
+==== ApplicationInvalidator
+
+`ApplicationInvalidator` and `ApplicationInvalidationLevel` are deprecated for the same reason as `ApplicationListener`: the callback arrives only after the application's services are gone, possibly after a replacement has started. Track `Application` services instead.
+
+==== Children and paths
+
+`ContentService.findByParent()`, `findIdsByParent()` and `findPaths()` are deprecated, as are `NodeService.findByParent()` and `NodeQuery.Builder.withPath()`. A query does the same job and accepts every constraint a search supports:
+
+* `ContentService.find()` with `ContentQuery.Builder.parentPath()` or `parentId()`, followed by `getByIds()` for the contents actually needed;
+* `find()` with `returnFields()` naming `_path`, in place of `findPaths()`;
+* `NodeService.findByQuery()` with `NodeQuery.Builder.parent()`, and `returnFields()` with `NodeIndexPath.PATH` in place of `withPath()`.
+
+==== Progress listeners
+
+Listener methods are renamed, so that every listener names its work the same way. The old methods are still called by the default implementations of the new ones:
+
+* `resolved()` replaces `PushContentListener.contentResolved()`, `NodeExportListener.nodeResolved()`, `NodeImportListener.nodeResolved()`, and `setTotal()` of `ApplyPermissionsListener` and `ApplyNodePermissionsListener`;
+* `CleanUpAuditLogListener.recordsDeleted()` replaces `processed()`; its `start()` and `finished()` are deprecated without a replacement.
+
+==== Export and import
+
+`ExportNodesParams.Builder.batchSize()` is ignored, as in lib-export. `ImportNodesParams.Builder.xsltFileName()` is ignored: use `xslt()` with a `VirtualFile`.
+
+==== Modified times
+
+`getModifiedTime()` is deprecated on `Icon`, `BaseSchema`, `MacroDescriptor`, `ComponentDescriptor`, `CmsDescriptor`, `SiteDescriptor` and `StyleDescriptor`, and so is `Resource.getTimestamp()`, for the reasons given for `modifiedTime` in JavaScript.
+
+==== Portal URLs
+
+The Java URL parameters follow the JavaScript ones:
+
+* `baseUrl` on `ImageUrlParams`, `AttachmentUrlParams`, `ProcessHtmlParams`, `ImageUrlGeneratorParams` and `AttachmentUrlGeneratorParams`: configure where the media APIs are served, with a virtual host mapping or `media.defaultBaseUrl` in `com.enonic.xp.portal.cfg`;
+* `setBaseUrl()` on `ApiUrlParams` and `ApiUrlGeneratorParams`: expose the API location as a virtual host mapping;
+* `projectName()` and `branch()` on `PageUrlParams`: use `PortalUrlService.pageUrlParts()` with a `PortalScope` resolved for the project and branch;
+* `setProjectName()`, `setBranch()`, `setId()` and `setPath()` on `BaseUrlParams`: use `PortalUrlService.portalScope()`;
+* `projectName()` and `branch()` on `ComponentUrlParams`: a component URL addresses a component of the page the request renders, in that request's project and branch.
+
+==== Scripts and tracing
+
+* `PortalScriptService.executeAsync()` and `ScriptRuntime.executeAsync()`: use `bootstrap()` for bootstrap scripts, or `execute()` on an executor of your choice.
+* `ScriptSettings.Builder.globalVariable()`, `ScriptSettings.getGlobalVariables()` and `ScriptTestSupport.addGlobalVariable()`: custom JavaScript globals are phased out, and `app` is the only supported global.
+* `Trace.putAll()` and `clear()`: record attributes with the typed `attribute()` methods; `Trace` will stop extending `Map`.
+* `getSize()`, `getBodyLength()` and `addTraceInfo()` of `BaseWebHandler`: XP records the response trace info itself.
+
 === Behaviour changes
 
 URLs that do not resolve::
