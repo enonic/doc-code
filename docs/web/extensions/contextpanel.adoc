@@ -51,7 +51,7 @@ Content Studio dispatches a `GET` to the extension URL with the selected content
 | `contentId`
 | Content UUID — the primary way to identify the selected content.
 
-| `repo`
+| `repository`
 | Repository id, e.g. `+com.enonic.cms.default+`.
 
 | `branch`
