@@ -86,7 +86,7 @@ Both requests carry the same query parameters:
 | Parameter | Description
 
 | `contentId`
-| Content UUID. Mutually exclusive with `contentPath` — Content Studio sends one or the other.
+| Content UUID.
 
 | `contentPath`
 | Content path, e.g. `/mysite/articles/hello`.

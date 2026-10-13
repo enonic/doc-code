@@ -48,18 +48,10 @@ TIP: To restrict the menu item to specific roles or principals, use the standard
 
 == Request
 
-Content Studio dispatches a `GET` to the extension URL when the user activates the menu item:
+Content Studio dispatches a `GET` to the extension URL when the user activates the menu item.
+No query parameters are sent.
 
-.Parameters sent to the extension URL
-[cols="1,3"]
-|===
-| Parameter | Description
-
-| `repo`
-| Repository id, e.g. `+com.enonic.cms.default+`.
-|===
-
-The standard XP request fields are available too: `req.user` for the active user, `req.locales` for i18n negotiation, and so on.
+The standard XP request fields are available: `req.user` for the active user, `req.locales` for i18n negotiation, and so on.
 
 == Response
 
