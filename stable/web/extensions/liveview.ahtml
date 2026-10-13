@@ -627,7 +627,7 @@ Both requests carry the same query parameters:</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Content UUID. Mutually exclusive with <code>contentPath</code> — Content Studio sends one or the other.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content UUID.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentPath</code></p></td>
@@ -918,7 +918,7 @@ Pass through <code>branch</code> and any other request parameters the external p
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:21:34 UTC
+Last updated 2026-10-13 08:22:57 UTC
 </div>
 </div>
 </body>

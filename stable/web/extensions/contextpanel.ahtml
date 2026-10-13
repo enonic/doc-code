@@ -557,7 +557,7 @@ interfaces:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Content UUID — the primary way to identify the selected content.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repository</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Repository id, e.g. <code>com.enonic.cms.default</code>.</p></td>
 </tr>
 <tr>
@@ -677,7 +677,7 @@ exports.GET = (req) =&gt; {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:21:34 UTC
+Last updated 2026-10-13 08:22:57 UTC
 </div>
 </div>
 </body>

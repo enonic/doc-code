@@ -555,29 +555,11 @@ To restrict the menu item to specific roles or principals, use the standard <cod
 <h2 id="request"><a class="link" href="#request">Request</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Content Studio dispatches a <code>GET</code> to the extension URL when the user activates the menu item:</p>
+<p>Content Studio dispatches a <code>GET</code> to the extension URL when the user activates the menu item.
+No query parameters are sent.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Parameters sent to the extension URL</caption>
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Repository id, e.g. <code>com.enonic.cms.default</code>.</p></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph">
-<p>The standard XP request fields are available too: <code>req.user</code> for the active user, <code>req.locales</code> for i18n negotiation, and so on.</p>
+<p>The standard XP request fields are available: <code>req.user</code> for the active user, <code>req.locales</code> for i18n negotiation, and so on.</p>
 </div>
 </div>
 </div>
@@ -676,7 +658,7 @@ The initial <code>GET</code> then becomes a thin shell that loads a bundled SPA,
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:21:34 UTC
+Last updated 2026-10-13 08:22:57 UTC
 </div>
 </div>
 </body>
