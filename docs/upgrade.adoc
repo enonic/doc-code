@@ -51,6 +51,8 @@ A vhost may now restrict the flows an ID provider serves. XP enforces `login`, `
 
 For code reaching the `VirtualHost` Java API through the <<runtime/java-bridge#, Java bridge>>: `getIdProviderKeys()` is deprecated in favor of `getIdProviders()` - a map of the enabled ID providers to their per-vhost configuration (flow lists today), the default provider first.
 
+In `DispatchConstants`, the connector constants are renamed after the endpoints they serve: `WEB_CONNECTOR`, `MANAGEMENT_CONNECTOR` and `STATISTICS_CONNECTOR` replace the deprecated `XP_CONNECTOR`, `API_CONNECTOR` and `STATUS_CONNECTOR`. The values are unchanged, so code comparing the request's connector attribute keeps working either way.
+
 [#xp-8-1]
 == XP 8.1
 
