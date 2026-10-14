@@ -141,7 +141,7 @@ The URL to this endpoint can be generated using the <<../libraries/lib-portal#id
 [#flows]
 == Flows
 
-image:xp-820.svg[XP 8.2.0,opts=inline] A vhost mapping may restrict the flows an ID provider serves, with a flow list on its `enabled` value — e.g. `+default&enabled=login,autologin+`. XP itself enforces the three flows it manages:
+image:xp-820.svg[XP 8.2.0,opts=inline] A vhost mapping may restrict the flows an ID provider serves, with the provider's `flows` setting — e.g. `idProvider.myidp.flows = login,autologin`. XP itself enforces the three flows it manages:
 
 login:: `handle401` and the `login` function.
 autologin:: the `autoLogin` filter.
@@ -162,7 +162,7 @@ export function POST(request: Request) {
 }
 ----
 
-An administrator then enables the endpoint per vhost by listing the flow — `+enabled=autologin,device+` — and disables it by leaving it out. Document the additional flows your ID provider supports, so administrators know what the names mean.
+An administrator then enables the endpoint per vhost by listing the flow — `flows = autologin,device` — and disables it by leaving it out. Document the additional flows your ID provider supports, so administrators know what the names mean.
 
 == Sample
 The code below demonstrates how an ID provider may be implemented
