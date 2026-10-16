@@ -81,6 +81,30 @@ Use ``request.getHeader(name)`` to read a header case-insensitively. Prefer it o
 
 NOTE: Modifications to the ``headers`` object do not affect the result of ``getHeader(name)``.
 
+[#access-token]
+=== Token-authenticated requests
+
+When the request was authenticated with an access token XP issued, through https://developer.enonic.com/docs/platform/stable/security/access-tokens[device login], the request carries what the token was granted, so a function can check that the client asked for what it is about to do. The user is already logged in, restricted to the token's principals; `accessToken` is informational.
+
+[source,json]
+----
+{
+  "accessToken": {
+    "clientId": "my-cli",  // <1>
+    "grantId": "0199e1a2-6c3b-7d4e-8f90-1a2b3c4d5e6f",  // <2>
+    "scope": ["content:read"],  // <3>
+    "audience": ["api"]  // <4>
+  }
+}
+----
+
+<1> The client that obtained the token, as it named itself, or `null`; XP has no client registry, so treat it as a label.
+<2> The grant the token was issued under, stable across refreshes, or `null` for a token issued without one.
+<3> The scopes the user kept at consent, sorted. The roles they imply are already applied to the logged-in user.
+<4> The audiences the token names, sorted. The vhost serving the request declares one of them.
+
+The property is absent on every other request, including one authenticated by an ID provider's own `autoLogin`.
+
 [#response]
 == Response
 
