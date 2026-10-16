@@ -98,8 +98,8 @@ When the request was authenticated with an access token XP issued, through https
 }
 ----
 
-<1> The client that obtained the token, as it named itself; XP has no client registry, so treat it as a label.
-<2> The grant the token was issued under, stable across refreshes.
+<1> The client that obtained the token, as it named itself, or `null`; XP has no client registry, so treat it as a label.
+<2> The grant the token was issued under, stable across refreshes, or `null` for a token issued without one.
 <3> The scopes the user kept at consent, sorted. The roles they imply are already applied to the logged-in user.
 <4> The audiences the token names, sorted. The vhost serving the request declares one of them.
 

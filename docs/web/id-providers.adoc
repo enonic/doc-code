@@ -151,7 +151,7 @@ XP serves the OAuth device flow (https://datatracker.ietf.org/doc/html/rfc8628[R
 | user | object | The signed-in user: `key`, `login`, `displayName`.
 | error | string | *Optional.* On `enter`: why the previous code was refused. Today the one value is `+invalid_code+`. The page words it.
 | userCode | string | On `confirm`: the code the client displays, so the user can check it matches.
-| clientId | string | On `confirm`: the name the client gave itself. XP has no client registry, so it is a label, not a verified identity.
+| clientId | string | On `confirm`: the name the client gave itself, or `null`. XP has no client registry, so it is a label, not a verified identity.
 | scope | object[] | On `confirm`: the scopes the client asked for, each as `id`, the `roles` it implies and whether it is `required`. Empty when the client asked for none.
 | unrestricted | boolean | On `confirm`: `true` when the vhost has no scope catalogue, so an approved token carries the user's full memberships.
 | audience | string[] | On `confirm`: the audiences the token will name.
@@ -168,6 +168,9 @@ import type {Request, Response} from '@enonic-types/core';
 
 export function deviceVerification(req: Request): Response {
     const d = req.deviceLogin;
+    if (!d) {
+        return {status: 404};
+    }
     if (d.action === 'confirm') {
         const scopes = d.scope
             .map(s => `<label><input type="checkbox" name="scope" value="${s.id}" checked ${s.required ? 'disabled' : ''}> ${s.id}</label>`)
