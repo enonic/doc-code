@@ -14,38 +14,351 @@ TIP: When building a new Enonic application, use the https://market.enonic.com/s
 
 The same selection applies when using an AI coding agent: start here, then read the linked guide and release sections that apply to the upgrade.
 
-[#xp-8-0]
-== XP 8.0
-
-XP 8.0 is the baseline for this documentation. The <<upgrade/xp7#, XP 7 migration guide>> covers changes to the build system, descriptors, application code and APIs when moving from XP 7. There are currently no later minor-release upgrade notes in this stable documentation.
-
 == Version bump
 
-Set the platform version in _gradle.properties_ to the release you are targeting. For XP 8.0:
+Set the platform version in _gradle.properties_ to the release you are targeting:
 
 [source,properties]
 ----
-xpVersion = 8.0.0
+xpVersion = 8.1.0
 ----
 
-TypeScript projects also need compatible type definitions. Update the `@enonic-types` packages used by your application to versions matching the target XP release:
+TypeScript projects also need the matching type definitions, or the parameters and functions added in the release will not type-check:
 
 .package.json
 [source,json]
 ----
 {
   "devDependencies": {
-    "@enonic-types/global": "^8.0.0",
-    "@enonic-types/lib-content": "^8.0.0"
+    "@enonic-types/global": "^8.1.0",
+    "@enonic-types/lib-content": "^8.1.0"
   }
 }
 ----
 
-After applying the relevant upgrade notes and installing the updated dependencies, rebuild and deploy to a sandbox running the target XP version:
+Then rebuild and deploy:
 
-[source,sh]
+  enonic project deploy
+
+The app builds and runs. What follows is work that can be done at your own pace.
+
+[#xp-8-0]
+== XP 8.0
+
+XP 8.0 is the baseline for this documentation. The <<upgrade/xp7#, XP 7 migration guide>> covers changes to the build system, descriptors, application code and APIs when moving from XP 7.
+
+[#xp-8-1]
+== XP 8.1
+
+No breaking changes for JavaScript application code. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, apart from the Java macro instruction noted below.
+
+=== Deprecations
+
+[#xp-8-1-lib-content]
+==== lib-content and lib-node
+
+<<libraries/lib-content#getchildren, `getChildren()`>> in lib-content and <<libraries/lib-node#findchildren, `findChildren()`>> in lib-node are deprecated. A query with `parent` does the same job: it takes the same path or id, and where `sort` is omitted it applies the child order stored on the parent, so the result comes back in the order it did before.
+
+.Content - before
+[source,typescript]
 ----
-enonic project deploy
+import {getChildren} from '/lib/xp/content';
+
+const result = getChildren({
+    key: '/mysite/articles',
+    start: 0,
+    count: 20
+});
 ----
 
-Verify the application's behavior in that sandbox before deploying to production.
+.Content - after
+[source,typescript]
+----
+import {query} from '/lib/xp/content';
+
+const result = query({
+    parent: '/mysite/articles',
+    start: 0,
+    count: 20
+});
+----
+
+`hits` carries the same contents as before, and `total` the same count.
+
+.Nodes - before
+[source,typescript]
+----
+const result = repo.findChildren({
+    parentKey: '/content',
+    count: 100,
+    recursive: true
+});
+----
+
+.Nodes - after
+[source,typescript]
+----
+const result = repo.query({
+    parent: '/content',
+    count: 100,
+    recursive: true
+});
+----
+
+Three parameters change name or shape:
+
+`childOrder`:: Use `sort`, which takes the same expression. Omit it to keep the parent's child order.
+`countOnly`:: Ask for no hits instead - `count: 0` - and read `total`.
+`recursive`:: Same name, same meaning. A subtree has no child order of its own, so pass `sort` where the order of a recursive result matters.
+
+Moving to a query also opens up everything a query can do that `getChildren()` could not: filters, content types, aggregations, highlighting, and the `returns` parameter that has each hit carry named index fields instead of the whole content.
+
+[#xp-8-1-lib-task]
+==== lib-task
+
+<<libraries/lib-task#executefunction, `executeFunction()`>> is deprecated and will be removed together with the Nashorn engine. It is also unsupported on the <<runtime/engines#graaljs, GraalJS>>, where a function cannot cross from one script context to another - so this is the one clean-up to do before trying that engine.
+
+Move the body of the function into a <<background/tasks#, named task>>, and submit it by descriptor.
+
+.Before
+[source,typescript]
+----
+import {executeFunction} from '/lib/xp/task';
+
+const taskId = executeFunction({
+    description: 'Reindex the catalog',
+    func: () => {
+        reindexCatalog(100);
+    }
+});
+----
+
+.After - src/main/resources/tasks/reindex-catalog/reindex-catalog.yaml
+[source,yaml]
+----
+kind: "Task"
+description: "Reindex the catalog"
+form:
+- type: "Long"
+  name: "batchSize"
+  label: "Items per batch"
+  occurrences:
+    min: 1
+    max: 1
+----
+
+.After - src/main/resources/tasks/reindex-catalog/reindex-catalog.ts
+[source,typescript]
+----
+export function run(params: { batchSize: number }): void {
+    reindexCatalog(params.batchSize);
+}
+----
+
+.After - submitting it
+[source,typescript]
+----
+import {submitTask} from '/lib/xp/task';
+
+const taskId = submitTask({
+    descriptor: 'reindex-catalog',
+    config: {
+        batchSize: 100
+    }
+});
+----
+
+Two differences to plan for. A named task takes its input as `config`, validated against the descriptor's form, rather than closing over the variables around it - anything the function read from its surroundings has to become a parameter. And a named task is distributable: the cluster picks a node that accepts it, which may not be the node that submitted it, so the task must not depend on running anywhere in particular.
+
+[#xp-8-1-lib-portal]
+==== lib-portal
+
+The `params` parameter is deprecated on <<libraries/lib-portal#imageUrl, `imageUrl()`>> and <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>>. The image API reads no query parameters but `quality`, `background` and `filter`, and the attachment API none but `download`, all set by their own parameters. Any other custom parameter only makes URLs to the same media differ, and one of those names - such as `params: {filter: 'blur(10)'}` - changes the image past the parameter meant for it. Use `quality`, `background`, `filter` and `download` instead.
+
+The `baseUrl` parameter is deprecated on <<libraries/lib-portal#imageUrl, `imageUrl()`>>, <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> and <<libraries/lib-portal#apiurl, `apiUrl()`>>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.
+
+.Before
+[source,typescript]
+----
+import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)',
+    baseUrl: 'https://cdn.example.com'
+});
+----
+
+.After
+[source,typescript]
+----
+import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)'
+});
+----
+
+For media, declare the host once in _com.enonic.xp.portal.cfg_. A mount that serves the media APIs itself always wins, so a site needs both keys:
+
+[source,properties]
+----
+media.defaultBaseUrl = https://cdn.example.com
+legacy.mediaApiAutoMount.enabled = false
+----
+
+A Base URL configured on the site itself does the same for that one site. See https://developer.enonic.com/docs/platform/stable/config/cms#media_base_url[serving media from another host].
+
+For APIs, the virtual host that receives the request declares where they live:
+
+[source,properties]
+----
+mapping.example.context.portal.apiBaseUrl = https://apis.example.com
+----
+
+See https://developer.enonic.com/docs/platform/stable/config/vhosts#api-locations[API locations].
+
+Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.
+
+Setting a project or branch on a request-following URL function switched it from the request to configuration, even for the request's own project, so the URL left the virtual host the request came through. These parameters are deprecated in favour of the <<libraries/lib-portal#url_parts, URL parts>> functions, which resolve URLs from configuration alone:
+
+* `project` and `branch` on <<libraries/lib-portal#pageurl, `pageUrl()`>>: use <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>> with a `scope` from <<libraries/lib-portal#portalscope, `portalScope()`>>.
+* `id`, `path`, `project` and `branch` on <<libraries/lib-portal#baseurl, `baseUrl()`>>: use <<libraries/lib-portal#portalscope, `portalScope()`>>, with `key` naming the site. `baseUrl()` keeps `type`, and without parameters it is the base URL of the current site request.
+
+.Before
+[source,typescript]
+----
+import {pageUrl} from '/lib/xp/portal';
+
+const url = pageUrl({
+    path: '/my-site/posts/first-post',
+    project: 'myproject',
+    branch: 'master',
+    type: 'absolute'
+});
+----
+
+.After
+[source,typescript]
+----
+import {pageUrlParts, portalScope} from '/lib/xp/portal';
+
+const scope = portalScope({key: '/my-site', project: 'myproject', branch: 'master'});
+const parts = pageUrlParts({path: '/my-site/posts/first-post', scope});
+const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.queryString;
+----
+
+[#xp-8-1-lib-export]
+==== lib-export
+
+`batchSize` on <<libraries/lib-export#exportnodes, `exportNodes()`>> is ignored. An export now reads each node at the exact version its scan observed, one at a time, so a subtree that changes while the export runs is written as it was seen rather than as a mixture of old and new. There is no read batch left to size - drop the parameter.
+
+[#xp-8-1-timestamps]
+==== lib-app, lib-schema and lib-io
+
+`modifiedTime` is deprecated on the icons, content types, schemas and application descriptors returned by lib-content, lib-schema and lib-app, and so is <<libraries/types#resource, `Resource.getTimestamp()`>> in lib-io. These read from application resources, where the value comes from a jar entry timestamp - and build tools normalize those to a constant so that builds are reproducible, Gradle by default since version 9. Two different builds of the same app therefore report the same value.
+
+Code that used them as a cache key or an invalidation signal was therefore already unreliable:
+
+[source,typescript]
+----
+const cacheKey = `icon-${contentType.icon.modifiedTime}`;
+----
+
+There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.
+
+[#xp-8-1-java]
+=== Java APIs
+
+==== NodeService
+
+`NodeService` gains two methods for reading a subtree: `list` streams every entry beneath a parent in path order, filtered by what the caller may read, and `enumerate` returns the same entries one bounded batch at a time, with a cursor. `ListNodesResult` and its `recursive` flag are removed - the listing always covers the whole subtree, so code that collected ids through `ListNodesResult` moves to `list`.
+
+==== ApplicationListener
+
+`ApplicationListener` is deprecated. It misses applications that were already active when the listener registered. Track `Application` services with a service tracker instead: `addingService` replays every active application on open and delivers future ones, and `removedService` is delivered before any replacement is registered.
+
+==== MacroService
+
+`MacroService.postProcessInstructionSerialize()` is deprecated. It turned a macro into an HTML comment that XP replaced with the macro's output when rendering the page. XP no longer does that for these comments: the page shows the macro as written, such as `[mymacro]`. Pass rich text through `processHtml()` instead; the macros it finds are rendered with the page.
+
+==== ApplicationInvalidator
+
+`ApplicationInvalidator` and `ApplicationInvalidationLevel` are deprecated for the same reason as `ApplicationListener`: the callback arrives only after the application's services are gone, possibly after a replacement has started. Track `Application` services instead.
+
+==== Children and paths
+
+`ContentService.findByParent()`, `findIdsByParent()` and `findPaths()` are deprecated, as are `NodeService.findByParent()` and `NodeQuery.Builder.withPath()`. A query does the same job and accepts every constraint a search supports:
+
+* `ContentService.find()` with `ContentQuery.Builder.parentPath()` or `parentId()`, followed by `getByIds()` for the contents actually needed;
+* `find()` with `returnFields()` naming `_path`, in place of `findPaths()`;
+* `NodeService.findByQuery()` with `NodeQuery.Builder.parent()`, and `returnFields()` with `NodeIndexPath.PATH` in place of `withPath()`.
+
+==== Progress listeners
+
+Listener methods are renamed, so that every listener names its work the same way. The old methods are still called by the default implementations of the new ones:
+
+* `resolved()` replaces `PushContentListener.contentResolved()`, `NodeExportListener.nodeResolved()`, `NodeImportListener.nodeResolved()`, and `setTotal()` of `ApplyPermissionsListener` and `ApplyNodePermissionsListener`;
+* `CleanUpAuditLogListener.recordsDeleted()` replaces `processed()`; its `start()` and `finished()` are deprecated without a replacement.
+
+==== Export and import
+
+`ExportNodesParams.Builder.batchSize()` is ignored, as in lib-export. `ImportNodesParams.Builder.xsltFileName()` is ignored: use `xslt()` with a `VirtualFile`.
+
+==== Modified times
+
+`getModifiedTime()` is deprecated on `Icon`, `BaseSchema`, `MacroDescriptor`, `ComponentDescriptor`, `CmsDescriptor`, `SiteDescriptor` and `StyleDescriptor`, and so is `Resource.getTimestamp()`, for the reasons given for `modifiedTime` in JavaScript.
+
+==== Portal URLs
+
+The Java URL parameters follow the JavaScript ones:
+
+* `baseUrl` on `ImageUrlParams`, `AttachmentUrlParams`, `ProcessHtmlParams`, `ImageUrlGeneratorParams` and `AttachmentUrlGeneratorParams`: configure where the media APIs are served, with a virtual host mapping or `media.defaultBaseUrl` in `com.enonic.xp.portal.cfg`;
+* `setBaseUrl()` on `ApiUrlParams` and `ApiUrlGeneratorParams`: expose the API location as a virtual host mapping;
+* `projectName()` and `branch()` on `PageUrlParams`: use `PortalUrlService.pageUrlParts()` with a `PortalScope` resolved for the project and branch;
+* `setProjectName()`, `setBranch()`, `setId()` and `setPath()` on `BaseUrlParams`: use `PortalUrlService.portalScope()`;
+* `projectName()` and `branch()` on `ComponentUrlParams`: a component URL addresses a component of the page the request renders, in that request's project and branch.
+
+==== Scripts and tracing
+
+* `PortalScriptService.executeAsync()` and `ScriptRuntime.executeAsync()`: use `bootstrap()` for bootstrap scripts, or `execute()` on an executor of your choice.
+* `ScriptSettings.Builder.globalVariable()`, `ScriptSettings.getGlobalVariables()` and `ScriptTestSupport.addGlobalVariable()`: custom JavaScript globals are phased out, and `app` is the only supported global.
+* `Trace.putAll()` and `clear()`: record attributes with the typed `attribute()` methods; `Trace` will stop extending `Map`.
+* `getSize()`, `getBodyLength()` and `addTraceInfo()` of `BaseWebHandler`: XP records the response trace info itself.
+
+=== Behaviour changes
+
+URLs that do not resolve::
+<<libraries/lib-portal#pageurl, `pageUrl()`>>, <<libraries/lib-portal#imageUrl, `imageUrl()`>>, <<libraries/lib-portal#attachmentUrl, `attachmentUrl()`>> and <<libraries/lib-portal#processHtml, `processHtml()`>> generate a URL answered with 404, rather than one answered with 500, when the content it names does not resolve. See <<libraries/lib-portal#unresolved_urls, URLs that do not resolve>>.
+
+Rich text images::
+`processHtml()` writes `sizes` only along with a `srcset` of at least one width, and an image the image API serves as stored gets no `srcset`. `srcset` and `sizes` come right after `src` in the `+<img>+` tag. The height of an image with an aspect ratio is rounded to the nearest pixel: a `21:9` image is now 329 pixels high at the default width of 768, rather than 324.
+
+Rich text macros::
+`processHtml()` now looks up each macro itself, so macros render on any page, also outside a site. A macro no application provides is shown as written. HTML comments in the rich text stay plain comments: they are never run as macros.
+
+=== Worth adopting
+
+None of these are deprecations. They are places where 8.1 offers a supported way to do something apps have had to work around.
+
+Content Security Policy::
+A `Content-Security-Policy` header assembled by hand and set on the response is now folded into the request's policy rather than sent verbatim, which means it is no longer the last word - a later contribution can add to it. Declare the policy through <<libraries/lib-portal#csp, `csp()`>> instead: one policy is shared by the page, its layouts, its parts and any response processor, and the header is composed when the response is flushed.
+
+Data down the request pipeline::
+Properties assigned to the request object - `+req.myFlag = true+` - never reached anything downstream; the field is dropped when the request is handed on. <<libraries/lib-context#setcustomlocalattribute, `+setCustomLocalAttribute()+`>> stores the value in the current execution instead, where implementations, response processors and the code after `next()` in a filter can all read it back.
+
+Initialization guards::
+<<runtime/main#, `main.ts`>> now runs to completion before anything else in the app on the same node, so a flag that made every request check whether start-up had finished is no longer needed. Keep a guard for work that must happen once *for the cluster* - a node does not wait for `main.ts` on any other node, so two nodes can still initialize the same repository at the same time.
+
+Disposer registration::
+`+__.disposer()+` registrations are remembered when they are made while the application is starting - from `main.ts`, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.
+
+URLs for a frontend of your own::
+A frontend that serves content from a host of its own builds its URLs from the <<libraries/lib-portal#url_parts, URL parts>> functions: <<libraries/lib-portal#pageurlparts, `pageUrlParts()`>>, <<libraries/lib-portal#imageurlparts, `imageUrlParts()`>>, <<libraries/lib-portal#attachmenturlparts, `attachmentUrlParts()`>> and <<libraries/lib-portal#processhtmlparts, `processHtmlParts()`>>, with the site or project resolved once by <<libraries/lib-portal#portalscope, `portalScope()`>>.
+
+Width of rich text images::
+The `src` of every image in rich text was 768 pixels wide. `imageSrcWidth` of <<libraries/lib-portal#processHtml, `processHtml()`>> sets that width; the height still follows the image's style.
+
+Image styles of a given application::
+An image in rich text can name its style as `<application>:<name>`, where several applications define styles of the same name.

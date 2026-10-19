@@ -13,7 +13,7 @@ An implementation becomes an SSE endpoint by returning an `sse` object from a re
 
 [source,typescript]
 ----
-exports.GET = (req) => {
+export function GET(req) {
     return {
         sse: {
             attributes: { startedAt: Date.now() }, // <1>
@@ -21,7 +21,7 @@ exports.GET = (req) => {
             timeout: 0                             // <3>
         }
     };
-};
+}
 ----
 
 <1> Per-connection object, exposed as `event.attributes` on every lifecycle event. Set once at SSE setup and immutable thereafter — events always see the original snapshot. Defaults to an empty object if omitted.
@@ -32,13 +32,13 @@ The implementation can react to lifecycle events by exporting an `sseEvent` func
 
 [source,typescript]
 ----
-exports.sseEvent = (event) => {
+export function sseEvent(event) {
     if (event.type === 'open') {
         // send a message back using event.clientId, or add it to a group for later broadcasts
     } else if (event.type === 'close') {
         // optional teardown — group membership is cleaned up automatically
     }
-};
+}
 ----
 
 Lifecycle event:
@@ -64,16 +64,16 @@ A connection is identified by `event.clientId`, delivered to the `sseEvent` func
 
 [source,typescript]
 ----
-const sseLib = require('/lib/xp/sse');
+import {send} from '/lib/xp/sse';
 
-exports.sseEvent = (event) => {
+export function sseEvent(event) {
     if (event.type === 'open') {
-        sseLib.send({
+        send({
             clientId: event.clientId,
             message: { event: 'welcome', data: 'Hello!' }
         });
     }
-};
+}
 ----
 
 `message.id` updates the client's last-event-id buffer for reconnects. `message.comment` emits an SSE comment line — useful for keep-alive pings. A message with no `data` does not dispatch a client event but any `id` still updates the buffer.
@@ -85,16 +85,16 @@ To address a client from outside the `sseEvent` function, do not store `event.cl
 
 [source,typescript]
 ----
-const sseLib = require('/lib/xp/sse');
+import {addToGroup, sendToGroup} from '/lib/xp/sse';
 
-exports.sseEvent = (event) => {
+export function sseEvent(event) {
     if (event.type === 'open') {
-        sseLib.addToGroup({ group: 'live', clientId: event.clientId });
+        addToGroup({ group: 'live', clientId: event.clientId });
     }
-};
+}
 
 // from an event listener:
-sseLib.sendToGroup({ group: 'live', message: { data: 'Update' } });
+sendToGroup({ group: 'live', message: { data: 'Update' } });
 ----
 
 See <<../libraries/lib-sse#,SSE library>> for the full reference.

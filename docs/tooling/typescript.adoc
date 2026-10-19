@@ -5,7 +5,19 @@ include::../.variables.adoc[]
 
 We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <<../libraries#, standard libraries>>.
 
-NOTE: XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <<runtime#, Runtime>> for the execution model.
+NOTE: XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <<../runtime#, Runtime>> for the execution model.
+
+[#ecmascript-target]
+== ECMAScript target
+
+TypeScript compilation is required for both XP engines. The ECMAScript target controls the JavaScript syntax emitted by the build:
+
+* *Nashorn:* Target ES5. The engine implements ECMAScript 5.1 with only a subset of later features, so the build must also convert newer syntax to that language level.
+* *GraalJS:* A modern ECMAScript target supported by the embedded engine can preserve newer JavaScript syntax. The build must still convert TypeScript to JavaScript before deployment.
+
+Choose the target in your TypeScript compiler or bundler configuration to match the <<../runtime/engines#, JavaScript engine>> used by the app. ES5 remains a common syntax target when supporting both engines; it does not remove differences in their runtime behavior.
+
+The module format is a separate setting. XP loads CommonJS modules on both engines, so the build must also convert `import` and `export` statements to CommonJS. See <<../runtime/globals#esm, ECMAScript modules>>.
 
 
 == TypeScript starter
@@ -21,7 +33,7 @@ enonic create -r starter-ts com.example.myapp
 
 To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under https://www.npmjs.com/org/enonic-types[@enonic-types] organisation on NPM.
 
-Install types at the major version of XP your project builds against. `@{release}` tracks the latest XP {release} release, which is what you want in most projects. If you target a specific XP version — the `xpVersion` in your <<../tooling/build#, `gradle.properties`>> — pin the types to it instead, for example `@{version}`. Never install types *newer* than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.
+Install types at the major version of XP your project builds against. `@{release}` tracks the latest XP {release} release, which is what you want in most projects. If you target a specific XP version — the `xpVersion` in your <<build#, `gradle.properties`>> — pin the types to it instead, for example `@{version}`. Never install types *newer* than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.
 
 == Enonic Libraries
 
@@ -65,7 +77,7 @@ Since `global` types are not placed under the `node_modules/@types`, it is neces
 
 === Core
 
-There are types that are shared between other libraries (like `Content` or `Principal`). Such types reside in the `core` package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. Content library exports `Content`` type. But if you want to use these type directly, you'll need to install them:
+There are types that are shared between other libraries (like `Content` or `Principal`). Such types reside in the `core` package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. the Content library exports the `Content` type. But if you want to use these types directly, you'll need to install them:
 
 [source,bash,subs="attributes+"]
 ----

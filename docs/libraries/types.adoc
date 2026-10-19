@@ -9,7 +9,7 @@ This page is the canonical reference for the cross-library types.
 
 principals, binary streams, the content object, page components, and more. They are defined once in the `@enonic-types/core` package and re-exported by the individual `@enonic-types/lib-*` packages, so the same `User`, `Content`, or `ByteSource` you receive from one library is the exact type another library accepts.
 
-Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <<typescript#, TypeScript>>.
+Library pages name them and link here rather than redefining them. For how to install and wire the type packages, see <<../tooling/typescript#, TypeScript>>.
 
 NOTE: These are the TypeScript shapes of the runtime objects. The conceptual models behind them — the content model, the query language, form schemas — are documented in the https://developer.enonic.com/docs/cms[CMS] and https://developer.enonic.com/docs/platform[XP platform] docs, linked from the relevant types below.
 
@@ -110,7 +110,7 @@ Properties
 [#byte-source]
 === ByteSource
 
-An opaque handle to a binary stream. You don't read its fields directly — you pass it to library functions (for example `+io.readText+`, `+io.getSize+`, attachment and media APIs) that consume or produce binary data. Obtain one from `<<../libraries/lib-io#, lib-io>>` (`newStream`, a resource stream) or from content attachments.
+An opaque handle to a binary stream. You don't read its fields directly — you pass it to library functions (for example `+io.readText+`, `+io.getSize+`, attachment and media APIs) that consume or produce binary data. Obtain one from `<<lib-io#, lib-io>>` (`newStream`, a resource stream) or from content attachments.
 
 [#resource]
 === Resource
@@ -127,7 +127,7 @@ Methods
 | Name | Type | Description
 | exists() | boolean | Whether the resource exists.
 | getSize() | number | Size in bytes.
-| getTimestamp() | number | Last-modified time, in milliseconds since the epoch.
+| getTimestamp() | number | *Deprecated.* Last-modified time, in milliseconds since the epoch. Not a dependable measure of when the resource last changed: for a resource in an application bundle the value comes from its jar entry, which build tools normalize to a constant for reproducible builds (Gradle does so by default as of version 9) — so it reflects the build, not the file. Only a resource backed by a repository node carries a genuine modification time; for file-backed resources the value is meaningful in development mode only.
 | getStream() | <<byte-source, ByteSource>> | The resource's binary stream.
 |===
 
@@ -277,7 +277,7 @@ Properties
 
 == Page and components
 
-A content's `page` (and a fragment's `fragment`) is a tree of components. Every component carries a `type` discriminant — one of `'page'`, `'layout'`, `'part'`, `'text'`, or `'fragment'`. There is no separate `Page` type: the page-level node is a <<page-component, PageComponent>>.
+A content's `page` (and a fragment's `fragment`) is a tree of components. Every component carries a `type` discriminant — one of `'page'`, `'layout'`, `'part'`, `'text'`, or `'fragment'`. There is no separate `Page` type: the page-level node is a <<page-component, PageComponent>>. The same tree is what <<../libraries/lib-content#pages-and-components, lib-content>> takes when creating or updating a page; `path` and a region's `name` are set by XP when the page is stored and are ignored on input.
 
 [#component]
 === Component
@@ -297,11 +297,11 @@ Properties
 |===
 | Name | Type | Description
 | type | string | Always `'page'`.
-| descriptor | string | Descriptor key of the page component (e.g. `com.myapp:main`).
-| config | object | The component's configuration, shaped by the descriptor.
-| regions | object | Map of region name to <<region, Region>>.
+| descriptor | string | *Optional.* Descriptor key of the page component (e.g. `com.myapp:main`). Absent when the page uses a template; mutually exclusive with `template`.
+| config | object | *Optional.* The component's configuration, shaped by the descriptor.
+| regions | object | *Optional.* Map of region name to <<region, Region>>.
 | path | string | Component path; always `/` for the page root.
-| template | string | *Optional.* Page template key, when the page uses a template.
+| template | string | *Optional.* Id of the page template the page uses; mutually exclusive with `descriptor`.
 |===
 
 [#layout-component]

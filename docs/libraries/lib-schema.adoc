@@ -2,6 +2,8 @@
 :toc: right
 :imagesdir: ../images
 
+image:unstable.svg[Unstable,opts=inline] The dynamic schema API is *not stable*. It may change, or be withdrawn, in a future release.
+
 API for fetching and manipulating dynamic schemas.
 
 WARNING: In XP 8 all `resource` strings passed to and returned from this library are *YAML*. XML resources are no longer accepted — `createSchema`, `createComponent`, `createStyles`, `updateSite`, and the `update*` counterparts all parse YAML only. Examples below use the XP 8 `kind:` form.
@@ -19,7 +21,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-schema` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-schema` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Functions
 
@@ -1276,9 +1278,9 @@ Properties
 | description | string | Schema description.
 | descriptionI18nKey | string | Schema description i18n key.
 | createdTime | string | Created zulu time.
-| creator | <<../fundamentals/types#user-key, UserKey>> | Principal that created the schema.
-| modifiedTime | string | Modified zulu time.
-| modifier | <<../fundamentals/types#user-key, UserKey>> | Principal that last modified the schema.
+| creator | <<../libraries/types#user-key, UserKey>> | Principal that created the schema.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.
+| modifier | <<../libraries/types#user-key, UserKey>> | Principal that last modified the schema.
 | resource | string | Schema resource value (YAML).
 | type | string | Schema type (`CONTENT_TYPE`, `FORM_FRAGMENT`, `MIXIN`).
 | icon | <<icon,Icon>> | *Optional.* Schema icon.
@@ -1301,7 +1303,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| form | <<../fundamentals/types#form-item, FormItem>>[] | Content type form.
+| form | <<../libraries/types#form-item, FormItem>>[] | Content type form.
 | config | object | Content type config. Map of config values keyed by name.
 | superType | string | *Optional.* Key of the content type this one inherits from.
 | abstract | boolean | *Optional.* `true` if the content type cannot be instantiated directly.
@@ -1332,7 +1334,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| form | <<../fundamentals/types#form-item, FormItem>>[] | Form fragment form.
+| form | <<../libraries/types#form-item, FormItem>>[] | Form fragment form.
 |===
 
 [#mixin]
@@ -1352,7 +1354,7 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| form | <<../fundamentals/types#form-item, FormItem>>[] | Mixin form.
+| form | <<../libraries/types#form-item, FormItem>>[] | Mixin form.
 | config | object | Mixin config. Map of config values keyed by name.
 |===
 
@@ -1379,10 +1381,10 @@ Properties
 | description | string | Component description.
 | descriptionI18nKey | string | Component description i18n key.
 | componentPath | string | Component path.
-| modifiedTime | string | Modified zulu time.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.
 | resource | string | Component resource value (YAML).
 | type | string | Component type (`PAGE`, `PART`, `LAYOUT`).
-| form | <<../fundamentals/types#form-item, FormItem>>[] | Component form.
+| form | <<../libraries/types#form-item, FormItem>>[] | Component form.
 | config | object | Component config. Map of config values keyed by name.
 |===
 
@@ -1464,8 +1466,8 @@ Properties
 | Name | Type | Description
 | application | string | Application key.
 | resource | string | Site CMS descriptor YAML resource value.
-| modifiedTime | string | Site zulu modified time.
-| form | <<../fundamentals/types#form-item, FormItem>>[] | Site descriptor form.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit.
+| form | <<../libraries/types#form-item, FormItem>>[] | Site descriptor form.
 | mixinMappings | <<mixin-mapping,MixinMapping[]>> | *Optional.* Mixin mappings.
 |===
 
@@ -1486,7 +1488,7 @@ Properties
 |===
 | Name | Type | Description
 | application | string | Application key.
-| modifiedTime | string | Styles zulu modified time.
+| modifiedTime | string | *Deprecated.* Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit.
 | resource | string | Styles YAML resource value.
 | elements | <<element,StyleElement[]>> | Style elements.
 |===
@@ -1571,9 +1573,9 @@ Properties
 [grid="none"]
 |===
 | Name | Type | Description
-| data | <<../fundamentals/types#byte-source, ByteSource>> | Icon stream data.
+| data | <<../libraries/types#byte-source, ByteSource>> | Icon stream data.
 | mimeType | string | Icon mime type.
-| modifiedTime | string | Icon modified time.
+| modifiedTime | string | *Deprecated.* Icon modified time. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read.
 |===
 
 

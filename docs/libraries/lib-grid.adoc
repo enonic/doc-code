@@ -18,7 +18,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-grid` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-grid` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Functions
 

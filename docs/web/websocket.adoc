@@ -14,16 +14,16 @@ A `GET` method must be implemented to handle initialization
 of the websocket.
 It can supply `data` object that will be available via `event.data`.
 
-[source,javascript]
+[source,typescript]
 ----
-include::code/websockets-1.js[]
+include::code/websockets-1.ts[]
 ----
 
 A websocket event handler named `webSocketEvent` is required. It will be called for every websocket event from a client. See example below.
 
-[source,javascript]
+[source,typescript]
 ----
-include::code/websockets-2.js[]
+include::code/websockets-2.ts[]
 ----
 
 Event object example:
@@ -68,9 +68,9 @@ Event object example:
 Below is an example of a simple chat using the <<../libraries/lib-websocket#, Websocket library>> for sending messages back and adding/removing clients
 in groups. Adding to groups allows for multicast message sending.
 
-[source,javascript]
+[source,typescript]
 ----
-include::code/websockets-3.js[]
+include::code/websockets-3.ts[]
 ----
 
 [#origin-check]
@@ -86,9 +86,9 @@ The default rules, applied when a controller does not supply its own `checkOrigi
 
 To allow other origins, or to apply application-specific logic, return a `checkOrigin` function on the `webSocket` config. It receives the raw `Origin` header value (or `null` when absent) and must return a boolean.
 
-[source,javascript]
+[source,typescript]
 ----
-include::code/websockets-4.js[]
+include::code/websockets-4.ts[]
 ----
 
 The function runs synchronously during the handshake, before any `webSocketEvent` callback. It should be a pure function of the `origin` string; capture any per-request data with a closure inside the `GET` handler. A function that throws or returns a non-boolean rejects the upgrade.

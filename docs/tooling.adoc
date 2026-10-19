@@ -1,7 +1,6 @@
 = Tooling
 :toc: right
 :imagesdir: images
-TODO
 
 == Introduction
 

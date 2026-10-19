@@ -16,7 +16,7 @@ XP offers two primitives for background execution. Pick by trigger and timing:
 
 Tasks and scheduled jobs share the same execution shape — both invoke a *named task* implementation. The scheduler is the trigger; tasks are the unit of work.
 
-For pub/sub on the cluster-wide bus, see <<fundamentals/events#, Events>>.
+For pub/sub on the cluster-wide bus, see <<runtime/events#, Events>>.
 
 == Cluster behavior
 

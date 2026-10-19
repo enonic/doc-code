@@ -16,7 +16,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-app` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-app` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 == Functions
 
@@ -174,6 +174,8 @@ const expected = {
 
 === createVirtualApplication
 
+image:unstable.svg[Unstable,opts=inline] Virtual applications belong to the <<lib-schema#, dynamic schema>> API, which is *not stable*. It may change, or be withdrawn, in a future release.
+
 Creates a virtual application (along with its schema repository nodes) with the specified key.
 
 TIP: This function requires the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <<lib-context#run, context>> of `system.schema.admin` role.
@@ -211,6 +213,8 @@ const app = createVirtualApplication({
 
 === deleteVirtualApplication
 
+image:unstable.svg[Unstable,opts=inline] Virtual applications belong to the <<lib-schema#, dynamic schema>> API, which is *not stable*. It may change, or be withdrawn, in a future release.
+
 Removes a virtual application with the specified key.
 
 TIP: This function requires the Schema Admin role. It means that user role in the current context may lack sufficient permissions, for example when executed from inside a service - in this case you must explicitly execute the function in the <<lib-context#run, context>> of `system.schema.admin` role.
@@ -247,6 +251,8 @@ const result = deleteVirtualApplication({
 ----
 
 === getApplicationMode
+
+image:unstable.svg[Unstable,opts=inline] Virtual applications belong to the <<lib-schema#, dynamic schema>> API, which is *not stable*. It may change, or be withdrawn, in a future release.
 
 Fetches mode of an application with the specified key.
 
@@ -362,8 +368,8 @@ Properties
 [grid="none"]
 |===
 | Name                      | Type       | Description
-| data                      | <<../fundamentals/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
+| data                      | <<../libraries/types#byte-source, ByteSource>> | Icon binary data, as a stream that can be read with `lib-io`
 | mimeType                  | string     | Icon MIME type
-| modifiedTime              | string     | Icon modified time, ISO-8601 instant
+| modifiedTime              | string     | *Deprecated.* Icon modified time, ISO-8601 instant. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read
 
 |===

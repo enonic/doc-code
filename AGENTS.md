@@ -8,6 +8,7 @@ This documentation covers only the **Development of Enonic apps** , targeted at 
 
 Keep content focused on XP development, and avoid repeating information from the other main Enonic XP documentation.
 
+
 ## Content Guidelines
 
 This is **reference documentation**, including examples, not tutorials. Tutorials and getting-started guides live in the learn section on developer.enonic.com and build on top of this content. Every page should be self-contained and useful on its own.
@@ -35,7 +36,7 @@ Avoid:
 
 Prefer flowing prose over mechanical substitution. *"The implementation must export `X`"* usually reads better than *"the implementation file must export `X`"*. Once a path is on the page, *"the file"* is fine for back-references. Drop the noun where the role already carries it: *"the webapp is reachable at..."*, *"the task receives a `params` object..."*.
 
-Code examples are TypeScript only — runtime transpilation makes raw JavaScript misleading.
+Code examples are TypeScript only.
 
 ### External references
 When referencing separately documented components, provide a brief summary and link:
@@ -87,7 +88,7 @@ This project relies on GitHub Actions for building and publishing. There are no 
   - **Single-object parameter:** lead in with *"``<fn>()`` takes a single `params` object with these properties:"* followed by **one flat table** with columns `Name | Type | Description`. Do *not* add an outer `params | object | …` row, do *not* use nested AsciiDoc tables (`!===`), and do *not* flatten sub-objects with dot-notation (`schedule.value`).
   - **Optionality — required by default.** There is no "Attributes"/"required" column. A field is *required* unless its Description begins with `*Optional.*`. Conditional requirements are stated in prose (e.g. "*Optional.* … Required when `type` is `CRON`."). Put any default value in the Description too — e.g. "*Optional.* Root path to serve from. Defaults to `+/static+`."
   - **Nested objects are broken out and linked, not nested.** In the Type column, reference a named type (e.g. `<<schedule-type, Schedule>>`); define that type once in the `== Type Definitions` section as its own flat table with an explicit anchor (`[#schedule-type]`). Reuse a single definition across request and response when the shape is shared (DRY).
-  - **Return objects** use the same flat-table style under `== Type Definitions`; the function's `Returns` line links to the type — e.g. `+*object* : (<<scheduled_job,`ScheduledJob`>>) …+`.
+  - **Return objects** use the same flat-table style under `== Type Definitions`; the function's `Returns` line links to the type — e.g. `*object* : (<<scheduled_job,`ScheduledJob`>>) …`. Do *not* wrap the whole line in single-plus passthrough (`+…+`): that disables the `*bold*` type, the `<<…>>` cross-reference, and the `` `monospace` `` all at once, so it renders as literal `*object*` / `<<…>>` text. Only wrap an individual substring that genuinely contains underscores.
   - **Table style:** borderless three-column tables — `[%header,cols="1%,1%,98%a"]` with `[frame="none"]` and `[grid="none"]`. Parameter, return, and type tables all share this one shape.
   - Keep the existing `Example` / `Return value` code blocks — they double as the concrete sample payloads.
   - **Reference example:** `docs/libraries/lib-scheduler.adoc` (all functions + the `ScheduledJob`/`Schedule` types follow this pattern).

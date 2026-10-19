@@ -15,7 +15,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-mail` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-mail` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 [NOTE]
 ====
@@ -154,7 +154,7 @@ Properties
 |===
 | Name | Type | Description
 | fileName | string | Attachment file name.
-| data | <<../fundamentals/types#byte-source, ByteSource>> | Attachment stream.
+| data | <<../libraries/types#byte-source, ByteSource>> | Attachment stream.
 | mimeType | string | *Optional.* Attachment content type. If not specified, it is inferred from the filename.
 | headers | object | *Optional.* Attachment headers in the form of name-value pairs.
 |===

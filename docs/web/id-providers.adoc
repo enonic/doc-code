@@ -141,8 +141,8 @@ The URL to this endpoint can be generated using the <<../libraries/lib-portal#id
 == Sample
 The code below demonstrates how an ID provider may be implemented
 
-.Sample idprovider.js
-[source,javascript]
+.Sample idprovider.ts
+[source,typescript]
 ----
-include::code/idprovider.js[]
+include::code/idprovider.ts[]
 ----

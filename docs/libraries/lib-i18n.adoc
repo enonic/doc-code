@@ -7,7 +7,7 @@ This API provides functionality for localization of text phrases.
 
 == Install
 
-NOTE: This API uses standard framework functionality. Please read the <<../fundamentals/i18n#, framework localization docs>> before using this API.
+NOTE: This API uses standard framework functionality. Please read the <<../runtime/i18n#, framework localization docs>> before using this API.
 
 Add the library to your `build.gradle` file:
 
@@ -18,7 +18,7 @@ dependencies {
 }
 ----
 
-TypeScript types come from the `@enonic-types/lib-i18n` package, installed at the version of XP your project builds against — see <<../fundamentals/typescript#, TypeScript>>.
+TypeScript types come from the `@enonic-types/lib-i18n` package, installed at the version of XP your project builds against — see <<../tooling/typescript#, TypeScript>>.
 
 Then you need to create files with original phrases and their translations.  These files should normally be placed in the `src/main/resources/i18n` folder of your application.
 There must be a file named `phrases.properties` that contains all the default phrases.  

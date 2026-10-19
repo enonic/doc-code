@@ -5,6 +5,10 @@
       "checkout": "xp8",
       "latest": true,
       "displayName": "8.x"
+    },
+    {
+      "label": "next", 
+      "checkout": "master"
     }
   ]
 }

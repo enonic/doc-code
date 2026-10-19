@@ -1,0 +1,160 @@
+= Globals and module bindings
+:toc: right
+:imagesdir: ../images
+
+Server-side code in an Enonic app reaches a handful of names it never declares and never requires: `app`, `log`, `require`, `resolve`, `+__+` and `exports`. Only one of them is a true global.
+
+[#module-scope]
+== What is actually global
+
+`app` is the only name *XP* installs on the JavaScript global object. Every other name on this page is *module-scoped*: XP wraps each module in a function, passing `log`, `require`, `resolve` and `+__+` in as arguments and declaring `exports` and `module` inside it. The engine contributes a few globals of its own on top; <<engines#graaljs, GraalJS>> adds `Graal`.
+
+[source,typescript]
+----
+// what XP evaluates for every module it loads
+(function (log, require, resolve, __) {
+    var exports = {};
+    var module = {};
+    // module.exports reads and writes the same object as exports
+
+    // your module's code goes here
+
+    return module.exports;
+});
+----
+
+Three consequences:
+
+* *They are not on the global object.* On GraalJS, `globalThis.app` resolves while `globalThis.log`, `globalThis.require`, `globalThis.resolve`, `globalThis.exports` and `globalThis.module` are all `undefined`; Nashorn has no `globalThis` binding at all. Inside a module `typeof require` still answers `"function"`, because the parameter is in scope. A bundled npm package that probes its environment through the global object will find nothing.
+* *They can be shadowed.* A variable or parameter named `log` declared in your module hides the binding for the rest of that scope.
+* *They are per module.* Each module body gets its own `exports`, and a `require` and `resolve` bound to that module's own location — which is what makes a relative path resolve against the file that wrote it.
+
+== App
+
+The `app` object holds information about the contextual app, and is the one name here that is genuinely global. It has the following properties:
+
+app.name:: The name of the application.
+
+app.version:: Version of the application.
+
+app.config:: Values from the application's configuration file. This can be set using ``$XP_HOME/config/<app.name>.cfg``. Every time the configuration is changed the app is restarted.
+
+Examples:
+
+[source,javascript]
+----
+include::code/app.js[]
+----
+
+
+== Log
+
+The ``log`` object holds the logging methods. It's one method for each log
+level and takes the same number of parameters.
+
+[source,javascript]
+  log.debug(message, [args]) // <1> <2>
+
+<1> *string message* Message to log as a debug-level message.
+<2> *array args* Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.
+
+[source,javascript]
+  log.info(message, [args]) // <1> <2>
+
+<1> *string message* Message to log as a info-level message.
+<2> *array args* Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.
+
+[source,javascript]
+  log.warning(message, [args]) // <1> <2>
+
+<1> *string message* Message to log as a warning-level message.
+<2> *array args* Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.
+
+[source,javascript]
+  log.error(message, [args]) // <1> <2>
+
+<1> *string message* Message to log as a error-level message.
+<2> *array args* Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.
+
+Examples:
+
+[source,javascript]
+----
+include::code/log.js[]
+----
+
+
+== Resolve()
+
+Resolves a fully qualified path to a local resource based
+on the current location. It does not check if a resource exists at the specified path.
+This function supports both relative (with dot-references) and absolute paths.
+
+[source,javascript]
+  resolve(path) // <1> <2>
+
+<1> *string path* Path to resolve using current location.
+<2> *returns* the fully qualified resource path of the location.
+
+
+Examples:
+
+[source,javascript]
+----
+include::code/resolve.js[]
+----
+
+[#require]
+== Require()
+
+Loads a JavaScript file and returns its exports.
+The function implements parts of the https://wiki.commonjs.org/wiki/Modules/1.1[CommonJS Modules Specification].
+
+[source,javascript]
+  require(path) // <1> <2>
+
+<1> *string path* Path to the JavaScript to load.
+<2> *returns* The loaded JavaScript object exports.
+
+
+Examples:
+
+[source,javascript]
+----
+include::code/require.js[]
+----
+
+If the path is relative then it will start looking for the file from the local directory.
+The file extension .js is not required.
+
+// TODO more examples of relative resolutions
+
+
+== Exports
+
+``exports`` is the object a module exposes to whatever requires it (implementations, libraries, and so on). This is part of the CommonJS module spec.
+
+Assign to it from any module to publish functionality. Assigning to `module.exports` replaces the object as a whole, as in CommonJS.
+
+[source,typescript]
+----
+import type {Request, Response} from '@enonic-types/core';
+
+export function GET(req: Request): Response {
+    return {body: 'hello'};
+}
+----
+
+TIP: Authoring in TypeScript, write `export` and let the build transpile it — the emitted JavaScript assigns to `exports`. See <<../tooling/typescript#, TypeScript>>.
+
+[#esm]
+== ECMAScript modules are not supported
+
+`import`, `export` and dynamic `import()` do not work at runtime, on either engine. This is a property of XP's module loader, not of the engine: XP evaluates every file as a script wrapped in a function, as shown <<module-scope, above>>, and `import` is only valid in a file evaluated as an ES module. GraalJS can parse the syntax, but XP never loads a file that way.
+
+Use `require()` and `exports` in the code you deploy. Writing `import`/`export` in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an `import` statement surviving into the emitted JavaScript.
+
+== Double underscore __
+
+The double underscore is available in any server-side JavaScript code and is used for wrapping Java objects in a JavaScript object. Read
+more about the <<java-bridge#,Java bridge>>.
