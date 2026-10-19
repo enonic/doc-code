@@ -459,13 +459,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>When building Enonic apps you may access a broad set of platform capabilities by requiring these libraries. Each library is pulled into your app as a <code>build.gradle</code> dependency and loaded at runtime via <code>require('/lib/xp/&lt;library&gt;')</code>.</p>
 </div>
 <div class="paragraph">
-<p>A library can be loaded two ways — both fully typed once the <code>@enonic-types</code> packages are installed (see <a href="fundamentals/typescript.ahtml">TypeScript</a>):</p>
+<p>A library can be loaded two ways — both fully typed once the <code>@enonic-types</code> packages are installed (see <a href="tooling/typescript.ahtml">TypeScript</a>):</p>
 </div>
 <div class="listingblock">
 <div class="title">require — CommonJS, the standard form</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const authLib = require('/lib/xp/auth');
-const user = authLib.getUser();</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getUser} from '/lib/xp/auth';
+
+const user = getUser();</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -489,14 +490,14 @@ const user = getUser();</code></pre>
 <h2 id="javadoc"><a class="link" href="#javadoc">JavaDoc</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Java developers or anyone interested in a Platform deep dive may check out our JavaDoc (<a href="https://repo.enonic.com/public/com/enonic/xp/docs/8.0.4/docs-8.0.4-javadoc.zip">zipfile download</a>).</p>
+<p>Java developers or anyone interested in a Platform deep dive may check out our JavaDoc (<a href="https://repo.enonic.com/public/com/enonic/xp/docs/8.1.0/docs-8.1.0-javadoc.zip">zipfile download</a>).</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Runtime</title>
+<title>Java bridge</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,20 +437,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Runtime</h1>
+<h1>Java bridge</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#execution_model">Execution model</a>
+<li><a href="#the_object">The <code>__</code> object</a>
 <ul class="sectlevel2">
-<li><a href="#language_level">Language level</a></li>
+<li><a href="#passing_parameters_to_java">Passing parameters to Java</a></li>
+<li><a href="#parameter_conversions">Parameter conversions</a></li>
+<li><a href="#returning_results_from_java">Returning results from Java</a></li>
 </ul>
 </li>
-<li><a href="#modules_and_bundling">Modules and bundling</a></li>
-<li><a href="#loading_and_caching">Loading and caching</a></li>
-<li><a href="#threading">Threading</a></li>
-<li><a href="#clustering">Clustering</a></li>
-<li><a href="#what_you_get_for_free">What you get for free</a></li>
+<li><a href="#functions">Functions</a>
+<ul class="sectlevel2">
+<li><a href="#disposer">disposer</a></li>
+<li><a href="#newbean">newBean</a></li>
+<li><a href="#nullorvalue">nullOrValue</a></li>
+<li><a href="#registermock">registerMock</a></li>
+<li><a href="#tonativeobject">toNativeObject</a></li>
+<li><a href="#toscriptvalue">toScriptValue</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -458,30 +465,91 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>What powers your Enonic app at execution time — the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free.</p>
+<p>JavaScript developers may optionally invoke and use Java-based code, since the XP runtime builds on the JVM.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="execution_model"><a class="link" href="#execution_model">Execution model</a></h2>
+<h2 id="the_object"><a class="link" href="#the_object">The <code>__</code> object</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic XP runs on top of the Java Virtual Machine. Your app&#8217;s TypeScript and JavaScript files are executed by an embedded JavaScript engine, with full access to the JVM through the <a href="java-bridge.ahtml">Java bridge</a>. There is no Node.js, no separate JS process, and no inter-process bridge — server-side JS runs inside the same JVM as the platform itself.</p>
+<p>In Enonic XP, there is a global object named <code>__</code> (double underscore), accessible from any serverside JavaScript code, which provides
+a way to wrap Java objects in a JavaScript object. The <code>__</code> object has functions that allow JavaScript to communicate with Java
+classes. The <code>newBean</code> function will wrap the Java object named in the parameter, for instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const bean = __.newBean('com.enonic.xp.lib.io.IOHandlerBean');</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Two engines are available:</p>
+<p>This line is from the <code>lib-io</code> library, which is a good example of how this is used. In the Java <code>IOHandlerBean</code> class, there are several
+methods, like the <code>readLines</code> method:</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Nashorn</dt>
-<dd>
-<p>The default engine. Stable, production-ready, ships with every XP install. All XP releases since 7.x have shipped Nashorn.</p>
-</dd>
-<dt class="hdlist1">GraalVM JavaScript</dt>
-<dd>
-<p>Available as an experimental alternative. Currently not recommended for production.</p>
-</dd>
-</dl>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public List&lt;String&gt; readLines( final Object value )
+  throws Exception
+    {
+      final CharSource source = toCharSource( value );
+      return source.readLines();
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is now accessible as a function on the JavaScript <code>bean</code> and may be invoked from JavaScript, like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function readLines(stream) {
+  return __.toNativeObject(bean.readLines(stream));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a global JavaScript function <code>readLines</code>. This example also shows the use of the <code>toNativeObject</code> method, which in
+this case, converts a Java String array to a JSON object.</p>
+</div>
+<div class="paragraph">
+<p>Java objects constructed by <code>newBean</code> may, but not required to, implement <code>com.enonic.xp.script.bean.ScriptBean</code> interface.
+<code>ScriptBean::initialize</code> is used to inject <code>com.enonic.xp.script.bean.BeanContext</code> object, which can be used to access the application and resource keys, as well as current Request, Context and XP Java API Services.</p>
+</div>
+<div class="sect2">
+<h3 id="passing_parameters_to_java"><a class="link" href="#passing_parameters_to_java">Passing parameters to Java</a></h3>
+<div class="paragraph">
+<p>There are 2 ways to pass parameters to a Java method, from JavaScript:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Passing the parameters in the method call</p>
+</li>
+<li>
+<p>Calling a setter on the Java object for each parameter, and then calling the method without parameters</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The first one is recommended when there are few parameters (1 or 2) and of simple types.
+The second one is better when there are multiple parameters, or some of them are optional.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function doSomething(param1, param2) {
+    const bean = __.newBean('com.enonic.lib.mylib.MyClass');
+
+    return bean.execute(param1, param2);
+}
+
+export function doSomethingElse(params) {
+    const bean = __.newBean('com.enonic.lib.mylib.MyClass');
+
+    bean.setText(__.nullOrValue(params.text) || '');
+    bean.setSize(__.nullOrValue(params.size) || 250);
+
+    return bean.execute();
+}</code></pre>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -490,137 +558,470 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-XP ships Nashorn as the default server-side JavaScript engine. GraalVM JavaScript is also available but is currently experimental and not recommended for production use.
+When passing values that might be <code>null</code> or <code>undefined</code> it is recommended to filter them using the <code>__.nullOrValue</code> built-in function.
+This function converts any value that is <code>null</code> or <code>undefined</code> in JavaScript to <code>null</code> in Java. Otherwise returns the input value without changes.
 </td>
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>The Java object must implement a setter method for each parameter passed that way.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The setter must be called. Nashorn also accepted an assignment to a property named after the setter and rewrote it into a call to that setter, but GraalJS exposes no such property, and the assignment fails with an <code>Unknown identifier</code> error. See <a href="engines.ahtml#graaljs-interop">Java interop</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setText('value');   // supported on both engines
+bean.text = 'value';     // Nashorn only; fails on GraalJS</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The Java class used in the example above looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.enonic.lib.mylib;
+
+public final class MyClass {
+    private String text;
+    private Long size;
+
+    public String something( String param1, Long param2 ) {
+        return "Parameters: " + param1 + " " + param2;
+    }
+
+    public String somethingElse() {
+        return "Parameters: " + this.text + " " + this.size;
+    }
+
+    public void setText( String text ) {
+        this.text = text;
+    }
+
+    public void setSize( Long size ) {
+        this.size = size;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
 <div class="sect2">
-<h3 id="language_level"><a class="link" href="#language_level">Language level</a></h3>
+<h3 id="parameter_conversions"><a class="link" href="#parameter_conversions">Parameter conversions</a></h3>
 <div class="paragraph">
-<p>Nashorn implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Server-side code must therefore run within that baseline: modern syntax and APIs beyond what the engine supports are not available at runtime unless your build down-levels or polyfills them. The official starters transpile to a conservative target (ES2015) for this reason. See <a href="typescript.ahtml">TypeScript</a> for the build step.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="modules_and_bundling"><a class="link" href="#modules_and_bundling">Modules and bundling</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Each <code>.ts</code> or <code>.js</code> file in your app is a module under the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS module specification</a>. Modules export values via <code>exports</code>, and consume other modules via <code>require()</code>. Paths are rooted at the app bundle, not the filesystem — <code>require('/lib/greet')</code> loads <code>src/main/resources/lib/greet.ts</code> from the same app.</p>
-</div>
-<div class="paragraph">
-<p>Platform libraries are referenced by name (for example, <code>require('/lib/xp/content')</code>). See <a href="functions.ahtml#modules_and_the_bundle">Functions: Modules and the bundle</a> for the full path-resolution rules and bundle boundaries.</p>
-</div>
-<div class="paragraph">
-<p>TypeScript is supported as the authoring language; the build step transpiles to JavaScript before deployment. See <a href="typescript.ahtml">TypeScript Definitions</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="loading_and_caching"><a class="link" href="#loading_and_caching">Loading and caching</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>XP loads each module <strong>once per app deploy</strong> and caches it. Subsequent <code>require()</code> calls and subsequent triggers reuse the cached module — the file is not re-read or re-parsed. Top-level code in a module therefore runs exactly once per deploy.</p>
-</div>
-<div class="paragraph">
-<p>This makes module top-level a natural place for one-time setup (requiring libraries, computing constants), but a poor place for mutable state. Treat anything declared outside a function body as immutable after load. For state that must survive between invocations, use a repo node, the <code>cache</code> library, or another explicit persistence mechanism.</p>
-</div>
-<div class="paragraph">
-<p>See <a href="functions.ahtml#loading_and_caching">Functions: Loading and caching</a> for the implications on each function type.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="threading"><a class="link" href="#threading">Threading</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The runtime is multithreaded. The platform serves requests, dispatches events, and runs background tasks concurrently across multiple threads, taking advantage of multi-core CPU architectures. There is no single event loop — each request, task, or event listener runs on a worker thread from a managed pool.</p>
-</div>
-<div class="paragraph">
-<p>Two consequences for your code:</p>
+<p>There are some type conversions that are made when calling from JavaScript to Java:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Module-level state is shared across threads.</strong> Cached modules are visible to every thread executing within the app. If two requests both call <code>require('/lib/cache')</code>, they receive the same module instance. Treat top-level state as read-only.</p>
+<p>when passing a JavaScript <code>string</code>, the Java method should expect a Java <code>String</code></p>
 </li>
 <li>
-<p><strong>Implementations are reentrant.</strong> A function may be invoked concurrently with itself. Don&#8217;t accumulate state in module-level variables across invocations.</p>
+<p>when passing a JavaScript <code>boolean</code>, the Java method should expect a Java <code>Boolean</code></p>
+</li>
+<li>
+<p>when passing a JavaScript <code>number</code>, the Java method should expect a Java <code>Long</code>, <code>Integer</code> or <code>Double</code></p>
+</li>
+<li>
+<p>when passing a JavaScript <code>array</code>, the Java method should expect a Java <code>List</code></p>
+</li>
+<li>
+<p>when passing a JavaScript <code>object</code>, the Java method should expect a Java <code>Map&lt;String, Object&gt;</code></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The argument must already be of the type the method declares. Nashorn coerced it where the two differed; GraalJS does not. HTTP request parameters, for instance, always arrive as strings and must be parsed before they are passed to a parameter declared as a number. Objects and arrays are handed over as a Java map or list by converting them first.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setSize(parseInt(req.params.size, 10));       // a Java Long
+bean.setConfig(__.toScriptValue(params.config));   // a Java Map</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="returning_results_from_java"><a class="link" href="#returning_results_from_java">Returning results from Java</a></h3>
+<div class="paragraph">
+<p>When returning simple values from Java to a JavaScript caller, the same type conversions applies.</p>
+</div>
+<div class="paragraph">
+<p>Complex values are not converted. A Java map returned to JavaScript remains a Java object, and inspecting it with the standard JavaScript operations reports the methods of its class rather than its entries. It is converted once, in the module that makes the call, as the <code>readLines</code> example above does.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const config = __.toNativeObject(bean.getConfig());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="engines.ahtml#graaljs-interop">Java interop</a>.</p>
+</div>
+<div class="paragraph">
+<p>To return complex object values, you should create a specific Java class to make the mapping. This class should implement the <code>MapSerializable</code> interface.
+It will implement the <code>serialize</code> method, which allows generating a JSON object.</p>
+</div>
+<div class="listingblock">
+<div class="title">Serialization example</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.enonic.lib.mylib;
+
+import java.util.Map;
+
+import com.enonic.xp.script.serializer.MapGenerator;
+import com.enonic.xp.script.serializer.MapSerializable;
+
+public final class ExampleObjectMapper
+    implements MapSerializable
+{
+    private final String text;
+
+    private final Object[] array;
+
+    private final Map&lt;String, Object&gt; object;
+
+    public ExampleObjectMapper( String text, Object[] array, Map&lt;String, Object&gt; object )
+    {
+        this.text = text;
+        this.array = array;
+        this.object = object;
+    }
+
+    @Override
+    public void serialize( MapGenerator gen )
+    {
+        gen.value( "text", text );
+        gen.array( "arrayValues" );
+        for ( Object value : array )
+        {
+            gen.value( value );
+        }
+        gen.end();
+
+        gen.map( "objectValues" );
+        for ( String key : object.keySet() )
+        {
+            gen.value( key, object.get( key ) );
+        }
+        gen.end();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, for returning values of type binary stream from Java, it should be wrapped on a <a href="https://google.github.io/guava/releases/19.0/api/docs/com/google/common/io/ByteSource.html">ByteSource</a> object.
+This is required by XP to allow returning it from an HTTP request, or add it as a content attachment.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="clustering"><a class="link" href="#clustering">Clustering</a></h2>
+<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="disposer"><a class="link" href="#disposer">disposer</a></h3>
+<div id="disposer" class="paragraph">
+<p>Add a disposer that is called when the app is stopped.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Register disposers while the application is starting — from <a href="main.ahtml"><code>main.ts</code></a>, or from a module it loads during start-up. Registering from anywhere else is not supported.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+GraalJS is a <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> preview engine and <strong>not for production</strong> — see <a href="engines.ahtml#graaljs">GraalJS</a>. Follow the start-up rule above regardless: it is the portable one.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Nashorn keeps only the most recent registration per module, so a module that calls <code>__.disposer</code> twice loses the first callback. Combine clean-up into a single disposer.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">func</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Function to call</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
 <div class="paragraph">
-<p>XP can run as a single node or as a cluster of nodes sharing the same data. The runtime is cluster-aware out of the box:</p>
+<p><strong>void</strong></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Events</strong> fire across the cluster. A listener registered on any node receives events published from any other node. See <a href="events.ahtml">Events</a>.</p>
-</li>
-<li>
-<p><strong>Scheduled jobs</strong> are distributed. A scheduled job runs on one cluster node per fire — XP coordinates so the same job doesn&#8217;t execute twice. See <a href="../background/scheduler.ahtml">Scheduler</a>.</p>
-</li>
-<li>
-<p><strong>Repositories</strong> are replicated. Content writes propagate to all nodes; reads can target any node.</p>
-</li>
-</ul>
+</div>
+<div class="sect2">
+<h3 id="newbean"><a class="link" href="#newbean">newBean</a></h3>
+<div class="paragraph">
+<p>Creates a new JavaScript bean that wraps the given Java class and makes it&#8217;s methods available to be called from JavaScript.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Classname for bean to create</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
 </div>
 <div class="paragraph">
-<p>Apps deployed to a cluster are installed and started on every node. The runtime guarantees the same module-loading and caching semantics on each node — your app sees a consistent execution environment regardless of which node serves a given request.</p>
+<p><strong>void</strong></p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="what_you_get_for_free"><a class="link" href="#what_you_get_for_free">What you get for free</a></h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="nullorvalue"><a class="link" href="#nullorvalue">nullOrValue</a></h3>
 <div class="paragraph">
-<p>Apps run inside a fully equipped platform. The runtime gives you, without extra setup:</p>
+<p>Converts a JavaScript variable that is undefined to a Java null object. If the JavaScript variable is defined, it is returned as is.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Persistence</strong> — content, nodes, repositories, blobs, all queryable and clusterable.</p>
-</li>
-<li>
-<p><strong>HTTP routing</strong> — the <a href="../web/request-response.ahtml">Portal</a> dispatches incoming requests to four services (<code>/api</code>, <code>/admin</code>, <code>/site</code>, <code>/webapp</code>); you provide the implementations.</p>
-</li>
-<li>
-<p><strong>Identity &amp; access management</strong> — pluggable <a href="../web/id-providers.ahtml">ID providers</a>, role-based permissions, audit logging.</p>
-</li>
-<li>
-<p><strong>Cluster-wide events</strong> — see <a href="events.ahtml">Events</a>.</p>
-</li>
-<li>
-<p><strong>Background work</strong> — <a href="../background/tasks.ahtml">tasks</a> and <a href="../background/scheduler.ahtml">scheduled jobs</a>.</p>
-</li>
-<li>
-<p><strong>Localization</strong> — see <a href="i18n.ahtml">Localization</a>.</p>
-</li>
-<li>
-<p><strong>Java interop</strong> — see <a href="java-bridge.ahtml">Java bridge</a>.</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Compatibility</dt>
-<dd>
-<p>An app built against any XP release runs unchanged on every patch and minor release within the same major version. For the changes needed when moving from XP 7 to XP 8, see <a href="../upgrade/xp7.ahtml">Upgrading from XP 7</a>.</p>
-</dd>
-</dl>
+<div class="paragraph lead">
+<p>Parameters</p>
 </div>
-</li>
-</ul>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to convert</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="registermock"><a class="link" href="#registermock">registerMock</a></h3>
+<div class="paragraph">
+<p>Registers a mock</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of mock</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to register</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tonativeobject"><a class="link" href="#tonativeobject">toNativeObject</a></h3>
+<div class="paragraph">
+<p>Converts arrays or complex Java objects to JSON.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to convert</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="toscriptvalue"><a class="link" href="#toscriptvalue">toScriptValue</a></h3>
+<div class="paragraph">
+<p>Converts JSON to a Java Map structure that can be used as parameters to a Java method on a bean created with <a href="#newbean">newBean</a>.</p>
+</div>
+<div class="paragraph lead">
+<p>Parameters</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Value to convert</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph lead">
+<p>Returns</p>
+</div>
+<div class="paragraph">
+<p><strong>void</strong></p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

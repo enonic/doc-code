@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Localization</title>
+<title>TypeScript Definitions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,34 +437,50 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Localization</h1>
+<h1>TypeScript Definitions</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#use_cases">Use cases</a></li>
-<li><a href="#localization_files">Localization files</a></li>
-<li><a href="#locale_format">Locale format</a></li>
-<li><a href="#best_match_resolving">Best match resolving</a>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#ecmascript-target">ECMAScript target</a></li>
+<li><a href="#typescript_starter">TypeScript starter</a></li>
+<li><a href="#install_types">Install types</a></li>
+<li><a href="#enonic_libraries">Enonic Libraries</a>
 <ul class="sectlevel2">
-<li><a href="#encoding_and_special_characters">Encoding and special characters</a></li>
+<li><a href="#global">Global</a></li>
+<li><a href="#core">Core</a></li>
+<li><a href="#content">Content</a></li>
+<li><a href="#additional_types">Additional types</a></li>
 </ul>
 </li>
-<li><a href="#sample">Sample</a></li>
-<li><a href="#placeholders">Placeholders</a></li>
+<li><a href="#usage">Usage</a>
+<ul class="sectlevel2">
+<li><a href="#require">require</a></li>
+<li><a href="#es6_style_import">ES6-style import</a></li>
+</ul>
+</li>
+<li><a href="#configuration">Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#require_2">Require</a></li>
+<li><a href="#other_imports">Other imports</a></li>
+</ul>
+</li>
+<li><a href="#beans">Beans</a>
+<ul class="sectlevel2">
+<li><a href="#option_1">Option 1</a></li>
+<li><a href="#option_2">Option 2</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="intro"><a class="link" href="#intro">Intro</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Localizing strings in your XP applications.</p>
+<p>We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <a href="../libraries.ahtml">standard libraries</a>.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
-<div class="sectionbody">
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -472,270 +488,294 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This section covers code-level localization, not multi-lingual content or websites.
+XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <a href="../runtime.ahtml">Runtime</a> for the execution model.
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>For any project targeting users in different languages, you may want to localize the interface.</p>
-</div>
-<div class="paragraph">
-<p>The XP framework provides localization for the following use cases:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">CMS/Sites</dt>
-<dd>
-<p>Use the <a href="../libraries/lib-i18n.ahtml">localization API</a> to dynamically localize any text phrases in your app. The framework will apply the locale specified in the site&#8217;s language property.</p>
-</dd>
-<dt class="hdlist1">Admin Console</dt>
-<dd>
-<p>Localize labels and texts in <a href="https://developer.enonic.com/docs/cms/xp8/schemas#schema_localization">schemas</a> such as content types. The framework will use the locale derived from the browser&#8217;s <code>Accept-Language</code> header.</p>
-</dd>
-<dt class="hdlist1">Webapps and more</dt>
-<dd>
-<p>The <a href="../libraries/lib-i18n.ahtml">localization API</a> may also be used for any other purpose. In these cases the developer controls and specifies the locale explicitly.</p>
-</dd>
-</dl>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="localization_files"><a class="link" href="#localization_files">Localization files</a></h2>
+<h2 id="ecmascript-target"><a class="link" href="#ecmascript-target">ECMAScript target</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The localization files are plain text files, using the <code>properties</code> format (key = value).
-The files must be placed in a specific project folder: <code>/src/main/resources/i18n/</code>.</p>
-</div>
-<div class="paragraph">
-<p>Imagine an app that supports the following localizations:</p>
+<p>TypeScript compilation is required for both XP engines. The ECMAScript target controls the JavaScript syntax emitted by the build:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>English (<code>en</code>)</p>
+<p><strong>Nashorn:</strong> Target ES5. The engine implements ECMAScript 5.1 with only a subset of later features, so the build must also convert newer syntax to that language level.</p>
 </li>
 <li>
-<p>English (US) (<code>en-US</code>)</p>
-</li>
-<li>
-<p>Norwegian Nynorsk (<code>nn</code>)</p>
-</li>
-<li>
-<p>Norwegian Nynorsk, Norway (<code>nn-NO</code>)</p>
+<p><strong>GraalJS:</strong> A modern ECMAScript target supported by the embedded engine can preserve newer JavaScript syntax. The build must still convert TypeScript to JavaScript before deployment.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Each locale needs a matching localization file, in the format:</p>
+<p>Choose the target in your TypeScript compiler or bundler configuration to match the <a href="../runtime/engines.ahtml">JavaScript engine</a> used by the app. ES5 remains a common syntax target when supporting both engines; it does not remove differences in their runtime behavior.</p>
 </div>
-<div class="literalblock">
-<div class="content">
-<pre>phrases[_LOCALE].properties</pre>
+<div class="paragraph">
+<p>The module format is a separate setting. XP loads CommonJS modules on both engines, so the build must also convert <code>import</code> and <code>export</code> statements to CommonJS. See <a href="../runtime/globals.ahtml#esm">ECMAScript modules</a>.</p>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The API&#8217;s country codes use <code>-</code> as separator but the files use <code>_</code>.
-</td>
-</tr>
-</table>
+</div>
+<div class="sect1">
+<h2 id="typescript_starter"><a class="link" href="#typescript_starter">TypeScript starter</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TS Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a>:</p>
 </div>
 <div class="listingblock">
-<div class="title">Sample localization bundle</div>
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">i18n/phrases.properties
-i18n/phrases_en.properties
-i18n/phrases_en_US.properties
-i18n/phrases_nn.properties
-i18n/phrases_nn_NO.properties</code></pre>
+<pre class="highlight"><code class="language-sh" data-lang="sh">enonic create -r starter-ts com.example.myapp</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>This format and packaging is commonly known as "property bundles".</p>
-</div>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-The filenames are case sensitive!
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="locale_format"><a class="link" href="#locale_format">Locale format</a></h2>
+<h2 id="install_types"><a class="link" href="#install_types">Install types</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A locale is composed of codes for language, country and variant.
-Language is required; country and variant are optional.</p>
+<p>To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under <a href="https://www.npmjs.com/org/enonic-types">@enonic-types</a> organisation on NPM.</p>
 </div>
 <div class="paragraph">
-<p>For the property files, all codes are case sensitive and separated by an underscore (<code>_</code>).</p>
-</div>
-<div class="paragraph">
-<p>The string representation of a locale is:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>la[_CO][_VA]</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>where</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>la</code> — two-letter language code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO-639</a>).</p>
-</li>
-<li>
-<p><code>CO</code> — optional two-letter country code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO-3166</a>).</p>
-</li>
-<li>
-<p><code>VA</code> — optional variant. May contain multiple subtags joined by <code>_</code>.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>A sample locale including a vendor-specific variant:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>es_ES_Traditional_WIN</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Variants are rarely used in XP and can usually be ignored.
-</td>
-</tr>
-</table>
+<p>Install types at the major version of XP your project builds against. <code>@8</code> tracks the latest XP 8 release, which is what you want in most projects. If you target a specific XP version — the <code>xpVersion</code> in your <a href="build.ahtml"><code>gradle.properties</code></a> — pin the types to it instead, for example <code>@8.1.0</code>. Never install types <strong>newer</strong> than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="best_match_resolving"><a class="link" href="#best_match_resolving">Best match resolving</a></h2>
+<h2 id="enonic_libraries"><a class="link" href="#enonic_libraries">Enonic Libraries</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Given a requested locale, the framework selects the best matching localization file. If the requested locale is <code>en-US</code>, the framework checks files in this order:</p>
+<p>For example, you have a <code>lib-auth</code> gradle dependency:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>phrases_en_US.properties</code></p>
-</li>
-<li>
-<p><code>phrases_en.properties</code></p>
-</li>
-<li>
-<p><code>phrases.properties</code></p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-gradle" data-lang="gradle">dependencies {
+  include xplibs.auth
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>If a request&#8217;s locale is <code>en</code>, the framework uses <code>phrases_en.properties</code>. If the locale does not match any file, <code>phrases.properties</code> is used as the fallback. If no matching key is found in any file in the bundle, the default <code>NOT_TRANSLATED</code> is returned.</p>
+<p>To add type definitions for the library, install dependency from NPM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/lib-auth@8</code></pre>
+</div>
 </div>
 <div class="sect2">
-<h3 id="encoding_and_special_characters"><a class="link" href="#encoding_and_special_characters">Encoding and special characters</a></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Property keys</dt>
-<dd>
-<p>Must be in the ISO-8859-1 range (Latin-1). Non-Latin-1 characters must use Unicode escape sequences, e.g. <code>\u00E6</code> for the Norwegian letter <code>æ</code>.</p>
-</dd>
-<dt class="hdlist1">Property values</dt>
-<dd>
-<p>Support any Unicode characters.</p>
-</dd>
-</dl>
+<h3 id="global"><a class="link" href="#global">Global</a></h3>
+<div class="paragraph">
+<p>Along with library types it is <strong>highly recommended</strong> to install definitions for global objects (<code>app</code>, <code>__</code>, <code>log</code>) and functions (<code>resolve</code>, <code>require</code>):</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-We always recommend saving property files using the UTF-8 charset.
-</td>
-</tr>
-</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/global@8</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since <code>global</code> types are not placed under the <code>node_modules/@types</code>, it is necessary to include them manually:</p>
+</div>
+<div class="paragraph">
+<p><code>tsconfig.json</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "compilerOptions": {
+    "types": [
+      "@enonic-types/global"
+    ]
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="core"><a class="link" href="#core">Core</a></h3>
+<div class="paragraph">
+<p>There are types that are shared between other libraries (like <code>Content</code> or <code>Principal</code>). Such types reside in the <code>core</code> package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. the Content library exports the <code>Content</code> type. But if you want to use these types directly, you&#8217;ll need to install them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/core@8</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and then import them in your TypeScript code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">import type {Content} from '@enonic-types/core';</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="content"><a class="link" href="#content">Content</a></h3>
+<div class="paragraph">
+<p><code>Content</code> contains the <code>x</code> property that has a very special <code>XpXData</code> type.</p>
+</div>
+<div class="paragraph">
+<p><code>XpXData</code> is an interface that is added to the global scope, so it can be modified using the <a href="https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces">declaration merging</a>. This allows you to set the shape of the XData in your project, simply by declaring the <code>XpXData</code> like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpXData {
+        'com-mysite-app': {
+            metadata: {
+                metaTagTitle: string;
+                metaTagImageId: string;
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="additional_types"><a class="link" href="#additional_types">Additional types</a></h3>
+<div class="paragraph">
+<p><code>Content</code> is a complex type that contains unions and maps that are not exported but may be needed during the development. Actually, these types can easily be retrieved from the <code>Content</code> itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">import type {Content} from '@enonic-types/core';
+
+type Attachments = Content['attachments'];
+
+type ContentInheritType = Content['inherit'];
+
+type Workflow = Content['workflow'];</code></pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="sample"><a class="link" href="#sample">Sample</a></h2>
+<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="require"><a class="link" href="#require">require</a></h3>
 <div class="paragraph">
-<p>A property file looks like this:</p>
+<p>After <code>global</code> and library types are installed and configured in <code>tsconfig.json</code>, libraries can be imported just like they would be in JS code:</p>
 </div>
 <div class="listingblock">
-<div class="title">phrases.properties</div>
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello there!
-message = Good to see you. How are you doing?
-with_\u00e6_\u00f8_\u00e5 = This key contains norwegian characters æ, ø and å</code></pre>
+<pre class="highlight"><code class="language-ts" data-lang="ts">const libAuth = require('/lib/xp/auth');</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="es6_style_import"><a class="link" href="#es6_style_import">ES6-style import</a></h3>
+<div class="paragraph">
+<p>If you are planning to use <code>import</code> in your code and transpile it with the default <code>tsc</code> TypeScript compiler, you&#8217;ll need to add proper types mapping to your configuration via <code>baseUrl</code> and <code>paths</code> properties in <code>tsconfig.json</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "/lib/xp/auth": ["node_modules/@enonic-types/lib-auth"],
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then in your code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">import {login, logout, getUser, generatePassword} from '/lib/xp/auth';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuring <code>baseUrl</code> and <code>paths</code> will allow the TypeScript compiler to keep the valid paths in the resulting JavaScript files.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="placeholders"><a class="link" href="#placeholders">Placeholders</a></h2>
+<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="require_2"><a class="link" href="#require_2">Require</a></h3>
 <div class="paragraph">
-<p>The properties format supports parameter values that are merged into the localized strings:</p>
+<p>To add support for type resolution for custom libraries via <code>require</code>, you can redeclare the <code>XpLibraries</code> interface in global scope, which will lead to declaration merging:</p>
 </div>
 <div class="listingblock">
-<div class="title">phrases.properties</div>
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello, {0}!
-message_url = http://localhost:8080/{0}
-message_multi_placeholder = My name is {0} and I live in {1}
-message_placeholder = Hello, my name is {0}.</code></pre>
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpLibraries {
+        '/lib/custom/mylib': typeof import('./mylib');
+    }
+}</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="other_imports"><a class="link" href="#other_imports">Other imports</a></h3>
 <div class="paragraph">
-<p>Placeholders are marked with <code>{&lt;number&gt;}</code>. The number corresponds to the position of the value in the <code>values</code> argument passed to the API.</p>
+<p>If you want to use custom import functions, like <code>__non_webpack_require__</code> with Webpack, just use <code>XpRequire</code> from <code>global</code> types for this:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare const __non_webpack_require__: XpRequire;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="beans"><a class="link" href="#beans">Beans</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>See <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/MessageFormat.html">MessageFormat</a> for advanced placeholder syntax.</p>
+<p>To create a new Java bean, the <code>__.newBean()</code> function must be used. Making it return a proper type can be done in two ways. Let&#8217;s say, you have created an interface for that bean somewhere in your project:</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Placeholders are formatted according to the requested locale.
-</td>
-</tr>
-</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">interface SomeHelper {
+  help(text: string): void;
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="option_1"><a class="link" href="#option_1">Option 1</a></h3>
+<div class="paragraph">
+<p>You can pass the type argument explicitly. This option is a bit cleaner.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">const helper = __.newBean&lt;SomeHelper&gt;('com.me.project.SomeHelper');</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="option_2"><a class="link" href="#option_2">Option 2</a></h3>
+<div class="paragraph">
+<p>Or you can map the bean name to bean interface. It may be a preferable way to do it, if the bean is used across multiple files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
+    interface XpBeans {
+        'com.me.project.SomeHelper': SomeHelper;
+    }
+}
+
+const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

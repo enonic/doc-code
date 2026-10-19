@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Events</title>
+<title>Extension response processors</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,18 +437,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Events</h1>
+<h1>Extension response processors</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#events">Introduction</a></li>
-<li><a href="#use_cases">Use cases</a></li>
-<li><a href="#local-vs-distributed">Local vs distributed semantics</a></li>
-<li><a href="#threading-ordering">Threading and ordering</a></li>
-<li><a href="#standard-events">Standard event catalog</a></li>
-<li><a href="#custom-naming">Custom event naming</a></li>
-<li><a href="#patterns">Common patterns</a></li>
-<li><a href="#library">Library</a></li>
+<li><a href="#when_you_need_one">When you need one</a></li>
+<li><a href="#implementing">Implementing</a></li>
+<li><a href="#what_a_processor_can_do">What a processor can do</a></li>
+<li><a href="#when_it_runs">When it runs</a></li>
 </ul>
 </div>
 </div>
@@ -456,232 +452,121 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Send and listen to local or cluster wide events</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> An extension is rendered inside an admin tool page, and that page&#8217;s response is final before the browser ever fetches the extension. Its <code>Content-Security-Policy</code> header in particular is set by the tool, which cannot know what its extensions need. A response processor lets an extension take part in the tool page&#8217;s response: it runs after the tool&#8217;s controller, on every tool page the extension is mounted to, and may adjust the policy or add page contributions.</p>
+</div>
+<div class="paragraph">
+<p>This is the admin counterpart of <a href="../sites/processors.ahtml">site response processors</a>. Unlike those, it is a Java SPI: there is no descriptor and no JavaScript function to export.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="events"><a class="link" href="#events">Introduction</a></h2>
+<h2 id="when_you_need_one"><a class="link" href="#when_you_need_one">When you need one</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The XP framework enable developers to create and/or listen to events.
-Events may be local (within a single server) or cluster wide (distributed to all servers within a cluster).
-In addition to application specific events, XP itself produces a range of standard events.</p>
+<p>A widget whose client-side script loads a chart library from a CDN, calls an external API, or embeds a frame is blocked by the host tool&#8217;s policy. A processor adds exactly the sources the extension needs, on top of the tool&#8217;s own policy, only on pages where the extension is present, and only for users allowed to see it.</p>
+</div>
+<div class="paragraph">
+<p>Loosening the tool&#8217;s policy through configuration instead applies to every page and every user. Prefer a processor.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
+<h2 id="implementing"><a class="link" href="#implementing">Implementing</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The use cases for events are limitless, but the most common are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Cache invalidation</p>
-</li>
-<li>
-<p>Notifications (i.e. notify clients connected to any server in the cluster via Websocket)</p>
-</li>
-<li>
-<p>Job triggering</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="local-vs-distributed"><a class="link" href="#local-vs-distributed">Local vs distributed semantics</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><code>send({distributed: false})</code> (default) — fires only on the node that produced the event; use for in-process signalling like per-node cache eviction.</p>
-</li>
-<li>
-<p><code>send({distributed: true})</code> — broadcasts to every member of the cluster; use for cross-node cache invalidation, multi-node WebSocket fanout, or any side effect that has to run on every node.</p>
-</li>
-<li>
-<p><code>listener({localOnly: true})</code> — filters out events that originated on a remote node; use when a side effect should run exactly once on the originating node.</p>
-</li>
-<li>
-<p>The event object&#8217;s <code>localOrigin</code> and <code>distributed</code> flags let a listener branch on origin without <code>localOnly</code>.</p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Event delivery is best-effort and fire-and-forget — no persistence, no replay, no acknowledgement. A node that is down or partitioned at broadcast time misses the event entirely.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="threading-ordering"><a class="link" href="#threading-ordering">Threading and ordering</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>`Each event is handed to a single event worker thred before walking the listener list, so the publishing thread returns as soon as the event is queued.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Listeners must not block — the dispatch thread is shared, and a slow listener backs up every other listener on the node.</p>
-</li>
-<li>
-<p>On a single node, FIFO holds — events published in sequence on the same node are delivered in that order to a listener that matches both.</p>
-</li>
-<li>
-<p>Across cluster nodes events from the same nodes are ordered but from different nodes can arrive in either order on any third node.</p>
-</li>
-<li>
-<p>Order between listeners is unspecified.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="standard-events"><a class="link" href="#standard-events">Standard event catalog</a></h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 20%;">
-<col style="width: 60%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Type pattern</th>
-<th class="tableblock halign-left valign-top">Origin</th>
-<th class="tableblock halign-left valign-top">What it signals</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Node lifecycle: <code>node.created</code>, <code>node.updated</code>, <code>node.deleted</code>, <code>node.pushed</code>, <code>node.duplicated</code>, <code>node.moved</code>, <code>node.sorted</code>, <code>node.permissionsUpdated</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repository.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Repository lifecycle: <code>repository.created</code>, <code>repository.updated</code>, <code>repository.deleted</code>, <code>repository.restored</code>, <code>repository.restoreInitialized</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>task.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-task</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Task lifecycle: <code>task.submitted</code>, <code>task.updated</code>, <code>task.finished</code>, <code>task.failed</code>, <code>task.removed</code>.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application</code>, <code>application.cluster</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">core-app</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Application install / start / stop and cluster install events; the action — <code>INSTALLED</code>, <code>STARTED</code>, <code>STOPPED</code>, <code>UNINSTALLED</code>, <code>state</code>, … — is carried in the payload&#8217;s <code>eventType</code> field, not the type string.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>custom.*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">user code</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Anything published through lib-event&#8217;s <code>send()</code>. The <code>custom.</code> prefix is added automatically.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Per-type payload details belong on the corresponding library page (<a href="../libraries/lib-node.ahtml#events">Node</a>, <a href="../libraries/lib-repo.ahtml#events">Repo</a>, <a href="../libraries/lib-task.ahtml#events">Task</a>).</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="custom-naming"><a class="link" href="#custom-naming">Custom event naming</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Custom events go through <code>eventLib.send(&#8230;&#8203;)</code>, which prepends <code>custom.</code> automatically — <code>send({type: 'foo'})</code> is delivered as <code>custom.foo</code>. Namespace by application key to avoid collisions when multiple apps share a cluster.</p>
+<p>Implement <code>com.enonic.xp.admin.extension.AdminExtensionResponseProcessor</code> and register it as an OSGi service with a <code>key</code> property naming the extension&#8217;s descriptor key:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">import eventLib from '/lib/xp/event';
+<pre class="highlight"><code class="language-java" data-lang="java">package com.example.myapp;
 
-eventLib.send({
-    type: 'com.example.app.somethingHappened',
-    distributed: true,
-    data: { id: 'abc-123' }
-});
-// delivered as 'custom.com.example.app.somethingHappened'</code></pre>
+import org.osgi.service.component.annotations.Component;
+
+import com.enonic.xp.admin.extension.AdminExtensionResponseProcessor;
+import com.enonic.xp.portal.PortalRequest;
+import com.enonic.xp.portal.PortalResponse;
+
+@Component(immediate = true, property = "key=com.example.myapp:analytics-widget")
+public class AnalyticsWidgetResponseProcessor
+    implements AdminExtensionResponseProcessor
+{
+    @Override
+    public PortalResponse process( final PortalRequest request, final PortalResponse response )
+    {
+        request.getContentSecurityPolicy()
+            .scriptSrc( "https://www.gstatic.com" )
+            .connectSrc( "https://www.googleapis.com" );
+
+        return response;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>key</code> must match the extension&#8217;s <code>&lt;application&gt;:&lt;name&gt;</code> key exactly. The method must return a response, never <code>null</code>. Return the one you were given when only the policy changes.</p>
+</div>
+<div class="paragraph">
+<p>The interface lives in <code>admin-api</code>, and the request and response types in <code>portal-api</code>. Declare both in <em>build.gradle</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+    implementation xplibs.api.admin
+    implementation xplibs.api.portal
+}</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="patterns"><a class="link" href="#patterns">Common patterns</a></h2>
+<h2 id="what_a_processor_can_do"><a class="link" href="#what_a_processor_can_do">What a processor can do</a></h2>
 <div class="sectionbody">
-<h3 id="cluster_wide_cache_invalidation" class="discrete">Cluster-wide cache invalidation</h3>
-<div class="paragraph">
-<p>A write on any node evicts the affected key on every node.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
-    type: 'custom.com.example.app.cache.invalidate',
-    callback: (event) =&gt; cache.delete(event.data.key as string)
-});
-
-eventLib.send({
-    type: 'com.example.app.cache.invalidate',
-    distributed: true,
-    data: { key }
-});</code></pre>
-</div>
-</div>
-<h3 id="websocket_fanout_across_the_cluster" class="discrete">WebSocket fanout across the cluster</h3>
-<div class="paragraph">
-<p>A producer on any node can push to clients connected to whichever node terminated their socket.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
-    type: 'custom.com.example.app.feed.message',
-    callback: (event) =&gt; websocketLib.sendToGroup('live-feed', JSON.stringify(event.data))
-});
-
-eventLib.send({
-    type: 'com.example.app.feed.message',
-    distributed: true,
-    data: { message }
-});</code></pre>
-</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Content Security Policy</dt>
+<dd>
+<p><code>request.getContentSecurityPolicy()</code> is the request-scoped policy the tool controller contributes to, and the same one <a href="../../libraries/lib-portal.ahtml#csp"><code>csp()</code></a> exposes to JavaScript. Contributions are additive: a directive&#8217;s sources are the union of everything declared for it, so a processor can open a directive but not close one the tool has opened. The header is composed when the response is flushed, so contributions made here are included. <code>reportOnly()</code> on the same object gives the report-only companion.</p>
+</dd>
+<dt class="hdlist1">Page contributions</dt>
+<dd>
+<p>Build a new response to add markup to the tool page: <code>PortalResponse.create( response ).contribution( HtmlTag.HEAD_END, "&lt;script src=\"&#8230;&#8203;\"&gt;&lt;/script&gt;" ).build()</code>, with <code>HtmlTag</code> from <code>com.enonic.xp.portal.postprocess</code>. This is how an extension gets a script onto the host page. <code>pageContributions</code> in the extension&#8217;s own response cannot do it, since they are dropped on the admin rendering path.</p>
+</dd>
+<dt class="hdlist1">The rest of the response</dt>
+<dd>
+<p>The processor receives the full <code>PortalResponse</code> and returns the one to continue with, so headers and cookies are available too. Changing the body of a page you do not own is rarely wise.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="library"><a class="link" href="#library">Library</a></h2>
+<h2 id="when_it_runs"><a class="link" href="#when_it_runs">When it runs</a></h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>After the admin tool controller has rendered the page, before the response is serialized.</p>
+</li>
+<li>
+<p>For every tool that shares an <a href="../extensions.ahtml#interfaces">interface</a> with the extension, or for every tool if the extension declares the <code>generic</code> interface. This is the same rule that decides where the extension is mounted.</p>
+</li>
+<li>
+<p>Only when the current user passes the extension&#8217;s <a href="../extensions.ahtml#access-control">access control</a>.</p>
+</li>
+<li>
+<p>When several extensions register processors, they run in order of extension key, each receiving the previous one&#8217;s response.</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>For implementation details, please visit the <a href="../libraries/lib-event.ahtml">event library</a> documentation.</p>
+<p>A processor that throws fails the tool page. Keep it small and free of I/O.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

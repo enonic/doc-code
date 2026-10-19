@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Fundamentals</title>
+<title>Localization</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,12 +437,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Fundamentals</h1>
+<h1>Localization</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#whats_in_this_section">What&#8217;s in this section</a></li>
-<li><a href="#how_the_parts_relate">How the parts relate</a></li>
+<li><a href="#use_cases">Use cases</a></li>
+<li><a href="#localization_files">Localization files</a></li>
+<li><a href="#locale_format">Locale format</a></li>
+<li><a href="#best_match_resolving">Best match resolving</a>
+<ul class="sectlevel2">
+<li><a href="#encoding_and_special_characters">Encoding and special characters</a></li>
+</ul>
+</li>
+<li><a href="#sample">Sample</a></li>
+<li><a href="#placeholders">Placeholders</a></li>
 </ul>
 </div>
 </div>
@@ -450,77 +458,284 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The execution model and the core building blocks every Enonic app uses — regardless of whether it serves an API, a webapp or a site.</p>
+<p>Localizing strings in your XP applications.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="whats_in_this_section"><a class="link" href="#whats_in_this_section">What&#8217;s in this section</a></h2>
+<h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
 <div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This section covers code-level localization, not multi-lingual content or websites.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>This section documents the parts of an app that are not tied to a specific HTTP service or background mechanism. Read the runtime overview first to understand what powers your code, then dip into the rest as needed.</p>
+<p>For any project targeting users in different languages, you may want to localize the interface.</p>
+</div>
+<div class="paragraph">
+<p>The XP framework provides localization for the following use cases:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><a href="fundamentals/runtime.ahtml">Runtime</a></dt>
+<dt class="hdlist1">CMS/Sites</dt>
 <dd>
-<p>How XP executes server-side JavaScript — the JVM-hosted engine, threading model, clustering, and the platform features your code inherits for free.</p>
+<p>Use the <a href="../libraries/lib-i18n.ahtml">localization API</a> to dynamically localize any text phrases in your app. The framework will apply the locale specified in the site&#8217;s language property.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/typescript.ahtml">TypeScript</a></dt>
+<dt class="hdlist1">Admin Console</dt>
 <dd>
-<p>TypeScript is the authoring language for Enonic apps — set it up first. How to install and use the official <code>@enonic-types</code> packages so your editor and build understand the platform APIs.</p>
+<p>Localize labels and texts in <a href="https://developer.enonic.com/docs/cms/xp8/schemas#schema_localization">schemas</a> such as content types. The framework will use the locale derived from the browser&#8217;s <code>Accept-Language</code> header.</p>
 </dd>
-<dt class="hdlist1"><a href="fundamentals/types.ahtml">Types</a></dt>
+<dt class="hdlist1">Webapps and more</dt>
 <dd>
-<p>The shared types that flow across the libraries — principals, binary streams, the content object, page components — defined once in <code>@enonic-types/core</code> and referenced from every library page.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/apps.ahtml">Apps</a></dt>
-<dd>
-<p>What an Enonic app is, how XP runs many of them at once, and the install/start/stop/redeploy lifecycle. Covers bundle isolation, cross-app composition, and configuration.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/functions.ahtml">Functions</a></dt>
-<dd>
-<p>How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/main.ahtml">Main</a></dt>
-<dd>
-<p>The <code>main.ts</code> lifecycle hook — code that runs when your app starts and stops.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/globals.ahtml">Globals</a></dt>
-<dd>
-<p>Global objects and functions available in every module — <code>app</code>, <code>log</code>, <code>require</code>, <code>resolve</code>, and friends.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/events.ahtml">Events</a></dt>
-<dd>
-<p>The cluster-wide pub/sub bus. Publish from anywhere — request handlers, tasks, <code>main.ts</code> — and subscribe to platform events (content writes, repo updates) or your own custom domain events.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/i18n.ahtml">Localization</a></dt>
-<dd>
-<p>Localizing text in your app and the schemas it deploys, using <code>phrases</code> files and the localization API.</p>
-</dd>
-<dt class="hdlist1"><a href="fundamentals/java-bridge.ahtml">Java bridge</a></dt>
-<dd>
-<p>Calling JVM code from JavaScript via the <code>__</code> global. Required reading for library authors and anyone integrating with existing Java codebases.</p>
+<p>The <a href="../libraries/lib-i18n.ahtml">localization API</a> may also be used for any other purpose. In these cases the developer controls and specifies the locale explicitly.</p>
 </dd>
 </dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="how_the_parts_relate"><a class="link" href="#how_the_parts_relate">How the parts relate</a></h2>
+<h2 id="localization_files"><a class="link" href="#localization_files">Localization files</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The runtime is the foundation: a JVM-based execution environment with a CommonJS module system, multithreading, clustering, and a platform&#8217;s worth of services attached. Functions are the units of code the runtime invokes — most of what you write is regular module code, with a smaller subset bound to framework contracts. <code>main.ts</code> is the lifecycle contract. Events are the cluster-wide pub/sub primitive, available from any function. Globals, TypeScript, the Java bridge, and localization are tools you reach for inside any function, regardless of which contract called it.</p>
+<p>The localization files are plain text files, using the <code>properties</code> format (key = value).
+The files must be placed in a specific project folder: <code>/src/main/resources/i18n/</code>.</p>
 </div>
 <div class="paragraph">
-<p>For HTTP-bound contracts (request handlers, filters, error handlers, websockets, SSE, ID providers), see <a href="web.ahtml">Web</a>. For asynchronous background execution (tasks, scheduled jobs), see <a href="background.ahtml">Background</a>.</p>
+<p>Imagine an app that supports the following localizations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>English (<code>en</code>)</p>
+</li>
+<li>
+<p>English (US) (<code>en-US</code>)</p>
+</li>
+<li>
+<p>Norwegian Nynorsk (<code>nn</code>)</p>
+</li>
+<li>
+<p>Norwegian Nynorsk, Norway (<code>nn-NO</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each locale needs a matching localization file, in the format:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>phrases[_LOCALE].properties</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The API&#8217;s country codes use <code>-</code> as separator but the files use <code>_</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Sample localization bundle</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">i18n/phrases.properties
+i18n/phrases_en.properties
+i18n/phrases_en_US.properties
+i18n/phrases_nn.properties
+i18n/phrases_nn_NO.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This format and packaging is commonly known as "property bundles".</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The filenames are case sensitive!
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="locale_format"><a class="link" href="#locale_format">Locale format</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A locale is composed of codes for language, country and variant.
+Language is required; country and variant are optional.</p>
+</div>
+<div class="paragraph">
+<p>For the property files, all codes are case sensitive and separated by an underscore (<code>_</code>).</p>
+</div>
+<div class="paragraph">
+<p>The string representation of a locale is:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>la[_CO][_VA]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>la</code> — two-letter language code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO-639</a>).</p>
+</li>
+<li>
+<p><code>CO</code> — optional two-letter country code (<a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO-3166</a>).</p>
+</li>
+<li>
+<p><code>VA</code> — optional variant. May contain multiple subtags joined by <code>_</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A sample locale including a vendor-specific variant:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>es_ES_Traditional_WIN</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Variants are rarely used in XP and can usually be ignored.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="best_match_resolving"><a class="link" href="#best_match_resolving">Best match resolving</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Given a requested locale, the framework selects the best matching localization file. If the requested locale is <code>en-US</code>, the framework checks files in this order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>phrases_en_US.properties</code></p>
+</li>
+<li>
+<p><code>phrases_en.properties</code></p>
+</li>
+<li>
+<p><code>phrases.properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a request&#8217;s locale is <code>en</code>, the framework uses <code>phrases_en.properties</code>. If the locale does not match any file, <code>phrases.properties</code> is used as the fallback. If no matching key is found in any file in the bundle, the default <code>NOT_TRANSLATED</code> is returned.</p>
+</div>
+<div class="sect2">
+<h3 id="encoding_and_special_characters"><a class="link" href="#encoding_and_special_characters">Encoding and special characters</a></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Property keys</dt>
+<dd>
+<p>Must be in the ISO-8859-1 range (Latin-1). Non-Latin-1 characters must use Unicode escape sequences, e.g. <code>\u00E6</code> for the Norwegian letter <code>æ</code>.</p>
+</dd>
+<dt class="hdlist1">Property values</dt>
+<dd>
+<p>Support any Unicode characters.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+We always recommend saving property files using the UTF-8 charset.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sample"><a class="link" href="#sample">Sample</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A property file looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">phrases.properties</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello there!
+message = Good to see you. How are you doing?
+with_\u00e6_\u00f8_\u00e5 = This key contains norwegian characters æ, ø and å</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="placeholders"><a class="link" href="#placeholders">Placeholders</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The properties format supports parameter values that are merged into the localized strings:</p>
+</div>
+<div class="listingblock">
+<div class="title">phrases.properties</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">user.greeting = Hello, {0}!
+message_url = http://localhost:8080/{0}
+message_multi_placeholder = My name is {0} and I live in {1}
+message_placeholder = Hello, my name is {0}.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Placeholders are marked with <code>{&lt;number&gt;}</code>. The number corresponds to the position of the value in the <code>values</code> argument passed to the API.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/MessageFormat.html">MessageFormat</a> for advanced placeholder syntax.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Placeholders are formatted according to the requested locale.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

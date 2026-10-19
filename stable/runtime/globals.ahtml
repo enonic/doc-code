@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>TypeScript Definitions</title>
+<title>Globals and module bindings</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,57 +437,334 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>TypeScript Definitions</h1>
+<h1>Globals and module bindings</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#intro">Intro</a></li>
-<li><a href="#typescript_starter">TypeScript starter</a></li>
-<li><a href="#install_types">Install types</a></li>
-<li><a href="#enonic_libraries">Enonic Libraries</a>
-<ul class="sectlevel2">
-<li><a href="#global">Global</a></li>
-<li><a href="#core">Core</a></li>
-<li><a href="#content">Content</a></li>
-<li><a href="#additional_types">Additional types</a></li>
-</ul>
-</li>
-<li><a href="#usage">Usage</a>
-<ul class="sectlevel2">
-<li><a href="#require">require</a></li>
-<li><a href="#es6_style_import">ES6-style import</a></li>
-</ul>
-</li>
-<li><a href="#configuration">Configuration</a>
-<ul class="sectlevel2">
-<li><a href="#require_2">Require</a></li>
-<li><a href="#other_imports">Other imports</a></li>
-</ul>
-</li>
-<li><a href="#beans">Beans</a>
-<ul class="sectlevel2">
-<li><a href="#option_1">Option 1</a></li>
-<li><a href="#option_2">Option 2</a></li>
-</ul>
-</li>
+<li><a href="#module-scope">What is actually global</a></li>
+<li><a href="#app">App</a></li>
+<li><a href="#log">Log</a></li>
+<li><a href="#resolve">Resolve()</a></li>
+<li><a href="#require">Require()</a></li>
+<li><a href="#exports">Exports</a></li>
+<li><a href="#esm">ECMAScript modules are not supported</a></li>
+<li><a href="#double_underscore">Double underscore __</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="intro"><a class="link" href="#intro">Intro</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>We default to TypeScript in our code examples and starters. This section describes how to configure and use our official TypeScript types - all aligned with our <a href="../libraries.ahtml">standard libraries</a>.</p>
+<p>Server-side code in an Enonic app reaches a handful of names it never declares and never requires: <code>app</code>, <code>log</code>, <code>require</code>, <code>resolve</code>, <code>__</code> and <code>exports</code>. Only one of them is a true global.</p>
 </div>
-<div class="admonitionblock note">
+</div>
+</div>
+<div class="sect1">
+<h2 id="module-scope"><a class="link" href="#module-scope">What is actually global</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>app</code> is the only name <strong>XP</strong> installs on the JavaScript global object. Every other name on this page is <strong>module-scoped</strong>: XP wraps each module in a function, passing <code>log</code>, <code>require</code>, <code>resolve</code> and <code>__</code> in as arguments and declaring <code>exports</code> and <code>module</code> inside it. The engine contributes a few globals of its own on top; <a href="engines.ahtml#graaljs">GraalJS</a> adds <code>Graal</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">// what XP evaluates for every module it loads
+(function (log, require, resolve, __) {
+    var exports = {};
+    var module = {};
+    // module.exports reads and writes the same object as exports
+
+    // your module's code goes here
+
+    return module.exports;
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three consequences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>They are not on the global object.</strong> On GraalJS, <code>globalThis.app</code> resolves while <code>globalThis.log</code>, <code>globalThis.require</code>, <code>globalThis.resolve</code>, <code>globalThis.exports</code> and <code>globalThis.module</code> are all <code>undefined</code>; Nashorn has no <code>globalThis</code> binding at all. Inside a module <code>typeof require</code> still answers <code>"function"</code>, because the parameter is in scope. A bundled npm package that probes its environment through the global object will find nothing.</p>
+</li>
+<li>
+<p><strong>They can be shadowed.</strong> A variable or parameter named <code>log</code> declared in your module hides the binding for the rest of that scope.</p>
+</li>
+<li>
+<p><strong>They are per module.</strong> Each module body gets its own <code>exports</code>, and a <code>require</code> and <code>resolve</code> bound to that module&#8217;s own location — which is what makes a relative path resolve against the file that wrote it.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="app"><a class="link" href="#app">App</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>app</code> object holds information about the contextual app, and is the one name here that is genuinely global. It has the following properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">app.name</dt>
+<dd>
+<p>The name of the application.</p>
+</dd>
+<dt class="hdlist1">app.version</dt>
+<dd>
+<p>Version of the application.</p>
+</dd>
+<dt class="hdlist1">app.config</dt>
+<dd>
+<p>Values from the application&#8217;s configuration file. This can be set using <code>$XP_HOME/config/&lt;app.name&gt;.cfg</code>. Every time the configuration is changed the app is restarted.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Get application name
+var name = app.name;  // com.enonic.app.superhero
+
+// Get application version
+var version = app.version;  // 1.2.0
+
+// Get some config from the &lt;app.name&gt;.cfg file
+var myKey = app.config.secretkey; // Reads the string stored in the "secretkey" property</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="log"><a class="link" href="#log">Log</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>log</code> object holds the logging methods. It&#8217;s one method for each log
+level and takes the same number of parameters.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.debug(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>string message</strong> Message to log as a debug-level message.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.info(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>string message</strong> Message to log as a info-level message.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.warning(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>string message</strong> Message to log as a warning-level message.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.error(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>string message</strong> Message to log as a error-level message.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Log a simple message
+log.debug('Hello World');
+
+// Log a formatting message
+log.info('Hello %s', 'World');
+
+// Log a formatting message
+log.warning('%s %s', 'Hello', 'World');
+
+// Log using the built-in JSON converter
+log.error('My JSON %s', object );
+
+// Log an exception with stack trace
+try {
+  thisWillFail();
+} catch (e) {
+  log.error('An error occurred', e);
+}
+
+// Log a formatting message with exception stack trace
+try {
+  bean.run();
+} catch (e) {
+  log.error('Error in %s', 'myFunction', e);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="resolve"><a class="link" href="#resolve">Resolve()</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Resolves a fully qualified path to a local resource based
+on the current location. It does not check if a resource exists at the specified path.
+This function supports both relative (with dot-references) and absolute paths.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">  resolve(path) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>string path</strong> Path to resolve using current location.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>returns</strong> the fully qualified resource path of the location.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Absolute path
+var path1 = resolve('/views/myview.html');
+
+// Relative path - in this case, the resource must be in the same folder
+var path2 = resolve('myview.html');
+
+// Relative path (same as above)
+var path3 = resolve('./myview.html');
+
+// Relative path - resource is one level up
+var path4 = resolve('../myview.html');</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="require"><a class="link" href="#require">Require()</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Loads a JavaScript file and returns its exports.
+The function implements parts of the <a href="https://wiki.commonjs.org/wiki/Modules/1.1">CommonJS Modules Specification</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">  require(path) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><strong>string path</strong> Path to the JavaScript to load.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><strong>returns</strong> The loaded JavaScript object exports.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Absolute path
+var lib1 = require('/lib/mylib.js');
+
+// Relative path
+var lib2 = require('mylib');
+
+// Relative path (same as above)
+var lib3 = require('./mylib.js');
+
+// Relative path
+var lib4 = require('../mylib');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the path is relative then it will start looking for the file from the local directory.
+The file extension .js is not required.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exports"><a class="link" href="#exports">Exports</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>exports</code> is the object a module exposes to whatever requires it (implementations, libraries, and so on). This is part of the CommonJS module spec.</p>
+</div>
+<div class="paragraph">
+<p>Assign to it from any module to publish functionality. Assigning to <code>module.exports</code> replaces the object as a whole, as in CommonJS.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import type {Request, Response} from '@enonic-types/core';
+
+export function GET(req: Request): Response {
+    return {body: 'hello'};
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScript by the build step before deployment — the types exist only at authoring time and are erased from the deployed code. See <a href="runtime.ahtml">Runtime</a> for the execution model.
+Authoring in TypeScript, write <code>export</code> and let the build transpile it — the emitted JavaScript assigns to <code>exports</code>. See <a href="../tooling/typescript.ahtml">TypeScript</a>.
 </td>
 </tr>
 </table>
@@ -495,262 +772,29 @@ XP executes JavaScript, not TypeScript. Your TypeScript is transpiled to JavaScr
 </div>
 </div>
 <div class="sect1">
-<h2 id="typescript_starter"><a class="link" href="#typescript_starter">TypeScript starter</a></h2>
+<h2 id="esm"><a class="link" href="#esm">ECMAScript modules are not supported</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The quickest way to start a TypeScript project — with types, <code>tsconfig</code>, and build already wired up — is the <a href="https://market.enonic.com/starters/typescript-starter">TS Starter</a>. Scaffold a new project from it with the <a href="https://developer.enonic.com/docs/enonic-cli/stable">Enonic CLI</a>:</p>
+<p><code>import</code>, <code>export</code> and dynamic <code>import()</code> do not work at runtime, on either engine. This is a property of XP&#8217;s module loader, not of the engine: XP evaluates every file as a script wrapped in a function, as shown <a href="#module-scope">above</a>, and <code>import</code> is only valid in a file evaluated as an ES module. GraalJS can parse the syntax, but XP never loads a file that way.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-sh" data-lang="sh">enonic create -r starter-ts com.example.myapp</code></pre>
-</div>
+<div class="paragraph">
+<p>Use <code>require()</code> and <code>exports</code> in the code you deploy. Writing <code>import</code>/<code>export</code> in TypeScript is fine — the build transpiles it away before deployment. What must not reach the server is an <code>import</code> statement surviving into the emitted JavaScript.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="install_types"><a class="link" href="#install_types">Install types</a></h2>
+<h2 id="double_underscore"><a class="link" href="#double_underscore">Double underscore __</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To add types for corresponding library use NPM (or similar package manager) and install them as any other dependency. All types can be found under <a href="https://www.npmjs.com/org/enonic-types">@enonic-types</a> organisation on NPM.</p>
-</div>
-<div class="paragraph">
-<p>Install types at the major version of XP your project builds against. <code>@8</code> tracks the latest XP 8 release, which is what you want in most projects. If you target a specific XP version — the <code>xpVersion</code> in your <a href="../tooling/build.ahtml"><code>gradle.properties</code></a> — pin the types to it instead, for example <code>@8.0.4</code>. Never install types <strong>newer</strong> than the XP you deploy to: they declare functions the runtime does not have yet, so your code compiles and then fails at runtime.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="enonic_libraries"><a class="link" href="#enonic_libraries">Enonic Libraries</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>For example, you have a <code>lib-auth</code> gradle dependency:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-gradle" data-lang="gradle">dependencies {
-  include xplibs.auth
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To add type definitions for the library, install dependency from NPM:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/lib-auth@8</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="global"><a class="link" href="#global">Global</a></h3>
-<div class="paragraph">
-<p>Along with library types it is <strong>highly recommended</strong> to install definitions for global objects (<code>app</code>, <code>__</code>, <code>log</code>) and functions (<code>resolve</code>, <code>require</code>):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/global@8</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Since <code>global</code> types are not placed under the <code>node_modules/@types</code>, it is necessary to include them manually:</p>
-</div>
-<div class="paragraph">
-<p><code>tsconfig.json</code></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "compilerOptions": {
-    "types": [
-      "@enonic-types/global"
-    ]
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="core"><a class="link" href="#core">Core</a></h3>
-<div class="paragraph">
-<p>There are types that are shared between other libraries (like <code>Content</code> or <code>Principal</code>). Such types reside in the <code>core</code> package. It is not necessary to include this dependency into your project, as all libraries export related core types, e.g. Content library exports <code>Content`</code> type. But if you want to use these type directly, you&#8217;ll need to install them:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm i --save-dev @enonic-types/core@8</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and then import them in your TypeScript code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">import type {Content} from '@enonic-types/core';</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="content"><a class="link" href="#content">Content</a></h3>
-<div class="paragraph">
-<p><code>Content</code> contains the <code>x</code> property that has a very special <code>XpXData</code> type.</p>
-</div>
-<div class="paragraph">
-<p><code>XpXData</code> is an interface that is added to the global scope, so it can be modified using the <a href="https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces">declaration merging</a>. This allows you to set the shape of the XData in your project, simply by declaring the <code>XpXData</code> like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
-    interface XpXData {
-        'com-mysite-app': {
-            metadata: {
-                metaTagTitle: string;
-                metaTagImageId: string;
-            }
-        }
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="additional_types"><a class="link" href="#additional_types">Additional types</a></h3>
-<div class="paragraph">
-<p><code>Content</code> is a complex type that contains unions and maps that are not exported but may be needed during the development. Actually, these types can easily be retrieved from the <code>Content</code> itself:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">import type {Content} from '@enonic-types/core';
-
-type Attachments = Content['attachments'];
-
-type ContentInheritType = Content['inherit'];
-
-type Workflow = Content['workflow'];</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="usage"><a class="link" href="#usage">Usage</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="require"><a class="link" href="#require">require</a></h3>
-<div class="paragraph">
-<p>After <code>global</code> and library types are installed and configured in <code>tsconfig.json</code>, libraries can be imported just like they would be in JS code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">const libAuth = require('/lib/xp/auth');</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="es6_style_import"><a class="link" href="#es6_style_import">ES6-style import</a></h3>
-<div class="paragraph">
-<p>If you are planning to use <code>import</code> in your code and transpile it with the default <code>tsc</code> TypeScript compiler, you&#8217;ll need to add proper types mapping to your configuration via <code>baseUrl</code> and <code>paths</code> properties in <code>tsconfig.json</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "/lib/xp/auth": ["node_modules/@enonic-types/lib-auth"],
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then in your code:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">import {login, logout, getUser, generatePassword} from '/lib/xp/auth';</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Configuring <code>baseUrl</code> and <code>paths</code> will allow the TypeScript compiler to keep the valid paths in the resulting JavaScript files.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="require_2"><a class="link" href="#require_2">Require</a></h3>
-<div class="paragraph">
-<p>To add support for type resolution for custom libraries via <code>require</code>, you can redeclare the <code>XpLibraries</code> interface in global scope, which will lead to declaration merging:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
-    interface XpLibraries {
-        '/lib/custom/mylib': typeof import('./mylib');
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="other_imports"><a class="link" href="#other_imports">Other imports</a></h3>
-<div class="paragraph">
-<p>If you want to use custom import functions, like <code>__non_webpack_require__</code> with Webpack, just use <code>XpRequire</code> from <code>global</code> types for this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare const __non_webpack_require__: XpRequire;</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="beans"><a class="link" href="#beans">Beans</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To create a new Java bean, the <code>__.newBean()</code> function must be used. Making it return a proper type can be done in two ways. Let&#8217;s say, you have created an interface for that bean somewhere in your project:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">interface SomeHelper {
-  help(text: string): void;
-}</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="option_1"><a class="link" href="#option_1">Option 1</a></h3>
-<div class="paragraph">
-<p>You can pass the type argument explicitly. This option is a bit cleaner.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">const helper = __.newBean&lt;SomeHelper&gt;('com.me.project.SomeHelper');</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="option_2"><a class="link" href="#option_2">Option 2</a></h3>
-<div class="paragraph">
-<p>Or you can map the bean name to bean interface. It may be a preferable way to do it, if the bean is used across multiple files:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-ts" data-lang="ts">declare global {
-    interface XpBeans {
-        'com.me.project.SomeHelper': SomeHelper;
-    }
-}
-
-const helper = __.newBean('com.me.project.SomeHelper');</code></pre>
-</div>
-</div>
+<p>The double underscore is available in any server-side JavaScript code and is used for wrapping Java objects in a JavaScript object. Read
+more about the <a href="java-bridge.ahtml">Java bridge</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

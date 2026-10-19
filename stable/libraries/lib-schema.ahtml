@@ -487,6 +487,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="66" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="66" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="66" height="20" fill="#fe7d37"/>
+    <rect width="66" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="330" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="461">unstable</text>
+    <text x="330" y="140" transform="scale(.1)" textLength="461">unstable</text>
+  </g>
+</svg></span> The dynamic schema API is <strong>not stable</strong>. It may change, or be withdrawn, in a future release.</p>
+</div>
+<div class="paragraph">
 <p>API for fetching and manipulating dynamic schemas.</p>
 </div>
 <div class="admonitionblock warning">
@@ -529,7 +549,7 @@ Functions of this library require the Schema Admin role. It means that user role
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript types come from the <code>@enonic-types/lib-schema</code> package, installed at the version of XP your project builds against — see <a href="../fundamentals/typescript.ahtml">TypeScript</a>.</p>
+<p>TypeScript types come from the <code>@enonic-types/lib-schema</code> package, installed at the version of XP your project builds against — see <a href="../tooling/typescript.ahtml">TypeScript</a>.</p>
 </div>
 </div>
 </div>
@@ -2258,7 +2278,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">creator</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal that created the schema.</p>
 </div></div></td>
@@ -2267,12 +2287,12 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Modified zulu time.</p>
+<p><strong>Deprecated.</strong> Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifier</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#user-key">UserKey</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#user-key">UserKey</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Principal that last modified the schema.</p>
 </div></div></td>
@@ -2331,7 +2351,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Content type form.</p>
 </div></div></td>
@@ -2446,7 +2466,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Form fragment form.</p>
 </div></div></td>
@@ -2484,7 +2504,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Mixin form.</p>
 </div></div></td>
@@ -2573,7 +2593,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Modified zulu time.</p>
+<p><strong>Deprecated.</strong> Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit. Only a dynamic schema stored in the repository carries a genuine time, and the two cannot be told apart.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2592,7 +2612,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Component form.</p>
 </div></div></td>
@@ -2764,12 +2784,12 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Site zulu modified time.</p>
+<p><strong>Deprecated.</strong> Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">form</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#form-item">FormItem</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#form-item">FormItem</a>[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Site descriptor form.</p>
 </div></div></td>
@@ -2820,7 +2840,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Styles zulu modified time.</p>
+<p><strong>Deprecated.</strong> Modification time, ISO-8601 instant. Not dependable: read from an application resource, the value derives from the build (jar-entry timestamps are normalized for reproducible builds) rather than from an edit.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3021,7 +3041,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../fundamentals/types.ahtml#byte-source">ByteSource</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#byte-source">ByteSource</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Icon stream data.</p>
 </div></div></td>
@@ -3037,7 +3057,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 <td class="tableblock halign-left valign-top"><p class="tableblock">modifiedTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Icon modified time.</p>
+<p><strong>Deprecated.</strong> Icon modified time. Not a dependable measure of when the icon last changed and unsuitable for cache invalidation: the value derives from a jar-entry timestamp that build tools normalize for reproducible builds, from the install time of the bundle providing the icon, or from the time the icon happened to be read.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -3048,7 +3068,7 @@ Despite its name, <code>updateSite</code> writes the <strong>CMS descriptor</str
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

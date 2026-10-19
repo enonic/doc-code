@@ -447,7 +447,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#implementation">Implementation</a></li>
 <li><a href="#extension_url">Extension URL</a></li>
 <li><a href="#assets">Sub-paths and static assets</a></li>
-<li><a href="#access_control">Access control</a></li>
+<li><a href="#response_processors">Response processors</a></li>
+<li><a href="#access-control">Access control</a></li>
 <li><a href="#discovery">Discovery</a></li>
 <li><a href="#interfaces">Interfaces</a></li>
 </ul>
@@ -579,13 +580,13 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 <div class="listingblock">
 <div class="title">Sample my-extension.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">exports.GET = (req) =&gt; {
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function GET(req) {
     const contentId = req.params.contentId;
     return {
         body: `&lt;div&gt;Inspecting content ${contentId}&lt;/div&gt;`,
         contentType: 'text/html'
     };
-};</code></pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -601,9 +602,9 @@ config:                               <i class="conum" data-value="5"></i><b>(5)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const adminLib = require('/lib/xp/admin');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {extensionUrl} from '/lib/xp/admin';
 
-const url = adminLib.extensionUrl({
+const url = extensionUrl({
     application: 'com.example.app',
     extension: 'my-extension',
     params: { contentId: '123' }
@@ -641,8 +642,10 @@ This is the extension&#8217;s only address space: an extension is served by the 
 <div class="listingblock">
 <div class="title">Sample my-extension.ts serving its own assets</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const router = require('/lib/router')();
-const staticLib = require('/lib/enonic/static');
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import Router from '/lib/router';
+import {mappedRelativePath, requestHandler} from '/lib/enonic/static';
+
+const router = Router();
 
 router.get('', (req) =&gt; ({
     contentType: 'text/html',
@@ -650,13 +653,15 @@ router.get('', (req) =&gt; ({
 &lt;div class="my-extension"&gt;Hello&lt;/div&gt;`
 }));
 
-router.get('/_static/{path:.*}', (req) =&gt; staticLib.requestHandler(req, {
+router.get('/_static/{path:.*}', (req) =&gt; requestHandler(req, {
     root: '/assets',
-    relativePath: staticLib.mappedRelativePath('/_static'),
+    relativePath: mappedRelativePath('/_static'),
     index: false
 }));
 
-exports.all = (req) =&gt; router.dispatch(req);</code></pre>
+export function all(req) {
+    return router.dispatch(req);
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -666,7 +671,15 @@ Client-side code in the extension can call back to the same URL space for data, 
 </div>
 </div>
 <div class="sect1">
-<h2 id="access_control"><a class="link" href="#access_control">Access control</a></h2>
+<h2 id="response_processors"><a class="link" href="#response_processors">Response processors</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> An extension that needs the host tool page to allow external resources, or to load a script of its own, registers a Java response processor for its key. It runs after the tool controller and may adjust the page&#8217;s Content Security Policy or add page contributions. See <a href="extensions/processors.ahtml">Extension response processors</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="access-control"><a class="link" href="#access-control">Access control</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Two checks are enforced:</p>
@@ -723,7 +736,7 @@ Client-side code in the extension can call back to the same URL space for data, 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

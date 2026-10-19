@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Java bridge</title>
+<title>Events</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,27 +437,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Java bridge</h1>
+<h1>Events</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#the_object">The <code>__</code> object</a>
-<ul class="sectlevel2">
-<li><a href="#passing_parameters_to_java">Passing parameters to Java</a></li>
-<li><a href="#parameter_conversions">Parameter conversions</a></li>
-<li><a href="#returning_results_from_java">Returning results from Java</a></li>
-</ul>
-</li>
-<li><a href="#functions">Functions</a>
-<ul class="sectlevel2">
-<li><a href="#disposer">disposer</a></li>
-<li><a href="#newbean">newBean</a></li>
-<li><a href="#nullorvalue">nullOrValue</a></li>
-<li><a href="#registermock">registerMock</a></li>
-<li><a href="#tonativeobject">toNativeObject</a></li>
-<li><a href="#toscriptvalue">toScriptValue</a></li>
-</ul>
-</li>
+<li><a href="#events">Introduction</a></li>
+<li><a href="#use_cases">Use cases</a></li>
+<li><a href="#local-vs-distributed">Local vs distributed semantics</a></li>
+<li><a href="#threading-ordering">Threading and ordering</a></li>
+<li><a href="#standard-events">Standard event catalog</a></li>
+<li><a href="#custom-naming">Custom event naming</a></li>
+<li><a href="#patterns">Common patterns</a></li>
+<li><a href="#library">Library</a></li>
 </ul>
 </div>
 </div>
@@ -465,470 +456,232 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>JavaScript developers may optionally invoke and use Java-based code, since the XP runtime builds on the JVM.</p>
+<p>Send and listen to local or cluster wide events</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="the_object"><a class="link" href="#the_object">The <code>__</code> object</a></h2>
+<h2 id="events"><a class="link" href="#events">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In Enonic XP, there is a global object named <code>__</code> (double underscore), accessible from any serverside JavaScript code, which provides
-a way to wrap Java objects in a JavaScript object. The <code>__</code> object has functions that allow JavaScript to communicate with Java
-classes. The <code>newBean</code> function will wrap the Java object named in the parameter, for instance:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">var bean = __.newBean('com.enonic.xp.lib.io.IOHandlerBean');</code></pre>
+<p>The XP framework enable developers to create and/or listen to events.
+Events may be local (within a single server) or cluster wide (distributed to all servers within a cluster).
+In addition to application specific events, XP itself produces a range of standard events.</p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="use_cases"><a class="link" href="#use_cases">Use cases</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>This line is from the <code>lib-io</code> library, which is a good example of how this is used. In the Java <code>IOHandlerBean</code> class, there are several
-methods, like the <code>readLines</code> method:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public List&lt;String&gt; readLines( final Object value )
-  throws Exception
-    {
-      final CharSource source = toCharSource( value );
-      return source.readLines();
-    }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This method is now accessible as a function on the JavaScript <code>bean</code> and may be invoked from JavaScript, like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.readLines = function (stream) {
-  return __.toNativeObject(bean.readLines(stream));
-  };</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This results in a global JavaScript function <code>readLines</code>. This example also shows the use of the <code>toNativeObject</code> method, which in
-this case, converts a Java String array to a JSON object.</p>
-</div>
-<div class="paragraph">
-<p>Java objects constructed by <code>newBean</code> may, but not required to, implement <code>com.enonic.xp.script.bean.ScriptBean</code> interface.
-<code>ScriptBean::initialize</code> is used to inject <code>com.enonic.xp.script.bean.BeanContext</code> object, which can be used to access the application and resource keys, as well as current Request, Context and XP Java API Services.</p>
-</div>
-<div class="sect2">
-<h3 id="passing_parameters_to_java"><a class="link" href="#passing_parameters_to_java">Passing parameters to Java</a></h3>
-<div class="paragraph">
-<p>There are 2 ways to pass parameters to a Java method, from JavaScript:</p>
+<p>The use cases for events are limitless, but the most common are:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Passing the parameters in the method call</p>
+<p>Cache invalidation</p>
 </li>
 <li>
-<p>Setting the parameters as properties in the Java object, and then calling the method without parameters</p>
+<p>Notifications (i.e. notify clients connected to any server in the cluster via Websocket)</p>
+</li>
+<li>
+<p>Job triggering</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>The first one is recommended when there are few parameters (1 or 2) and of simple types.
-The second one is better when there are multiple parameters, or some of them are optional.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">exports.doSomething = function (param1, param2) {
-    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
-
-    return bean.execute(param1, param2);
-};
-
-exports.doSomethingElse = function (params) {
-    var bean = __.newBean('com.enonic.lib.mylib.MyClass');
-
-    bean.text = __.nullOrValue(params.text) || '';
-    bean.size = __.nullOrValue(params.size) || 250;
-
-    return bean.execute();
-};</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
+<div class="sect1">
+<h2 id="local-vs-distributed"><a class="link" href="#local-vs-distributed">Local vs distributed semantics</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>send({distributed: false})</code> (default) — fires only on the node that produced the event; use for in-process signalling like per-node cache eviction.</p>
+</li>
+<li>
+<p><code>send({distributed: true})</code> — broadcasts to every member of the cluster; use for cross-node cache invalidation, multi-node WebSocket fanout, or any side effect that has to run on every node.</p>
+</li>
+<li>
+<p><code>listener({localOnly: true})</code> — filters out events that originated on a remote node; use when a side effect should run exactly once on the originating node.</p>
+</li>
+<li>
+<p>The event object&#8217;s <code>localOrigin</code> and <code>distributed</code> flags let a listener branch on origin without <code>localOnly</code>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-When passing values that might be <code>null</code> or <code>undefined</code> it is recommended to filter them using the <code>__.nullOrValue</code> built-in function.
-This function converts any value that is <code>null</code> or <code>undefined</code> in JavaScript to <code>null</code> in Java. Otherwise returns the input value without changes.
+<div class="paragraph">
+<p>Event delivery is best-effort and fire-and-forget — no persistence, no replay, no acknowledgement. A node that is down or partitioned at broadcast time misses the event entirely.</p>
+</div>
 </td>
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="threading-ordering"><a class="link" href="#threading-ordering">Threading and ordering</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>To be able to set property values as in the 2nd example above, the Java object must implement a setter method for each field.</p>
-</div>
-<div class="paragraph">
-<p>The Java class used in the example above looks like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package com.enonic.lib.mylib;
-
-public final class MyClass {
-    private String text;
-    private Long size;
-
-    public String something( String param1, Long param2 ) {
-        return "Parameters: " + param1 + " " + param2;
-    }
-
-    public String somethingElse() {
-        return "Parameters: " + this.text + " " + this.size;
-    }
-
-    public void setText( String text ) {
-        this.text = text;
-    }
-
-    public void setSize( Long size ) {
-        this.size = size;
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="parameter_conversions"><a class="link" href="#parameter_conversions">Parameter conversions</a></h3>
-<div class="paragraph">
-<p>There are some type conversions that are made when calling from JavaScript to Java:</p>
+<p>`Each event is handed to a single event worker thred before walking the listener list, so the publishing thread returns as soon as the event is queued.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>when passing a JavaScript <code>string</code>, the Java method should expect a Java <code>String</code></p>
+<p>Listeners must not block — the dispatch thread is shared, and a slow listener backs up every other listener on the node.</p>
 </li>
 <li>
-<p>when passing a JavaScript <code>boolean</code>, the Java method should expect a Java <code>Boolean</code></p>
+<p>On a single node, FIFO holds — events published in sequence on the same node are delivered in that order to a listener that matches both.</p>
 </li>
 <li>
-<p>when passing a JavaScript <code>number</code>, the Java method should expect a Java <code>Long</code>, <code>Integer</code> or <code>Double</code></p>
+<p>Across cluster nodes events from the same nodes are ordered but from different nodes can arrive in either order on any third node.</p>
 </li>
 <li>
-<p>when passing a JavaScript <code>array</code>, the Java method should expect a Java <code>List</code></p>
-</li>
-<li>
-<p>when passing a JavaScript <code>object</code>, the Java method should expect a Java <code>Map&lt;String, Object&gt;</code></p>
+<p>Order between listeners is unspecified.</p>
 </li>
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="returning_results_from_java"><a class="link" href="#returning_results_from_java">Returning results from Java</a></h3>
-<div class="paragraph">
-<p>When returning simple values from Java to a JavaScript caller, the same type conversions applies.</p>
 </div>
+<div class="sect1">
+<h2 id="standard-events"><a class="link" href="#standard-events">Standard event catalog</a></h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type pattern</th>
+<th class="tableblock halign-left valign-top">Origin</th>
+<th class="tableblock halign-left valign-top">What it signals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>node.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Node lifecycle: <code>node.created</code>, <code>node.updated</code>, <code>node.deleted</code>, <code>node.pushed</code>, <code>node.duplicated</code>, <code>node.moved</code>, <code>node.sorted</code>, <code>node.permissionsUpdated</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repository.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-repo</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Repository lifecycle: <code>repository.created</code>, <code>repository.updated</code>, <code>repository.deleted</code>, <code>repository.restored</code>, <code>repository.restoreInitialized</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>task.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-task</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Task lifecycle: <code>task.submitted</code>, <code>task.updated</code>, <code>task.finished</code>, <code>task.failed</code>, <code>task.removed</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application</code>, <code>application.cluster</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">core-app</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Application install / start / stop and cluster install events; the action — <code>INSTALLED</code>, <code>STARTED</code>, <code>STOPPED</code>, <code>UNINSTALLED</code>, <code>state</code>, … — is carried in the payload&#8217;s <code>eventType</code> field, not the type string.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>custom.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user code</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Anything published through lib-event&#8217;s <code>send()</code>. The <code>custom.</code> prefix is added automatically.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
-<p>To return complex object values, you should create a specific Java class to make the mapping. This class should implement the <code>MapSerializable</code> interface.
-It will implement the <code>serialize</code> method, which allows generating a JSON object.</p>
+<p>Per-type payload details belong on the corresponding library page (<a href="../libraries/lib-node.ahtml#events">Node</a>, <a href="../libraries/lib-repo.ahtml#events">Repo</a>, <a href="../libraries/lib-task.ahtml#events">Task</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="custom-naming"><a class="link" href="#custom-naming">Custom event naming</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Custom events go through <code>eventLib.send(&#8230;&#8203;)</code>, which prepends <code>custom.</code> automatically — <code>send({type: 'foo'})</code> is delivered as <code>custom.foo</code>. Namespace by application key to avoid collisions when multiple apps share a cluster.</p>
 </div>
 <div class="listingblock">
-<div class="title">Serialization example</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">package com.enonic.lib.mylib;
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import eventLib from '/lib/xp/event';
 
-import java.util.Map;
-
-import com.enonic.xp.script.serializer.MapGenerator;
-import com.enonic.xp.script.serializer.MapSerializable;
-
-public final class ExampleObjectMapper
-    implements MapSerializable
-{
-    private final String text;
-
-    private final Object[] array;
-
-    private final Map&lt;String, Object&gt; object;
-
-    public ExampleObjectMapper( String text, Object[] array, Map&lt;String, Object&gt; object )
-    {
-        this.text = text;
-        this.array = array;
-        this.object = object;
-    }
-
-    @Override
-    public void serialize( MapGenerator gen )
-    {
-        gen.value( "text", text );
-        gen.array( "arrayValues" );
-        for ( Object value : array )
-        {
-            gen.value( value );
-        }
-        gen.end();
-
-        gen.map( "objectValues" );
-        for ( String key : object.keySet() )
-        {
-            gen.value( key, object.get( key ) );
-        }
-        gen.end();
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Finally, for returning values of type binary stream from Java, it should be wrapped on a <a href="https://google.github.io/guava/releases/19.0/api/docs/com/google/common/io/ByteSource.html">ByteSource</a> object.
-This is required by XP to allow returning it from an HTTP request, or add it as a content attachment.</p>
+eventLib.send({
+    type: 'com.example.app.somethingHappened',
+    distributed: true,
+    data: { id: 'abc-123' }
+});
+// delivered as 'custom.com.example.app.somethingHappened'</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="functions"><a class="link" href="#functions">Functions</a></h2>
+<h2 id="patterns"><a class="link" href="#patterns">Common patterns</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="disposer"><a class="link" href="#disposer">disposer</a></h3>
+<h3 id="cluster_wide_cache_invalidation" class="discrete">Cluster-wide cache invalidation</h3>
 <div class="paragraph">
-<p>Add a disposer that is called when the app is stopped.</p>
+<p>A write on any node evicts the affected key on every node.</p>
 </div>
-<div class="paragraph lead">
-<p>Parameters</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
+    type: 'custom.com.example.app.cache.invalidate',
+    callback: (event) =&gt; cache.delete(event.data.key as string)
+});
+
+eventLib.send({
+    type: 'com.example.app.cache.invalidate',
+    distributed: true,
+    data: { key }
+});</code></pre>
 </div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">func</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Function to call</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
 </div>
+<h3 id="websocket_fanout_across_the_cluster" class="discrete">WebSocket fanout across the cluster</h3>
 <div class="paragraph">
-<p><strong>void</strong></p>
+<p>A producer on any node can push to clients connected to whichever node terminated their socket.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">eventLib.listener({
+    type: 'custom.com.example.app.feed.message',
+    callback: (event) =&gt; websocketLib.sendToGroup('live-feed', JSON.stringify(event.data))
+});
+
+eventLib.send({
+    type: 'com.example.app.feed.message',
+    distributed: true,
+    data: { message }
+});</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="newbean"><a class="link" href="#newbean">newBean</a></h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="library"><a class="link" href="#library">Library</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Creates a new JavaScript bean that wraps the given Java class and makes it&#8217;s methods available to be called from JavaScript.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Classname for bean to create</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="nullorvalue"><a class="link" href="#nullorvalue">nullOrValue</a></h3>
-<div class="paragraph">
-<p>Converts a JavaScript variable that is undefined to a Java null object. If the JavaScript variable is defined, it is returned as is.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Value to convert</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="registermock"><a class="link" href="#registermock">registerMock</a></h3>
-<div class="paragraph">
-<p>Registers a mock</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Name of mock</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Value to register</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="tonativeobject"><a class="link" href="#tonativeobject">toNativeObject</a></h3>
-<div class="paragraph">
-<p>Converts arrays or complex Java objects to JSON.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Value to convert</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="toscriptvalue"><a class="link" href="#toscriptvalue">toScriptValue</a></h3>
-<div class="paragraph">
-<p>Converts JSON to a Java Map structure that can be used as parameters to a Java method on a bean created with <a href="#newbean">newBean</a>.</p>
-</div>
-<div class="paragraph lead">
-<p>Parameters</p>
-</div>
-<table class="tableblock frame-none grid-none stretch">
-<colgroup>
-<col style="width: 1%;">
-<col style="width: 1%;">
-<col style="width: 98%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Kind</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">value</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Value to convert</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph lead">
-<p>Returns</p>
-</div>
-<div class="paragraph">
-<p><strong>void</strong></p>
-</div>
+<p>For implementation details, please visit the <a href="../libraries/lib-event.ahtml">event library</a> documentation.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

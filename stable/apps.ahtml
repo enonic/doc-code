@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Global objects and functions</title>
+<title>Applications</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,16 +437,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Global objects and functions</h1>
+<h1>Applications</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#app">App</a></li>
-<li><a href="#log">Log</a></li>
-<li><a href="#resolve">Resolve()</a></li>
-<li><a href="#require">Require()</a></li>
-<li><a href="#exports">Exports</a></li>
-<li><a href="#double_underscore">Double underscore __</a></li>
+<li><a href="#name">Name and namespace</a></li>
+<li><a href="#what_an_app_can_contain">What an app can contain</a></li>
+<li><a href="#building_and_deploying">Building and deploying</a></li>
+<li><a href="#lifecycle">Lifecycle</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#packaging">Packaging</a></li>
 </ul>
 </div>
 </div>
@@ -454,275 +455,200 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following global functions and objects are available in the Enonic XP framework.</p>
+<p>An <strong>Enonic application</strong> is a named package of functionality that XP installs, starts and configures as one unit. The application name is unique within an installation, and everything the app ships is identified by it: schemas, endpoints, tools, extensions, jobs and configuration. Many apps run side by side in one XP instance, and most of XP&#8217;s own components are apps.</p>
+</div>
+<div class="paragraph">
+<p>An app may contain nothing but CMS schemas, or JavaScript that serves a site or an API, or Java components, or all of these. This documentation covers apps that contain code. Modelling content with schemas is covered in the <a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a>, and installing and operating apps in the <a href="https://developer.enonic.com/docs/platform/stable/apps">platform documentation</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="app"><a class="link" href="#app">App</a></h2>
+<h2 id="name"><a class="link" href="#name">Name and namespace</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The globally available <code>app</code> object holds information about the contextual app. It has the following properties:</p>
+<p>Every app has a unique name, such as <code>com.example.myapp</code>. Reverse-DNS is the convention. When installed, the app claims a <strong>namespace</strong> matching its name. The resources it contributes belong to this namespace; no separate namespace declaration is needed.</p>
+</div>
+<div class="paragraph">
+<p>For example, an <code>article</code> content type contributed by <code>com.example.myapp</code> is identified as <code>com.example.myapp:article</code>. Another app can contribute its own <code>article</code> type without a collision because it has a different namespace. The same application name identifies resources across the app&#8217;s functionality:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">What</th>
+<th class="tableblock halign-left valign-top">Identified as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Schemas: content types, mixins, form fragments, macros</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:article</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APIs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:myapi</code>, served under <code>/api/com.example.myapp:myapi</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Admin tools and extensions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:mytool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tasks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp:reindex</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.example.myapp.cfg</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>require()</code> resolves within the app that calls it; see <a href="runtime.ahtml#modules_and_bundling">Modules</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>See the <a href="https://developer.enonic.com/docs/cms/stable/schemas/namespaces">CMS namespace reference</a> for schema identifier rules and how namespaces are represented in stored content and APIs.</p>
+</div>
+<div class="paragraph">
+<p>Platform-provided types use the reserved names <code>base</code>, <code>portal</code> and <code>media</code>, as in <code>base:folder</code>, <code>portal:site</code> and <code>media:image</code>. No app can take these names.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what_an_app_can_contain"><a class="link" href="#what_an_app_can_contain">What an app can contain</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Everything below is optional. An app ships whichever parts it needs.</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">app.name</dt>
+<dt class="hdlist1">Schemas</dt>
 <dd>
-<p>The name of the application.</p>
+<p>Content types, mixins, form fragments and macros, under <code>src/main/resources/cms/</code>. See <a href="schemas.ahtml">Schemas</a>.</p>
 </dd>
-<dt class="hdlist1">app.version</dt>
+<dt class="hdlist1">Sites</dt>
 <dd>
-<p>Version of the application.</p>
+<p>Page, layout and part components, mappings, filters and response processors for CMS-driven sites. See <a href="web/sites.ahtml">Sites</a>.</p>
 </dd>
-<dt class="hdlist1">app.config</dt>
+<dt class="hdlist1">APIs</dt>
 <dd>
-<p>Values from the application&#8217;s configuration file. This can be set using <code>$XP_HOME/config/&lt;app.name&gt;.cfg</code>. Every time the configuration is changed the app is restarted.</p>
+<p>HTTP endpoints exposed under <code>/api</code>, and mountable under sites, webapps and admin tools. See <a href="web/apis.ahtml">APIs</a>.</p>
+</dd>
+<dt class="hdlist1">Admin tools and extensions</dt>
+<dd>
+<p>Screens in the XP admin, and extensions that plug into other tools. See <a href="web/tools.ahtml">Tools</a> and <a href="web/extensions.ahtml">Extensions</a>.</p>
+</dd>
+<dt class="hdlist1">Webapps</dt>
+<dd>
+<p>Standalone web applications. See <a href="web/webapps.ahtml">Webapps</a>.</p>
+</dd>
+<dt class="hdlist1">ID providers</dt>
+<dd>
+<p>Authentication for sites, webapps and the admin. See <a href="web/id-providers.ahtml">ID providers</a>.</p>
+</dd>
+<dt class="hdlist1">Background work</dt>
+<dd>
+<p>Named tasks and scheduled jobs. See <a href="background.ahtml">Background</a>.</p>
+</dd>
+<dt class="hdlist1">Start-up code</dt>
+<dd>
+<p>A <code>main.ts</code> that runs when the app starts. See <a href="runtime/main.ahtml">Main</a>.</p>
+</dd>
+<dt class="hdlist1">Java</dt>
+<dd>
+<p>OSGi components and code reached through the Java bridge. See <a href="runtime/java-bridge.ahtml">Java bridge</a>.</p>
+</dd>
+<dt class="hdlist1">Localization</dt>
+<dd>
+<p>Phrases files for the app&#8217;s own text and its schemas. See <a href="runtime/i18n.ahtml">Localization</a>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building_and_deploying"><a class="link" href="#building_and_deploying">Building and deploying</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create a project from a <a href="https://market.enonic.com/starters">starter</a> with the <a href="tooling/cli.ahtml">Enonic CLI</a>, build it with <code>enonic project build</code>, and deploy it to a <a href="tooling/sandboxes.ahtml">sandbox</a> with <code>enonic project deploy</code>. During development, <code>enonic project dev</code> rebuilds on every change and the sandbox picks the changes up without a redeploy. The project files, the Gradle plugin and the build and deploy steps are covered under <a href="tooling/build.ahtml">Building apps</a>; automated builds under <a href="tooling/ci-cd.ahtml">CI/CD</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lifecycle"><a class="link" href="#lifecycle">Lifecycle</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An app&#8217;s life inside XP follows a fixed sequence:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Install</dt>
+<dd>
+<p>The app package is uploaded to the cluster and registered. Installation alone does not run any of your code.</p>
+</dd>
+<dt class="hdlist1">Start</dt>
+<dd>
+<p>XP starts the app on every cluster node. If the app contains <a href="runtime/main.ahtml"><code>main.ts</code></a> at <code>src/main/resources/main.ts</code>, it is loaded and its top-level code runs once per node. <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.1.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.1.0</text></g></svg></span> Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. <code>__.disposer()</code> registrations made during start are remembered for the stop phase; registering one later is not dependable.</p>
+</dd>
+<dt class="hdlist1">Running</dt>
+<dd>
+<p>The app is reachable. HTTP functions, event listeners, scheduled tasks, components, and admin tools all become live. Modules are loaded lazily on first <code>require()</code> and cached for the lifetime of the deploy.</p>
+</dd>
+<dt class="hdlist1">Stop</dt>
+<dd>
+<p>Before uninstall (or before a redeploy of a new version), XP stops the app on every node. Registered disposers are invoked. After stop, no further requests reach the app&#8217;s code.</p>
+</dd>
+<dt class="hdlist1">Uninstall</dt>
+<dd>
+<p>The app is removed from the cluster.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Examples:</p>
+<p>The platform calls <code>main.ts</code> exactly once per app start, per node. Top-level code in any other module runs once on first <code>require()</code> and is then cached — see <a href="runtime.ahtml#loading_and_caching">Runtime: Loading and caching</a>.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Get application name
-var name = app.name;  // com.enonic.app.superhero
-
-// Get application version
-var version = app.version;  // 1.2.0
-
-// Get some config from the &lt;app.name&gt;.cfg file
-var myKey = app.config.secretkey; // Reads the string stored in the "secretkey" property</code></pre>
+<div class="paragraph">
+<p>Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
 </div>
+<div class="paragraph">
+<p>This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="log"><a class="link" href="#log">Log</a></h2>
+<h2 id="installation"><a class="link" href="#installation">Installation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This globally available <code>log</code> object holds the logging methods. It&#8217;s one method for each log
-level and takes the same number of parameters.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.debug(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a debug-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.info(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a info-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.warning(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a warning-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  log.error(message, [args]) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string message</strong> Message to log as a error-level message.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>array args</strong> Optional arguments used in message format. When the last argument is an exception/error instance, its stack trace will be logged.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Log a simple message
-log.debug('Hello World');
-
-// Log a formatting message
-log.info('Hello %s', 'World');
-
-// Log a formatting message
-log.warning('%s %s', 'Hello', 'World');
-
-// Log using the built-in JSON converter
-log.error('My JSON %s', object );
-
-// Log an exception with stack trace
-try {
-  thisWillFail();
-} catch (e) {
-  log.error('An error occurred', e);
-}
-
-// Log a formatting message with exception stack trace
-try {
-  bean.run();
-} catch (e) {
-  log.error('Error in %s', 'myFunction', e);
-}</code></pre>
-</div>
+<p>Apps reach an XP instance through the Enonic CLI and the management API, which is the standard path for CI/CD; through the Applications admin tool, which also installs from <a href="https://market.enonic.com">Enonic Market</a>; or by dropping the app file into the instance&#8217;s <code>deploy/</code> folder during development. Installation channels, clustering and operations are covered in the <a href="https://developer.enonic.com/docs/platform/stable/apps">platform documentation</a>. See <a href="tooling/ci-cd.ahtml">CI/CD</a> for the developer side.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="resolve"><a class="link" href="#resolve">Resolve()</a></h2>
+<h2 id="configuration"><a class="link" href="#configuration">Configuration</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This globally available function resolves a fully qualified path to a local resource based
-on the current location. It does not check if a resource exists at the specified path.
-This function supports both relative (with dot-references) and absolute paths.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  resolve(path) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string path</strong> Path to resolve using current location.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>returns</strong> the fully qualified resource path of the location.</td>
-</tr>
-</table>
+<p>Each app may read configuration from a <code>&lt;app-name&gt;.cfg</code> file (e.g. <code>com.example.myapp.cfg</code>) placed in the XP configuration directory. Configuration is a simple key/value text format and is exposed to the app at runtime through the platform&#8217;s configuration APIs.</p>
 </div>
 <div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Absolute path
-var path1 = resolve('/views/myview.html');
-
-// Relative path - in this case, the resource must be in the same folder
-var path2 = resolve('myview.html');
-
-// Relative path (same as above)
-var path3 = resolve('./myview.html');
-
-// Relative path - resource is one level up
-var path4 = resolve('../myview.html');</code></pre>
-</div>
+<p>The file format, location, and reload behavior are documented in the <a href="https://developer.enonic.com/docs/platform/stable/config">XP platform documentation</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="require"><a class="link" href="#require">Require()</a></h2>
+<h2 id="packaging"><a class="link" href="#packaging">Packaging</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This globally available function will load a JavaScript file and return the exports as objects.
-The function implements parts of the `CommonJS Modules Specification`_.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  require(path) <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><strong>string path</strong> Path to the JavaScript to load.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><strong>returns</strong> The loaded JavaScript object exports.</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">// Absolute path
-var lib1 = require('/lib/mylib.js');
-
-// Relative path
-var lib2 = require('mylib');
-
-// Relative path (same as above)
-var lib3 = require('./mylib.js');
-
-// Relative path
-var lib4 = require('../mylib');</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If the path is relative then it will start looking for the file from the local directory.
-The file extension .js is not required.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="exports"><a class="link" href="#exports">Exports</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The globally available <code>exports</code> keyword is used to expose functionality from a given module (implementations, libraries, etc.). This is part of the CommonJS module spec.</p>
-</div>
-<div class="paragraph">
-<p>Simply use the <code>exports</code> keyword to expose functionality from any JavaScript file.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="double_underscore"><a class="link" href="#double_underscore">Double underscore __</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The double underscore is available in any server-side JavaScript code and is used for wrapping Java objects in a JavaScript object. Read
-more about the <a href="java-bridge.ahtml">Java bridge</a>.</p>
+<p>The <a href="https://developer.enonic.com/docs/enonic-gradle-plugins">Enonic Gradle plugin</a> builds an app into a single file, today a jar, that XP installs as one unit; the name is set as <code>appName</code> in <em>gradle.properties</em>. See <a href="tooling/build.ahtml">Build system</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

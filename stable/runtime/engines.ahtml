@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Main</title>
+<title>JavaScript engines</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,11 +437,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Main</h1>
+<h1>JavaScript engines</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#main_ts">main.ts</a></li>
+<li><a href="#choosing">Choosing an engine</a></li>
+<li><a href="#nashorn">Nashorn</a></li>
+<li><a href="#graaljs">GraalJS</a>
+<ul class="sectlevel2">
+<li><a href="#detecting_the_engine">Detecting the engine</a></li>
+<li><a href="#graaljs-limits">Not supported</a></li>
+<li><a href="#graaljs-interop">Java interop</a></li>
+<li><a href="#contexts">Script contexts</a></li>
+<li><a href="#trying_it_out">Trying it out</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -449,54 +459,252 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Handle application lifecycle events via <code>main.ts</code>.</p>
+<p>Server-side code in an Enonic app runs on an embedded JavaScript engine inside the JVM - see <a href="../runtime.ahtml">Runtime</a>. Two engines are available: <strong>Nashorn</strong>, the default, and <strong>GraalJS</strong>, available as a preview since XP 8.1.0.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="main_ts"><a class="link" href="#main_ts">main.ts</a></h2>
+<h2 id="choosing"><a class="link" href="#choosing">Choosing an engine</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic apps may contain a special <code>main.ts</code> at <code>src/main/resources/main.ts</code>.</p>
+<p>The engine is chosen per application. Declare it in <em>build.gradle</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">app {
+    scriptEngine = 'GraalJS'
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><code>main.ts</code> is invoked when an application lifecycle event occurs. A common use is initialization — creating repositories, registering event listeners when the application starts — and cleaning up resources when the application stops.</p>
+<p>The value becomes the <code>X-Script-Engine</code> header in the application&#8217;s bundle manifest, and the app&#8217;s tests run on the same engine. An application that declares no engine runs on the installation default, set by <code>xp.script-engine</code> in the platform&#8217;s <a href="https://developer.enonic.com/docs/platform/stable/config/system#script-engine">system properties</a>. The default is <code>Nashorn</code>.</p>
 </div>
 <div class="paragraph">
-<p>The code should complete as quickly as possible to prevent the application from stalling. Never call remote endpoints or wait in loops for events at the top level of <code>main.ts</code>.</p>
+<p>Applications on different engines coexist in the same installation, so a single app can be moved to GraalJS and back without touching the rest.</p>
 </div>
-<div class="admonitionblock tip">
+<div class="paragraph">
+<p>Every module runs in ECMAScript <strong>strict mode</strong>, on both engines. Nothing about how you <strong>write</strong> an app changes with the engine: the same modules, the same libraries, the same <a href="java-bridge.ahtml">Java bridge</a>. What changes is the language level and the execution environment around them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="nashorn"><a class="link" href="#nashorn">Nashorn</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nashorn is the default and the supported engine, shipped with every XP release since 7.x. It implements ECMAScript 5.1, with only a subset of later (ES2015+) features. Target ES5 when compiling TypeScript for Nashorn. See <a href="../tooling/typescript.ahtml#ecmascript-target">ECMAScript target</a> for build configuration.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="graaljs"><a class="link" href="#graaljs">GraalJS</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="63" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <clipPath id="r">
+    <rect width="63" height="20" rx="3" fill="#fff"/>
+  </clipPath>
+  <g clip-path="url(#r)">
+    <rect width="63" height="20" fill="#dfb317"/>
+    <rect width="63" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision"
+     font-size="110">
+    <text x="315" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="426">preview</text>
+    <text x="315" y="140" transform="scale(.1)" textLength="426">preview</text>
+  </g>
+</svg></span> GraalJS is the engine that will replace Nashorn. It supports modern ECMAScript, so the build can preserve newer JavaScript syntax. This does not add native TypeScript support: TypeScript must still be compiled to JavaScript before deployment. See <a href="../tooling/typescript.ahtml#ecmascript-target">ECMAScript target</a>.</p>
+</div>
+<div class="admonitionblock warning">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-If you need to perform time-consuming work during startup, run it from a <a href="../background/tasks.ahtml">task</a> instead.
+GraalJS is not for production use. Nashorn remains the supported engine, and what follows may change while GraalJS is in preview.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Running code when the application starts:</p>
+<p>ES5 remains a common syntax target when supporting both engines. An app must also account for the runtime and Java interoperability differences described below when switching engines.</p>
+</div>
+<div class="sect2">
+<h3 id="detecting_the_engine"><a class="link" href="#detecting_the_engine">Detecting the engine</a></h3>
+<div class="paragraph">
+<p>GraalJS installs a <code>Graal</code> global, and Nashorn has no such name:</p>
 </div>
 <div class="listingblock">
-<div class="title">main.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Log application start
-log.info(`Application ${app.name} started`);</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">if (typeof Graal !== 'undefined') {
+    log.info(`${Graal.language} ${Graal.versionECMAScript}`);  // JavaScript 2026
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Running code when the application stops:</p>
+<p><code>Graal.versionECMAScript</code> is the year of the ECMAScript compatibility mode in force. <code>Graal.versionGraalVM</code> gives the GraalVM version. See the <a href="https://www.graalvm.org/latest/reference-manual/js/JavaScriptCompatibility/#graal-object">Graal object</a> in the GraalJS compatibility reference.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="graaljs-limits"><a class="link" href="#graaljs-limits">Not supported</a></h3>
+<div class="paragraph">
+<p>A current-standard engine brings browser and Node.js expectations with it. XP is a different environment:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">ES modules</dt>
+<dd>
+<p><strong>Not supported as a loading mechanism.</strong> XP loads every file as a CommonJS module, wrapped in a function, on both engines. GraalJS can parse <code>import</code> and <code>export</code>, but a file XP loads is never evaluated as an ES module, so those statements fail at runtime. Write them in TypeScript and let the build transpile them; see <a href="globals.ahtml#esm">ECMAScript modules</a>.</p>
+</dd>
+<dt class="hdlist1"><code>async</code> / <code>await</code></dt>
+<dd>
+<p><strong>Not supported.</strong> Write synchronous code, and move work that should not block a request into a <a href="../background/tasks.ahtml">task</a>.</p>
+</dd>
+<dt class="hdlist1">Node.js APIs</dt>
+<dd>
+<p><strong>Not supported.</strong> No <code>process</code>, <code>Buffer</code> or <code>global</code>, and no <code>node_modules</code> resolution.</p>
+</dd>
+<dt class="hdlist1">Web APIs</dt>
+<dd>
+<p><strong>Partially supported.</strong> <code>TextEncoder</code> and <code>TextDecoder</code> are available. Further APIs may become available in future GraalJS versions, while others, such as <code>fetch</code> and <code>setTimeout</code>, might never be supported. For HTTP, mail, storage and the rest, use the platform <a href="../libraries.ahtml">libraries</a>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="graaljs-interop"><a class="link" href="#graaljs-interop">Java interop</a></h3>
+<div class="paragraph">
+<p>The <a href="java-bridge.ahtml">Java bridge</a> is identical on both engines: the same bridge object, the same beans, the same libraries. What differs is conversion. Nashorn converted values implicitly as they crossed between JavaScript and Java, whereas GraalJS converts nothing. Four rules follow from that, and code written to observe them runs unchanged on either engine.</p>
+</div>
+<div class="sect3">
+<h4 id="convert_values_at_the_boundary"><a class="link" href="#convert_values_at_the_boundary">Convert values at the boundary</a></h4>
+<div class="paragraph">
+<p>Values are converted explicitly: on the way into Java with <code>toScriptValue</code>, and on the way back out with <code>toNativeObject</code>.</p>
 </div>
 <div class="listingblock">
-<div class="title">main.ts</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// Log application stop
-__.disposer(() =&gt; {
-    log.info(`Application ${app.name} stopped`);
-});</code></pre>
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const bean = __.newBean&lt;MyBean&gt;('com.example.MyBean');
+
+bean.setConfig(__.toScriptValue(params.config));
+
+const result = __.toNativeObject(bean.execute());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A Java map returned without conversion remains a Java object. Inspecting it with the standard JavaScript operations returns the methods of its class instead of its entries, and throws nothing along the way. An individual property read may still return the expected value, which is what makes the omission easy to overlook.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const map = bean.getConfig();       // a Java Map, unconverted
+
+const mode = map.mode;              // 'live' - the read succeeds
+const keys = Object.keys(map);      // ['get', 'put', 'size', ...]
+const json = JSON.stringify(map);   // '{}'
+const copy = {...map};              // {}
+
+const config = __.toNativeObject(bean.getConfig());   // a JavaScript object</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Java lists are the exception. They present array semantics on both engines, so index access and iteration require no conversion.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="call_setters_rather_than_assigning_properties"><a class="link" href="#call_setters_rather_than_assigning_properties">Call setters rather than assigning properties</a></h4>
+<div class="paragraph">
+<p>Nashorn accepted an assignment to a property named after the setter and rewrote it into a call to that setter. GraalJS exposes the bean&#8217;s methods and its public fields, and nothing else, so no such property exists and the assignment fails with an <code>Unknown identifier</code> error.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setValue(42);   // supported on both engines
+bean.value = 42;     // Nashorn only; fails on GraalJS</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TypeScript declarations written for a bean should therefore declare its setters and omit the properties, so that the unsupported form does not compile.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="pass_the_type_the_method_declares"><a class="link" href="#pass_the_type_the_method_declares">Pass the type the method declares</a></h4>
+<div class="paragraph">
+<p>Arguments are not coerced to the declared parameter type. HTTP request parameters, for instance, always arrive as strings and must be parsed before they reach a Java method that expects a number.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">bean.setCount(req.params.count);                 // fails: a string is not an int
+bean.setCount(parseInt(req.params.count, 10));   // supported on both engines</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="do_not_determine_java_types_from_javascript"><a class="link" href="#do_not_determine_java_types_from_javascript">Do not determine Java types from JavaScript</a></h4>
+<div class="paragraph">
+<p>The standard type-tag idiom reported the name of the Java class on Nashorn. On GraalJS it reports a generic tag, so a branch written against that string stops matching, and it does so silently.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">Object.prototype.toString.call(value);
+// Nashorn: '[object com.example.Thing]'
+// GraalJS: '[object Object]'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Convert the value at the boundary and branch on the converted result, or perform the type test in Java, where the type is known.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The bridge XP supports is the <code>__</code> object, on both engines. Interop globals installed by an engine itself, among them the <code>Java</code> object, are not part of the XP API, and code written against them is not portable between engines.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>GraalJS is documented by its maintainers at <a href="https://www.graalvm.org/javascript/docs/">graalvm.org</a>. That reference describes the engine as it is distributed standalone; XP embeds it, so it should be read together with <a href="#graaljs-limits">Not supported</a> above. What the engine is capable of and what an application may rely on are not the same set.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="contexts"><a class="link" href="#contexts">Script contexts</a></h3>
+<div class="paragraph">
+<p>GraalJS executes an application in <strong>script contexts</strong>. The rules below follow from that, and they are stricter versions of what <a href="../runtime.ahtml#threading">threading</a> already requires.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">An application gets a pool of contexts</dt>
+<dd>
+<p>Contexts are created lazily as concurrency demands them, and <strong>module-level state is per context</strong>. Two requests may load the same module and see two different copies of its top-level variables. Treat top-level state as read-only, and put anything that must be shared in a repo node, the cache library, or another explicit store.</p>
+</dd>
+<dt class="hdlist1">Compiled code is shared</dt>
+<dd>
+<p>One engine serves the whole installation, and the code it compiles is cached across every context built from it. A module parsed while one context starts is reused by the next.</p>
+</dd>
+<dt class="hdlist1">Values cannot leave their context</dt>
+<dd>
+<p>A JavaScript function or object belongs to the context that created it. <a href="../libraries/lib-task.ahtml#executefunction"><code>executeFunction()</code></a> is therefore unsupported. Submit a <a href="../background/tasks.ahtml">named task</a> with <code>submitTask()</code> instead.</p>
+</dd>
+<dt class="hdlist1">Disposers are registered during start-up</dt>
+<dd>
+<p>Register <code>__.disposer</code> from <code>main.ts</code>, or from a module it loads while starting. See <a href="java-bridge.ahtml#disposer"><code>__.disposer</code></a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The size of the context pool is tuned in the platform&#8217;s <a href="https://developer.enonic.com/docs/platform/stable/config/system#script-engine">system properties</a>. The defaults normally need no attention.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="trying_it_out"><a class="link" href="#trying_it_out">Trying it out</a></h3>
+<div class="paragraph">
+<p>Run your test suite against both engines before switching an app. The differences above are the ones the platform imposes; a dependency written against Nashorn&#8217;s language level can have its own. With <code>app { scriptEngine }</code> set, the Gradle plugin runs the app&#8217;s tests on that engine.</p>
 </div>
 </div>
 </div>
@@ -504,7 +712,7 @@ __.disposer(() =&gt; {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>

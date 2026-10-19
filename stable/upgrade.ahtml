@@ -442,8 +442,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#choosing_upgrade_notes">Choosing upgrade notes</a></li>
-<li><a href="#xp-8-0">XP 8.0</a></li>
 <li><a href="#version_bump">Version bump</a></li>
+<li><a href="#xp-8-0">XP 8.0</a></li>
+<li><a href="#xp-8-1">XP 8.1</a>
+<ul class="sectlevel2">
+<li><a href="#deprecations">Deprecations</a></li>
+<li><a href="#xp-8-1-java">Java APIs</a></li>
+<li><a href="#behaviour_changes">Behaviour changes</a></li>
+<li><a href="#worth_adopting">Worth adopting</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -489,55 +497,493 @@ When building a new Enonic application, use the <a href="https://market.enonic.c
 </div>
 </div>
 <div class="sect1">
-<h2 id="xp-8-0"><a class="link" href="#xp-8-0">XP 8.0</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>XP 8.0 is the baseline for this documentation. The <a href="upgrade/xp7.ahtml">XP 7 migration guide</a> covers changes to the build system, descriptors, application code and APIs when moving from XP 7. There are currently no later minor-release upgrade notes in this stable documentation.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="version_bump"><a class="link" href="#version_bump">Version bump</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Set the platform version in <em>gradle.properties</em> to the release you are targeting. For XP 8.0:</p>
+<p>Set the platform version in <em>gradle.properties</em> to the release you are targeting:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">xpVersion = 8.0.0</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">xpVersion = 8.1.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>TypeScript projects also need compatible type definitions. Update the <code>@enonic-types</code> packages used by your application to versions matching the target XP release:</p>
+<p>TypeScript projects also need the matching type definitions, or the parameters and functions added in the release will not type-check:</p>
 </div>
 <div class="listingblock">
 <div class="title">package.json</div>
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
   "devDependencies": {
-    "@enonic-types/global": "^8.0.0",
-    "@enonic-types/lib-content": "^8.0.0"
+    "@enonic-types/global": "^8.1.0",
+    "@enonic-types/lib-content": "^8.1.0"
   }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>After applying the relevant upgrade notes and installing the updated dependencies, rebuild and deploy to a sandbox running the target XP version:</p>
+<p>Then rebuild and deploy:</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code class="language-sh" data-lang="sh">enonic project deploy</code></pre>
+<pre>enonic project deploy</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Verify the application&#8217;s behavior in that sandbox before deploying to production.</p>
+<p>The app builds and runs. What follows is work that can be done at your own pace.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="xp-8-0"><a class="link" href="#xp-8-0">XP 8.0</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XP 8.0 is the baseline for this documentation. The <a href="upgrade/xp7.ahtml">XP 7 migration guide</a> covers changes to the build system, descriptors, application code and APIs when moving from XP 7.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="xp-8-1"><a class="link" href="#xp-8-1">XP 8.1</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No breaking changes for JavaScript application code. Every API deprecated in 8.1 still works, and every replacement ships with 8.1.0, apart from the Java macro instruction noted below.</p>
+</div>
+<div class="sect2">
+<h3 id="deprecations"><a class="link" href="#deprecations">Deprecations</a></h3>
+<div class="sect3">
+<h4 id="xp-8-1-lib-content"><a class="link" href="#xp-8-1-lib-content">lib-content and lib-node</a></h4>
+<div class="paragraph">
+<p><a href="libraries/lib-content.ahtml#getchildren"><code>getChildren()</code></a> in lib-content and <a href="libraries/lib-node.ahtml#findchildren"><code>findChildren()</code></a> in lib-node are deprecated. A query with <code>parent</code> does the same job: it takes the same path or id, and where <code>sort</code> is omitted it applies the child order stored on the parent, so the result comes back in the order it did before.</p>
+</div>
+<div class="listingblock">
+<div class="title">Content - before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getChildren} from '/lib/xp/content';
+
+const result = getChildren({
+    key: '/mysite/articles',
+    start: 0,
+    count: 20
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Content - after</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {query} from '/lib/xp/content';
+
+const result = query({
+    parent: '/mysite/articles',
+    start: 0,
+    count: 20
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>hits</code> carries the same contents as before, and <code>total</code> the same count.</p>
+</div>
+<div class="listingblock">
+<div class="title">Nodes - before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.findChildren({
+    parentKey: '/content',
+    count: 100,
+    recursive: true
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Nodes - after</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const result = repo.query({
+    parent: '/content',
+    count: 100,
+    recursive: true
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three parameters change name or shape:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>childOrder</code></dt>
+<dd>
+<p>Use <code>sort</code>, which takes the same expression. Omit it to keep the parent&#8217;s child order.</p>
+</dd>
+<dt class="hdlist1"><code>countOnly</code></dt>
+<dd>
+<p>Ask for no hits instead - <code>count: 0</code> - and read <code>total</code>.</p>
+</dd>
+<dt class="hdlist1"><code>recursive</code></dt>
+<dd>
+<p>Same name, same meaning. A subtree has no child order of its own, so pass <code>sort</code> where the order of a recursive result matters.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Moving to a query also opens up everything a query can do that <code>getChildren()</code> could not: filters, content types, aggregations, highlighting, and the <code>returns</code> parameter that has each hit carry named index fields instead of the whole content.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xp-8-1-lib-task"><a class="link" href="#xp-8-1-lib-task">lib-task</a></h4>
+<div class="paragraph">
+<p><a href="libraries/lib-task.ahtml#executefunction"><code>executeFunction()</code></a> is deprecated and will be removed together with the Nashorn engine. It is also unsupported on the <a href="runtime/engines.ahtml#graaljs">GraalJS</a>, where a function cannot cross from one script context to another - so this is the one clean-up to do before trying that engine.</p>
+</div>
+<div class="paragraph">
+<p>Move the body of the function into a <a href="background/tasks.ahtml">named task</a>, and submit it by descriptor.</p>
+</div>
+<div class="listingblock">
+<div class="title">Before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {executeFunction} from '/lib/xp/task';
+
+const taskId = executeFunction({
+    description: 'Reindex the catalog',
+    func: () =&gt; {
+        reindexCatalog(100);
+    }
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After - src/main/resources/tasks/reindex-catalog/reindex-catalog.yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Task"
+description: "Reindex the catalog"
+form:
+- type: "Long"
+  name: "batchSize"
+  label: "Items per batch"
+  occurrences:
+    min: 1
+    max: 1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After - src/main/resources/tasks/reindex-catalog/reindex-catalog.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">export function run(params: { batchSize: number }): void {
+    reindexCatalog(params.batchSize);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After - submitting it</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {submitTask} from '/lib/xp/task';
+
+const taskId = submitTask({
+    descriptor: 'reindex-catalog',
+    config: {
+        batchSize: 100
+    }
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Two differences to plan for. A named task takes its input as <code>config</code>, validated against the descriptor&#8217;s form, rather than closing over the variables around it - anything the function read from its surroundings has to become a parameter. And a named task is distributable: the cluster picks a node that accepts it, which may not be the node that submitted it, so the task must not depend on running anywhere in particular.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xp-8-1-lib-portal"><a class="link" href="#xp-8-1-lib-portal">lib-portal</a></h4>
+<div class="paragraph">
+<p>The <code>params</code> parameter is deprecated on <a href="libraries/lib-portal.ahtml#imageUrl"><code>imageUrl()</code></a> and <a href="libraries/lib-portal.ahtml#attachmentUrl"><code>attachmentUrl()</code></a>. The image API reads no query parameters but <code>quality</code>, <code>background</code> and <code>filter</code>, and the attachment API none but <code>download</code>, all set by their own parameters. Any other custom parameter only makes URLs to the same media differ, and one of those names - such as <code>params: {filter: 'blur(10)'}</code> - changes the image past the parameter meant for it. Use <code>quality</code>, <code>background</code>, <code>filter</code> and <code>download</code> instead.</p>
+</div>
+<div class="paragraph">
+<p>The <code>baseUrl</code> parameter is deprecated on <a href="libraries/lib-portal.ahtml#imageUrl"><code>imageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#attachmentUrl"><code>attachmentUrl()</code></a> and <a href="libraries/lib-portal.ahtml#apiurl"><code>apiUrl()</code></a>. Where media or an API is served from is a deployment decision, and passing it per call means every call site has to agree on it.</p>
+</div>
+<div class="listingblock">
+<div class="title">Before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)',
+    baseUrl: 'https://cdn.example.com'
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {imageUrl} from '/lib/xp/portal';
+
+const url = imageUrl({
+    id: content._id,
+    scale: 'width(800)'
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For media, declare the host once in <em>com.enonic.xp.portal.cfg</em>. A mount that serves the media APIs itself always wins, so a site needs both keys:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">media.defaultBaseUrl = https://cdn.example.com
+legacy.mediaApiAutoMount.enabled = false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A Base URL configured on the site itself does the same for that one site. See <a href="https://developer.enonic.com/docs/platform/stable/config/cms#media_base_url">serving media from another host</a>.</p>
+</div>
+<div class="paragraph">
+<p>For APIs, the virtual host that receives the request declares where they live:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">mapping.example.context.portal.apiBaseUrl = https://apis.example.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="https://developer.enonic.com/docs/platform/stable/config/vhosts#api-locations">API locations</a>.</p>
+</div>
+<div class="paragraph">
+<p>Both are read at URL generation, so the same code produces the right URL in every environment - and in a preview, a task or a headless client, where there may be no request to anchor to.</p>
+</div>
+<div class="paragraph">
+<p>Setting a project or branch on a request-following URL function switched it from the request to configuration, even for the request&#8217;s own project, so the URL left the virtual host the request came through. These parameters are deprecated in favour of the <a href="libraries/lib-portal.ahtml#url_parts">URL parts</a> functions, which resolve URLs from configuration alone:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>project</code> and <code>branch</code> on <a href="libraries/lib-portal.ahtml#pageurl"><code>pageUrl()</code></a>: use <a href="libraries/lib-portal.ahtml#pageurlparts"><code>pageUrlParts()</code></a> with a <code>scope</code> from <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>.</p>
+</li>
+<li>
+<p><code>id</code>, <code>path</code>, <code>project</code> and <code>branch</code> on <a href="libraries/lib-portal.ahtml#baseurl"><code>baseUrl()</code></a>: use <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>, with <code>key</code> naming the site. <code>baseUrl()</code> keeps <code>type</code>, and without parameters it is the base URL of the current site request.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Before</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {pageUrl} from '/lib/xp/portal';
+
+const url = pageUrl({
+    path: '/my-site/posts/first-post',
+    project: 'myproject',
+    branch: 'master',
+    type: 'absolute'
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">After</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {pageUrlParts, portalScope} from '/lib/xp/portal';
+
+const scope = portalScope({key: '/my-site', project: 'myproject', branch: 'master'});
+const parts = pageUrlParts({path: '/my-site/posts/first-post', scope});
+const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.queryString;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xp-8-1-lib-export"><a class="link" href="#xp-8-1-lib-export">lib-export</a></h4>
+<div class="paragraph">
+<p><code>batchSize</code> on <a href="libraries/lib-export.ahtml#exportnodes"><code>exportNodes()</code></a> is ignored. An export now reads each node at the exact version its scan observed, one at a time, so a subtree that changes while the export runs is written as it was seen rather than as a mixture of old and new. There is no read batch left to size - drop the parameter.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="xp-8-1-timestamps"><a class="link" href="#xp-8-1-timestamps">lib-app, lib-schema and lib-io</a></h4>
+<div class="paragraph">
+<p><code>modifiedTime</code> is deprecated on the icons, content types, schemas and application descriptors returned by lib-content, lib-schema and lib-app, and so is <a href="libraries/types.ahtml#resource"><code>Resource.getTimestamp()</code></a> in lib-io. These read from application resources, where the value comes from a jar entry timestamp - and build tools normalize those to a constant so that builds are reproducible, Gradle by default since version 9. Two different builds of the same app therefore report the same value.</p>
+</div>
+<div class="paragraph">
+<p>Code that used them as a cache key or an invalidation signal was therefore already unreliable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">const cacheKey = `icon-${contentType.icon.modifiedTime}`;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no drop-in replacement, and no general rule - what to key on depends on what the key is protecting. For an icon, or any other binary resource, a hash of the content itself is the dependable choice: it changes exactly when the bytes do, and only then. An application version is weaker than it looks - it stays the same across redeploys while you develop, even though each deploy is a new build.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="xp-8-1-java"><a class="link" href="#xp-8-1-java">Java APIs</a></h3>
+<div class="sect3">
+<h4 id="nodeservice"><a class="link" href="#nodeservice">NodeService</a></h4>
+<div class="paragraph">
+<p><code>NodeService</code> gains two methods for reading a subtree: <code>list</code> streams every entry beneath a parent in path order, filtered by what the caller may read, and <code>enumerate</code> returns the same entries one bounded batch at a time, with a cursor. <code>ListNodesResult</code> and its <code>recursive</code> flag are removed - the listing always covers the whole subtree, so code that collected ids through <code>ListNodesResult</code> moves to <code>list</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="applicationlistener"><a class="link" href="#applicationlistener">ApplicationListener</a></h4>
+<div class="paragraph">
+<p><code>ApplicationListener</code> is deprecated. It misses applications that were already active when the listener registered. Track <code>Application</code> services with a service tracker instead: <code>addingService</code> replays every active application on open and delivers future ones, and <code>removedService</code> is delivered before any replacement is registered.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="macroservice"><a class="link" href="#macroservice">MacroService</a></h4>
+<div class="paragraph">
+<p><code>MacroService.postProcessInstructionSerialize()</code> is deprecated. It turned a macro into an HTML comment that XP replaced with the macro&#8217;s output when rendering the page. XP no longer does that for these comments: the page shows the macro as written, such as <code>[mymacro]</code>. Pass rich text through <code>processHtml()</code> instead; the macros it finds are rendered with the page.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="applicationinvalidator"><a class="link" href="#applicationinvalidator">ApplicationInvalidator</a></h4>
+<div class="paragraph">
+<p><code>ApplicationInvalidator</code> and <code>ApplicationInvalidationLevel</code> are deprecated for the same reason as <code>ApplicationListener</code>: the callback arrives only after the application&#8217;s services are gone, possibly after a replacement has started. Track <code>Application</code> services instead.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="children_and_paths"><a class="link" href="#children_and_paths">Children and paths</a></h4>
+<div class="paragraph">
+<p><code>ContentService.findByParent()</code>, <code>findIdsByParent()</code> and <code>findPaths()</code> are deprecated, as are <code>NodeService.findByParent()</code> and <code>NodeQuery.Builder.withPath()</code>. A query does the same job and accepts every constraint a search supports:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ContentService.find()</code> with <code>ContentQuery.Builder.parentPath()</code> or <code>parentId()</code>, followed by <code>getByIds()</code> for the contents actually needed;</p>
+</li>
+<li>
+<p><code>find()</code> with <code>returnFields()</code> naming <code>_path</code>, in place of <code>findPaths()</code>;</p>
+</li>
+<li>
+<p><code>NodeService.findByQuery()</code> with <code>NodeQuery.Builder.parent()</code>, and <code>returnFields()</code> with <code>NodeIndexPath.PATH</code> in place of <code>withPath()</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="progress_listeners"><a class="link" href="#progress_listeners">Progress listeners</a></h4>
+<div class="paragraph">
+<p>Listener methods are renamed, so that every listener names its work the same way. The old methods are still called by the default implementations of the new ones:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>resolved()</code> replaces <code>PushContentListener.contentResolved()</code>, <code>NodeExportListener.nodeResolved()</code>, <code>NodeImportListener.nodeResolved()</code>, and <code>setTotal()</code> of <code>ApplyPermissionsListener</code> and <code>ApplyNodePermissionsListener</code>;</p>
+</li>
+<li>
+<p><code>CleanUpAuditLogListener.recordsDeleted()</code> replaces <code>processed()</code>; its <code>start()</code> and <code>finished()</code> are deprecated without a replacement.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="export_and_import"><a class="link" href="#export_and_import">Export and import</a></h4>
+<div class="paragraph">
+<p><code>ExportNodesParams.Builder.batchSize()</code> is ignored, as in lib-export. <code>ImportNodesParams.Builder.xsltFileName()</code> is ignored: use <code>xslt()</code> with a <code>VirtualFile</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="modified_times"><a class="link" href="#modified_times">Modified times</a></h4>
+<div class="paragraph">
+<p><code>getModifiedTime()</code> is deprecated on <code>Icon</code>, <code>BaseSchema</code>, <code>MacroDescriptor</code>, <code>ComponentDescriptor</code>, <code>CmsDescriptor</code>, <code>SiteDescriptor</code> and <code>StyleDescriptor</code>, and so is <code>Resource.getTimestamp()</code>, for the reasons given for <code>modifiedTime</code> in JavaScript.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="portal_urls"><a class="link" href="#portal_urls">Portal URLs</a></h4>
+<div class="paragraph">
+<p>The Java URL parameters follow the JavaScript ones:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>baseUrl</code> on <code>ImageUrlParams</code>, <code>AttachmentUrlParams</code>, <code>ProcessHtmlParams</code>, <code>ImageUrlGeneratorParams</code> and <code>AttachmentUrlGeneratorParams</code>: configure where the media APIs are served, with a virtual host mapping or <code>media.defaultBaseUrl</code> in <code>com.enonic.xp.portal.cfg</code>;</p>
+</li>
+<li>
+<p><code>setBaseUrl()</code> on <code>ApiUrlParams</code> and <code>ApiUrlGeneratorParams</code>: expose the API location as a virtual host mapping;</p>
+</li>
+<li>
+<p><code>projectName()</code> and <code>branch()</code> on <code>PageUrlParams</code>: use <code>PortalUrlService.pageUrlParts()</code> with a <code>PortalScope</code> resolved for the project and branch;</p>
+</li>
+<li>
+<p><code>setProjectName()</code>, <code>setBranch()</code>, <code>setId()</code> and <code>setPath()</code> on <code>BaseUrlParams</code>: use <code>PortalUrlService.portalScope()</code>;</p>
+</li>
+<li>
+<p><code>projectName()</code> and <code>branch()</code> on <code>ComponentUrlParams</code>: a component URL addresses a component of the page the request renders, in that request&#8217;s project and branch.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="scripts_and_tracing"><a class="link" href="#scripts_and_tracing">Scripts and tracing</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PortalScriptService.executeAsync()</code> and <code>ScriptRuntime.executeAsync()</code>: use <code>bootstrap()</code> for bootstrap scripts, or <code>execute()</code> on an executor of your choice.</p>
+</li>
+<li>
+<p><code>ScriptSettings.Builder.globalVariable()</code>, <code>ScriptSettings.getGlobalVariables()</code> and <code>ScriptTestSupport.addGlobalVariable()</code>: custom JavaScript globals are phased out, and <code>app</code> is the only supported global.</p>
+</li>
+<li>
+<p><code>Trace.putAll()</code> and <code>clear()</code>: record attributes with the typed <code>attribute()</code> methods; <code>Trace</code> will stop extending <code>Map</code>.</p>
+</li>
+<li>
+<p><code>getSize()</code>, <code>getBodyLength()</code> and <code>addTraceInfo()</code> of <code>BaseWebHandler</code>: XP records the response trace info itself.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="behaviour_changes"><a class="link" href="#behaviour_changes">Behaviour changes</a></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">URLs that do not resolve</dt>
+<dd>
+<p><a href="libraries/lib-portal.ahtml#pageurl"><code>pageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#imageUrl"><code>imageUrl()</code></a>, <a href="libraries/lib-portal.ahtml#attachmentUrl"><code>attachmentUrl()</code></a> and <a href="libraries/lib-portal.ahtml#processHtml"><code>processHtml()</code></a> generate a URL answered with 404, rather than one answered with 500, when the content it names does not resolve. See <a href="libraries/lib-portal.ahtml#unresolved_urls">URLs that do not resolve</a>.</p>
+</dd>
+<dt class="hdlist1">Rich text images</dt>
+<dd>
+<p><code>processHtml()</code> writes <code>sizes</code> only along with a <code>srcset</code> of at least one width, and an image the image API serves as stored gets no <code>srcset</code>. <code>srcset</code> and <code>sizes</code> come right after <code>src</code> in the <code>&lt;img&gt;</code> tag. The height of an image with an aspect ratio is rounded to the nearest pixel: a <code>21:9</code> image is now 329 pixels high at the default width of 768, rather than 324.</p>
+</dd>
+<dt class="hdlist1">Rich text macros</dt>
+<dd>
+<p><code>processHtml()</code> now looks up each macro itself, so macros render on any page, also outside a site. A macro no application provides is shown as written. HTML comments in the rich text stay plain comments: they are never run as macros.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="worth_adopting"><a class="link" href="#worth_adopting">Worth adopting</a></h3>
+<div class="paragraph">
+<p>None of these are deprecations. They are places where 8.1 offers a supported way to do something apps have had to work around.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Content Security Policy</dt>
+<dd>
+<p>A <code>Content-Security-Policy</code> header assembled by hand and set on the response is now folded into the request&#8217;s policy rather than sent verbatim, which means it is no longer the last word - a later contribution can add to it. Declare the policy through <a href="libraries/lib-portal.ahtml#csp"><code>csp()</code></a> instead: one policy is shared by the page, its layouts, its parts and any response processor, and the header is composed when the response is flushed.</p>
+</dd>
+<dt class="hdlist1">Data down the request pipeline</dt>
+<dd>
+<p>Properties assigned to the request object - <code>req.myFlag = true</code> - never reached anything downstream; the field is dropped when the request is handed on. <a href="libraries/lib-context.ahtml#setcustomlocalattribute"><code>setCustomLocalAttribute()</code></a> stores the value in the current execution instead, where implementations, response processors and the code after <code>next()</code> in a filter can all read it back.</p>
+</dd>
+<dt class="hdlist1">Initialization guards</dt>
+<dd>
+<p><a href="runtime/main.ahtml"><code>main.ts</code></a> now runs to completion before anything else in the app on the same node, so a flag that made every request check whether start-up had finished is no longer needed. Keep a guard for work that must happen once <strong>for the cluster</strong> - a node does not wait for <code>main.ts</code> on any other node, so two nodes can still initialize the same repository at the same time.</p>
+</dd>
+<dt class="hdlist1">Disposer registration</dt>
+<dd>
+<p><code>__.disposer()</code> registrations are remembered when they are made while the application is starting - from <code>main.ts</code>, or a module it loads during start-up. Registering one later is not dependable; move such registrations into start-up.</p>
+</dd>
+<dt class="hdlist1">URLs for a frontend of your own</dt>
+<dd>
+<p>A frontend that serves content from a host of its own builds its URLs from the <a href="libraries/lib-portal.ahtml#url_parts">URL parts</a> functions: <a href="libraries/lib-portal.ahtml#pageurlparts"><code>pageUrlParts()</code></a>, <a href="libraries/lib-portal.ahtml#imageurlparts"><code>imageUrlParts()</code></a>, <a href="libraries/lib-portal.ahtml#attachmenturlparts"><code>attachmentUrlParts()</code></a> and <a href="libraries/lib-portal.ahtml#processhtmlparts"><code>processHtmlParts()</code></a>, with the site or project resolved once by <a href="libraries/lib-portal.ahtml#portalscope"><code>portalScope()</code></a>.</p>
+</dd>
+<dt class="hdlist1">Width of rich text images</dt>
+<dd>
+<p>The <code>src</code> of every image in rich text was 768 pixels wide. <code>imageSrcWidth</code> of <a href="libraries/lib-portal.ahtml#processHtml"><code>processHtml()</code></a> sets that width; the height still follows the image&#8217;s style.</p>
+</dd>
+<dt class="hdlist1">Image styles of a given application</dt>
+<dd>
+<p>An image in rich text can name its style as <code>&lt;application&gt;:&lt;name&gt;</code>, where several applications define styles of the same name.</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-13 08:22:57 UTC
+Last updated 2026-10-19 15:55:22 UTC
 </div>
 </div>
 </body>
