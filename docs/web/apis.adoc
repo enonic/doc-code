@@ -190,6 +190,37 @@ Listing both mounts — `mount: ["web", "management"]` — makes the same API re
 
 The `allow` principal list is enforced on every request regardless of which endpoint served it.
 
+[#management-policy]
+=== Honouring virtual host policy
+
+image:xp-820.svg[XP 8.2.0,opts=inline] A https://developer.enonic.com/docs/platform/stable/config/vhosts#management-api-policy[virtual host on the management endpoint] selects what each API exposes through it. The mapping declares settings under `+context.api.<app-name>\:<api-name>.<setting>+` (the colon escaped, as in any properties file); XP copies them into the request context as attributes named `+api.<app-name>:<api-name>.<setting>+`. XP's own resources understand `verbs`, the comma separated list of operations the mapping exposes. An API of your own reads its settings from the same attributes and defines their meaning. An absent setting means unrestricted: a request without a matching mapping, or on the default management port, carries none.
+
+.src/main/resources/apis/cluster/cluster.ts
+[source,typescript]
+----
+import {get as getContext} from '/lib/xp/context';
+
+const KEY = 'com.example.ops:cluster';
+
+function allows(verb: string): boolean {
+    const value = getContext().attributes[`api.${KEY}.verbs`];
+    if (typeof value !== 'string' || value.trim() === '') {
+        return true;
+    }
+    const verbs = value.split(',').map((v) => v.trim());
+    return verbs.includes('*') || verbs.includes(verb);
+}
+
+export function GET(request: XP.Request): XP.Response {
+    if (!allows('list')) {
+        return {status: 403, body: {message: 'Verb [list] is not exposed on this virtual host'}};
+    }
+    return {body: {nodes: ['node-1', 'node-2']}};
+}
+----
+
+With `+mapping.ops.context.api.com.example.ops\:cluster.verbs = list+`, the mapping exposes `list` and nothing else the API guards.
+
 == apiUrl()
 
 To safely generate an API URL, use the `apiUrl()` function from the <<../libraries/lib-portal#,Portal library>>. It picks the right URL form based on the calling context — a contextual URL under the active service when called from a site, webapp, or admin tool, and `/api/` otherwise.
