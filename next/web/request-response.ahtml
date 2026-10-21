@@ -442,7 +442,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#http_functions">HTTP functions</a></li>
-<li><a href="#request">Request</a></li>
+<li><a href="#request">Request</a>
+<ul class="sectlevel2">
+<li><a href="#access-token">Token-authenticated requests</a></li>
+</ul>
+</li>
 <li><a href="#response">Response</a></li>
 <li><a href="#cookies">Cookies</a></li>
 </ul>
@@ -618,6 +622,52 @@ Modifications to the <code>headers</code> object do not affect the result of <co
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="access-token"><a class="link" href="#access-token">Token-authenticated requests</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> A request authenticated with an access token carries it as <code>accessToken</code> (<a href="../libraries/types.ahtml#request-access-token"><code>RequestAccessToken</code></a>), so a function can check the token&#8217;s scopes before acting. The token is one XP issued through <a href="https://developer.enonic.com/docs/platform/stable/security/access-tokens">device login</a>, or one of another issuer that the ID provider verified and passed to <a href="../libraries/lib-auth.ahtml#login"><code>login({accessToken})</code></a>; <code>issuer</code> tells them apart. The user is already logged in, restricted to the roles the token&#8217;s grant holds.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "accessToken": {
+    "issuer": "xp",  <i class="conum" data-value="1"></i><b>(1)</b>
+    "clientId": "my-cli",  <i class="conum" data-value="2"></i><b>(2)</b>
+    "grantId": "0199e1a2-6c3b-7d4e-8f90-1a2b3c4d5e6f",  <i class="conum" data-value="3"></i><b>(3)</b>
+    "scope": ["content:read"],  <i class="conum" data-value="4"></i><b>(4)</b>
+    "audience": ["api"]  <i class="conum" data-value="5"></i><b>(5)</b>
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Who issued the token: XP&#8217;s issuer name, or the upstream issuer of a promoted token.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The client that obtained the token, as it named itself; <code>null</code> if a promoted token does not say. Not a verified identity.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The grant the token was issued under, stable across refreshes; <code>null</code> for a promoted token.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The scopes the request was granted, sorted: the grant&#8217;s current scopes for an XP token, the token&#8217;s own for a promoted one. The roles they imply are already applied to the logged-in user.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The audiences the token is for, sorted.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The property is absent on a request authenticated any other way.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -767,7 +817,7 @@ Modifications to the <code>headers</code> object do not affect the result of <co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-21 08:28:36 UTC
+Last updated 2026-10-21 08:50:16 UTC
 </div>
 </div>
 </body>

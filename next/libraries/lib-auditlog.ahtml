@@ -713,6 +713,13 @@ const log = getAuditEntry({
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">actor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> The principal that acted on the user&#8217;s behalf, when the two differ. Defaults to the actor of the current context when the entry is written for the context&#8217;s user, see <a href="../libraries/lib-auth.ahtml#login"><code>login()</code></a>; an entry written for another user records no actor unless one is given.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">objects</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -732,7 +739,7 @@ const log = getAuditEntry({
 <p>Returns</p>
 </div>
 <div class="paragraph">
-<p><strong>Object</strong> : Created audit log entry as JSON.</p>
+<p><strong>Object</strong> : Created audit log entry as JSON. An entry carries <code>actor</code> only when one was recorded; the same holds for entries returned by <code>get()</code> and <code>find()</code>.</p>
 </div>
 <div class="paragraph lead">
 <p>Examples</p>
@@ -771,7 +778,7 @@ const log2 = logAuditEntry({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-21 08:28:36 UTC
+Last updated 2026-10-21 08:50:16 UTC
 </div>
 </div>
 </body>

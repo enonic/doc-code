@@ -452,6 +452,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#worth_adopting">Worth adopting</a></li>
 </ul>
 </li>
+<li><a href="#xp-8-2">XP 8.2</a>
+<ul class="sectlevel2">
+<li><a href="#autologin_may_run_where_it_did_not_before">autoLogin may run where it did not before</a></li>
+<li><a href="#worth_adopting_flow_gating">Worth adopting: flow gating</a></li>
+<li><a href="#deprecations_2">Deprecations</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -504,7 +511,7 @@ When building a new Enonic application, use the <a href="https://market.enonic.c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">xpVersion = 8.1.0</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">xpVersion = 8.2.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -515,8 +522,8 @@ When building a new Enonic application, use the <a href="https://market.enonic.c
 <div class="content">
 <pre class="highlight"><code class="language-json" data-lang="json">{
   "devDependencies": {
-    "@enonic-types/global": "^8.1.0",
-    "@enonic-types/lib-content": "^8.1.0"
+    "@enonic-types/global": "^8.2.0",
+    "@enonic-types/lib-content": "^8.2.0"
   }
 }</code></pre>
 </div>
@@ -980,10 +987,39 @@ const url = (parts.baseUrl ?? 'https://www.example.com') + parts.path + parts.qu
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="xp-8-2"><a class="link" href="#xp-8-2">XP 8.2</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No breaking changes for application code. The rest of this section concerns ID provider implementations.</p>
+</div>
+<div class="sect2">
+<h3 id="autologin_may_run_where_it_did_not_before"><a class="link" href="#autologin_may_run_where_it_did_not_before">autoLogin may run where it did not before</a></h3>
+<div class="paragraph">
+<p><code>autoLogin</code> now runs for every ID provider enabled on the request&#8217;s virtual host - the <code>default</code> provider first - until one of them authenticates the request or returns a response. Previously only the <code>default</code> provider&#8217;s <code>autoLogin</code> ran, so a provider configured as <code>enabled</code> will now have its <code>autoLogin</code> called on requests where it never ran before. Implementations that quietly return when they find no credentials to act on - the common shape - need no change.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="worth_adopting_flow_gating"><a class="link" href="#worth_adopting_flow_gating">Worth adopting: flow gating</a></h3>
+<div class="paragraph">
+<p>A vhost may now restrict the flows an ID provider serves. XP enforces <code>login</code>, <code>autologin</code> and <code>logout</code> itself, and hands the configured list to the implementation as <code>request.idProviderSettings.flows</code> - empty when no restriction applies. An ID provider with custom <code>GET</code>/<code>POST</code> endpoints can gate additional flows of its own on it, letting administrators enable or disable those endpoints per vhost - the Standard ID Provider gates its (deprecated) basic authentication on the additional <code>basic</code> flow this way. See <a href="web/id-providers.ahtml#flows">Flows</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deprecations_2"><a class="link" href="#deprecations_2">Deprecations</a></h3>
+<div class="paragraph">
+<p>For code reaching the <code>VirtualHost</code> Java API through the <a href="runtime/java-bridge.ahtml">Java bridge</a>: <code>getIdProviderKeys()</code> is deprecated in favor of <code>getIdProviders()</code> - a map of the enabled ID providers to their per-vhost configuration (flow lists today), the default provider first.</p>
+</div>
+<div class="paragraph">
+<p>In <code>DispatchConstants</code>, the connector constants are renamed after the endpoints they serve: <code>WEB_CONNECTOR</code>, <code>MANAGEMENT_CONNECTOR</code> and <code>STATISTICS_CONNECTOR</code> replace the deprecated <code>XP_CONNECTOR</code>, <code>API_CONNECTOR</code> and <code>STATUS_CONNECTOR</code>. The values are unchanged, so code comparing the request&#8217;s connector attribute keeps working either way.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-21 08:28:36 UTC
+Last updated 2026-10-21 08:50:16 UTC
 </div>
 </div>
 </body>

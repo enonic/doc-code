@@ -450,9 +450,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#login">login</a></li>
 <li><a href="#logout">logout</a></li>
 <li><a href="#autologin">autoLogin</a></li>
+<li><a href="#deviceverification">deviceVerification</a></li>
 <li><a href="#getpost_etc">GET/POST etc</a></li>
 </ul>
 </li>
+<li><a href="#flows">Flows</a></li>
 <li><a href="#sample">Sample</a></li>
 </ul>
 </div>
@@ -541,6 +543,10 @@ This diagram covers the ID provider&#8217;s <strong>endpoint</strong> surfaces. 
 <dd>
 <p>The base endpoint dispatches to the provider&#8217;s <code>GET</code>/<code>POST</code>/… HTTP functions.</p>
 </dd>
+<dt class="hdlist1"><code>/_/idprovider/&lt;name&gt;/device/code</code>, <code>/_/idprovider/&lt;name&gt;/device</code>, <code>/_/idprovider/&lt;name&gt;/token</code></dt>
+<dd>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> XP&#8217;s own <a href="https://developer.enonic.com/docs/platform/stable/security/access-tokens">device login</a> endpoints, served for the provider&#8217;s users when the vhost enables the <code>device</code> flow. The implementation does not serve them; it only renders the verification page, through <a href="#deviceverification"><code>deviceVerification</code></a>.</p>
+</dd>
 </dl>
 </div>
 <div class="paragraph">
@@ -554,7 +560,7 @@ This diagram covers the ID provider&#8217;s <strong>endpoint</strong> surfaces. 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The endpoint is <strong>mounted</strong> everywhere, but an ID provider only <strong>activates</strong> for a request when it is bound to the request&#8217;s virtual host. The vhost mapping declares which ID provider(s) apply, and the one marked <code>default</code> is the provider whose <code>autoLogin</code> filter runs. See the <a href="https://developer.enonic.com/docs/platform/xp8/config/vhosts">vhost configuration</a> for the binding rules.</p>
+<p>The endpoint is <strong>mounted</strong> everywhere, but an ID provider only <strong>activates</strong> for a request when it is bound to the request&#8217;s virtual host. The vhost mapping declares which ID provider(s) apply and, optionally, <a href="#flows">which flows</a> each of them serves. See the <a href="https://developer.enonic.com/docs/platform/xp8/config/vhosts">vhost configuration</a> for the binding rules.</p>
 </div>
 </td>
 </tr>
@@ -632,6 +638,39 @@ This forms does not support CMS-specific input types, such as contentSelector an
 </div>
 <div class="paragraph">
 <p>To implement your ID provider, export one or more of the following functions:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> Every function receives the <a href="request-response.ahtml#request">request</a>. On an ID provider&#8217;s own function calls the request also carries <code>request.idProviderSettings</code> (<a href="../libraries/types.ahtml#id-provider-settings"><code>IdProviderSettings</code></a>): what the virtual host serving the request declares for this ID provider in <a href="https://developer.enonic.com/docs/platform/stable/config/vhosts"><code>com.enonic.xp.web.vhost.cfg</code></a>, read from <code>mapping.&lt;name&gt;.idProvider.&lt;idp&gt;.*</code> and the mapping&#8217;s <code>audience</code>. It is absent when the host does not map the ID provider.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "idProviderSettings": {
+    "flows": ["device", "login", "logout"],  <i class="conum" data-value="1"></i><b>(1)</b>
+    "audience": ["api"],  <i class="conum" data-value="2"></i><b>(2)</b>
+    "scopes": {  <i class="conum" data-value="3"></i><b>(3)</b>
+      "content:read": {"roles": ["role:cms.project.site.viewer"], "required": false},
+      "profile": {"roles": [], "required": true}
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The flows the host serves for the ID provider, sorted. Empty means no restriction. An ID provider uses it to enable its own flows: the standard ID provider serves basic authentication only where <code>basic</code> is listed or the list is empty.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The audiences the host serves, sorted. Empty means the host accepts only tokens whose audience is XP&#8217;s own issuer name.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The scope catalogue (<a href="../libraries/types.ahtml#id-provider-scope"><code>IdProviderScope</code></a> per id): the roles each scope implies and whether the user must keep it. An empty role list is a label-only scope.</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -722,8 +761,205 @@ This effectively blocks all unauthorised access attempts for the protected servi
 </td>
 <td class="content">
 <div class="paragraph">
-<p><code>autoLogin</code> works only for identity providers that are configured as <code>default</code> in the virtual host mapping. Visit the <a href="https://developer.enonic.com/docs/platform/xp8/config/vhosts">vhost configuration</a> section for more details.</p>
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> <code>autoLogin</code> runs for every ID provider on the request&#8217;s virtual host that has the <code>autologin</code> <a href="#flows">flow</a> enabled — the <code>default</code> provider first — until one of them authenticates the request or returns a response. In earlier versions only the <code>default</code> provider&#8217;s <code>autoLogin</code> ran. Visit the <a href="https://developer.enonic.com/docs/platform/xp8/config/vhosts">vhost configuration</a> section for more details.</p>
 </div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> A bearer token XP issued itself is accepted before <code>autoLogin</code> runs, on a vhost that enables the <code>autologin</code> flow for the user&#8217;s ID provider and accepts the token&#8217;s audience (one it declares, or XP&#8217;s own issuer name on a vhost declaring none). <code>autoLogin</code> is then not called: the request is already authenticated, and the functions handling it see the user and <a href="request-response.ahtml#access-token"><code>request.accessToken</code></a>. Any other bearer token reaches <code>autoLogin</code> untouched. See <a href="https://developer.enonic.com/docs/platform/stable/security/access-tokens">access tokens</a>.</p>
+</div>
+<div class="paragraph">
+<p>An ID provider that verifies a bearer token of its upstream identity system can pass the token on with the <code>accessToken</code> option of <a href="../libraries/lib-auth.ahtml#login"><code>login()</code></a>. XP then applies the same rules as to its own tokens: the audience must be one the virtual host declares, and the scopes map to roles through the host&#8217;s scope catalogue for the ID provider. The request then carries the token as <code>request.accessToken</code>. Verifying the token stays the ID provider&#8217;s job.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {login} from '/lib/xp/auth';
+
+export function autoLogin(req: Request): void {
+    const claims = verifyBearer(req); // the ID provider's own verification against its upstream
+    if (!claims) {
+        return;
+    }
+    login({
+        user: claims.sub,
+        idProvider: 'myIdProvider',
+        skipAuth: true,
+        scope: 'REQUEST',
+        accessToken: {
+            issuer: claims.iss,
+            clientId: claims.azp ?? claims.client_id,
+            scope: ([] as string[]).concat(claims.scp ?? claims.scope ?? []).flatMap((v) =&gt; v.split(' ')).filter(Boolean),
+            audience: ([] as string[]).concat(claims.aud ?? [])
+        }
+    });
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deviceverification"><a class="link" href="#deviceverification">deviceVerification</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> XP serves the OAuth device flow (<a href="https://datatracker.ietf.org/doc/html/rfc8628">RFC 8628</a>) for an ID provider&#8217;s users: a command-line tool or another browserless client asks XP for a code, the user opens a page, signs in and approves, and the client receives XP-issued tokens. XP owns the protocol, the codes and the tokens; the page the user sees is the ID provider&#8217;s, as the login page is. An ID provider that exports <code>deviceVerification</code> supports device login; one that does not answers 404 on the device endpoints, so a client is never handed a code it cannot complete.</p>
+</div>
+<div class="paragraph">
+<p><code>deviceVerification(req)</code> is called for <code>GET</code> and <code>POST</code> on <code>/_/idprovider/&lt;name&gt;/device</code>, once XP has done its part: the user is signed in (an unauthenticated request is answered with 401 and reaches the page again after the interactive login), the code has been looked up, and a posted choice has been applied. The function renders a page for the state XP hands it in <code>req.deviceLogin</code> (<a href="../libraries/types.ahtml#device-login"><code>DeviceLogin</code></a>, a union narrowed by <code>action</code>):</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idProvider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the ID provider the page belongs to.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">action</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>What to show: <code>enter</code> (ask for the code the client displays), <code>confirm</code> (show the request and ask for approval), <code>done</code> (the request was approved or denied) or <code>wrongAccount</code> (the signed-in user belongs to another ID provider and cannot approve here).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#device-login-user">DeviceLoginUser</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The signed-in user: <code>key</code>, <code>login</code>, <code>displayName</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">error</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> On <code>enter</code>: why the previous code was refused. The only value so far is <code>invalid_code</code>; the page supplies the wording.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userCode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>On <code>confirm</code>: the code the client displays, so the user can check it matches.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">clientId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>On <code>confirm</code>: the name the client gave itself. XP has no client registry yet, so it is a label, not a verified identity.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#device-login-scope">DeviceLoginScope</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>On <code>confirm</code>: the scopes the client asked for, each as <code>id</code>, the <code>roles</code> it implies and whether it is <code>required</code>. Empty when the client asked for none.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unrestricted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>On <code>confirm</code>: <code>true</code> when the vhost has no scope catalogue, so an approved token carries the user&#8217;s full memberships.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">audience</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>On <code>confirm</code>: the audiences the token will be for.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">csrf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>On <code>confirm</code>: a per-session token the form must post back as <code>_csrf</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">approved</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>On <code>done</code>: whether the user approved.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>confirm</code> page is a form that posts back to the same URL: <code>user_code</code>, <code>approve</code> (<code>true</code> or <code>false</code>), <code>_csrf</code>, and one <code>scope</code> field per scope the user keeps. A scope left out is not granted, except a required one, which is granted whenever the request is approved; a scope that was never asked for is ignored. XP validates the posted choices; the page only renders. XP hands the page scope ids and roles, not descriptions, so the page supplies the wording, typically by looking the id up in its own texts and falling back to the id.</p>
+</div>
+<div class="listingblock">
+<div class="title">Minimal deviceVerification</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import type {Request, Response} from '@enonic-types/core';
+
+const escape = (value: string): string =&gt;
+    value.replace(/[&amp;&lt;&gt;"']/g, (c) =&gt; ({'&amp;': '&amp;amp;', '&lt;': '&amp;lt;', '&gt;': '&amp;gt;', '"': '&amp;quot;', "'": '&amp;#39;'})[c] as string);
+
+export function deviceVerification(req: Request): Response {
+    const d = req.deviceLogin;
+    if (!d) {
+        return {status: 404};
+    }
+    if (d.action === 'confirm') {
+        const scopes = d.scope
+            .map(s =&gt; `&lt;label&gt;&lt;input type="checkbox" name="scope" value="${escape(s.id)}" checked ${s.required ? 'disabled' : ''}&gt; ${escape(s.id)}&lt;/label&gt;`)
+            .join('');
+        const required = d.scope
+            .filter(s =&gt; s.required)
+            .map(s =&gt; `&lt;input type="hidden" name="scope" value="${escape(s.id)}"&gt;`)
+            .join('');
+        return {
+            contentType: 'text/html',
+            body: `&lt;form method="post"&gt;
+                &lt;h1&gt;Authorize ${escape(d.clientId)}&lt;/h1&gt;
+                &lt;p&gt;Code: ${d.userCode}&lt;/p&gt;
+                ${scopes}${required}
+                &lt;input type="hidden" name="user_code" value="${d.userCode}"&gt;
+                &lt;input type="hidden" name="_csrf" value="${d.csrf}"&gt;
+                &lt;button name="approve" value="true"&gt;Authorize&lt;/button&gt;
+                &lt;button name="approve" value="false"&gt;Cancel&lt;/button&gt;
+            &lt;/form&gt;`,
+        };
+    }
+    if (d.action === 'done') {
+        return {contentType: 'text/html', body: d.approved ? '&lt;p&gt;Request approved. You may close this window.&lt;/p&gt;' : '&lt;p&gt;Request denied.&lt;/p&gt;'};
+    }
+    if (d.action === 'wrongAccount') {
+        return {contentType: 'text/html', body: `&lt;p&gt;${escape(d.user.displayName)} cannot approve requests for ${escape(d.idProvider)}.&lt;/p&gt;`};
+    }
+    return {
+        contentType: 'text/html',
+        body: `&lt;form method="get"&gt;${d.error ? '&lt;p&gt;That code was not recognised.&lt;/p&gt;' : ''}
+            &lt;input name="user_code" placeholder="Enter code"&gt;
+            &lt;button&gt;Next&lt;/button&gt;
+        &lt;/form&gt;`,
+    };
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>clientId</code> is whatever the client sent, and a display name is whatever the user chose, so the example escapes them, and scope ids with them. A template engine that escapes by default does the same.
 </td>
 </tr>
 </table>
@@ -738,6 +974,52 @@ Communication with the implementation is handled via the ID provider endpoint.</
 <div class="paragraph">
 <p>The URL to this endpoint can be generated using the <a href="../libraries/lib-portal.ahtml#idproviderurl">idProviderUrl() function in the portal library</a></p>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="flows"><a class="link" href="#flows">Flows</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> A vhost mapping may restrict the flows an ID provider serves, with the provider&#8217;s <code>flows</code> setting — e.g. <code>idProvider.myidp.flows = login,autologin</code>. XP itself enforces the three flows it manages:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">login</dt>
+<dd>
+<p><code>handle401</code> and the <code>login</code> function.</p>
+</dd>
+<dt class="hdlist1">autologin</dt>
+<dd>
+<p>the <code>autoLogin</code> filter.</p>
+</dd>
+<dt class="hdlist1">logout</dt>
+<dd>
+<p>the <code>logout</code> function.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Any other name in the list addresses an <strong>additional flow</strong> of the ID provider application itself. XP dispatches the custom <code>GET</code>/<code>POST</code> functions regardless of the list, and instead hands the list to the implementation as <code>request.idProviderSettings.flows</code>, empty when no restriction applies. The property is absent when the vhost applies no flow restriction (and on XP versions before 8.2.0), so an absent list means every flow is enabled.</p>
+</div>
+<div class="paragraph">
+<p>Use it to serve an endpoint only where its flow is listed. For example, an ID provider offering a device authorization flow can gate it on the name <code>device</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import type {Request, Response} from '@enonic-types/core';
+
+export function POST(request: Request): Response {
+    const flows = request.idProviderSettings?.flows ?? [];
+    if (flows.length &gt; 0 &amp;&amp; !flows.includes('device')) {
+        return {status: 403};
+    }
+    // serve the device authorization endpoint
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An administrator then enables the endpoint per vhost by listing the flow — <code>flows = autologin,device</code> — and disables it by leaving it out. Document the additional flows your ID provider supports, so administrators know what the names mean.</p>
 </div>
 </div>
 </div>
@@ -806,7 +1088,7 @@ export function logout(req) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-21 08:28:36 UTC
+Last updated 2026-10-21 08:50:16 UTC
 </div>
 </div>
 </body>

@@ -475,6 +475,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#login-scope-type">LoginScopeType</a></li>
 <li><a href="#login-result">LoginResult</a></li>
+<li><a href="#login-access-token">LoginAccessToken</a></li>
 <li><a href="#find-principals-result">FindPrincipalsResult</a></li>
 <li><a href="#id-provider">IdProvider</a></li>
 <li><a href="#id-provider-config">IdProviderConfig</a></li>
@@ -1782,6 +1783,27 @@ const isAdmin = hasRole('system.admin');</code></pre>
 <p><strong>Optional.</strong> Scope of the login. When set to <code>SESSION</code> the login is persistent; <code>REQUEST</code> makes it valid only for the current request; <code>NONE</code> checks the username and password without logging into the system. Defaults to <code>SESSION</code>.</p>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#role-key">RoleKey</a>[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> Restricts the login to these roles: the user keeps only the listed roles they actually hold, directly or through a group. A key that is not a role is rejected. An empty array leaves only the user&#8217;s own key and the roles every authenticated user has. A member of <code>role:system.admin</code> counts as a member of every role, but keeps <code>role:system.admin</code> itself only when it is listed. Groups are never kept, so anything granted by naming a group, such as a node permission entry, an API, service, admin tool or admin extension allow list, or an ID provider access list, does not apply to a restricted login. Omit for no restriction. A <code>SESSION</code> login keeps the result for the session&#8217;s lifetime.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">actor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../libraries/types.ahtml#principal-key">PrincipalKey</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> The principal acting on the user&#8217;s behalf, such as a service that logs a user in for a call it makes for them. Recorded next to the user in every audit log entry the request writes; it grants no permissions.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accessToken</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#login-access-token">LoginAccessToken</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> <span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> An access token of another issuer, verified by the caller, typically an ID provider accepting a bearer token of its upstream identity system. XP applies the same rules as to its own tokens: the token&#8217;s audience must be one the virtual host declares, or the login is refused with <code>authenticated: false</code> before any user is consulted; its scopes are mapped to roles through the host&#8217;s scope catalogue for the ID provider, and <code>roles</code> narrows that further. The token is then exposed as <code>request.accessToken</code> (<a href="../libraries/types.ahtml#request-access-token"><code>RequestAccessToken</code></a>). XP verifies nothing of the token itself.</p>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph lead">
@@ -1821,6 +1843,45 @@ const loginResult = login({
         hasPassword: true
     }
 })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Logging a user in for the current request with a subset of their roles, on behalf of a service</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {login} from '/lib/xp/auth';
+
+// An ID provider that verified a service's own credential and the user it names.
+login({
+    user: 'user1',
+    idProvider: 'myIdProvider',
+    skipAuth: true,
+    scope: 'REQUEST',
+    roles: ['role:cms.project.site.viewer'],
+    actor: 'user:myIdProvider:deploy-service'
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Promoting a verified token of another issuer</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import {login} from '/lib/xp/auth';
+
+// In an ID provider's autoLogin: `claims` is the payload of a bearer token the
+// ID provider verified against its upstream identity system, and `user` the XP
+// user it maps the subject to. XP checks the audience against the virtual host
+// and maps the scopes to roles through the host's catalogue for this ID provider.
+const result = login({
+    user: user.login,
+    idProvider: 'myIdProvider',
+    skipAuth: true,
+    scope: 'REQUEST',
+    accessToken: {
+        issuer: claims.iss,
+        clientId: claims.azp ?? claims.client_id,
+        scope: ([] as string[]).concat(claims.scp ?? claims.scope ?? []).flatMap((v) =&gt; v.split(' ')).filter(Boolean),
+        audience: ([] as string[]).concat(claims.aud ?? [])
+    }
+});</code></pre>
 </div>
 </div>
 </div>
@@ -2263,6 +2324,59 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </table>
 </div>
 <div class="sect2">
+<h3 id="login-access-token"><a class="link" href="#login-access-token">LoginAccessToken</a></h3>
+<div class="paragraph">
+<p><span class="image"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="20"><linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="r"><rect width="64" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#r)"><rect width="25" height="20" fill="#555"/><rect x="25" width="39" height="20" fill="#007ec6"/><rect width="64" height="20" fill="url(#s)"/></g><g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110"><text x="135" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="150">XP</text><text x="135" y="140" transform="scale(.1)" textLength="150">XP</text><text x="435" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">8.2.0</text><text x="435" y="140" transform="scale(.1)" textLength="290">8.2.0</text></g></svg></span> What a verified access token of another issuer says, as handed to <a href="#login"><code>login()</code></a>.</p>
+</div>
+<div class="paragraph lead">
+<p>Properties</p>
+</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 1%;">
+<col style="width: 1%;">
+<col style="width: 98%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">issuer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The token&#8217;s issuer. For a JWT, the <code>iss</code> claim.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">clientId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The client the token was issued to. For a JWT, <code>azp</code> or <code>client_id</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scope</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The token&#8217;s scopes. For a JWT, the <code>scope</code> or <code>scp</code> claim: a space-separated string, split, or a list as it is.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">audience</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string[]</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Optional.</strong> The token&#8217;s audiences. For a JWT, the <code>aud</code> claim, a string or a list. One of them must be declared by the virtual host, so a host that accepts another issuer&#8217;s tokens declares the audience they carry.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
 <h3 id="find-principals-result"><a class="link" href="#find-principals-result">FindPrincipalsResult</a></h3>
 <div class="paragraph">
 <p>The result of <code>findPrincipals()</code> and <code>findUsers()</code>.</p>
@@ -2441,7 +2555,7 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);</co
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-21 08:28:36 UTC
+Last updated 2026-10-21 08:50:16 UTC
 </div>
 </div>
 </body>
