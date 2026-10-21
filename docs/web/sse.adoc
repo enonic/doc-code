@@ -81,7 +81,7 @@ export function sseEvent(event) {
 To address a client from outside the `sseEvent` function, do not store `event.clientId` in module-scope state — module code runs multi-threaded/multi-engine and ad-hoc shared collections of ids are not safe. Use one of the following instead:
 
 * For a *task* or other background job, capture the `clientId` when the task is started and hold it in the task's own local scope. Each task instance then targets exactly the connection it was started for.
-* For an *event listener*, use named groups: add the connection on `open`, then call `sendToGroup` from the listener.
+* For an *event listener*, use named groups: add the connection on `open`, then call `sendToGroup` from the listener. Register the listener in `main.ts`, not in the SSE implementation - see <<../runtime/events#where-to-register, Where to register listeners>>.
 
 [source,typescript]
 ----
@@ -93,7 +93,7 @@ export function sseEvent(event) {
     }
 }
 
-// from an event listener:
+// from an event listener registered in main.ts:
 sendToGroup({ group: 'live', message: { data: 'Update' } });
 ----
 
