@@ -1,6 +1,6 @@
 = Event library
 :toc: right
-:imagesdir: ../images
+:imagesdir: images
 
 This API provides functions to create and listen to instance local or cluster distributed events.
 
@@ -29,7 +29,7 @@ For more details, check out the <<lib-node#events, Node library>>, <<lib-repo#ev
 
 Registers an event listener that fires for events whose type matches the given pattern.
 
-WARNING: image:xp-820.svg[XP 8.2.0,opts=inline] Call `listener()` from <<../runtime/main#, `main.ts`>>, or from a module it loads during start-up. On <<../runtime/engines#graaljs, GraalJS>>, a listener registered anywhere else logs a warning and will stop working in the next version. See <<../runtime/events#where-to-register, Where to register listeners>>.
+WARNING: Call `listener()` from <<../runtime/main#, `main.ts`>>, or from a module it loads during start-up. A listener registered anywhere else will stop working in the next version. See <<../runtime/events#where-to-register, Where to register listeners>>.
 
 [.lead]
 Parameters
