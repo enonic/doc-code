@@ -141,6 +141,7 @@ An application gets a pool of contexts:: Contexts are created lazily as concurre
 Compiled code is shared:: One engine serves the whole installation, and the code it compiles is cached across every context built from it. A module parsed while one context starts is reused by the next.
 Values cannot leave their context:: A JavaScript function or object belongs to the context that created it. <<../libraries/lib-task#executefunction, `executeFunction()`>> is therefore unsupported. Submit a <<../background/tasks#, named task>> with `submitTask()` instead.
 Disposers are registered during start-up:: Register `+__.disposer+` from `main.ts`, or from a module it loads while starting. See <<java-bridge#disposer, `+__.disposer+`>>.
+Event listeners are registered during start-up:: Register them from `main.ts`, or from a module it loads while starting. A module loaded by a request, task or websocket loads once per context, so a listener registered there is registered once per context, and it waits for whatever request holds that context. See <<events#where-to-register, Where to register listeners>>.
 
 The size of the context pool is tuned in the platform's https://developer.enonic.com/docs/platform/stable/config/system#script-engine[system properties]. The defaults normally need no attention.
 
