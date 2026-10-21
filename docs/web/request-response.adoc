@@ -81,6 +81,32 @@ Use ``request.getHeader(name)`` to read a header case-insensitively. Prefer it o
 
 NOTE: Modifications to the ``headers`` object do not affect the result of ``getHeader(name)``.
 
+[#access-token]
+=== Token-authenticated requests
+
+image:../../images/xp-820.svg[XP 8.2.0,opts=inline] A request authenticated with an access token carries it as `accessToken` (<<../libraries/types#request-access-token, `RequestAccessToken`>>), so a function can check the token's scopes before acting. The token is one XP issued through https://developer.enonic.com/docs/platform/stable/security/access-tokens[device login], or one of another issuer that the ID provider verified and passed to <<../libraries/lib-auth#login, `login({accessToken})`>>; `issuer` tells them apart. The user is already logged in, restricted to the roles the token's grant holds.
+
+[source,json]
+----
+{
+  "accessToken": {
+    "issuer": "xp",  // <1>
+    "clientId": "my-cli",  // <2>
+    "grantId": "0199e1a2-6c3b-7d4e-8f90-1a2b3c4d5e6f",  // <3>
+    "scope": ["content:read"],  // <4>
+    "audience": ["api"]  // <5>
+  }
+}
+----
+
+<1> Who issued the token: XP's issuer name, or the upstream issuer of a promoted token.
+<2> The client that obtained the token, as it named itself; `null` if a promoted token does not say. Not a verified identity.
+<3> The grant the token was issued under, stable across refreshes; `null` for a promoted token.
+<4> The scopes the request was granted, sorted: the grant's current scopes for an XP token, the token's own for a promoted one. The roles they imply are already applied to the logged-in user.
+<5> The audiences the token is for, sorted.
+
+The property is absent on a request authenticated any other way.
+
 [#response]
 == Response
 

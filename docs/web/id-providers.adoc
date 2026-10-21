@@ -39,6 +39,8 @@ NOTE: This diagram covers the ID provider's *endpoint* surfaces. Its two *pipeli
 
 `+/_/idprovider/<name>+`:: The base endpoint dispatches to the provider's `GET`/`POST`/… HTTP functions.
 
+`+/_/idprovider/<name>/device/code+`, `+/_/idprovider/<name>/device+`, `+/_/idprovider/<name>/token+`:: image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP's own https://developer.enonic.com/docs/platform/stable/security/access-tokens[device login] endpoints, served for the provider's users when the vhost enables the `device` flow. The implementation does not serve them; it only renders the verification page, through <<#deviceverification, `deviceVerification`>>.
+
 Rather than hardcoding these paths, generate them with the portal library helpers — <<../libraries/lib-portal#loginurl, loginUrl()>>, <<../libraries/lib-portal#logouturl, logoutUrl()>> and <<../libraries/lib-portal#idproviderurl, idProviderUrl()>> — which resolve the correct contextual URL for the current request.
 
 [NOTE]
@@ -82,6 +84,25 @@ NOTE: This forms does not support CMS-specific input types, such as contentSelec
 Add an ID provider implementation at `src/main/resources/idprovider/idprovider.ts`. An application may only implement a single ID provider.
 
 To implement your ID provider, export one or more of the following functions:
+
+image:../../images/xp-820.svg[XP 8.2.0,opts=inline] Every function receives the <<request-response#request, request>>. On an ID provider's own function calls the request also carries `+request.idProviderSettings+` (<<../libraries/types#id-provider-settings, `IdProviderSettings`>>): what the virtual host serving the request declares for this ID provider in https://developer.enonic.com/docs/platform/stable/config/vhosts[`com.enonic.xp.web.vhost.cfg`], read from `+mapping.<name>.idProvider.<idp>.*+` and the mapping's `audience`. It is absent when the host does not map the ID provider.
+
+[source,json]
+----
+{
+  "idProviderSettings": {
+    "flows": ["device", "login", "logout"],  // <1>
+    "audience": ["api"],  // <2>
+    "scopes": {  // <3>
+      "content:read": {"roles": ["role:cms.project.site.viewer"], "required": false},
+      "profile": {"roles": [], "required": true}
+    }
+  }
+}
+----
+<1> The flows the host serves for the ID provider, sorted. Empty means no restriction. An ID provider uses it to enable its own flows: the standard ID provider serves basic authentication only where `basic` is listed or the list is empty.
+<2> The audiences the host serves, sorted. Empty means the host accepts only tokens whose audience is XP's own issuer name.
+<3> The scope catalogue (<<../libraries/types#id-provider-scope, `IdProviderScope`>> per id): the roles each scope implies and whether the user must keep it. An empty role list is a label-only scope.
 
 NOTE: To serve static assets (CSS, JS, images — e.g. for a login page), use the https://developer.enonic.com/docs/lib-static[`lib-static`] library, *not* `lib-asset`. Like admin extensions, an ID provider runs in a context where `lib-asset` does not fit; `lib-static` (typically paired with `lib-router`) is designed for serving static files from here.
 
@@ -129,6 +150,113 @@ If no user already exists in the context, the autoLogin filter is executed early
 ====
 image:xp-820.svg[XP 8.2.0,opts=inline] `autoLogin` runs for every ID provider on the request's virtual host that has the `autologin` <<#flows, flow>> enabled — the `default` provider first — until one of them authenticates the request or returns a response. In earlier versions only the `default` provider's `autoLogin` ran. Visit the https://developer.enonic.com/docs/platform/xp8/config/vhosts[vhost configuration] section for more details.
 ====
+
+image:../../images/xp-820.svg[XP 8.2.0,opts=inline] A bearer token XP issued itself is accepted before `autoLogin` runs, on a vhost that enables the `autologin` flow for the user's ID provider and accepts the token's audience (one it declares, or XP's own issuer name on a vhost declaring none). `autoLogin` is then not called: the request is already authenticated, and the functions handling it see the user and <<request-response#access-token, `request.accessToken`>>. Any other bearer token reaches `autoLogin` untouched. See https://developer.enonic.com/docs/platform/stable/security/access-tokens[access tokens].
+
+An ID provider that verifies a bearer token of its upstream identity system can pass the token on with the `accessToken` option of <<../libraries/lib-auth#login, `login()`>>. XP then applies the same rules as to its own tokens: the audience must be one the virtual host declares, and the scopes map to roles through the host's scope catalogue for the ID provider. The request then carries the token as `request.accessToken`. Verifying the token stays the ID provider's job.
+
+[source,typescript]
+----
+import {login} from '/lib/xp/auth';
+
+export function autoLogin(req: Request): void {
+    const claims = verifyBearer(req); // the ID provider's own verification against its upstream
+    if (!claims) {
+        return;
+    }
+    login({
+        user: claims.sub,
+        idProvider: 'myIdProvider',
+        skipAuth: true,
+        scope: 'REQUEST',
+        accessToken: {
+            issuer: claims.iss,
+            clientId: claims.azp ?? claims.client_id,
+            scope: ([] as string[]).concat(claims.scp ?? claims.scope ?? []).flatMap((v) => v.split(' ')).filter(Boolean),
+            audience: ([] as string[]).concat(claims.aud ?? [])
+        }
+    });
+}
+----
+
+[#deviceverification]
+=== deviceVerification
+
+image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP serves the OAuth device flow (https://datatracker.ietf.org/doc/html/rfc8628[RFC 8628]) for an ID provider's users: a command-line tool or another browserless client asks XP for a code, the user opens a page, signs in and approves, and the client receives XP-issued tokens. XP owns the protocol, the codes and the tokens; the page the user sees is the ID provider's, as the login page is. An ID provider that exports `deviceVerification` supports device login; one that does not answers 404 on the device endpoints, so a client is never handed a code it cannot complete.
+
+`deviceVerification(req)` is called for `GET` and `POST` on `+/_/idprovider/<name>/device+`, once XP has done its part: the user is signed in (an unauthenticated request is answered with 401 and reaches the page again after the interactive login), the code has been looked up, and a posted choice has been applied. The function renders a page for the state XP hands it in `req.deviceLogin` (<<../libraries/types#device-login, `DeviceLogin`>>, a union narrowed by `action`):
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Name of the ID provider the page belongs to.
+| action | string | What to show: `enter` (ask for the code the client displays), `confirm` (show the request and ask for approval), `done` (the request was approved or denied) or `wrongAccount` (the signed-in user belongs to another ID provider and cannot approve here).
+| user | <<../libraries/types#device-login-user, DeviceLoginUser>> | The signed-in user: `key`, `login`, `displayName`.
+| error | string | *Optional.* On `enter`: why the previous code was refused. The only value so far is `+invalid_code+`; the page supplies the wording.
+| userCode | string | On `confirm`: the code the client displays, so the user can check it matches.
+| clientId | string | On `confirm`: the name the client gave itself. XP has no client registry yet, so it is a label, not a verified identity.
+| scope | <<../libraries/types#device-login-scope, DeviceLoginScope>>[] | On `confirm`: the scopes the client asked for, each as `id`, the `roles` it implies and whether it is `required`. Empty when the client asked for none.
+| unrestricted | boolean | On `confirm`: `true` when the vhost has no scope catalogue, so an approved token carries the user's full memberships.
+| audience | string[] | On `confirm`: the audiences the token will be for.
+| csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
+| approved | boolean | On `done`: whether the user approved.
+|===
+
+The `confirm` page is a form that posts back to the same URL: `+user_code+`, `approve` (`true` or `false`), `+_csrf+`, and one `scope` field per scope the user keeps. A scope left out is not granted, except a required one, which is granted whenever the request is approved; a scope that was never asked for is ignored. XP validates the posted choices; the page only renders. XP hands the page scope ids and roles, not descriptions, so the page supplies the wording, typically by looking the id up in its own texts and falling back to the id.
+
+.Minimal deviceVerification
+[source,typescript]
+----
+import type {Request, Response} from '@enonic-types/core';
+
+const escape = (value: string): string =>
+    value.replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c] as string);
+
+export function deviceVerification(req: Request): Response {
+    const d = req.deviceLogin;
+    if (!d) {
+        return {status: 404};
+    }
+    if (d.action === 'confirm') {
+        const scopes = d.scope
+            .map(s => `<label><input type="checkbox" name="scope" value="${escape(s.id)}" checked ${s.required ? 'disabled' : ''}> ${escape(s.id)}</label>`)
+            .join('');
+        const required = d.scope
+            .filter(s => s.required)
+            .map(s => `<input type="hidden" name="scope" value="${escape(s.id)}">`)
+            .join('');
+        return {
+            contentType: 'text/html',
+            body: `<form method="post">
+                <h1>Authorize ${escape(d.clientId)}</h1>
+                <p>Code: ${d.userCode}</p>
+                ${scopes}${required}
+                <input type="hidden" name="user_code" value="${d.userCode}">
+                <input type="hidden" name="_csrf" value="${d.csrf}">
+                <button name="approve" value="true">Authorize</button>
+                <button name="approve" value="false">Cancel</button>
+            </form>`,
+        };
+    }
+    if (d.action === 'done') {
+        return {contentType: 'text/html', body: d.approved ? '<p>Request approved. You may close this window.</p>' : '<p>Request denied.</p>'};
+    }
+    if (d.action === 'wrongAccount') {
+        return {contentType: 'text/html', body: `<p>${escape(d.user.displayName)} cannot approve requests for ${escape(d.idProvider)}.</p>`};
+    }
+    return {
+        contentType: 'text/html',
+        body: `<form method="get">${d.error ? '<p>That code was not recognised.</p>' : ''}
+            <input name="user_code" placeholder="Enter code">
+            <button>Next</button>
+        </form>`,
+    };
+}
+----
+
+NOTE: `clientId` is whatever the client sent, and a display name is whatever the user chose, so the example escapes them, and scope ids with them. A template engine that escapes by default does the same.
 
 
 === GET/POST etc
