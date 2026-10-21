@@ -695,6 +695,10 @@ The bridge XP supports is the <code>__</code> object, on both engines. Interop g
 <dd>
 <p>Register <code>__.disposer</code> from <code>main.ts</code>, or from a module it loads while starting. See <a href="java-bridge.ahtml#disposer"><code>__.disposer</code></a>.</p>
 </dd>
+<dt class="hdlist1">Event listeners are registered during start-up</dt>
+<dd>
+<p>Register them from <code>main.ts</code>, or from a module it loads while starting. A module loaded by a request, task or websocket loads once per context, so a listener registered there is registered once per context, and it waits for whatever request holds that context. See <a href="events.ahtml#where-to-register">Where to register listeners</a>.</p>
+</dd>
 </dl>
 </div>
 <div class="paragraph">
@@ -712,7 +716,7 @@ The bridge XP supports is the <code>__</code> object, on both engines. Interop g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-20 06:11:05 UTC
+Last updated 2026-10-21 08:27:09 UTC
 </div>
 </div>
 </body>

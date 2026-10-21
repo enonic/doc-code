@@ -505,6 +505,18 @@ For more details, check out the <a href="lib-node.ahtml#events">Node library</a>
 <div class="paragraph">
 <p>Registers an event listener that fires for events whose type matches the given pattern.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Call <code>listener()</code> from <a href="../runtime/main.ahtml"><code>main.ts</code></a>, or from a module it loads during start-up. A listener registered anywhere else will stop working in the next version. See <a href="../runtime/events.ahtml#where-to-register">Where to register listeners</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph lead">
 <p>Parameters</p>
 </div>
@@ -715,7 +727,7 @@ send({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-20 06:11:05 UTC
+Last updated 2026-10-21 08:27:09 UTC
 </div>
 </div>
 </body>

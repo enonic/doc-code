@@ -582,7 +582,7 @@ export function sseEvent(event) {
 <p>For a <strong>task</strong> or other background job, capture the <code>clientId</code> when the task is started and hold it in the task&#8217;s own local scope. Each task instance then targets exactly the connection it was started for.</p>
 </li>
 <li>
-<p>For an <strong>event listener</strong>, use named groups: add the connection on <code>open</code>, then call <code>sendToGroup</code> from the listener.</p>
+<p>For an <strong>event listener</strong>, use named groups: add the connection on <code>open</code>, then call <code>sendToGroup</code> from the listener. Register the listener in <code>main.ts</code>, not in the SSE implementation - see <a href="../runtime/events.ahtml#where-to-register">Where to register listeners</a>.</p>
 </li>
 </ul>
 </div>
@@ -596,7 +596,7 @@ export function sseEvent(event) {
     }
 }
 
-// from an event listener:
+// from an event listener registered in main.ts:
 sendToGroup({ group: 'live', message: { data: 'Update' } });</code></pre>
 </div>
 </div>
@@ -620,7 +620,7 @@ sendToGroup({ group: 'live', message: { data: 'Update' } });</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-20 06:11:05 UTC
+Last updated 2026-10-21 08:27:09 UTC
 </div>
 </div>
 </body>
