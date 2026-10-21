@@ -1,5 +1,6 @@
 = Types
 :toc: right
+:imagesdir: ../images
 
 The shared types that flow across the Enonic libraries
 
@@ -425,6 +426,123 @@ The object passed to an HTTP function (`GET`, `POST`, filters, error handlers). 
 === Response
 
 The object an HTTP function returns — `status`, `body`, `contentType`, `headers`, `cookies`, `pageContributions`, `redirect`, and more. All fields are optional. See <<../web#, Web>> for the full model and examples.
+
+[#request-access-token]
+=== RequestAccessToken
+
+image:xp-820.svg[XP 8.2.0,opts=inline] The access token the request was authenticated with: one XP issued, or one of another issuer that the ID provider verified and passed to <<lib-auth#login, `login({accessToken})`>>. Present as `request.accessToken`. See <<../web/request-response#access-token, token-authenticated requests>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| issuer | string | Who issued the token: XP's issuer name (`token.issuer` in `com.enonic.xp.security.cfg`), or the upstream issuer of a promoted token.
+| clientId | string | The client id the token was issued to, as the client gave it; `null` when a promoted token has none. Not a verified identity.
+| grantId | string | The grant the token was issued under, stable across refreshes; `null` for a promoted token.
+| scope | string[] | The scopes the request was granted, sorted: the grant's current scopes for an XP token, the token's own for a promoted one. The roles they imply are already applied to the logged-in user.
+| audience | string[] | The audiences the token is for, sorted.
+|===
+
+[#id-provider-settings]
+=== IdProviderSettings
+
+image:xp-820.svg[XP 8.2.0,opts=inline] An ID provider's settings on the virtual host serving the request, from `+mapping.<name>.idProvider.<idp>.*+` and the mapping's `audience` in `+com.enonic.xp.web.vhost.cfg+`. Present as `request.idProviderSettings` on an ID provider's own function calls when the host maps the provider. See <<../web/id-providers#, ID providers>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| flows | string[] | The flows the host serves for the ID provider, sorted. Empty means no restriction.
+| audience | string[] | The audiences the host serves, sorted. Empty means the host accepts only tokens whose audience is XP's own issuer name.
+| scopes | object | The scope catalogue: each scope id mapped to an <<id-provider-scope, IdProviderScope>>.
+|===
+
+[#id-provider-scope]
+=== IdProviderScope
+
+image:xp-820.svg[XP 8.2.0,opts=inline] A scope of the host's catalogue, as declared by `+mapping.<name>.idProvider.<idp>.scope.<id>.*+`.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| roles | <<role-key, RoleKey>>[] | The roles the scope implies, sorted. Empty for a label-only scope.
+| required | boolean | Whether the user must keep it.
+|===
+
+[#device-login]
+=== DeviceLogin
+
+image:xp-820.svg[XP 8.2.0,opts=inline] The state XP hands an ID provider's `deviceVerification` function as `request.deviceLogin`: a union of `DeviceLoginEnter`, `DeviceLoginConfirm`, `DeviceLoginDone` and `DeviceLoginWrongAccount`, told apart by `action`. Every member carries `idProvider` and `user`; each other property belongs to one action. See <<../web/id-providers#deviceverification, deviceVerification>>.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| action | string | `enter`, `confirm`, `done` or `wrongAccount`. Narrow on it to reach the action's own properties.
+| idProvider | string | Name of the ID provider the page belongs to.
+| user | <<device-login-user, DeviceLoginUser>> | The signed-in user.
+| error | string | *Optional.* On `enter`: why the previous code was refused. The only value so far is `+invalid_code+`.
+| userCode | string | On `confirm`: the code the client displays.
+| clientId | string | On `confirm`: the name the client gave itself. Not a verified identity.
+| scope | <<device-login-scope, DeviceLoginScope>>[] | On `confirm`: the scopes the client asked for.
+| unrestricted | boolean | On `confirm`: `true` when the host has no scope catalogue, so an approved token carries the user's full memberships.
+| audience | string[] | On `confirm`: the audiences the token will be for.
+| csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
+| approved | boolean | On `done`: whether the user approved.
+|===
+
+[#device-login-user]
+=== DeviceLoginUser
+
+image:xp-820.svg[XP 8.2.0,opts=inline] The signed-in user, as shown on the consent page.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| key | <<user-key, UserKey>> | The user's principal key.
+| login | string | Login name.
+| displayName | string | Human-friendly name.
+|===
+
+[#device-login-scope]
+=== DeviceLoginScope
+
+image:xp-820.svg[XP 8.2.0,opts=inline] A scope as shown on the consent page.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | The scope id the client asked for.
+| roles | <<role-key, RoleKey>>[] | The roles the scope implies; empty for a scope that is only a label.
+| required | boolean | Whether the user must keep it: a required scope is granted whenever the request is approved.
+|===
 
 == Other
 
