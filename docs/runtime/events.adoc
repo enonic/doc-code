@@ -35,7 +35,7 @@ Event delivery is best-effort and fire-and-forget — no persistence, no replay,
 [#where-to-register]
 == Where to register listeners
 
-WARNING: Register listeners from <<main#, `main.ts`>>, or from a module it loads during start-up. A listener registered anywhere else will stop working in the next version. On <<engines#graaljs, GraalJS>>, XP already logs a warning for it.
+WARNING: Register listeners from <<main#, `main.ts`>>, or from a module it loads during start-up. A listener registered anywhere else will stop working in the next version.
 
 `main.ts` runs once per node when the application starts, so each listener is registered exactly once. A listener does not belong in a module that a request, task or websocket loads, nor in a function that runs per request or per event: there is no way to remove a listener, so every call adds another.
 
