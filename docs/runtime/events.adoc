@@ -32,6 +32,15 @@ The use cases for events are limitless, but the most common are:
 Event delivery is best-effort and fire-and-forget — no persistence, no replay, no acknowledgement. A node that is down or partitioned at broadcast time misses the event entirely.
 ====
 
+[#where-to-register]
+== Where to register listeners
+
+WARNING: Register listeners from <<main#, `main.ts`>>, or from a module it loads during start-up. A listener registered anywhere else will stop working in the next version.
+
+`main.ts` runs once per node when the application starts, so each listener is registered exactly once. A listener does not belong in a module that a request, task or websocket loads, nor in a function that runs per request or per event: there is no way to remove a listener, so every call adds another.
+
+Code that serves connections does not need its own listener. To push events to websocket or SSE clients, add the connection to a group when it opens, and send to that group from the listener in `main.ts` - see <<#websocket-fanout, WebSocket fanout>> and <<../web/sse#, Server-Sent Events>>.
+
 [#threading-ordering]
 == Threading and ordering
 
@@ -100,6 +109,7 @@ A write on any node evicts the affected key on every node.
 
 [source,typescript]
 ----
+// main.ts
 eventLib.listener({
     type: 'custom.com.example.app.cache.invalidate',
     callback: (event) => cache.delete(event.data.key as string)
@@ -113,12 +123,14 @@ eventLib.send({
 ----
 
 [discrete]
+[#websocket-fanout]
 === WebSocket fanout across the cluster
 
-A producer on any node can push to clients connected to whichever node terminated their socket.
+A producer on any node can push to clients connected to whichever node terminated their socket. Each socket joins the `live-feed` group with `addToGroup` when it opens.
 
 [source,typescript]
 ----
+// main.ts
 eventLib.listener({
     type: 'custom.com.example.app.feed.message',
     callback: (event) => websocketLib.sendToGroup('live-feed', JSON.stringify(event.data))
