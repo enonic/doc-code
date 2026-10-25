@@ -90,6 +90,79 @@ if (user) {
 }
 ----
 
+=== createClient
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Registers a client with an ID provider: who it is to the user, which flows it may use, where it may be sent an authorization code, and the most it may ask for. Knowing a client's id proves nothing; the record names and limits it. The caller must be allowed to administer the ID provider.
+
+[.lead]
+Parameters
+
+`createClient()` takes a single `CreateClientParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider to register the client with.
+| id | string | The client id, as the client will send it in `+client_id+`; a valid node name.
+| displayName | string | *Optional.* The name the consent page shows. Defaults to the id.
+| uri | string | *Optional.* The client's home page. An `http` or `https` URL, as every link here.
+| logoUri | string | *Optional.* The client's logo.
+| policyUri | string | *Optional.* The client's privacy policy.
+| tosUri | string | *Optional.* The client's terms of service.
+| grantTypes | string[] | *Optional.* The grant types the client may use: `+urn:ietf:params:oauth:grant-type:device_code+`, `+authorization_code+` and `+refresh_token+`. A flow not listed is refused to it, so a client without any obtains no tokens.
+| redirectUris | string[] | *Optional.* The redirect URIs the client may be sent an authorization code to, besides loopback addresses; matched exactly.
+| scope | string[] | *Optional.* The most scopes the client may ask for, and what it gets when it names none. Omit for any of the ID provider's scopes.
+| resource | string[] | *Optional.* The most audiences the client may ask for, and what it gets when it names none. Omit for any XP serves.
+| grantTtl | string | *Optional.* How long a grant to the client lives, as an ISO 8601 duration such as `P30D`. Omit for the configured default.
+| enabled | boolean | *Optional.* Whether the client may obtain tokens. Defaults to `true`.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<client, `Client`>>) The registered client.
+
+[.lead]
+Example
+
+.Registering an MCP client with the system ID provider
+[source,typescript]
+----
+import {createClient} from '/lib/xp/auth';
+
+const client = createClient({
+    idProvider: 'system',
+    id: 'claude',
+    displayName: 'Claude',
+    uri: 'https://claude.ai',
+    grantTypes: ['authorization_code', 'refresh_token'],
+    redirectUris: ['https://claude.ai/api/mcp/auth_callback'],
+    scope: ['content:read'],
+    resource: ['https://example.com/api/mcp'],
+    grantTtl: 'P30D'
+});
+----
+
+.Sample response
+[source,typescript]
+----
+({
+    idProvider: 'system',
+    id: 'claude',
+    displayName: 'Claude',
+    uri: 'https://claude.ai',
+    grantTypes: ['authorization_code', 'refresh_token'],
+    redirectUris: ['https://claude.ai/api/mcp/auth_callback'],
+    scope: ['content:read'],
+    resource: ['https://example.com/api/mcp'],
+    grantTtl: 'PT720H',
+    enabled: true,
+    builtin: false
+})
+----
+
 === createGroup
 
 Creates a group.
@@ -261,6 +334,63 @@ const role = createRole({
 })
 ----
 
+=== createScope
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Adds a scope to an ID provider: what a client may ask for, what the user is asked to approve, and the roles a token granted it is restricted to. The caller must be allowed to administer the ID provider.
+
+[.lead]
+Parameters
+
+`createScope()` takes a single `CreateScopeParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider to add the scope to.
+| id | string | The scope's id: what a client puts in `scope` and what the token carries. Printable ASCII without spaces, quotes or backslashes, and a valid node name.
+| displayName | string | *Optional.* The title shown on the consent page. Defaults to the id.
+| description | string | *Optional.* What approving the scope allows, in the user's words.
+| roles | <<../libraries/types#role-key, RoleKey>>[] | *Optional.* The roles a token granted the scope is restricted to. Omit for a label that restricts nothing by itself.
+| required | boolean | *Optional.* Whether the user may not drop the scope when approving a request that names it. Defaults to `false`.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<scope, `Scope`>>) The created scope.
+
+[.lead]
+Example
+
+.Adding a scope to the system ID provider
+[source,typescript]
+----
+import {createScope} from '/lib/xp/auth';
+
+const scope = createScope({
+    idProvider: 'system',
+    id: 'content:write',
+    displayName: 'Edit content',
+    description: 'Create, change and publish content in all projects',
+    roles: ['role:cms.cm.app', 'role:cms.expert']
+});
+----
+
+.Sample response
+[source,typescript]
+----
+({
+    idProvider: 'system',
+    id: 'content:write',
+    displayName: 'Edit content',
+    description: 'Create, change and publish content in all projects',
+    roles: ['role:cms.cm.app', 'role:cms.expert'],
+    required: false
+})
+----
+
 === createUser
 
 Creates a user.
@@ -317,6 +447,40 @@ const user = createUser({
 })
 ----
 
+=== deleteClient
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Removes a client from an ID provider. A built-in client cannot be removed; disable it instead. Grants to the client stay and keep refreshing until the client is disabled. The caller must be allowed to administer the ID provider.
+
+[.lead]
+Parameters
+
+`deleteClient()` takes a single `DeleteClientParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider the client belongs to.
+| id | string | The client to remove.
+|===
+
+[.lead]
+Returns
+
+*boolean* : `true` when the client was removed, `false` when the ID provider had no such client or it is built in.
+
+[.lead]
+Example
+
+.Removing a client
+[source,typescript]
+----
+import {deleteClient} from '/lib/xp/auth';
+
+const removed = deleteClient({idProvider: 'system', id: 'claude'});
+----
+
 === deletePrincipal
 
 Deletes the principal with the specified key.
@@ -340,6 +504,40 @@ Example
 import {deletePrincipal} from '/lib/xp/auth';
 
 const deleted = deletePrincipal('user:myIdProvider:userId');
+----
+
+=== deleteScope
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Removes a scope from an ID provider. Grants already holding the scope keep it. The caller must be allowed to administer the ID provider.
+
+[.lead]
+Parameters
+
+`deleteScope()` takes a single `DeleteScopeParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider the scope belongs to.
+| id | string | The scope to remove.
+|===
+
+[.lead]
+Returns
+
+*boolean* : `true` when the scope was removed, `false` when the ID provider had no such scope.
+
+[.lead]
+Example
+
+.Removing a scope
+[source,typescript]
+----
+import {deleteScope} from '/lib/xp/auth';
+
+const removed = deleteScope({idProvider: 'system', id: 'content:write'});
 ----
 
 === findPrincipals
@@ -505,6 +703,56 @@ Example
 import {generatePassword} from '/lib/xp/auth';
 
 const pwd = generatePassword();
+----
+
+=== getClients
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Returns an ID provider's registered clients, by id.
+
+[.lead]
+Parameters
+
+`getClients()` takes a single `GetClientsParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider.
+|===
+
+[.lead]
+Returns
+
+*object[]* : (<<client, `Client`>>[]) The clients; empty when the ID provider has none, or does not exist.
+
+[.lead]
+Example
+
+.Listing the clients of the system ID provider
+[source,typescript]
+----
+import {getClients} from '/lib/xp/auth';
+
+const clients = getClients({idProvider: 'system'});
+----
+
+.Sample response
+[source,typescript]
+----
+[{
+    idProvider: 'system',
+    id: 'enonic-cli',
+    displayName: 'Enonic CLI',
+    uri: 'https://developer.enonic.com/docs/enonic-cli',
+    grantTypes: ['refresh_token', 'urn:ietf:params:oauth:grant-type:device_code'],
+    redirectUris: [],
+    scope: [],
+    resource: [],
+    enabled: true,
+    builtin: true
+}]
 ----
 
 === getIdProviderConfig
@@ -786,6 +1034,52 @@ const result = getProfile({
 ----
 
 
+=== getScopes
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Returns an ID provider's scopes, by id.
+
+[.lead]
+Parameters
+
+`getScopes()` takes a single `GetScopesParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider.
+|===
+
+[.lead]
+Returns
+
+*object[]* : (<<scope, `Scope`>>[]) The scopes; empty when the ID provider has none, or does not exist.
+
+[.lead]
+Example
+
+.Listing the scopes of the system ID provider
+[source,typescript]
+----
+import {getScopes} from '/lib/xp/auth';
+
+const scopes = getScopes({idProvider: 'system'});
+----
+
+.Sample response
+[source,typescript]
+----
+[{
+    idProvider: 'system',
+    id: 'content:write',
+    displayName: 'Edit content',
+    description: 'Create, change and publish content in all projects',
+    roles: ['role:cms.cm.app', 'role:cms.expert'],
+    required: false
+}]
+----
+
 === getUser
 
 Returns the logged-in user. If not logged-in, this will return `null`.
@@ -975,6 +1269,51 @@ Returns
 
 *void*
 
+=== modifyClient
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Changes a client. A property left out keeps its value; the name, the links and `grantTtl` set to `null` are cleared; a list given replaces the current one, and an empty list lifts a limit. Whether the client is built in cannot change. The caller must be allowed to administer the ID provider.
+
+[.lead]
+Parameters
+
+`modifyClient()` takes a single `ModifyClientParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider the client belongs to.
+| id | string | The client to change.
+| displayName | string | *Optional.* A new name, or `null` to fall back to the id.
+| uri | string | *Optional.* A new home page, or `null` to remove it.
+| logoUri | string | *Optional.* A new logo, or `null` to remove it.
+| policyUri | string | *Optional.* A new privacy policy, or `null` to remove it.
+| tosUri | string | *Optional.* New terms of service, or `null` to remove them.
+| grantTypes | string[] | *Optional.* The grant types the client may use.
+| redirectUris | string[] | *Optional.* The redirect URIs.
+| scope | string[] | *Optional.* The most scopes the client may ask for; empty for any.
+| resource | string[] | *Optional.* The most audiences the client may ask for; empty for any.
+| grantTtl | string | *Optional.* A new grant lifetime, or `null` for the configured default.
+| enabled | boolean | *Optional.* Whether the client may obtain tokens.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<client, `Client`>>) The changed client, or `null` when the ID provider has no such client.
+
+[.lead]
+Example
+
+.Disabling a client
+[source,typescript]
+----
+import {modifyClient} from '/lib/xp/auth';
+
+const client = modifyClient({idProvider: 'system', id: 'claude', enabled: false});
+----
+
 === modifyGroup
 
 Updates an existing group.
@@ -1143,6 +1482,44 @@ const theRole = modifyRole({
 })
 ----
 
+=== modifyScope
+
+image:xp-820.svg[XP 8.2.0,opts=inline] Changes a scope. A property left out keeps its value; `displayName` and `description` set to `null` are cleared. The caller must be allowed to administer the ID provider.
+
+[.lead]
+Parameters
+
+`modifyScope()` takes a single `ModifyScopeParams` object with these properties:
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider the scope belongs to.
+| id | string | The scope to change.
+| displayName | string | *Optional.* A new title, or `null` to fall back to the id.
+| description | string | *Optional.* A new description, or `null` to remove it.
+| roles | <<../libraries/types#role-key, RoleKey>>[] | *Optional.* New roles; an empty list makes the scope a label.
+| required | boolean | *Optional.* Whether the user may not drop the scope.
+|===
+
+[.lead]
+Returns
+
+*object* : (<<scope, `Scope`>>) The changed scope, or `null` when the ID provider has no such scope.
+
+[.lead]
+Example
+
+.Making a scope required
+[source,typescript]
+----
+import {modifyScope} from '/lib/xp/auth';
+
+const scope = modifyScope({idProvider: 'system', id: 'profile', required: true});
+----
+
 === modifyUser
 
 Updates an existing user.
@@ -1231,6 +1608,54 @@ removeMembers('role:roleId', ['user:system:user1', 'group:system:group-a']);
 == Type Definitions
 
 The core principal types — <<../libraries/types#user, `User`>>, <<../libraries/types#group, `Group`>>, <<../libraries/types#role, `Role`>>, <<../libraries/types#principal, `Principal`>>, and the key types <<../libraries/types#principal-key, `PrincipalKey`>>, <<../libraries/types#user-key, `UserKey`>>, <<../libraries/types#group-key, `GroupKey`>>, <<../libraries/types#role-key, `RoleKey`>> and <<../libraries/types#principal-type, `PrincipalType`>> — are shared across the libraries and defined on the <<../libraries/types#, Types>> page.
+
+[#client]
+=== Client
+
+image:xp-820.svg[XP 8.2.0,opts=inline] A client registered with an ID provider: who it is to the user, which flows it may use, and the most it may ask for. A client that registered itself through XP's registration endpoint has the same shape, and is not listed.
+
+[.lead]
+Properties
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider the client belongs to.
+| id | string | The client id, as the client sends it in `+client_id+`.
+| displayName | string | The name the consent page shows; the id when none was given.
+| uri | string | *Optional.* The client's home page.
+| logoUri | string | *Optional.* The client's logo.
+| policyUri | string | *Optional.* The client's privacy policy.
+| tosUri | string | *Optional.* The client's terms of service.
+| grantTypes | string[] | The grant types the client may use, sorted. A flow it does not list is refused to it.
+| redirectUris | string[] | The redirect URIs the client may be sent an authorization code to, sorted; matched exactly.
+| scope | string[] | The most scopes the client may ask for, sorted, and what it gets when it names none. Empty means any.
+| resource | string[] | The most audiences the client may ask for, sorted, and what it gets when it names none. Empty means any.
+| grantTtl | string | *Optional.* How long a grant to the client lives, as an ISO 8601 duration; absent for the configured default.
+| enabled | boolean | Whether the client may obtain tokens. A disabled client gets no new grant and cannot refresh.
+| builtin | boolean | Whether XP seeded the client. A built-in client can be changed and disabled, not deleted.
+|===
+
+[#scope]
+=== Scope
+
+image:xp-820.svg[XP 8.2.0,opts=inline] A scope of an ID provider: what a client may ask for, what the user is asked to approve, and the roles a token granted it is restricted to.
+
+[.lead]
+Properties
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| idProvider | string | Key of the ID provider the scope belongs to.
+| id | string | The scope's id: what a client puts in `scope` and what the token carries.
+| displayName | string | The title shown on the consent page; the id when none was given.
+| description | string | *Optional.* What approving the scope allows, in the user's words.
+| roles | <<../libraries/types#role-key, RoleKey>>[] | The roles a token granted the scope is restricted to, sorted. Empty for a label.
+| required | boolean | Whether the user may not drop the scope when approving a request that names it.
+|===
 
 [#login-scope-type]
 === LoginScopeType
