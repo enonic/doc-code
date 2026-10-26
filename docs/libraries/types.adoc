@@ -547,7 +547,7 @@ Properties
 |===
 | Name | Type | Description
 | id | string | The scope id the client asked for.
-| displayName | string | The title to show; the id when the scope has none.
+| title | string | The title to show, which may be the whole wording; the id when the scope has none.
 | description | string | *Optional.* What approving the scope allows, in the user's words.
 | roles | <<role-key, RoleKey>>[] | The roles the scope implies; empty for a scope that is only a label.
 | required | boolean | Whether the user must keep it: a required scope is granted whenever the request is approved.

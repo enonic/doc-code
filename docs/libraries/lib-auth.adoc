@@ -350,7 +350,7 @@ Parameters
 | Name | Type | Description
 | idProvider | string | Key of the ID provider to add the scope to.
 | id | string | The scope's id: what a client puts in `scope` and what the token carries. Printable ASCII without spaces, quotes or backslashes, and a valid node name.
-| displayName | string | *Optional.* The title shown on the consent page. Defaults to the id.
+| title | string | *Optional.* The title shown on the consent page, which may be the whole wording. Defaults to the id.
 | description | string | *Optional.* What approving the scope allows, in the user's words.
 | roles | <<../libraries/types#role-key, RoleKey>>[] | *Optional.* The roles a token granted the scope is restricted to. Omit for a label that restricts nothing by itself.
 | required | boolean | *Optional.* Whether the user may not drop the scope when approving a request that names it. Defaults to `false`.
@@ -372,7 +372,7 @@ import {createScope} from '/lib/xp/auth';
 const scope = createScope({
     idProvider: 'system',
     id: 'content:write',
-    displayName: 'Edit content',
+    title: 'Edit content',
     description: 'Create, change and publish content in all projects',
     roles: ['role:cms.cm.app', 'role:cms.expert']
 });
@@ -384,7 +384,7 @@ const scope = createScope({
 ({
     idProvider: 'system',
     id: 'content:write',
-    displayName: 'Edit content',
+    title: 'Edit content',
     description: 'Create, change and publish content in all projects',
     roles: ['role:cms.cm.app', 'role:cms.expert'],
     required: false
@@ -1073,7 +1073,7 @@ const scopes = getScopes({idProvider: 'system'});
 [{
     idProvider: 'system',
     id: 'content:write',
-    displayName: 'Edit content',
+    title: 'Edit content',
     description: 'Create, change and publish content in all projects',
     roles: ['role:cms.cm.app', 'role:cms.expert'],
     required: false
@@ -1484,7 +1484,7 @@ const theRole = modifyRole({
 
 === modifyScope
 
-image:xp-820.svg[XP 8.2.0,opts=inline] Changes a scope. A property left out keeps its value; `displayName` and `description` set to `null` are cleared. The caller must be allowed to administer the ID provider.
+image:xp-820.svg[XP 8.2.0,opts=inline] Changes a scope. A property left out keeps its value; `title` and `description` set to `null` are cleared. The caller must be allowed to administer the ID provider.
 
 [.lead]
 Parameters
@@ -1498,7 +1498,7 @@ Parameters
 | Name | Type | Description
 | idProvider | string | Key of the ID provider the scope belongs to.
 | id | string | The scope to change.
-| displayName | string | *Optional.* A new title, or `null` to fall back to the id.
+| title | string | *Optional.* A new title, or `null` to fall back to the id.
 | description | string | *Optional.* A new description, or `null` to remove it.
 | roles | <<../libraries/types#role-key, RoleKey>>[] | *Optional.* New roles; an empty list makes the scope a label.
 | required | boolean | *Optional.* Whether the user may not drop the scope.
@@ -1651,7 +1651,7 @@ Properties
 | Name | Type | Description
 | idProvider | string | Key of the ID provider the scope belongs to.
 | id | string | The scope's id: what a client puts in `scope` and what the token carries.
-| displayName | string | The title shown on the consent page; the id when none was given.
+| title | string | The title shown on the consent page; the id when none was given.
 | description | string | *Optional.* What approving the scope allows, in the user's words.
 | roles | <<../libraries/types#role-key, RoleKey>>[] | The roles a token granted the scope is restricted to, sorted. Empty for a label.
 | required | boolean | Whether the user may not drop the scope when approving a request that names it.

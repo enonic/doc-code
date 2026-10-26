@@ -195,7 +195,7 @@ image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP issues https://developer.
 | requestId | string | On `confirm` in the authorization code flow: the request the user decides on.
 | clientId | string | On `confirm`: the client id the client sent.
 | client | <<../libraries/types#device-login-client, DeviceLoginClient>> | On `confirm`: the client's record: the name to show, its links, and whether XP knows it. A client registered with the ID provider, or one that registered itself, is `registered`; one that merely named itself is not, and its record repeats the id.
-| scope | <<../libraries/types#device-login-scope, DeviceLoginScope>>[] | On `confirm`: the scopes the client asked for, each with its `id`, the `displayName` and `description` the ID provider gave it, the `roles` it implies and whether it is `required`. Empty when the client asked for none.
+| scope | <<../libraries/types#device-login-scope, DeviceLoginScope>>[] | On `confirm`: the scopes the client asked for, each with its `id`, the `title` and `description` the ID provider gave it, the `roles` it implies and whether it is `required`. Empty when the client asked for none.
 | unrestricted | boolean | On `confirm`: `true` when the ID provider has no scopes, so an approved token carries the user's full memberships.
 | audience | string[] | On `confirm`: the audiences the token will be for.
 | csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
@@ -204,7 +204,7 @@ image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP issues https://developer.
 
 The `confirm` page is a form that posts back to the same URL: `+user_code+` in device login or `request` in the authorization code flow, `approve` (`true` or `false`), `+_csrf+`, and one `scope` field per scope the user keeps. A scope left out is not granted, except a required one, which is granted whenever the request is approved; a scope that was never asked for is ignored. XP validates the posted choices; the page only renders. In device login the page shows the code, so the user can check it against the one on the device; the code flow has no code to show, and the browser is sent back to the client once the user has decided.
 
-Scopes are worded by the ID provider that holds them (<<../libraries/lib-auth#createscope, `createScope()`>>), so the page shows `displayName` and `description` and falls back to the id. A client's name and links are its own words about itself: show them as text and plain links, nothing more.
+Scopes are worded by the ID provider that holds them (<<../libraries/lib-auth#createscope, `createScope()`>>), so the page shows `title` and `description` and falls back to the id; a title may be the whole wording. A client's name and links are its own words about itself: show them as text and plain links, nothing more.
 
 .Minimal deviceVerification
 [source,typescript]
@@ -221,7 +221,7 @@ export function deviceVerification(req: Request): Response {
     }
     if (d.action === 'confirm') {
         const scopes = d.scope
-            .map(s => `<label><input type="checkbox" name="scope" value="${escape(s.id)}" checked ${s.required ? 'disabled' : ''}> ${escape(s.displayName)}</label>`)
+            .map(s => `<label><input type="checkbox" name="scope" value="${escape(s.id)}" checked ${s.required ? 'disabled' : ''}> ${escape(s.title)}</label>`)
             .join('');
         const required = d.scope
             .filter(s => s.required)
