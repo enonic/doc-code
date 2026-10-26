@@ -1175,7 +1175,7 @@ Parameters
 | scope | <<login-scope-type, LoginScopeType>> | *Optional.* Scope of the login. When set to `SESSION` the login is persistent; `REQUEST` makes it valid only for the current request; `NONE` checks the username and password without logging into the system. Defaults to `SESSION`.
 | roles | <<../libraries/types#role-key, RoleKey>>[] | *Optional.* image:xp-820.svg[XP 8.2.0,opts=inline] Restricts the login to these roles: the user keeps only the listed roles they actually hold, directly or through a group. A key that is not a role is rejected. An empty array leaves only the user's own key and the roles every authenticated user has. A member of `+role:system.admin+` counts as a member of every role, but keeps `+role:system.admin+` itself only when it is listed. Groups are never kept, so anything granted by naming a group, such as a node permission entry, an API, service, admin tool or admin extension allow list, or an ID provider access list, does not apply to a restricted login. Omit for no restriction. A `SESSION` login keeps the result for the session's lifetime.
 | actor | <<../libraries/types#principal-key, PrincipalKey>> | *Optional.* image:xp-820.svg[XP 8.2.0,opts=inline] The principal acting on the user's behalf, such as a service that logs a user in for a call it makes for them. Recorded next to the user in every audit log entry the request writes; it grants no permissions.
-| accessToken | <<login-access-token, LoginAccessToken>> | *Optional.* image:xp-820.svg[XP 8.2.0,opts=inline] An access token of another issuer, verified by the caller, typically an ID provider accepting a bearer token of its upstream identity system. XP applies the same rules as to its own tokens: the token's audience must be one the virtual host declares, or the login is refused with `authenticated: false` before any user is consulted; its scopes are mapped to roles through the host's scope catalogue for the ID provider, and `roles` narrows that further. The token is then exposed as `request.accessToken` (<<../libraries/types#request-access-token, `RequestAccessToken`>>). XP verifies nothing of the token itself.
+| accessToken | <<login-access-token, LoginAccessToken>> | *Optional.* image:xp-820.svg[XP 8.2.0,opts=inline] An access token of another issuer, verified by the caller, typically an ID provider accepting a bearer token of its upstream identity system. XP applies the same rules as to its own tokens: the token's audience must be one the virtual host declares, or the login is refused with `authenticated: false` before any user is consulted; its scopes are mapped to roles through the ID provider's scopes for the ID provider, and `roles` narrows that further. The token is then exposed as `request.accessToken` (<<../libraries/types#request-access-token, `RequestAccessToken`>>). XP verifies nothing of the token itself.
 |===
 
 [.lead]
@@ -1240,7 +1240,7 @@ import {login} from '/lib/xp/auth';
 // In an ID provider's autoLogin: `claims` is the payload of a bearer token the
 // ID provider verified against its upstream identity system, and `user` the XP
 // user it maps the subject to. XP checks the audience against the virtual host
-// and maps the scopes to roles through the host's catalogue for this ID provider.
+// and maps the scopes to roles through the ID provider's scopes.
 const result = login({
     user: user.login,
     idProvider: 'myIdProvider',
