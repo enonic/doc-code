@@ -148,7 +148,7 @@ image:xp-820.svg[XP 8.2.0,opts=inline] `autoLogin` runs for every ID provider on
 
 image:../../images/xp-820.svg[XP 8.2.0,opts=inline] A bearer token XP issued itself is accepted before `autoLogin` runs, on a vhost that enables the `autologin` flow for the user's ID provider and accepts the token's audience (one it declares, or XP's own issuer name on a vhost declaring none). `autoLogin` is then not called: the request is already authenticated, and the functions handling it see the user and <<request-response#access-token, `request.accessToken`>>. Any other bearer token reaches `autoLogin` untouched. See https://developer.enonic.com/docs/platform/stable/security/access-tokens[access tokens].
 
-An ID provider that verifies a bearer token of its upstream identity system can pass the token on with the `accessToken` option of <<../libraries/lib-auth#login, `login()`>>. XP then applies the same rules as to its own tokens: the audience must be one the virtual host serves, and the scopes map to roles through the ID provider's scopes. The request then carries the token as `request.accessToken`. Verifying the token stays the ID provider's job.
+An ID provider that verifies a bearer token of its upstream identity system can pass the token on with the `accessToken` option of <<../libraries/lib-auth#login, `login()`>>. XP then applies the same rules as to its own tokens: the audience must be one the virtual host serves, and the scopes map to roles through the ID provider's scopes; a token without scopes carries the user's full memberships. The request then carries the token as `request.accessToken`. Verifying the token stays the ID provider's job.
 
 [source,typescript]
 ----
@@ -196,13 +196,13 @@ image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP issues https://developer.
 | clientId | string | On `confirm`: the client id the client sent.
 | client | <<../libraries/types#oauth-consent-client, OAuthConsentClient>> | On `confirm`: the client's record: the name to show, its links, and whether XP knows it. A client registered with the ID provider, or one that registered itself, is `registered`; one that merely named itself is not, and its record repeats the id.
 | scope | <<../libraries/types#oauth-consent-scope, OAuthConsentScope>>[] | On `confirm`: the scopes the client asked for, each with its `id`, the `title` and `description` the ID provider gave it, the `roles` it implies and whether it is `required`. Empty when the client asked for none.
-| unrestricted | boolean | On `confirm`: `true` when the ID provider has no scopes, so an approved token carries the user's full memberships.
+| unrestricted | boolean | On `confirm`: `true` when the client asked for no scope, so an approved token carries the user's full memberships: the ID provider has no scopes, or the client is one the administrator registered without a scope list.
 | audience | string[] | On `confirm`: the audiences the token will be for.
 | csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
 | approved | boolean | On `done`: whether the user approved.
 |===
 
-The `confirm` page is a form that posts back to the same URL: `+user_code+` in device login or `request` in the authorization code flow, `approve` (`true` or `false`), `+_csrf+`, and one `scope` field per scope the user keeps. A scope left out is not granted, except a required one, which is granted whenever the request is approved; a scope that was never asked for is ignored. XP validates the posted choices; the page only renders. In device login the page shows the code, so the user can check it against the one on the device; the code flow has no code to show, and the browser is sent back to the client once the user has decided.
+The `confirm` page is a form that posts back to the same URL: `+user_code+` in device login or `request` in the authorization code flow, `approve` (`true` or `false`), `+_csrf+`, and one `scope` field per scope the user keeps. A scope left out is not granted, except a required one, which is granted whenever the request is approved; a scope that was never asked for is ignored. Keeping none of the scopes asked for denies the request, since a token with no permission is of no use; a page may disable approval while nothing is kept. XP validates the posted choices; the page only renders. In device login the page shows the code, so the user can check it against the one on the device; the code flow has no code to show, and the browser is sent back to the client once the user has decided.
 
 Scopes are worded by the ID provider that holds them (<<../libraries/lib-auth#createscope, `createScope()`>>), so the page shows `title` and `description` and falls back to the id; a title may be the whole wording. A client's name and links are its own words about itself: show them as text and plain links, nothing more.
 

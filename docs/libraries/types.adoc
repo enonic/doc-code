@@ -487,7 +487,7 @@ Properties
 | clientId | string | On `confirm`: the client id the client sent. Not a verified identity.
 | client | <<oauth-consent-client, OAuthConsentClient>> | On `confirm`: the client's record, as registered with the ID provider or as it registered itself. For a client XP does not know, the record repeats the id and is not registered.
 | scope | <<oauth-consent-scope, OAuthConsentScope>>[] | On `confirm`: the scopes the client asked for.
-| unrestricted | boolean | On `confirm`: `true` when the ID provider has no scopes, so an approved token carries the user's full memberships.
+| unrestricted | boolean | On `confirm`: `true` when the client asked for no scope, so an approved token carries the user's full memberships: the ID provider has no scopes, or the client is one the administrator registered without a scope list.
 | audience | string[] | On `confirm`: the audiences the token will be for.
 | csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
 | approved | boolean | On `done`: whether the user approved.
