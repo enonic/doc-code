@@ -461,31 +461,13 @@ Properties
 |===
 | Name | Type | Description
 | flows | string[] | The flows the host serves for the ID provider, sorted. Empty means no restriction.
-| audience | string[] | The audiences the host serves, sorted. Empty means the host accepts only tokens whose audience is XP's own issuer name.
-| scopes | object | The scope catalogue: each scope id mapped to an <<id-provider-scope, IdProviderScope>>.
-|===
-
-[#id-provider-scope]
-=== IdProviderScope
-
-image:xp-820.svg[XP 8.2.0,opts=inline] A scope of the host's catalogue, as declared by `+mapping.<name>.idProvider.<idp>.scope.<id>.*+`.
-
-[.lead]
-Properties
-
-[%header,cols="1%,1%,98%a"]
-[frame="none"]
-[grid="none"]
-|===
-| Name | Type | Description
-| roles | <<role-key, RoleKey>>[] | The roles the scope implies, sorted. Empty for a label-only scope.
-| required | boolean | Whether the user must keep it.
+| audience | string[] | The audiences the host is configured to serve, sorted. Empty means the host serves its own URL and XP's issuer name.
 |===
 
 [#device-login]
-=== DeviceLogin
+=== OAuthConsent
 
-image:xp-820.svg[XP 8.2.0,opts=inline] The state XP hands an ID provider's `deviceVerification` function as `request.deviceLogin`: a union of `DeviceLoginEnter`, `DeviceLoginConfirm`, `DeviceLoginDone` and `DeviceLoginWrongAccount`, told apart by `action`. Every member carries `idProvider` and `user`; each other property belongs to one action. See <<../web/id-providers#deviceverification, deviceVerification>>.
+image:xp-820.svg[XP 8.2.0,opts=inline] The state XP hands an ID provider's `oauthConsent` function as `request.oauthConsent`, for device login and the authorization code flow alike: a union of `OAuthConsentEnter`, `OAuthConsentConfirm`, `OAuthConsentDone` and `OAuthConsentWrongAccount`, told apart by `action`. Every member carries `idProvider` and `user`; each other property belongs to one action. See <<../web/id-providers#oauthconsent, oauthConsent>>.
 
 [.lead]
 Properties
@@ -497,19 +479,22 @@ Properties
 | Name | Type | Description
 | action | string | `enter`, `confirm`, `done` or `wrongAccount`. Narrow on it to reach the action's own properties.
 | idProvider | string | Name of the ID provider the page belongs to.
-| user | <<device-login-user, DeviceLoginUser>> | The signed-in user.
+| user | <<oauth-consent-user, OAuthConsentUser>> | The signed-in user.
 | error | string | *Optional.* On `enter`: why the previous code was refused. The only value so far is `+invalid_code+`.
-| userCode | string | On `confirm`: the code the client displays.
-| clientId | string | On `confirm`: the name the client gave itself. Not a verified identity.
-| scope | <<device-login-scope, DeviceLoginScope>>[] | On `confirm`: the scopes the client asked for.
-| unrestricted | boolean | On `confirm`: `true` when the host has no scope catalogue, so an approved token carries the user's full memberships.
+| flow | string | On `confirm`: `device` for device login, `code` for the authorization code flow.
+| userCode | string | On `confirm` in device login: the code the client displays.
+| requestId | string | On `confirm` in the authorization code flow: the request the user decides on, posted back as `request`.
+| clientId | string | On `confirm`: the client id the client sent. Not a verified identity.
+| client | <<oauth-consent-client, OAuthConsentClient>> | On `confirm`: the client's record, as registered with the ID provider or as it registered itself. For a client XP does not know, the record repeats the id and is not registered.
+| scope | <<oauth-consent-scope, OAuthConsentScope>>[] | On `confirm`: the scopes the client asked for.
+| unrestricted | boolean | On `confirm`: `true` when the client asked for no scope, so an approved token carries the user's full memberships: the ID provider has no scopes, or the client is one the administrator registered without a scope list.
 | audience | string[] | On `confirm`: the audiences the token will be for.
 | csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
 | approved | boolean | On `done`: whether the user approved.
 |===
 
-[#device-login-user]
-=== DeviceLoginUser
+[#oauth-consent-user]
+=== OAuthConsentUser
 
 image:xp-820.svg[XP 8.2.0,opts=inline] The signed-in user, as shown on the consent page.
 
@@ -526,10 +511,32 @@ Properties
 | displayName | string | Human-friendly name.
 |===
 
-[#device-login-scope]
-=== DeviceLoginScope
+[#oauth-consent-client]
+=== OAuthConsentClient
 
-image:xp-820.svg[XP 8.2.0,opts=inline] A scope as shown on the consent page.
+image:xp-820.svg[XP 8.2.0,opts=inline] The client as the consent page may present it. The links are the client's own words about itself; XP admits only `http` and `https` URLs there.
+
+[.lead]
+Properties
+
+[%header,cols="1%,1%,98%a"]
+[frame="none"]
+[grid="none"]
+|===
+| Name | Type | Description
+| id | string | The client id.
+| displayName | string | The name to show: the registered one, or the id for a client XP does not know.
+| uri | string | *Optional.* The client's home page.
+| logoUri | string | *Optional.* The client's logo.
+| policyUri | string | *Optional.* The client's privacy policy.
+| tosUri | string | *Optional.* The client's terms of service.
+| registered | boolean | Whether XP knows the client: registered with the ID provider, or self-registered. `false` for a client that merely named itself.
+|===
+
+[#oauth-consent-scope]
+=== OAuthConsentScope
+
+image:xp-820.svg[XP 8.2.0,opts=inline] A scope as shown on the consent page, worded by its ID provider.
 
 [.lead]
 Properties
@@ -540,6 +547,8 @@ Properties
 |===
 | Name | Type | Description
 | id | string | The scope id the client asked for.
+| title | string | The title to show, which may be the whole wording; the id when the scope has none.
+| description | string | *Optional.* What approving the scope allows, in the user's words.
 | roles | <<role-key, RoleKey>>[] | The roles the scope implies; empty for a scope that is only a label.
 | required | boolean | Whether the user must keep it: a required scope is granted whenever the request is approved.
 |===
