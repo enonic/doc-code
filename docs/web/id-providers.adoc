@@ -39,7 +39,7 @@ NOTE: This diagram covers the ID provider's *endpoint* surfaces. Its two *pipeli
 
 `+/_/idprovider/<name>+`:: The base endpoint dispatches to the provider's `GET`/`POST`/… HTTP functions.
 
-`+/_/idprovider/<name>/device/code+`, `+/_/idprovider/<name>/device+`, `+/_/idprovider/<name>/authorize+`, `+/_/idprovider/<name>/token+`, `+/_/idprovider/<name>/register+`:: image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP's own https://developer.enonic.com/docs/platform/stable/security/access-tokens[access token] endpoints, served for the provider's users when the vhost enables the `device` or `code` flow, with the OAuth metadata under `+/_/idprovider/<name>/.well-known/+`. The implementation does not serve them; it only renders the consent page, through <<#deviceverification, `deviceVerification`>>.
+`+/_/idprovider/<name>/device/code+`, `+/_/idprovider/<name>/device+`, `+/_/idprovider/<name>/authorize+`, `+/_/idprovider/<name>/token+`, `+/_/idprovider/<name>/register+`:: image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP's own https://developer.enonic.com/docs/platform/stable/security/access-tokens[access token] endpoints, served for the provider's users when the vhost enables the `device` or `code` flow, with the OAuth metadata under `+/_/idprovider/<name>/.well-known/+`. The implementation does not serve them; it only renders the consent page, through <<#oauthconsent, `oauthConsent`>>.
 
 Rather than hardcoding these paths, generate them with the portal library helpers — <<../libraries/lib-portal#loginurl, loginUrl()>>, <<../libraries/lib-portal#logouturl, logoutUrl()>> and <<../libraries/lib-portal#idproviderurl, idProviderUrl()>> — which resolve the correct contextual URL for the current request.
 
@@ -174,12 +174,12 @@ export function autoLogin(req: Request): void {
 }
 ----
 
-[#deviceverification]
-=== deviceVerification
+[#oauthconsent]
+=== oauthConsent
 
-image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP issues https://developer.enonic.com/docs/platform/stable/security/access-tokens[access tokens] to an ID provider's users through the OAuth device flow (https://datatracker.ietf.org/doc/html/rfc8628[RFC 8628]) and the authorization code flow with PKCE: a command-line tool, an MCP client or another application asks XP for access, the user signs in and approves, and the client receives XP-issued tokens. XP owns the protocols, the codes and the tokens; the page the user sees is the ID provider's, as the login page is. An ID provider that exports `deviceVerification` supports both flows; one that does not answers 404 on their endpoints, so a client is never handed a code it cannot complete.
+image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP issues https://developer.enonic.com/docs/platform/stable/security/access-tokens[access tokens] to an ID provider's users through the OAuth device flow (https://datatracker.ietf.org/doc/html/rfc8628[RFC 8628]) and the authorization code flow with PKCE: a command-line tool, an MCP client or another application asks XP for access, the user signs in and approves, and the client receives XP-issued tokens. XP owns the protocols, the codes and the tokens; the page the user sees is the ID provider's, as the login page is. An ID provider that exports `oauthConsent` supports both flows; one that does not answers 404 on their endpoints, so a client is never handed a code it cannot complete.
 
-`deviceVerification(req)` is called for `GET` and `POST` on `+/_/idprovider/<name>/device+` and `+/_/idprovider/<name>/authorize+`, once XP has done its part: the user is signed in (an unauthenticated request is answered with 401 and reaches the page again after the interactive login), the request has been looked up and checked, and a posted choice has been applied. The function renders a page for the state XP hands it in `req.deviceLogin` (<<../libraries/types#device-login, `DeviceLogin`>>, a union narrowed by `action`):
+`oauthConsent(req)` is called for `GET` and `POST` on `+/_/idprovider/<name>/device+` and `+/_/idprovider/<name>/authorize+`, once XP has done its part: the user is signed in (an unauthenticated request is answered with 401 and reaches the page again after the interactive login), the request has been looked up and checked, and a posted choice has been applied. The function renders a page for the state XP hands it in `req.oauthConsent` (<<../libraries/types#device-login, `OAuthConsent`>>, a union narrowed by `action`):
 
 [%header,cols="1%,1%,98%a"]
 [frame="none"]
@@ -188,14 +188,14 @@ image:../../images/xp-820.svg[XP 8.2.0,opts=inline] XP issues https://developer.
 | Name | Type | Description
 | idProvider | string | Name of the ID provider the page belongs to.
 | action | string | What to show: `enter` (ask for the code the client displays), `confirm` (show the request and ask for approval), `done` (the request was approved or denied) or `wrongAccount` (the signed-in user belongs to another ID provider and cannot approve here).
-| user | <<../libraries/types#device-login-user, DeviceLoginUser>> | The signed-in user: `key`, `login`, `displayName`.
+| user | <<../libraries/types#oauth-consent-user, OAuthConsentUser>> | The signed-in user: `key`, `login`, `displayName`.
 | error | string | *Optional.* On `enter`: why the previous code was refused. The only value so far is `+invalid_code+`; the page supplies the wording.
 | flow | string | On `confirm`: `device` for device login, `code` for the authorization code flow.
 | userCode | string | On `confirm` in device login: the code the client displays, so the user can check it matches.
 | requestId | string | On `confirm` in the authorization code flow: the request the user decides on.
 | clientId | string | On `confirm`: the client id the client sent.
-| client | <<../libraries/types#device-login-client, DeviceLoginClient>> | On `confirm`: the client's record: the name to show, its links, and whether XP knows it. A client registered with the ID provider, or one that registered itself, is `registered`; one that merely named itself is not, and its record repeats the id.
-| scope | <<../libraries/types#device-login-scope, DeviceLoginScope>>[] | On `confirm`: the scopes the client asked for, each with its `id`, the `title` and `description` the ID provider gave it, the `roles` it implies and whether it is `required`. Empty when the client asked for none.
+| client | <<../libraries/types#oauth-consent-client, OAuthConsentClient>> | On `confirm`: the client's record: the name to show, its links, and whether XP knows it. A client registered with the ID provider, or one that registered itself, is `registered`; one that merely named itself is not, and its record repeats the id.
+| scope | <<../libraries/types#oauth-consent-scope, OAuthConsentScope>>[] | On `confirm`: the scopes the client asked for, each with its `id`, the `title` and `description` the ID provider gave it, the `roles` it implies and whether it is `required`. Empty when the client asked for none.
 | unrestricted | boolean | On `confirm`: `true` when the ID provider has no scopes, so an approved token carries the user's full memberships.
 | audience | string[] | On `confirm`: the audiences the token will be for.
 | csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
@@ -206,7 +206,7 @@ The `confirm` page is a form that posts back to the same URL: `+user_code+` in d
 
 Scopes are worded by the ID provider that holds them (<<../libraries/lib-auth#createscope, `createScope()`>>), so the page shows `title` and `description` and falls back to the id; a title may be the whole wording. A client's name and links are its own words about itself: show them as text and plain links, nothing more.
 
-.Minimal deviceVerification
+.Minimal oauthConsent
 [source,typescript]
 ----
 import type {Request, Response} from '@enonic-types/core';
@@ -214,8 +214,8 @@ import type {Request, Response} from '@enonic-types/core';
 const escape = (value: string): string =>
     value.replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c] as string);
 
-export function deviceVerification(req: Request): Response {
-    const d = req.deviceLogin;
+export function oauthConsent(req: Request): Response {
+    const d = req.oauthConsent;
     if (!d) {
         return {status: 404};
     }

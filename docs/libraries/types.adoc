@@ -465,9 +465,9 @@ Properties
 |===
 
 [#device-login]
-=== DeviceLogin
+=== OAuthConsent
 
-image:xp-820.svg[XP 8.2.0,opts=inline] The state XP hands an ID provider's `deviceVerification` function as `request.deviceLogin`, for device login and the authorization code flow alike: a union of `DeviceLoginEnter`, `DeviceLoginConfirm`, `DeviceLoginDone` and `DeviceLoginWrongAccount`, told apart by `action`. Every member carries `idProvider` and `user`; each other property belongs to one action. See <<../web/id-providers#deviceverification, deviceVerification>>.
+image:xp-820.svg[XP 8.2.0,opts=inline] The state XP hands an ID provider's `oauthConsent` function as `request.oauthConsent`, for device login and the authorization code flow alike: a union of `OAuthConsentEnter`, `OAuthConsentConfirm`, `OAuthConsentDone` and `OAuthConsentWrongAccount`, told apart by `action`. Every member carries `idProvider` and `user`; each other property belongs to one action. See <<../web/id-providers#oauthconsent, oauthConsent>>.
 
 [.lead]
 Properties
@@ -479,22 +479,22 @@ Properties
 | Name | Type | Description
 | action | string | `enter`, `confirm`, `done` or `wrongAccount`. Narrow on it to reach the action's own properties.
 | idProvider | string | Name of the ID provider the page belongs to.
-| user | <<device-login-user, DeviceLoginUser>> | The signed-in user.
+| user | <<oauth-consent-user, OAuthConsentUser>> | The signed-in user.
 | error | string | *Optional.* On `enter`: why the previous code was refused. The only value so far is `+invalid_code+`.
 | flow | string | On `confirm`: `device` for device login, `code` for the authorization code flow.
 | userCode | string | On `confirm` in device login: the code the client displays.
 | requestId | string | On `confirm` in the authorization code flow: the request the user decides on, posted back as `request`.
 | clientId | string | On `confirm`: the client id the client sent. Not a verified identity.
-| client | <<device-login-client, DeviceLoginClient>> | On `confirm`: the client's record, as registered with the ID provider or as it registered itself. For a client XP does not know, the record repeats the id and is not registered.
-| scope | <<device-login-scope, DeviceLoginScope>>[] | On `confirm`: the scopes the client asked for.
+| client | <<oauth-consent-client, OAuthConsentClient>> | On `confirm`: the client's record, as registered with the ID provider or as it registered itself. For a client XP does not know, the record repeats the id and is not registered.
+| scope | <<oauth-consent-scope, OAuthConsentScope>>[] | On `confirm`: the scopes the client asked for.
 | unrestricted | boolean | On `confirm`: `true` when the ID provider has no scopes, so an approved token carries the user's full memberships.
 | audience | string[] | On `confirm`: the audiences the token will be for.
 | csrf | string | On `confirm`: a per-session token the form must post back as `+_csrf+`.
 | approved | boolean | On `done`: whether the user approved.
 |===
 
-[#device-login-user]
-=== DeviceLoginUser
+[#oauth-consent-user]
+=== OAuthConsentUser
 
 image:xp-820.svg[XP 8.2.0,opts=inline] The signed-in user, as shown on the consent page.
 
@@ -511,8 +511,8 @@ Properties
 | displayName | string | Human-friendly name.
 |===
 
-[#device-login-client]
-=== DeviceLoginClient
+[#oauth-consent-client]
+=== OAuthConsentClient
 
 image:xp-820.svg[XP 8.2.0,opts=inline] The client as the consent page may present it. The links are the client's own words about itself; XP admits only `http` and `https` URLs there.
 
@@ -533,8 +533,8 @@ Properties
 | registered | boolean | Whether XP knows the client: registered with the ID provider, or self-registered. `false` for a client that merely named itself.
 |===
 
-[#device-login-scope]
-=== DeviceLoginScope
+[#oauth-consent-scope]
+=== OAuthConsentScope
 
 image:xp-820.svg[XP 8.2.0,opts=inline] A scope as shown on the consent page, worded by its ID provider.
 
