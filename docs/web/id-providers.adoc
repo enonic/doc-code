@@ -97,7 +97,7 @@ image:../../images/xp-820.svg[XP 8.2.0,opts=inline] Every function receives the 
 }
 ----
 <1> The flows the host serves for the ID provider, sorted. Empty means no restriction on the ID provider's own flows; XP's token flows `device`, `code` and `register` are served only where listed, or on the default virtual host. An ID provider uses it to enable its own flows: the standard ID provider serves basic authentication only where `basic` is listed or the list is empty.
-<2> The audiences the host is configured to serve, sorted. Empty means the host serves its own URL and XP's issuer name. The scopes a token can be asked for are the ID provider's, not the host's: see <<../libraries/lib-auth#getscopes, `getScopes()`>>.
+<2> The audiences the host serves, sorted: its own URL, the one the request's mapping is served at, and any it is configured to serve. XP's own issuer name is an audience of XP's tokens only, accepted where the host configures none. The scopes a token can be asked for are the ID provider's, not the host's: see <<../libraries/lib-auth#getscopes, `getScopes()`>>.
 
 NOTE: To serve static assets (CSS, JS, images — e.g. for a login page), use the https://developer.enonic.com/docs/lib-static[`lib-static`] library, *not* `lib-asset`. Like admin extensions, an ID provider runs in a context where `lib-asset` does not fit; `lib-static` (typically paired with `lib-router`) is designed for serving static files from here.
 
