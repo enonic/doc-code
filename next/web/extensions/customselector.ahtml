@@ -526,7 +526,7 @@ interfaces:
 <h2 id="request"><a class="link" href="#request">Request</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Content Studio dispatches a <code>GET</code> to the extension URL with the selected content as query parameters:</p>
+<p>Content Studio dispatches a <code>GET</code> to the extension URL with the selection state and the context of the content being edited as query parameters:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Parameters sent to the extension URL</caption>
@@ -556,6 +556,18 @@ interfaces:
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>query</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String with the search text typed by the user in the CustomSelector input field.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content UUID of the content being edited — the content that holds the CustomSelector.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>repository</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repository id of the project the content belongs to, e.g. <code>com.enonic.cms.default</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>branch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always <code>draft</code> — the CustomSelector is only used while editing content.</p></td>
 </tr>
 </tbody>
 </table>
@@ -799,7 +811,7 @@ interfaces:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-26 18:50:41 UTC
+Last updated 2026-11-11 10:05:51 UTC
 </div>
 </div>
 </body>
