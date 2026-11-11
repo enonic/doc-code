@@ -37,7 +37,7 @@ interfaces:
 
 == Request
 
-Content Studio dispatches a `GET` to the extension URL with the selected content as query parameters:
+Content Studio dispatches a `GET` to the extension URL with the selection state and the context of the content being edited as query parameters:
 
 .Parameters sent to the extension URL
 [cols="1,3"]
@@ -55,6 +55,15 @@ Content Studio dispatches a `GET` to the extension URL with the selected content
 
 | `query`
 | String with the search text typed by the user in the CustomSelector input field.
+
+| `contentId`
+| Content UUID of the content being edited — the content that holds the CustomSelector.
+
+| `repository`
+| Repository id of the project the content belongs to, e.g. `+com.enonic.cms.default+`.
+
+| `branch`
+| Always `draft` — the CustomSelector is only used while editing content.
 |===
 
 In the implementation, all standard XP request fields are available too: `req.locales` for i18n negotiation, `req.user` for the active user, and so on.
