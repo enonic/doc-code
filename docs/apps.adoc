@@ -2,9 +2,9 @@
 :toc: right
 :imagesdir: images
 
-An *Enonic application* is a named package of functionality that XP installs, starts and configures as one unit. The application name is unique within an installation, and everything the app ships is identified by it: schemas, endpoints, tools, extensions, jobs and configuration. Many apps run side by side in one XP instance, and most of XP's own components are apps.
+An *Enonic application*, or *app*, is a named, deployable package containing code, schemas, assets, or any combination of these. XP installs, starts, and configures the app as one unit. The application name is unique within an installation and identifies the resources the app contributes.
 
-An app may contain nothing but CMS schemas, or JavaScript that serves a site or an API, or Java components, or all of these. This documentation covers apps that contain code. Modelling content with schemas is covered in the https://developer.enonic.com/docs/cms/stable[CMS documentation], and installing and operating apps in the https://developer.enonic.com/docs/platform/stable/apps[platform documentation].
+An app can deploy schemas or assets without executable code. Apps that include code can implement APIs, admin tools, websites, background tasks, and other functionality. This reference focuses on developing application code and packaging apps, including <<schemas#, deploying schemas through an app>>. Schema design and content modeling are covered in the https://developer.enonic.com/docs/cms/stable[CMS documentation], and installation and operations in the https://developer.enonic.com/docs/platform/stable/apps[platform documentation].
 
 [#name]
 == Name and namespace
@@ -45,6 +45,7 @@ Platform-provided types use the reserved names `base`, `portal` and `media`, as 
 Everything below is optional. An app ships whichever parts it needs.
 
 Schemas:: Content types, mixins, form fragments and macros, under `src/main/resources/cms/`. See <<schemas#, Schemas>>.
+Assets:: Images, stylesheets, client-side JavaScript, and other resource files. See <<tooling/starters#general_resources, General resources>>.
 Sites:: Page, layout and part components, mappings, filters and response processors for CMS-driven sites. See <<web/sites#, Sites>>.
 APIs:: HTTP endpoints exposed under `/api`, and mountable under sites, webapps and admin tools. See <<web/apis#, APIs>>.
 Admin tools and extensions:: Screens in the XP admin, and extensions that plug into other tools. See <<web/tools#, Tools>> and <<web/extensions#, Extensions>>.
@@ -67,15 +68,15 @@ Install:: The app package is uploaded to the cluster and registered. Installatio
 
 Start:: XP starts the app on every cluster node. If the app contains <<runtime/main#, `main.ts`>> at `src/main/resources/main.ts`, it is loaded and its top-level code runs once per node. image:xp-810.svg[XP 8.1.0,opts=inline] Nothing else in the app runs until it returns, so start-up cannot race the code it initializes. `+__.disposer()+` registrations made during start are remembered for the stop phase; registering one later is not dependable.
 
-Running:: The app is reachable. HTTP functions, event listeners, scheduled tasks, components, and admin tools all become live. Modules are loaded lazily on first `require()` and cached for the lifetime of the deploy.
+Running:: The app's contributions are available. Any HTTP functions, event listeners, scheduled tasks, components, or admin tools it implements become live. For apps containing JavaScript, module loading and caching follow the <<runtime#loading_and_caching, runtime's execution model>>.
 
 Stop:: Before uninstall (or before a redeploy of a new version), XP stops the app on every node. Registered disposers are invoked. After stop, no further requests reach the app's code.
 
 Uninstall:: The app is removed from the cluster.
 
-The platform calls `main.ts` exactly once per app start, per node. Top-level code in any other module runs once on first `require()` and is then cached — see <<runtime#loading_and_caching, Runtime: Loading and caching>>.
+If the app includes `main.ts`, the platform calls it exactly once per app start, per node. Top-level code in any other module runs once on first `require()` and is then cached — see <<runtime#loading_and_caching, Runtime: Loading and caching>>.
 
-Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and `main.ts` runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.
+Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and `main.ts` runs again if present. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.
 
 This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).
 
@@ -92,4 +93,4 @@ The file format, location, and reload behavior are documented in the https://dev
 
 == Packaging
 
-The https://developer.enonic.com/docs/enonic-gradle-plugins[Enonic Gradle plugin] builds an app into a single file, today a jar, that XP installs as one unit; the name is set as `appName` in _gradle.properties_. See <<tooling/build#, Build system>>.
+The https://developer.enonic.com/docs/enonic-gradle-plugins[Enonic Gradle plugin] packages app resources and any compiled code into a single JAR file that XP installs as one unit. This JAR is the application bundle referred to in the runtime and module-loading documentation. Executable code is optional; apps containing only schemas or assets use the same packaging. Set the application name with `appName` in _gradle.properties_. See <<tooling/build#, Build system>>.

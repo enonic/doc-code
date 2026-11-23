@@ -2,9 +2,9 @@
 :toc: right
 :imagesdir: images
 
-The XP runtime executes applications built with the Enonic application framework. The framework defines the programming contracts and APIs; the runtime provides the execution environment for HTTP requests, background tasks, event listeners, and application lifecycle functions.
+The XP runtime executes code in Enonic apps using the Enonic application framework. The framework defines the programming contracts and APIs; the runtime provides the execution environment for HTTP requests, background tasks, event listeners, and application lifecycle functions.
 
-This section covers the JVM-hosted JavaScript engine, module system, threading model, and cluster behavior. What an app is, and what it may contain, is covered under <<apps#, Applications>>.
+This section covers the JVM-hosted JavaScript engine, module system, threading model, and cluster behavior. Apps containing only schemas or assets do not need JavaScript modules. What an app is, and what it may contain, is covered under <<apps#, Applications>>.
 
 == Execution model
 
@@ -62,7 +62,7 @@ See <<runtime/functions#loading_and_caching, Functions: Loading and caching>> fo
 
 === Redeploy
 
-Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and `main.ts` runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.
+Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and `main.ts` runs again if present. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.
 
 This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).
 
@@ -106,9 +106,9 @@ This section documents the parts of an app that are not tied to a specific HTTP 
 
 <<runtime/engines#, JavaScript engines>>:: Nashorn and GraalJS: how an app chooses its engine, and what differs between them.
 
-<<runtime/functions#, Functions>>:: How modules and exported functions form the building blocks of an app. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).
+<<runtime/functions#, Functions>>:: How modules and exported functions form the building blocks of an app's JavaScript code. Covers the CommonJS module system, the bundle boundary, module caching, and the framework contracts that bind specific exports to triggers (HTTP requests, events, scheduled times, lifecycle).
 
-<<runtime/main#, Main>>:: The `main.ts` lifecycle hook — code that runs when your app starts and stops.
+<<runtime/main#, Main>>:: The optional `main.ts` lifecycle hook — code that runs when your app starts and stops.
 
 <<runtime/globals#, Globals>>:: Global objects and functions available in every module — `app`, `log`, `require`, `resolve`, and friends.
 
@@ -123,6 +123,6 @@ Setting up TypeScript for the build is covered under <<tooling/typescript#, Tool
 
 == How the parts relate
 
-The runtime is the foundation: a JVM-based execution environment with a CommonJS module system, multithreading, clustering, and a platform's worth of services attached. Functions are the units of code the runtime invokes — most of what you write is regular module code, with a smaller subset bound to framework contracts. `main.ts` is the lifecycle contract. Events are the cluster-wide pub/sub primitive, available from any function. Globals, TypeScript, the Java bridge, and localization are tools you reach for inside any function, regardless of which contract called it.
+The runtime is the foundation: a JVM-based execution environment with a CommonJS module system, multithreading, clustering, and a platform's worth of services attached. Functions are the units of code the runtime invokes — most of what you write is regular module code, with a smaller subset bound to framework contracts. `main.ts` is the optional lifecycle contract. Events are the cluster-wide pub/sub primitive, available from any function. Globals, TypeScript, the Java bridge, and localization are tools you reach for inside any function, regardless of which contract called it.
 
 For HTTP-bound contracts (request handlers, filters, error handlers, websockets, SSE, ID providers), see <<web#, Web>>. For asynchronous background execution (tasks, scheduled jobs), see <<background#, Background>>.

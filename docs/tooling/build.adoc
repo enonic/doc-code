@@ -10,7 +10,7 @@ NOTE: Upgrading from XP 7? See <<../upgrade/xp7#, Upgrading Enonic apps from XP 
 
 Enonic apps and libraries use https://gradle.org/[Gradle] as the main build tool.
 
-Gradle is used because Enonic apps are packaged and deployed as .jar (Java) files in the end.
+Gradle packages app resources and any compiled code into a deployable JAR file. Apps containing only schemas or assets use the same packaging and deployment process.
 
 Builds run on Gradle 9.x — bundle a Gradle Wrapper of version 9.5.0 or later in your project.
 

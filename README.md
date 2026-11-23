@@ -1,18 +1,16 @@
-# Enonic CMS Stack - Reference documentation
+# Enonic Development Kit — Reference documentation
 
-Enonic's CMS features span several different software products which combined make up the Enonic CMS stack. For ease ease of use, the documenation of these are combined here. 
+This repository contains the AsciiDoc reference documentation for the Enonic Development Kit (EDK): the Enonic application framework and tools for building and deploying Enonic apps.
 
-The idependently released software components covered by this documentation are:
+The Enonic application framework is the server-side application framework built into Enonic XP. An Enonic app is a deployable package containing code, schemas, assets, or any combination of these. Executable code is optional.
 
-* Enonic XP (Platform)
-* Guillotine (Headless API)
-* Content Studio (Authoring interface)
-* Content Studio+ (Extensions for subscription customers)
+The reference focuses on application development: runtime behavior, web services, background tasks, standard libraries, and packaging. It also covers deploying schemas through apps; schema design and content modeling belong in the CMS documentation.
 
-This, and other relevant Enonic XP documentation is published on the Enonic Developer Portal:
+Published documentation:
 
-* [Enonic CMS](https://developer.enonic.com/docs/cms)
-* [Enonic XP](https://developer.enonic.com/docs/xp)
-* [Enonic Development ](https://developer.enonic.com/docs/sting)
+- [Enonic Development Kit](https://developer.enonic.com/docs/code)
+- [Enonic CMS](https://developer.enonic.com/docs/cms) for content modeling and content APIs
+- [Enonic XP platform](https://developer.enonic.com/docs/platform) for architecture and administration
+- [Content Studio](https://developer.enonic.com/docs/content-studio) for the content authoring interface
 
-NOTE: This documentation is versioned according to XP main version, but each software component is updated according to version and release notes
+Documentation sources are under `docs/`. `docs/versions.json` defines the published versions, and `docs/menu.json` defines navigation.
