@@ -465,7 +465,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="events"><a class="link" href="#events">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The XP framework enable developers to create and/or listen to events.
+<p>The Enonic framework lets applications publish and listen to events.
 Events may be local (within a single server) or cluster wide (distributed to all servers within a cluster).
 In addition to application specific events, XP itself produces a range of standard events.</p>
 </div>
@@ -707,7 +707,7 @@ eventLib.send({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 13:02:14 UTC
+Last updated 2026-11-23 13:31:38 UTC
 </div>
 </div>
 </body>

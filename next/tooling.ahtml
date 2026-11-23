@@ -441,16 +441,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#introduction">Introduction</a></li>
+<li><a href="#tools_and_libraries">Tools and libraries</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enonic&#8217;s Development Kit consists of several independent tools:</p>
+<p>The Enonic Development Kit (EDK) combines the Enonic application framework with development tools. These tools help you create, build, test, and deploy Enonic apps.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tools_and_libraries"><a class="link" href="#tools_and_libraries">Tools and libraries</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The development tools and libraries include:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -485,7 +492,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 13:02:14 UTC
+Last updated 2026-11-23 13:31:38 UTC
 </div>
 </div>
 </body>

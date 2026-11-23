@@ -452,7 +452,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Enonic Development Kit (EDK) is the combined server-side TypeScript framework and tools for Enonic app development.</p>
+<p>The Enonic Development Kit (EDK) combines the Enonic application framework with tools for building and deploying Enonic apps.</p>
+</div>
+<div class="paragraph">
+<p>The <strong>Enonic application framework</strong>, also called the <strong>Enonic framework</strong>, is the server-side application framework built into Enonic XP. It provides the programming model and APIs for applications written in JavaScript or TypeScript, including <a href="web.ahtml">web services</a>, <a href="background/tasks.ahtml">background tasks</a>, <a href="background/scheduler.ahtml">scheduled jobs</a>, <a href="runtime/events.ahtml">event processing</a>, and access to platform services such as storage and identity.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -549,7 +552,7 @@ For a hands-on introduction to development with Enonic XP, visit the <a href="ht
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 13:02:14 UTC
+Last updated 2026-11-23 13:31:38 UTC
 </div>
 </div>
 </body>

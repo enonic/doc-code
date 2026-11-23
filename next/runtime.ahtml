@@ -468,7 +468,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>What powers your Enonic app at execution time - the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free. Regardless of whether the app serves an API, a webapp or a site, this is the environment its code runs in. What an app is, and what it may contain, is covered under <a href="apps.ahtml">Applications</a>.</p>
+<p>The XP runtime executes applications built with the Enonic application framework. The framework defines the programming contracts and APIs; the runtime provides the execution environment for HTTP requests, background tasks, event listeners, and application lifecycle functions.</p>
+</div>
+<div class="paragraph">
+<p>This section covers the JVM-hosted JavaScript engine, module system, threading model, and cluster behavior. What an app is, and what it may contain, is covered under <a href="apps.ahtml">Applications</a>.</p>
 </div>
 </div>
 </div>
@@ -750,7 +753,7 @@ On GraalJS a module is loaded once per <strong>script context</strong> rather th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 13:02:14 UTC
+Last updated 2026-11-23 13:31:38 UTC
 </div>
 </div>
 </body>

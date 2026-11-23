@@ -453,7 +453,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The XP framework also supports execution of asynchronous (potentially long running) background tasks.</p>
+<p>The Enonic framework supports asynchronous background tasks, including long-running work such as imports and batch processing.</p>
 </div>
 <div class="paragraph">
 <p>Tasks may be executed as inline functions, or as named tasks. Named tasks are defined by creating a folder, e.g. <code>src/main/resources/tasks/&lt;taskname&gt;</code>, in your project.</p>
@@ -620,7 +620,7 @@ For fine-grained control which nodes should be capable to execute distributable 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 13:02:14 UTC
+Last updated 2026-11-23 13:31:38 UTC
 </div>
 </div>
 </body>
