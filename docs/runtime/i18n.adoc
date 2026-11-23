@@ -10,7 +10,7 @@ NOTE: This section covers code-level localization, not multi-lingual content or 
 
 For any project targeting users in different languages, you may want to localize the interface.
 
-The XP framework provides localization for the following use cases:
+The Enonic framework provides localization for the following use cases:
 
 CMS/Sites:: Use the <<../libraries/lib-i18n#,localization API>> to dynamically localize any text phrases in your app. The framework will apply the locale specified in the site's language property.
 

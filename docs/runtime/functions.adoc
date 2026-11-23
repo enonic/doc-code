@@ -2,7 +2,7 @@
 :toc: right
 :imagesdir: images
 
-Every `.ts` or `.js` file in an Enonic app is a *module* whose exported functions are callable from anywhere else in the bundle. On top of this module system, the framework defines *contracts* that bind specific files — or specific exports within them — to triggers such as an HTTP request, an event, a scheduled time, or the app's own lifecycle.
+Every `.ts` or `.js` file in an Enonic app is a *module* whose exported functions are callable from anywhere else in the bundle. On top of this module system, the Enonic application framework defines *contracts* that bind specific files — or specific exports within them — to triggers such as an HTTP request, an event, a scheduled time, or the app's own lifecycle.
 
 TIP: Code examples throughout the documentation use TypeScript. Strip the type annotations for plain JavaScript.
 

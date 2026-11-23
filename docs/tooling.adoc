@@ -2,9 +2,11 @@
 :toc: right
 :imagesdir: images
 
-== Introduction
+The Enonic Development Kit (EDK) combines the Enonic application framework with development tools. These tools help you create, build, test, and deploy Enonic apps.
 
-Enonic's Development Kit consists of several independent tools:
+== Tools and libraries
+
+The development tools and libraries include:
 
 * https://github.com/enonic/cli-enonic[Enonic CLI]
 * SDK versions of the https://developer.enonic.com/docs/platform[Enonic XP distro]

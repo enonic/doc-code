@@ -2,7 +2,9 @@
 :toc: right
 :imagesdir: images
 
-What powers your Enonic app at execution time - the JVM-hosted JavaScript engine, the module system, the threading model, and the cluster-aware machinery you get for free. Regardless of whether the app serves an API, a webapp or a site, this is the environment its code runs in. What an app is, and what it may contain, is covered under <<apps#, Applications>>.
+The XP runtime executes applications built with the Enonic application framework. The framework defines the programming contracts and APIs; the runtime provides the execution environment for HTTP requests, background tasks, event listeners, and application lifecycle functions.
+
+This section covers the JVM-hosted JavaScript engine, module system, threading model, and cluster behavior. What an app is, and what it may contain, is covered under <<apps#, Applications>>.
 
 == Execution model
 

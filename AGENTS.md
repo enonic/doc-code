@@ -21,6 +21,12 @@ This documentation should be highly useful for LLMs learning about Enonic and Co
 - **Consistent structure.** Use the same pattern across similar pages when appliccable.
 
 ### Vocabulary
+
+- Use **Enonic application framework** when introducing the concept or distinguishing it from front-end frameworks. Define it as the **server-side application framework built into Enonic XP**, covering web services, background tasks, scheduled jobs, events, and application lifecycle.
+- **Enonic framework** is the accepted short form; **the framework** is sufficient once established on a page.
+- Use **XP runtime** for the execution environment and **Enonic Development Kit (EDK)** for the framework and development tools together.
+- Avoid **XP framework** and **Enonic web framework**.
+
 Naming conventions for JS/TS code in an Enonic app:
 
 - **module** — any `.ts`/`.js` file. Foundational term; applies to helpers and entry-point files alike.
