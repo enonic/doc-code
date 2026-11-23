@@ -455,10 +455,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>An <strong>Enonic application</strong> is a named package of functionality that XP installs, starts and configures as one unit. The application name is unique within an installation, and everything the app ships is identified by it: schemas, endpoints, tools, extensions, jobs and configuration. Many apps run side by side in one XP instance, and most of XP&#8217;s own components are apps.</p>
+<p>An <strong>Enonic application</strong>, or <strong>app</strong>, is a named, deployable package containing code, schemas, assets, or any combination of these. XP installs, starts, and configures the app as one unit. The application name is unique within an installation and identifies the resources the app contributes.</p>
 </div>
 <div class="paragraph">
-<p>An app may contain nothing but CMS schemas, or JavaScript that serves a site or an API, or Java components, or all of these. This documentation covers apps that contain code. Modelling content with schemas is covered in the <a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a>, and installing and operating apps in the <a href="https://developer.enonic.com/docs/platform/stable/apps">platform documentation</a>.</p>
+<p>An app can deploy schemas or assets without executable code. Apps that include code can implement APIs, admin tools, websites, background tasks, and other functionality. This reference focuses on developing application code and packaging apps, including <a href="schemas.ahtml">deploying schemas through an app</a>. Schema design and content modeling are covered in the <a href="https://developer.enonic.com/docs/cms/stable">CMS documentation</a>, and installation and operations in the <a href="https://developer.enonic.com/docs/platform/stable/apps">platform documentation</a>.</p>
 </div>
 </div>
 </div>
@@ -529,6 +529,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <dd>
 <p>Content types, mixins, form fragments and macros, under <code>src/main/resources/cms/</code>. See <a href="schemas.ahtml">Schemas</a>.</p>
 </dd>
+<dt class="hdlist1">Assets</dt>
+<dd>
+<p>Images, stylesheets, client-side JavaScript, and other resource files. See <a href="tooling/starters.ahtml#general_resources">General resources</a>.</p>
+</dd>
 <dt class="hdlist1">Sites</dt>
 <dd>
 <p>Page, layout and part components, mappings, filters and response processors for CMS-driven sites. See <a href="web/sites.ahtml">Sites</a>.</p>
@@ -595,7 +599,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dd>
 <dt class="hdlist1">Running</dt>
 <dd>
-<p>The app is reachable. HTTP functions, event listeners, scheduled tasks, components, and admin tools all become live. Modules are loaded lazily on first <code>require()</code> and cached for the lifetime of the deploy.</p>
+<p>The app&#8217;s contributions are available. Any HTTP functions, event listeners, scheduled tasks, components, or admin tools it implements become live. For apps containing JavaScript, module loading and caching follow the <a href="runtime.ahtml#loading_and_caching">runtime&#8217;s execution model</a>.</p>
 </dd>
 <dt class="hdlist1">Stop</dt>
 <dd>
@@ -608,10 +612,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </dl>
 </div>
 <div class="paragraph">
-<p>The platform calls <code>main.ts</code> exactly once per app start, per node. Top-level code in any other module runs once on first <code>require()</code> and is then cached — see <a href="runtime.ahtml#loading_and_caching">Runtime: Loading and caching</a>.</p>
+<p>If the app includes <code>main.ts</code>, the platform calls it exactly once per app start, per node. Top-level code in any other module runs once on first <code>require()</code> and is then cached — see <a href="runtime.ahtml#loading_and_caching">Runtime: Loading and caching</a>.</p>
 </div>
 <div class="paragraph">
-<p>Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
+<p>Redeploying an app is conceptually a stop followed by a start with the new package. The module cache is invalidated, every module is re-loaded on first use, and <code>main.ts</code> runs again if present. Top-level state held in module variables does not survive a redeploy — treat it as ephemeral.</p>
 </div>
 <div class="paragraph">
 <p>This makes hot iteration cheap during development (drop a new package on the file system; XP picks it up) and keeps the running model simple in production (no partial-update edge cases).</p>
@@ -641,14 +645,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="packaging"><a class="link" href="#packaging">Packaging</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <a href="https://developer.enonic.com/docs/enonic-gradle-plugins">Enonic Gradle plugin</a> builds an app into a single file, today a jar, that XP installs as one unit; the name is set as <code>appName</code> in <em>gradle.properties</em>. See <a href="tooling/build.ahtml">Build system</a>.</p>
+<p>The <a href="https://developer.enonic.com/docs/enonic-gradle-plugins">Enonic Gradle plugin</a> packages app resources and any compiled code into a single JAR file that XP installs as one unit. This JAR is the application bundle referred to in the runtime and module-loading documentation. Executable code is optional; apps containing only schemas or assets use the same packaging. Set the application name with <code>appName</code> in <em>gradle.properties</em>. See <a href="tooling/build.ahtml">Build system</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 13:31:38 UTC
+Last updated 2026-11-23 14:10:07 UTC
 </div>
 </div>
 </body>
