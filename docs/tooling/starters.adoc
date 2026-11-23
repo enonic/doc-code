@@ -1,15 +1,15 @@
 = Project and code structure
 :toc: right
 :imagesdir: images
-This section describes the file structure of an Enonic application project
+An Enonic application project packages code, schemas, assets, or any combination of these for deployment to XP. This section describes the project layout and the role of each resource.
 
 TIP: Get started running. Use one of our https://market.enonic.com/starters[starters] to bootstrap your development project.
 
-NOTE: Enonic apps are primarily written in *JavaScript/TypeScript*. However, thanks to the <<../runtime#,XP runtime>> being a polyglot, applications may contain Java, Kotlin, Scala, or any other language that compiles to Java bytecode.
+NOTE: Executable code is optional. Application code is typically written in *JavaScript or TypeScript*. The <<../runtime#, XP runtime>> also supports Java, Kotlin, Scala, and other languages that compile to Java bytecode.
 
 == Project structure
 
-The example structure below includes the standard files and folders in an Enonic application (or library).
+The example below shows the standard locations for application resources and code. Include the resources and implementations the app needs; it does not need every folder or a `main.ts` module. Library packaging is covered under <<build#libraries, Building libraries>>.
 
 [source,files]
 ----
@@ -89,7 +89,7 @@ assets/:: Standard folder for static assets such as CSS and JavaScript. Serve th
 
 error/error.ts:: The <<../web/error#, HTTP error handler>>.
 
-main.ts:: The application's <<../runtime/main#, main lifecycle>>. Runs when the application starts and stops.
+main.ts:: Optional <<../runtime/main#, lifecycle module>> for initialization and cleanup of the app's code.
 
 i18n/:: Short for internationalization, this folder contains <<../libraries/lib-i18n#,app localization files>>.
 

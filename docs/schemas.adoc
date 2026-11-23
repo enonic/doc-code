@@ -1,15 +1,15 @@
 = Content schemas
 :toc: right
 
-Desciption of how to ship your *CMS schemas* as code as part of your Enonic app
+Deploy CMS schemas through an <<apps#, Enonic app>>. The app can contain only schemas, or combine them with code and other assets.
 
 == Introduction
 
-The CMS schemas control your content model. The schemas descriptors are writte in YAML. In this example, we show how to bundle and deploy schemas to XP as part of an app.
+CMS schemas define your content model through YAML descriptors. XP reads these descriptors from the app package; no JavaScript implementation is required to deploy them.
 
 NOTE: Visit the https://developer.enonic.com/docs/cms/xp8/schemas[CMS docs] for details on content modeling.
 
-You may bundle schemas in any Enonic app. https://market.enonic.com/starters/vanilla-starter[The Vanilla starter] is a minimalistic approach.
+You may include schemas in any Enonic app. https://market.enonic.com/starters/vanilla-starter[The Vanilla starter] is a minimalistic approach.
 
 Create a new app using Enonic CLI:
 
@@ -133,13 +133,13 @@ form:
     label: "Analytics tracking ID"
 ----
 
-Without the `mixins:` entry, the `seo` mixin is bundled but not attached to anything.
+Without the `mixins:` entry, the `seo` mixin is included in the app package but not attached to anything.
 
 == Deployment
 
-Nothing extra is required. When the app is installed (or hot-deployed during development by dropping the JAR into XP's `deploy/` folder), XP scans the bundle, registers every schema under the app's key, and Content Studio refreshes immediately. Removing the app removes the schemas; redeploying a new bundle replaces the previous registration.
+Nothing extra is required. When the app is installed (or hot-deployed during development by dropping the JAR into XP's `deploy/` folder), XP scans the app package, registers every schema under the app's key, and Content Studio refreshes immediately. Removing the app removes the schemas; redeploying an updated package replaces the previous registration.
 
-There is no separate "publish schemas" step. The bundle *is* the source of truth.
+For schemas delivered through an app, deployment updates the schema definitions. No separate schema-publishing step or application code is required.
 
 == References
 

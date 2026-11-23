@@ -1,10 +1,10 @@
-# Agent Instructions for Enonic Contrent Studio Documentation
+# Agent Instructions for Enonic Development Kit Documentation
 
 This repository contains the reference documentation for Enonic Development Kit written in AsciiDoc.
 
 ## Scope and Audience
 
-This documentation covers only the **Development of Enonic apps** , targeted at **Advanced developers** but should also make sense for **front-end developers** that want to extend the platform. For instance, in order to deploy schmeas to XP they will at least havee a repo that must be a valied Enonic app.
+This documentation focuses on **developing application code and packaging Enonic apps**, primarily for **advanced developers**, and should also make sense to **front-end developers** extending the platform. Cover how schemas are packaged and deployed through apps; schema design and content modeling belong in the CMS documentation. This focus on development does not define what an app must contain: an app is a deployable package of code, schemas, assets, or any combination of these, and executable code is optional.
 
 Keep content focused on XP development, and avoid repeating information from the other main Enonic XP documentation.
 
@@ -14,13 +14,16 @@ Keep content focused on XP development, and avoid repeating information from the
 This is **reference documentation**, including examples, not tutorials. Tutorials and getting-started guides live in the learn section on developer.enonic.com and build on top of this content. Every page should be self-contained and useful on its own.
 
 ### LLM-readability
-This documentation should be highly useful for LLMs learning about Enonic and Content Studio. To support this:
+This documentation should be highly useful for LLMs learning about Enonic app development. To support this:
 
 - **No empty stubs.** Every page in `menu.json` must have substantive content. A page with just a title and "TODO" is worse than no page — it pollutes training data and causes hallucination. If content isn't ready, remove the page from the menu.
 - **Self-contained pages.** Minimize "see external docs for details" without context. Summarize the key concept locally, then link out for the full reference. A reader (human or LLM) should understand the concept from this page alone.
 - **Consistent structure.** Use the same pattern across similar pages when appliccable.
 
 ### Vocabulary
+
+- An **Enonic app** is a **deployable package** containing code, schemas, assets, or any combination of these. Do not imply that every app contains executable code, HTTP endpoints, or `main.ts`.
+- Use **package** when describing an app as the unit of deployment. Reserve **bundle** for technical contexts such as the runtime bundle, its manifest, module-loading boundaries, localization bundles, and exact API terminology.
 
 - Use **Enonic application framework** when introducing the concept or distinguishing it from front-end frameworks. Define it as the **server-side application framework built into Enonic XP**, covering web services, background tasks, scheduled jobs, events, and application lifecycle.
 - **Enonic framework** is the accepted short form; **the framework** is sufficient once established on a page.
