@@ -2,7 +2,7 @@
   "versions": [
     {
       "label": "stable",
-      "checkout": "xp8",
+      "checkout": "8.x",
       "latest": true,
       "displayName": "8.x"
     },
