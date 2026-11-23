@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<meta name="author" content="This section describes the file structure of an Enonic application project">
+<meta name="author" content="An Enonic application project packages code, schemas, assets, or any combination of these for deployment to XP. This section describes the project layout and the role of each resource.">
 <title>Project and code structure</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -440,7 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Project and code structure</h1>
 <div class="details">
-<span id="author" class="author">This section describes the file structure of an Enonic application project</span><br>
+<span id="author" class="author">An Enonic application project packages code, schemas, assets, or any combination of these for deployment to XP. This section describes the project layout and the role of each resource.</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -478,7 +478,7 @@ Get started running. Use one of our <a href="https://market.enonic.com/starters"
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. However, thanks to the <a href="../runtime.ahtml">XP runtime</a> being a polyglot, applications may contain Java, Kotlin, Scala, or any other language that compiles to Java bytecode.
+Executable code is optional. Application code is typically written in <strong>JavaScript or TypeScript</strong>. The <a href="../runtime.ahtml">XP runtime</a> also supports Java, Kotlin, Scala, and other languages that compile to Java bytecode.
 </td>
 </tr>
 </table>
@@ -489,7 +489,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 <h2 id="project_structure"><a class="link" href="#project_structure">Project structure</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The example structure below includes the standard files and folders in an Enonic application (or library).</p>
+<p>The example below shows the standard locations for application resources and code. Include the resources and implementations the app needs; it does not need every folder or a <code>main.ts</code> module. Library packaging is covered under <a href="build.ahtml#libraries">Building libraries</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -601,7 +601,7 @@ Enonic apps are primarily written in <strong>JavaScript/TypeScript</strong>. How
 </dd>
 <dt class="hdlist1">main.ts</dt>
 <dd>
-<p>The application&#8217;s <a href="../runtime/main.ahtml">main lifecycle</a>. Runs when the application starts and stops.</p>
+<p>Optional <a href="../runtime/main.ahtml">lifecycle module</a> for initialization and cleanup of the app&#8217;s code.</p>
 </dd>
 <dt class="hdlist1">i18n/</dt>
 <dd>
@@ -715,7 +715,7 @@ Check out <a href="https://market.enonic.com/starters/library-starter">the libra
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 14:09:47 UTC
+Last updated 2026-11-23 17:30:53 UTC
 </div>
 </div>
 </body>

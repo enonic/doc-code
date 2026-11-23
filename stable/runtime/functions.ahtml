@@ -452,7 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Every <code>.ts</code> or <code>.js</code> file in an Enonic app is a <strong>module</strong> whose exported functions are callable from anywhere else in the bundle. On top of this module system, the framework defines <strong>contracts</strong> that bind specific files — or specific exports within them — to triggers such as an HTTP request, an event, a scheduled time, or the app&#8217;s own lifecycle.</p>
+<p>Every <code>.ts</code> or <code>.js</code> file in an Enonic app is a <strong>module</strong> whose exported functions are callable from anywhere else in the bundle. On top of this module system, the Enonic application framework defines <strong>contracts</strong> that bind specific files — or specific exports within them — to triggers such as an HTTP request, an event, a scheduled time, or the app&#8217;s own lifecycle.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -599,7 +599,7 @@ exports.GET = () =&gt; ({
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 14:09:47 UTC
+Last updated 2026-11-23 17:30:53 UTC
 </div>
 </div>
 </body>

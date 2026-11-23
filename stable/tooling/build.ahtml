@@ -484,7 +484,7 @@ Upgrading from XP 7? See <a href="../upgrade/xp7.ahtml">Upgrading Enonic apps fr
 <p>Enonic apps and libraries use <a href="https://gradle.org/">Gradle</a> as the main build tool.</p>
 </div>
 <div class="paragraph">
-<p>Gradle is used because Enonic apps are packaged and deployed as .jar (Java) files in the end.</p>
+<p>Gradle packages app resources and any compiled code into a deployable JAR file. Apps containing only schemas or assets use the same packaging and deployment process.</p>
 </div>
 <div class="paragraph">
 <p>Builds run on Gradle 9.x — bundle a Gradle Wrapper of version 9.5.0 or later in your project.</p>
@@ -898,7 +898,7 @@ Development mode also disables some of XP&#8217;s caching mechanisms. To make th
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 14:09:47 UTC
+Last updated 2026-11-23 17:30:53 UTC
 </div>
 </div>
 </body>
