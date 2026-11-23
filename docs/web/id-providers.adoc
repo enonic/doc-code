@@ -2,7 +2,7 @@
 :toc: right
 :imagesdir: images
 
-The XP framework offers a solution for pluggable authentication called ID providers
+The Enonic framework supports pluggable authentication through ID providers.
 
 == Introduction
 As part of the XP's Identity and Access Management (IAM) system, services may be loosely associated with an ID provider via vhost configuration.

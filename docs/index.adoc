@@ -2,7 +2,9 @@
 :imagesdir: images
 :toc: right
 
-The Enonic Development Kit (EDK) is the combined server-side TypeScript framework and tools for Enonic app development.
+The Enonic Development Kit (EDK) combines the Enonic application framework with tools for building and deploying Enonic apps.
+
+The *Enonic application framework*, also called the *Enonic framework*, is the server-side application framework built into Enonic XP. It provides the programming model and APIs for applications written in JavaScript or TypeScript, including <<web#, web services>>, <<background/tasks#, background tasks>>, <<background/scheduler#, scheduled jobs>>, <<runtime/events#, event processing>>, and access to platform services such as storage and identity.
 
 image::coder.svg["Ready, set, code!", 720w]
 

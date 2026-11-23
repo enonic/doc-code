@@ -7,7 +7,7 @@ Send and listen to local or cluster wide events
 [#events]
 == Introduction
 
-The XP framework enable developers to create and/or listen to events.
+The Enonic framework lets applications publish and listen to events.
 Events may be local (within a single server) or cluster wide (distributed to all servers within a cluster).
 In addition to application specific events, XP itself produces a range of standard events.
 

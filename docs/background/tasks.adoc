@@ -2,7 +2,7 @@
 :toc: right
 :imagesdir: images
 
-The XP framework also supports execution of asynchronous (potentially long running) background tasks.
+The Enonic framework supports asynchronous background tasks, including long-running work such as imports and batch processing.
 
 Tasks may be executed as inline functions, or as named tasks. Named tasks are defined by creating a folder, e.g. `src/main/resources/tasks/<taskname>`, in your project.
 
