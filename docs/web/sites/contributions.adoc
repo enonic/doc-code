@@ -62,11 +62,11 @@ return {
 * Contribution values are treated as plain text.
 * Values must be unique within each injection point, duplicates will be truncated.
 * If the target tag does not exist in the response body, the contribution will be ignored. I.e. if there is no `<head>` tag, the contributions to `headBegin` and  `headEnd` will be ignored.
-* For consistency, all positions are automatically treated arrays in the aggregated response object, even if there is only a single value.
+* For consistency, all positions are automatically treated as arrays in the aggregated response object, even if there is only a single value.
 
 == Contribution merging
 
-Page contributions are merged into the response markup during a specific step in the <<../sites#, site service>>, called `Contributions filter`. It occurs after <<processors#, page processors>> and before <<mappings#, the site filters>>.
+Page contributions are merged into the response markup during a specific step in the <<../sites#, site service>> pipeline, called contribution merging. It occurs after the <<processors#, response processors>> and before the <<mappings#, response filters>>.
 
 
 NOTE: Duplicate page contributions are automatically removed, so if multiple components contribute the same script, it will only be included once in the final response.

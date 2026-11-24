@@ -6,7 +6,7 @@ Bind HTTP functions and filters to specific content types or site-relative URLs
 
 == Introduction
 
-Mappings are the first custom processing step in the <<../sites#, site service>>. Mappings execute before the component rendering. You may define mappings for both <<../request-response#, HTTP functions>> and <<../filters#, filters>>. The use cases are vast.
+Mappings are the first custom processing step in the <<../sites#, site service>>. Mappings execute before the page is rendered. You may define mappings for both <<../request-response#, HTTP functions>> and <<../filters#, filters>>. The use cases are vast.
 
 == Usage
 
@@ -93,7 +93,7 @@ A pattern may include the literal token `+${app}+`, which is expanded at parse t
 ----
 mappings:
   - pattern: "/_/static/${app}/.+"
-    controller: "/site/mappings/static-controller.js"
+    controller: "/cms/foobar/static.ts"
 ----
 
 == Match mappings
