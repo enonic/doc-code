@@ -146,4 +146,4 @@ For schemas delivered through an app, deployment updates the schema definitions.
 * https://developer.enonic.com/docs/cms/xp8/schemas[CMS schemas reference] — the schema language, field types, and per-kind documentation.
 * https://developer.enonic.com/docs/cms/xp8[CMS documentation] — content modelling, queries, and runtime APIs.
 * <<tooling/starters#, Starters>> — folder layout for the rest of an Enonic app.
-* <<web/sites#, Sites>> — wiring page/part/layout schemas to rendering implementations.
+* <<web/sites#, Site Framework>> — wiring page/part/layout schemas to rendering implementations.
