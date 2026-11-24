@@ -191,7 +191,7 @@ A single component can be rendered on its own — without rendering the surround
 
 `+:8080/site/<project>/<branch>/<path-to-page>/_/component/<component-path>+`
 
-The component path is the region name and index, so `+.../_/component/main/0+` renders the first component of the page's `main` region. In this mode only the *component rendering* step runs — page resolution, response processors, and contributions are skipped.
+The component path is the region name and index, so `+.../_/component/main/0+` renders the first component of the page's `main` region. In this mode only the *component rendering* step runs. The page is resolved to locate the component, but it is not rendered, and response processors and contribution merging are skipped.
 
 [NOTE]
 ====
