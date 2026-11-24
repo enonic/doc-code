@@ -30,6 +30,7 @@ This documentation should be highly useful for LLMs learning about Enonic app de
 - Use **XP runtime** for the execution environment and **Enonic Development Kit (EDK)** for the framework and development tools together.
 - Avoid **XP framework** and **Enonic web framework**.
 - The **Enonic Site Framework** is the built-in way to build content-driven sites, documented in the Sites section. Write **Enonic Site Framework** on first mention and **the Site Framework** after that. Singular "Site", no abbreviation.
+- Enonic is headless first, so the Site Framework and React4XP may be presented next to Next.js, but always as alternatives to using a third-party front-end framework, never as the default. Do not write "headless first" in the documentation itself; say that Enonic works with any front-end framework.
 - The **site service** is the runtime: what XP does with a request to `/site`. Use **site service** when XP is the subject of the sentence and **Site Framework** when the developer is. Avoid **site engine**.
 - Name the steps of the site pipeline consistently: **Mappings**, **Render page**, **Render component**, **Response processors**, **contribution merging**, **Response filters**.
 
