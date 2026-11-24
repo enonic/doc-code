@@ -1,4 +1,4 @@
-= Building a front-end with the Enonic Site Framework
+= Building front-ends with the Enonic Site Framework
 :toc: right
 :imagesdir: images
 
@@ -8,6 +8,8 @@ NOTE: For a hands-on introduction, visit the https://developer.enonic.com/learn/
 
 
 == Introduction
+
+A content-driven site gets its pages and URLs from the content: editors create and compose the pages, and XP renders them.
 
 A site built with the Site Framework is rendered by the _site service_: the part of XP that responds at `:8080/site/<project>/<branch>/<path-to-content>`. The site service resolves the page for the requested content item, and renders its components with the server-side implementations in your app. It is purpose-built for delivering content-driven websites, and is closely linked to the CMS features of the platform. Combine it with vhosts for custom domains and paths.
 
@@ -21,24 +23,19 @@ TIP: Visit the https://developer.enonic.com/docs/cms/xp8[CMS documentation] for 
 
 === Usage
 
-To activate the site service, you will need a site descriptor in your app.
+To activate the site service, you will need a site descriptor in your app. The minimal descriptor only declares its kind:
 
 .src/main/resources/cms/site.yaml
 [source,yaml]
 ----
 kind: "Site"
-mappings: # <1>
-  - controller: "/lib/preview.ts"
-    order: 50
-    match: "type:'(?!media:).*'"
-apis:
-  - "ws"  # <2>
-  - "app:graphql" # <3>
 ----
 
-<1> A mapping to take over the request for all non-media content items, and render a preview.
-<2> Contextually mounts an API in the same application on the site's underscore endpoint.
-<3> Mounts the `graphql` API of the application `app` in the same way.
+The descriptor may also declare:
+
+`mappings`:: Bind HTTP functions and filters to URLs or content. See <<sites/mappings#, Mappings>>.
+`processors`:: Functions that process the response after rendering. See <<sites/processors#, Response processors>>.
+`apis`:: APIs to mount on the site. See <<apis#, Universal APIs>>.
 
 NOTE: You will also need implementations of <<sites/mappings#, Mapping function>> or <<sites/components#, component functions>> to start rendering.
 
