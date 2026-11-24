@@ -721,7 +721,7 @@ export function GET(req) {
 <p><code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-page&gt;/_/component/&lt;component-path&gt;</code></p>
 </div>
 <div class="paragraph">
-<p>The component path is the region name and index, so <code>.../_/component/main/0</code> renders the first component of the page&#8217;s <code>main</code> region. In this mode only the <strong>component rendering</strong> step runs — page resolution, response processors, and contributions are skipped.</p>
+<p>The component path is the region name and index, so <code>.../_/component/main/0</code> renders the first component of the page&#8217;s <code>main</code> region. In this mode only the <strong>component rendering</strong> step runs. The page is resolved to locate the component, but it is not rendered, and response processors and contribution merging are skipped.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -826,7 +826,7 @@ Bypass the built-in implementation by running your own code instead of injecting
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-24 08:20:12 UTC
+Last updated 2026-11-24 08:45:47 UTC
 </div>
 </div>
 </body>

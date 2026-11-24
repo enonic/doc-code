@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Building a front-end with the Enonic Site Framework</title>
+<title>Building front-ends with the Enonic Site Framework</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Building a front-end with the Enonic Site Framework</h1>
+<h1>Building front-ends with the Enonic Site Framework</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -475,6 +475,9 @@ For a hands-on introduction, visit the <a href="https://developer.enonic.com/lea
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>A content-driven site gets its pages and URLs from the content: editors create and compose the pages, and XP renders them.</p>
+</div>
+<div class="paragraph">
 <p>A site built with the Site Framework is rendered by the <em>site service</em>: the part of XP that responds at <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-content&gt;</code>. The site service resolves the page for the requested content item, and renders its components with the server-side implementations in your app. It is purpose-built for delivering content-driven websites, and is closely linked to the CMS features of the platform. Combine it with vhosts for custom domains and paths.</p>
 </div>
 <div class="paragraph">
@@ -505,36 +508,32 @@ Visit the <a href="https://developer.enonic.com/docs/cms/xp8">CMS documentation<
 <div class="sect2">
 <h3 id="usage"><a class="link" href="#usage">Usage</a></h3>
 <div class="paragraph">
-<p>To activate the site service, you will need a site descriptor in your app.</p>
+<p>To activate the site service, you will need a site descriptor in your app. The minimal descriptor only declares its kind:</p>
 </div>
 <div class="listingblock">
 <div class="title">src/main/resources/cms/site.yaml</div>
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
-mappings: <i class="conum" data-value="1"></i><b>(1)</b>
-  - controller: "/lib/preview.ts"
-    order: 50
-    match: "type:'(?!media:).*'"
-apis:
-  - "ws"  <i class="conum" data-value="2"></i><b>(2)</b>
-  - "app:graphql" <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>A mapping to take over the request for all non-media content items, and render a preview.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Contextually mounts an API in the same application on the site&#8217;s underscore endpoint.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Mounts the <code>graphql</code> API of the application <code>app</code> in the same way.</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>The descriptor may also declare:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>mappings</code></dt>
+<dd>
+<p>Bind HTTP functions and filters to URLs or content. See <a href="sites/mappings.ahtml">Mappings</a>.</p>
+</dd>
+<dt class="hdlist1"><code>processors</code></dt>
+<dd>
+<p>Functions that process the response after rendering. See <a href="sites/processors.ahtml">Response processors</a>.</p>
+</dd>
+<dt class="hdlist1"><code>apis</code></dt>
+<dd>
+<p>APIs to mount on the site. See <a href="apis.ahtml">Universal APIs</a>.</p>
+</dd>
+</dl>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -677,7 +676,7 @@ The image and attachment APIs are implicitly mounted by the site service, and ar
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-24 08:20:37 UTC
+Last updated 2026-11-24 08:46:10 UTC
 </div>
 </div>
 </body>
