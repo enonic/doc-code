@@ -23,19 +23,26 @@ TIP: Visit the https://developer.enonic.com/docs/cms/xp8[CMS documentation] for 
 
 === Usage
 
-To activate the site service, you will need a site descriptor in your app. The minimal descriptor only declares its kind:
+To activate the site service, you will need a site descriptor in your app.
 
 .src/main/resources/cms/site.yaml
 [source,yaml]
 ----
 kind: "Site"
+mappings: # <1>
+  - controller: "/cms/mappings/security-txt.ts"
+    pattern: '/\.well-known/security\.txt'
+processors: # <2>
+  - name: "tracker"
+apis: # <3>
+  - "ws"
 ----
 
-The descriptor may also declare:
+<1> *mappings* — *Optional.* Binds HTTP functions and filters to URLs or content. Here, requests for `/.well-known/security.txt` on the site are handled by `security-txt.ts`. See <<sites/mappings#, Mappings>>.
+<2> *processors* — *Optional.* Functions that process the response after rendering. Here, the processor in `cms/processors/tracker.ts`. See <<sites/processors#, Response processors>>.
+<3> *apis* — *Optional.* APIs to mount on the site. Here, the `ws` API of the same application. See <<apis#, Universal APIs>>.
 
-`mappings`:: Bind HTTP functions and filters to URLs or content. See <<sites/mappings#, Mappings>>.
-`processors`:: Functions that process the response after rendering. See <<sites/processors#, Response processors>>.
-`apis`:: APIs to mount on the site. See <<apis#, Universal APIs>>.
+All three are optional: a descriptor with only `kind: "Site"` is enough to activate the site service.
 
 NOTE: You will also need implementations of <<sites/mappings#, Mapping function>> or <<sites/components#, component functions>> to start rendering.
 

@@ -21,16 +21,16 @@ Mappings are defined in the <<../sites#, site descriptor>> (`cms/site.yaml`). Ex
 ----
 kind: "Site"
 mappings:
-- controller: "/cms/foobar/api.ts" # <1> <2>
-  pattern: '/api/v\d+/.*'          # <3>
+- controller: "/cms/mappings/api.ts" # <1> <2>
+  pattern: '/api/v\d+/.*'            # <3>
   order: 10
 - controller: "/cms/pages/default/default.ts"
-  match: "type:'portal:fragment'"  # <4>
-- filter: "/cms/foobar/filter.ts"  # <5>
+  match: "type:'portal:fragment'"    # <4>
+- filter: "/cms/mappings/filter.ts"  # <5>
   pattern: '/dont-match-me/.*'
   invertPattern: true
   order: 10
-- filter: "/cms/services/image.ts" # <6>
+- filter: "/cms/services/image.ts"   # <6>
   service: "image"
 ----
 
@@ -93,7 +93,7 @@ A pattern may include the literal token `+${app}+`, which is expanded at parse t
 ----
 mappings:
   - pattern: "/_/static/${app}/.+"
-    controller: "/cms/foobar/static.ts"
+    controller: "/cms/mappings/static.ts"
 ----
 
 == Match mappings
