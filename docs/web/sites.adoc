@@ -2,16 +2,22 @@
 :toc: right
 :imagesdir: images
 
-Serving content driven sites using XP apps. The service responds at `:8080/site/<project>/<branch>/<path-to-content>`. Combine with Vhosts for custom domains and paths.
+The Enonic Site Framework is the built-in way to build content-driven sites with Enonic apps. This section covers how the site service handles a request, and how mappings, components, page contributions, and response processors take part in rendering it.
 
-NOTE: For hands on tutorials on building native Enonic XP sites, visit https://developer.enonic.com/learn/react4xp/stable[React4XP tutorial] or the https://developer.enonic.com/docs/my-first-site[My first site tutorial].
+NOTE: For a hands-on introduction, visit the https://developer.enonic.com/learn/enonic-site-framework[Enonic Site Framework tutorial].
 
 
 == Introduction
 
-As an alternative to using 3rd party front-end frameworks like Next.js, the site service is purpose-built for delivering content-driven websites, and is closesly linked to the CMS features of the platform.
+A site built with the Site Framework is rendered by the _site service_: the part of XP that responds at `:8080/site/<project>/<branch>/<path-to-content>`. The site service resolves the page for the requested content item, and renders its components with the server-side implementations in your app. It is purpose-built for delivering content-driven websites, and is closely linked to the CMS features of the platform. Combine it with vhosts for custom domains and paths.
 
-TIP: Visit the https://developer.enonic.com/docs/cms/xp8[CMS documentation] for details on Content Modelling and schemas. This section focuses on implementing site rendering via Enonic apps.
+The Site Framework is one of several ways to build a front-end for Enonic:
+
+* *The Site Framework* uses the page rendering built into the site service, as described in this section. Each component is rendered by the implementation placed next to its descriptor.
+* *React4XP* also runs on the site service. It uses mappings to replace the built-in page and component rendering with rendering based on React. The rendering is detached from the component descriptors: a component registry binds each component, or content type, to a React view. This is the same model headless front-ends use. Visit the https://developer.enonic.com/learn/react4xp/stable[React4XP tutorial] for details.
+* *Next.js* and other external front-end frameworks render outside Enonic, and fetch the content through an API.
+
+TIP: Visit the https://developer.enonic.com/docs/cms/xp8[CMS documentation] for details on content modeling and schemas. This section focuses on implementing site rendering via Enonic apps.
 
 
 === Usage
@@ -23,16 +29,17 @@ To activate the site service, you will need a site descriptor in your app.
 ----
 kind: "Site"
 mappings: # <1>
-  - controller: "/lib/preview.js"
+  - controller: "/lib/preview.ts"
     order: 50
     match: "type:'(?!media:).*'"
 apis:
-  - "ws"  # <3>
-  - "app:graphql" # <4>
+  - "ws"  # <2>
+  - "app:graphql" # <3>
 ----
 
 <1> A mapping to take over the request for all non-media content items, and render a preview.
 <2> Contextually mounts an API in the same application on the site's underscore endpoint.
+<3> Mounts the `graphql` API of the application `app` in the same way.
 
 NOTE: You will also need implementations of <<sites/mappings#, Mapping function>> or <<sites/components#, component functions>> to start rendering.
 
@@ -47,17 +54,11 @@ image::site-pipeline.svg[Site rendering pipeline, 500px]
 
 This section describes the standard pipeline involved in processing a page request, e.g. `:8080/site/<project>/<branch>/<path-to-page>`.
 
-Render component:: If a component is matched, the matching component implementation is invoked to render it — also directly addressable via the <<sites/components#direct-rendering, component endpoint>>. The result may include nested components, which are resolved and rendered iteratively (via component placeholders) until all placeholders are resolved and rendered.
-
-Universal APIs:: Sites support contextual APIs mounted in the same URL space. They are are available on the `/_/<app>:<api>` path. APIs are mounted via the site descriptor.
-+
-NOTE: The image and attachment APIs are implicitly mounted by the site service, and are available at `/_/media:image` and `/_/media:attachment` respectively. Use <<../libraries/lib-portal#base_urls, portal library functions>> to generate URLs for these, and they will be served with the appropriate caching and optimizations — including when an operator has moved media to a separate host or turned the implicit mounting off, in which case the generated URLs point elsewhere.
-
-Mappings:: Use path or content-based <<sites/mappings#, site mappings>>. Each mapping will trigger a function, acting as a filter or a controller (returning a response directly). Filters will iteratively execute until a controller is reached, or the mappings are exhausted. If no mapping matches, the request continues to the default page rendering step.
+Mappings::Use path or content-based <<sites/mappings#, site mappings>>. Each mapping will trigger a function, acting as a filter or a controller (returning a response directly). Filters will iteratively execute until a controller is reached, or the mappings are exhausted. If no mapping matches, the request continues to the default page rendering step.
 
 Render page:: Looks up the content at the path and resolves the page implementation and config (optionally via a page template) or returns a matching 404 if not found. 401 if protected, and 403 if user lacks permissions.
 +
-NOTE: The content types `base:shortcut` is automatically handled with a `307 Temporary Redirect`, and `portal:fragment` is only rendered when referend from another page.
+NOTE: The content types `base:shortcut` is automatically handled with a `307 Temporary Redirect`, and `portal:fragment` is only rendered when referenced from another page.
 +
 *Implementation resolution:*
 +
@@ -73,10 +74,17 @@ NOTE: In `inline` rendering mode the status is `418` instead of `404`, so Conten
 
 Once the page component is rendered, the rendering iteratively continues until all nested components placeholders are resolved and rendered.
 
-Text/html processors:: For `text/html` responses, any <<sites/processors#, response processors>> defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding <<sites/contributions#, page contributions>>. Once all processors are done, available `pageContributions` in the response object are merged into the html response body.
+Response processors:: For `text/html` responses, any <<sites/processors#, response processors>> defined in the site descriptor are executed. Processors may manipulate the result, for instance by adding <<sites/contributions#, page contributions>>. Once all processors are done, contribution merging takes place: available `pageContributions` in the response object are merged into the html response body.
 
+Response filters:: Finally, any filters registered through a mapping iteratively execute their response processing step before the response is returned from the pipeline.
 
-Response filters:: Finally, any filters registered via through a mapping iteratively execute their response processing step before the response is returned from the pipeline.
+Two kinds of requests are routed past these steps:
+
+Render component:: A request to the <<sites/components#direct-rendering, component endpoint>> invokes the implementation of a single component directly. The result may include nested components, which are resolved and rendered iteratively (via component placeholders) until all placeholders are resolved and rendered.
+
+Universal APIs:: Sites support contextual APIs mounted in the same URL space. They are available on the `/_/<app>:<api>` path. APIs are mounted via the site descriptor.
++
+NOTE: The image and attachment APIs are implicitly mounted by the site service, and are available at `/_/media:image` and `/_/media:attachment` respectively. Use <<../libraries/lib-portal#base_urls, portal library functions>> to generate URLs for these, and they will be served with the appropriate caching and optimizations — including when an operator has moved media to a separate host or turned the implicit mounting off, in which case the generated URLs point elsewhere.
 
 
 == One site, multiple apps

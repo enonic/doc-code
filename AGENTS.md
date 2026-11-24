@@ -29,13 +29,16 @@ This documentation should be highly useful for LLMs learning about Enonic app de
 - **Enonic framework** is the accepted short form; **the framework** is sufficient once established on a page.
 - Use **XP runtime** for the execution environment and **Enonic Development Kit (EDK)** for the framework and development tools together.
 - Avoid **XP framework** and **Enonic web framework**.
+- The **Enonic Site Framework** is the built-in way to build content-driven sites, documented in the Sites section. Write **Enonic Site Framework** on first mention and **the Site Framework** after that. Singular "Site", no abbreviation.
+- The **site service** is the runtime: what XP does with a request to `/site`. Use **site service** when XP is the subject of the sentence and **Site Framework** when the developer is. Avoid **site engine**.
+- Name the steps of the site pipeline consistently: **Mappings**, **Render page**, **Render component**, **Response processors**, **contribution merging**, **Response filters**.
 
 Naming conventions for JS/TS code in an Enonic app:
 
 - **module** — any `.ts`/`.js` file. Foundational term; applies to helpers and entry-point files alike.
 - **implementation** (or **implementation file**) — a module bound to a framework contract: paired with a descriptor at a conventional location. Use this when contrasting with the descriptor or pointing at the file specifically.
 - **function** — exports from a module (`GET`, `POST`, `responseProcessor`, `run`, etc.).
-- **components** are pages, parts, and layouts — configurable building blocks of a site. Components are *not* functions; their *implementations* export HTTP functions invoked by the site engine.
+- **components** are pages, parts, and layouts — configurable building blocks of a site. Components are *not* functions; their *implementations* export HTTP functions invoked by the site service.
 
 Avoid:
 
