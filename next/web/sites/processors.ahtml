@@ -473,7 +473,7 @@ Response processors are only available in <a href="components.ahtml">component r
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Processors get executed between the <code>component rendering</code> step, and the <code>contributions filter</code> in the <a href="../sites.ahtml">site service</a> pipeline. Response processors are commonly used by apps that need to inject <a href="contributions.ahtml">page contributions</a> without placing a component on the page.</p>
+<p>Response processors are executed after the page and its components are rendered, and before contribution merging, in the <a href="../sites.ahtml">site service</a> pipeline. Response processors are commonly used by apps that need to inject <a href="contributions.ahtml">page contributions</a> without placing a component on the page.</p>
 </div>
 <div class="paragraph">
 <p>Use cases are:</p>
@@ -608,7 +608,7 @@ When a page is rendered, all processors are ordered and executed accordingly.</p
 <p>Processors with a <strong>lower</strong> order will be executed first (across all apps within the site).</p>
 </div>
 <div class="paragraph">
-<p>In case there are several filters with the same <code>order</code> number, the position of the applications (as configured on the site) determines the order of execution.</p>
+<p>In case there are several processors with the same <code>order</code> number, the position of the applications (as configured on the site) determines the order of execution.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -627,7 +627,7 @@ If <code>applyFilters</code> is set to <code>false</code> in the <a href="../req
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 17:31:16 UTC
+Last updated 2026-11-24 07:40:30 UTC
 </div>
 </div>
 </body>

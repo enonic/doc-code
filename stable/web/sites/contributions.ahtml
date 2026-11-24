@@ -567,7 +567,7 @@ Page contributions will only be triggered if the response type is <code>text/htm
 <p>If the target tag does not exist in the response body, the contribution will be ignored. I.e. if there is no <code>&lt;head&gt;</code> tag, the contributions to <code>headBegin</code> and  <code>headEnd</code> will be ignored.</p>
 </li>
 <li>
-<p>For consistency, all positions are automatically treated arrays in the aggregated response object, even if there is only a single value.</p>
+<p>For consistency, all positions are automatically treated as arrays in the aggregated response object, even if there is only a single value.</p>
 </li>
 </ul>
 </div>
@@ -577,7 +577,7 @@ Page contributions will only be triggered if the response type is <code>text/htm
 <h2 id="contribution_merging"><a class="link" href="#contribution_merging">Contribution merging</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Page contributions are merged into the response markup during a specific step in the <a href="../sites.ahtml">site service</a>, called <code>Contributions filter</code>. It occurs after <a href="processors.ahtml">page processors</a> and before <a href="mappings.ahtml">the site filters</a>.</p>
+<p>Page contributions are merged into the response markup during a specific step in the <a href="../sites.ahtml">site service</a> pipeline, called contribution merging. It occurs after the <a href="processors.ahtml">response processors</a> and before the <a href="mappings.ahtml">response filters</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -596,7 +596,7 @@ Duplicate page contributions are automatically removed, so if multiple component
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 17:30:53 UTC
+Last updated 2026-11-24 07:40:11 UTC
 </div>
 </div>
 </body>

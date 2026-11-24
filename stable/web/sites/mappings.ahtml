@@ -470,7 +470,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Mappings are the first custom processing step in the <a href="../sites.ahtml">site service</a>. Mappings execute before the component rendering. You may define mappings for both <a href="../request-response.ahtml">HTTP functions</a> and <a href="../filters.ahtml">filters</a>. The use cases are vast.</p>
+<p>Mappings are the first custom processing step in the <a href="../sites.ahtml">site service</a>. Mappings execute before the page is rendered. You may define mappings for both <a href="../request-response.ahtml">HTTP functions</a> and <a href="../filters.ahtml">filters</a>. The use cases are vast.</p>
 </div>
 </div>
 </div>
@@ -640,7 +640,7 @@ The question mark <code>?</code> is escaped with a backslash in the pattern beca
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">mappings:
   - pattern: "/_/static/${app}/.+"
-    controller: "/site/mappings/static-controller.js"</code></pre>
+    controller: "/cms/foobar/static.ts"</code></pre>
 </div>
 </div>
 </div>
@@ -824,7 +824,7 @@ Build the new path from values you control rather than interpolating a query par
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 17:30:53 UTC
+Last updated 2026-11-24 07:40:11 UTC
 </div>
 </div>
 </body>

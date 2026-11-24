@@ -463,7 +463,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Explicit Page, part, and layout components rendereing.</p>
+<p>Pages, parts, and layouts are rendered by component implementations. This page covers how the site service invokes them, and how regions, fragments, and single components are rendered.</p>
 </div>
 </div>
 </div>
@@ -477,13 +477,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-For a hands-on introduction tutorial, visit the <a href="https://developer.enonic.com/docs/my-first-site">My first site tutorial</a>.
+For a hands-on introduction, visit the <a href="https://developer.enonic.com/learn/enonic-site-framework">Enonic Site Framework tutorial</a>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>A component implementation is created in the same folder as its <a href="https://developer.enonic.com/docs/cms/xp8/pages/page">CMS component schema</a>. It exports the same HTTP functions as any other endpoint, but is always executed in the context of a content item. It may also make use of <a href="contributions.ahtml">page contributions</a>.</p>
+<p>A component implementation is created in the same folder as its <a href="https://developer.enonic.com/docs/cms/xp8/pages/page">CMS component descriptor</a>. It exports the same HTTP functions as any other endpoint, but is always executed in the context of a content item. It may also make use of <a href="contributions.ahtml">page contributions</a>.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -529,7 +529,7 @@ The site service uses the underlying permissions of the content, which means the
 <h2 id="pages"><a class="link" href="#pages">Pages</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The page implementation lives next to its <a href="https://developer.enonic.com/docs/cms/xp8/pages/page">Page schema</a> at <code>src/main/resources/cms/pages/&lt;page-name&gt;/&lt;page-name&gt;.ts</code>.</p>
+<p>The page implementation lives next to its <a href="https://developer.enonic.com/docs/cms/xp8/pages/page">page descriptor</a> at <code>src/main/resources/cms/pages/&lt;page-name&gt;/&lt;page-name&gt;.ts</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample page implementation using the context</div>
@@ -554,7 +554,7 @@ export function GET(req) {
 <h2 id="parts"><a class="link" href="#parts">Parts</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A part implementation lives next to its <a href="https://developer.enonic.com/docs/cms/xp8/pages/parts">Part schema</a> at <code>src/main/resources/cms/parts/&lt;part-name&gt;/&lt;part-name&gt;.ts</code>.</p>
+<p>A part implementation lives next to its <a href="https://developer.enonic.com/docs/cms/xp8/pages/parts">part descriptor</a> at <code>src/main/resources/cms/parts/&lt;part-name&gt;/&lt;part-name&gt;.ts</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample part implementation using the form value</div>
@@ -562,10 +562,10 @@ export function GET(req) {
 <pre class="highlight"><code class="language-typescript" data-lang="typescript">import {getComponent} from '/lib/xp/portal';
 
 export function GET(req) {
-  const config = getComponent();
+  const component = getComponent();
   return {
     body: `&lt;div&gt;
-              &lt;h1&gt;${config.heading}&lt;/h1&gt;
+              &lt;h1&gt;${component.config.heading}&lt;/h1&gt;
           &lt;/div&gt;`
   };
 }</code></pre>
@@ -577,7 +577,7 @@ export function GET(req) {
 <h2 id="layouts"><a class="link" href="#layouts">Layouts</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The layout implementation lives next to its <a href="https://developer.enonic.com/docs/cms/xp8/pages/parts">Layout schema</a> at <code>src/main/resources/cms/layouts/&lt;layout-name&gt;/&lt;layout-name&gt;.ts</code>.</p>
+<p>The layout implementation lives next to its <a href="https://developer.enonic.com/docs/cms/xp8/pages/parts">layout descriptor</a> at <code>src/main/resources/cms/layouts/&lt;layout-name&gt;/&lt;layout-name&gt;.ts</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Sample layout using Thymeleaf to render two regions</div>
@@ -624,7 +624,7 @@ export function GET(req) {
 <p>Rendering a region essentially boils down to rendering the components of that region.</p>
 </div>
 <div class="paragraph">
-<p>To render a component, leave a component placeholder in the page or layout&#8217;s response markup. Placeholders are then identified and iteratively rendered bys the site service. Components may contain new regions with new placeholders, so the process repeats until no placeholders remain in the response.</p>
+<p>To render a component, leave a component placeholder in the page or layout&#8217;s response markup. Placeholders are then identified and iteratively rendered by the site service. Components may contain new regions with new placeholders, so the process repeats until no placeholders remain in the response.</p>
 </div>
 <div class="sect2">
 <h3 id="component_placeholders"><a class="link" href="#component_placeholders">Component placeholders</a></h3>
@@ -655,7 +655,7 @@ export function GET(req) {
 
   // Render with placeholders
   return {
-    body: `&lt;html&gt;&lt;head&gt;Placeholder demo&lt;/head&gt;
+    body: `&lt;html&gt;&lt;head&gt;&lt;title&gt;Placeholder demo&lt;/title&gt;&lt;/head&gt;
             &lt;body&gt;
               &lt;main data-portal-region="main"&gt;
                 ${components.map((c) =&gt; `&lt;!--# COMPONENT ${c.path} --&gt;`).join('\n')}
@@ -685,7 +685,7 @@ export function GET(req) {
 
   // Render and return the result
   return {
-    body: render(view, mainRegion)
+    body: render(resolve('./default.html'), {mainRegion})
   };
 }</code></pre>
 </div>
@@ -826,7 +826,7 @@ Bypass the built-in implementation by running your own code instead of injecting
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-23 17:31:16 UTC
+Last updated 2026-11-24 07:40:30 UTC
 </div>
 </div>
 </body>
