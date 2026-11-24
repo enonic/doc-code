@@ -46,7 +46,7 @@ Everything below is optional. An app ships whichever parts it needs.
 
 Schemas:: Content types, mixins, form fragments and macros, under `src/main/resources/cms/`. See <<schemas#, Schemas>>.
 Assets:: Images, stylesheets, client-side JavaScript, and other resource files. See <<tooling/starters#general_resources, General resources>>.
-Sites:: Page, layout and part components, mappings, filters and response processors for CMS-driven sites. See <<web/sites#, Sites>>.
+Sites:: Page, layout and part components, mappings, filters and response processors for CMS-driven sites. See <<web/sites#, Site Framework>>.
 APIs:: HTTP endpoints exposed under `/api`, and mountable under sites, webapps and admin tools. See <<web/apis#, APIs>>.
 Admin tools and extensions:: Screens in the XP admin, and extensions that plug into other tools. See <<web/tools#, Tools>> and <<web/extensions#, Extensions>>.
 Webapps:: Standalone web applications. See <<web/webapps#, Webapps>>.

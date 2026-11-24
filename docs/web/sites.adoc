@@ -1,4 +1,4 @@
-= Building front-ends with the Enonic Site Framework
+= Site Framework
 :toc: right
 :imagesdir: images
 
