@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.26">
-<title>Sites</title>
+<title>Building a front-end with the Enonic Site Framework</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-right">
 <div id="header">
-<h1>Sites</h1>
+<h1>Building a front-end with the Enonic Site Framework</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -455,7 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Enonic Site Framework is the built-in way to build content-driven sites with Enonic apps. This section covers how the site service handles a request, and how mappings, components, page contributions, and response processors take part in rendering it.</p>
+<p>The Enonic Site Framework is the built-in way to build content-driven sites with Enonic apps, as an alternative to using a third-party front-end framework. This section covers how the site service handles a request, and how mappings, components, page contributions, and response processors take part in rendering it.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -478,7 +478,7 @@ For a hands-on introduction, visit the <a href="https://developer.enonic.com/lea
 <p>A site built with the Site Framework is rendered by the <em>site service</em>: the part of XP that responds at <code>:8080/site/&lt;project&gt;/&lt;branch&gt;/&lt;path-to-content&gt;</code>. The site service resolves the page for the requested content item, and renders its components with the server-side implementations in your app. It is purpose-built for delivering content-driven websites, and is closely linked to the CMS features of the platform. Combine it with vhosts for custom domains and paths.</p>
 </div>
 <div class="paragraph">
-<p>The Site Framework is one of several ways to build a front-end for Enonic:</p>
+<p>Enonic works with any <a href="https://developer.enonic.com/docs/frameworks">front-end framework</a>. Next.js, for example, renders outside Enonic and fetches the content over HTTP. As alternatives to using a third-party front-end framework, two options run on the site service, inside XP:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -487,9 +487,6 @@ For a hands-on introduction, visit the <a href="https://developer.enonic.com/lea
 </li>
 <li>
 <p><strong>React4XP</strong> also runs on the site service. It uses mappings to replace the built-in page and component rendering with rendering based on React. The rendering is detached from the component descriptors: a component registry binds each component, or content type, to a React view. This is the same model headless front-ends use. Visit the <a href="https://developer.enonic.com/learn/react4xp/stable">React4XP tutorial</a> for details.</p>
-</li>
-<li>
-<p><strong>Next.js</strong> and other external front-end frameworks render outside Enonic, and fetch the content through an API.</p>
 </li>
 </ul>
 </div>
@@ -680,7 +677,7 @@ The image and attachment APIs are implicitly mounted by the site service, and ar
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-24 07:40:35 UTC
+Last updated 2026-11-24 08:20:30 UTC
 </div>
 </div>
 </body>
