@@ -447,7 +447,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#site_request_pipeline">Site Request pipeline</a></li>
-<li><a href="#one_site_multiple_apps">One site, multiple apps</a></li>
+<li><a href="#one_site_multiple_apps">One site, multiple apps</a>
+<ul class="sectlevel2">
+<li><a href="#when_an_app_is_not_available">When an app is not available</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -676,14 +680,83 @@ The image and attachment APIs are implicitly mounted by the site service, and ar
 <h2 id="one_site_multiple_apps"><a class="link" href="#one_site_multiple_apps">One site, multiple apps</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. I.e. via filters APIs and response processors. This allows you to modularize functionality across multiple apps, and reuse apps across sites. Visit Enonic Market for existing apps and inspiration: <a href="https://market.enonic.com/apps" class="bare">https://market.enonic.com/apps</a></p>
+<p>XP is modular: an <a href="../apps.ahtml">app</a> is a unit that is installed, started, and stopped on its own, and a site is assembled from several of them. The apps are added to the site in Content Studio:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/site-applications.png" alt="The Applications field of a site in Content Studio" width="listing several apps" height="546px">
+</div>
+</div>
+<div class="paragraph">
+<p>The modularity applies to the <a href="../schemas.ahtml">content schemas</a>, where each app contributes content types to the site under its own namespace. It applies in the same way to the front-end: every app with a site descriptor takes part in the request pipeline of the sites it is added to.</p>
+</div>
+<div class="paragraph">
+<p>The schemas and the front-end don&#8217;t have to come from the same app. With React4XP, for instance, the schemas are typically placed in one app, and the front-end in another.</p>
+</div>
+<div class="paragraph">
+<p>Rendering is normally the responsibility of one app: the app that provides the page, part, and layout components. The other apps contribute around the rendering, without rendering pages themselves:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Mappings</dt>
+<dd>
+<p>An app may serve specific URLs on the site, or handle specific content. The site service collects the <a href="sites/mappings.ahtml">mappings</a> of every app on the site before rendering starts.</p>
+</dd>
+<dt class="hdlist1">Filters</dt>
+<dd>
+<p>Filters reached through mappings, from every app on the site, form a single chain around the request. See <a href="filters.ahtml#site">HTTP filters</a>.</p>
+</dd>
+<dt class="hdlist1">Response processors</dt>
+<dd>
+<p>An app may process the rendered page, typically to add <a href="sites/contributions.ahtml">page contributions</a> such as scripts and meta tags. See <a href="sites/processors.ahtml">Response processors</a>.</p>
+</dd>
+<dt class="hdlist1">APIs</dt>
+<dd>
+<p>The site descriptor of an app mounts APIs on the site: its own, or those of another app. See <a href="apis.ahtml#contextual-apis">Contextual APIs</a>.</p>
+</dd>
+<dt class="hdlist1">Site configuration</dt>
+<dd>
+<p>An app may declare a form in its <a href="../schemas.ahtml#cms-yaml"><code>cms.yaml</code> descriptor</a>. Content Studio shows the form for every site the app is added to, and the values are available through <a href="../libraries/lib-portal.ahtml#getsiteconfig"><code>getSiteConfig()</code></a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Where several apps contribute at the same step, the <code>order</code> value decides the sequence, lowest first. For equal values, the position of the apps on the site decides.</p>
+</div>
+<div class="paragraph">
+<p>As an example, the <a href="https://market.enonic.com/vendors/enonic/sitemapxml">Sitemap.xml</a> app consists of a single mapping for <code>/sitemap.xml</code>, and a site configuration form. Adding it to a site gives the site a sitemap, while another app keeps rendering the pages.</p>
+</div>
+<div class="paragraph">
+<p>This lets you split functionality across apps, and reuse apps across sites. Visit <a href="https://market.enonic.com/apps">Enonic Market</a> for existing apps.</p>
+</div>
+<div class="sect2">
+<h3 id="when_an_app_is_not_available"><a class="link" href="#when_an_app_is_not_available">When an app is not available</a></h3>
+<div class="paragraph">
+<p>An app stays on the site when it is stopped or uninstalled. Content Studio lists it by its name, as not available, and the configuration stored for it on the site is kept.</p>
+</div>
+<div class="paragraph">
+<p>While the app is not available, it takes no part in the request pipeline. What happens to the site depends on the role of the app:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>A contributing app</strong> - The site keeps working without the features of that app. A URL served by one of its mappings is handled as any other request, and normally ends in a <code>404</code> response.</p>
+</li>
+<li>
+<p><strong>The app that renders the site</strong> - Pages that use its components respond with <code>503</code>. The other apps on the site keep working.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When the app is started again, it takes part as before, with the stored configuration.</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-25 07:24:47 UTC
+Last updated 2026-11-25 08:08:29 UTC
 </div>
 </div>
 </body>
