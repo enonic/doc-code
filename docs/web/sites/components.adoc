@@ -211,7 +211,7 @@ To mitigate this, add a <<mappings#, site mapping>> for the `portal:fragment` co
 ----
 kind: "Site"
 mappings:
-- controller: "/cms/pages/default/default.ts"
+- controller: "/cms/pages/default/default.js"
   match: "type:'portal:fragment'"
 ----
 

@@ -32,7 +32,7 @@ The site service invokes filters for you. A <<sites/mappings#, site mapping>> wi
 ----
 kind: "Site"
 mappings:
-- filter: "/cms/filters/timing.ts"
+- filter: "/cms/filters/timing.js"
   pattern: '/.*'
   order: 10
 ----
