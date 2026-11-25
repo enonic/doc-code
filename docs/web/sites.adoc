@@ -91,5 +91,40 @@ NOTE: The image and attachment APIs are implicitly mounted by the site service, 
 
 
 == One site, multiple apps
-Sites may be powered by multiple apps. The apps may even collaborate on processing and responding to a single request. I.e. via filters APIs and response processors. This allows you to modularize functionality across multiple apps, and reuse apps across sites. Visit Enonic Market for existing apps and inspiration: https://market.enonic.com/apps
 
+XP is modular: an <<../apps#, app>> is a unit that is installed, started, and stopped on its own, and a site is assembled from several of them. The apps are added to the site in Content Studio:
+
+image::site-applications.png[The Applications field of a site in Content Studio, listing several apps, 546px]
+
+The modularity applies to the <<../schemas#, content schemas>>, where each app contributes content types to the site under its own namespace. It applies in the same way to the front-end: every app with a site descriptor takes part in the request pipeline of the sites it is added to.
+
+The schemas and the front-end don't have to come from the same app. With React4XP, for instance, the schemas are typically placed in one app, and the front-end in another.
+
+Rendering is normally the responsibility of one app: the app that provides the page, part, and layout components. The other apps contribute around the rendering, without rendering pages themselves:
+
+Mappings:: An app may serve specific URLs on the site, or handle specific content. The site service collects the <<sites/mappings#, mappings>> of every app on the site before rendering starts.
+
+Filters:: Filters reached through mappings, from every app on the site, form a single chain around the request. See <<filters#site, HTTP filters>>.
+
+Response processors:: An app may process the rendered page, typically to add <<sites/contributions#, page contributions>> such as scripts and meta tags. See <<sites/processors#, Response processors>>.
+
+APIs:: The site descriptor of an app mounts APIs on the site: its own, or those of another app. See <<apis#contextual-apis, Contextual APIs>>.
+
+Site configuration:: An app may declare a form in its <<../schemas#cms-yaml, `cms.yaml` descriptor>>. Content Studio shows the form for every site the app is added to, and the values are available through <<../libraries/lib-portal#getsiteconfig, `getSiteConfig()`>>.
+
+Where several apps contribute at the same step, the `order` value decides the sequence, lowest first. For equal values, the position of the apps on the site decides.
+
+As an example, the https://market.enonic.com/vendors/enonic/sitemapxml[Sitemap.xml] app consists of a single mapping for `/sitemap.xml`, and a site configuration form. Adding it to a site gives the site a sitemap, while another app keeps rendering the pages.
+
+This lets you split functionality across apps, and reuse apps across sites. Visit https://market.enonic.com/apps[Enonic Market] for existing apps.
+
+=== When an app is not available
+
+An app stays on the site when it is stopped or uninstalled. Content Studio lists it by its name, as not available, and the configuration stored for it on the site is kept.
+
+While the app is not available, it takes no part in the request pipeline. What happens to the site depends on the role of the app:
+
+* *A contributing app* - The site keeps working without the features of that app. A URL served by one of its mappings is handled as any other request, and normally ends in a `404` response.
+* *The app that renders the site* - Pages that use its components respond with `503`. The other apps on the site keep working.
+
+When the app is started again, it takes part as before, with the stored configuration.
