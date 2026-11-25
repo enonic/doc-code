@@ -756,7 +756,7 @@ export function GET(req) {
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
 mappings:
-- controller: "/cms/pages/default/default.ts"
+- controller: "/cms/pages/default/default.js"
   match: "type:'portal:fragment'"</code></pre>
 </div>
 </div>
@@ -826,7 +826,7 @@ Bypass the built-in implementation by running your own code instead of injecting
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-24 23:13:31 UTC
+Last updated 2026-11-25 07:24:46 UTC
 </div>
 </div>
 </body>

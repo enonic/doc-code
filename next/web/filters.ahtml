@@ -489,7 +489,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
 mappings:
-- filter: "/cms/filters/timing.ts"
+- filter: "/cms/filters/timing.js"
   pattern: '/.*'
   order: 10</code></pre>
 </div>
@@ -601,7 +601,7 @@ export function GET(req) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-24 23:13:54 UTC
+Last updated 2026-11-25 07:25:03 UTC
 </div>
 </div>
 </body>

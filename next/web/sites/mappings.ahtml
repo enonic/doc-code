@@ -498,16 +498,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
 mappings:
-- controller: "/cms/mappings/api.ts" <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
+- controller: "/cms/mappings/api.js" <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
   pattern: '/api/v\d+/.*'            <i class="conum" data-value="3"></i><b>(3)</b>
   order: 10
-- controller: "/cms/pages/default/default.ts"
+- controller: "/cms/pages/default/default.js"
   match: "type:'portal:fragment'"    <i class="conum" data-value="4"></i><b>(4)</b>
-- filter: "/cms/mappings/filter.ts"  <i class="conum" data-value="5"></i><b>(5)</b>
+- filter: "/cms/mappings/filter.js"  <i class="conum" data-value="5"></i><b>(5)</b>
   pattern: '/dont-match-me/.*'
   invertPattern: true
   order: 10
-- filter: "/cms/services/image.ts"   <i class="conum" data-value="6"></i><b>(6)</b>
+- filter: "/cms/services/image.js"   <i class="conum" data-value="6"></i><b>(6)</b>
   service: "image"</code></pre>
 </div>
 </div>
@@ -640,7 +640,7 @@ The question mark <code>?</code> is escaped with a backslash in the pattern beca
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">mappings:
   - pattern: "/_/static/${app}/.+"
-    controller: "/cms/mappings/static.ts"</code></pre>
+    controller: "/cms/mappings/static.js"</code></pre>
 </div>
 </div>
 </div>
@@ -824,7 +824,7 @@ Build the new path from values you control rather than interpolating a query par
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-24 23:13:54 UTC
+Last updated 2026-11-25 07:25:03 UTC
 </div>
 </div>
 </body>

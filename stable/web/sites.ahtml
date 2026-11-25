@@ -515,7 +515,7 @@ Visit the <a href="https://developer.enonic.com/docs/cms/xp8">CMS documentation<
 <div class="content">
 <pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: "Site"
 mappings: <i class="conum" data-value="1"></i><b>(1)</b>
-  - controller: "/cms/mappings/security-txt.ts"
+  - controller: "/cms/mappings/security-txt.js"
     pattern: '/\.well-known/security\.txt'
 processors: <i class="conum" data-value="2"></i><b>(2)</b>
   - name: "tracker"
@@ -683,7 +683,7 @@ The image and attachment APIs are implicitly mounted by the site service, and ar
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-11-24 23:13:31 UTC
+Last updated 2026-11-25 07:24:46 UTC
 </div>
 </div>
 </body>
