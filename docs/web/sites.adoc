@@ -30,7 +30,7 @@ To activate the site service, you will need a site descriptor in your app.
 ----
 kind: "Site"
 mappings: # <1>
-  - controller: "/cms/mappings/security-txt.ts"
+  - controller: "/cms/mappings/security-txt.js"
     pattern: '/\.well-known/security\.txt'
 processors: # <2>
   - name: "tracker"
